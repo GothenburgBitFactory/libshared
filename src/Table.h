@@ -34,8 +34,6 @@
 class Table
 {
 public:
-  Table ();
-
   // View specifications.
   void add (const std::string& col, bool alignLeft = true) { _columns.push_back (col); _align.push_back (alignLeft); }
   void width (int width)                                   { _width = width;                                         }
@@ -72,21 +70,21 @@ private:
   std::vector <std::vector <Color>>       _color;
   std::vector <std::string>               _columns;
   std::vector <bool>                      _align;
-  int                                     _width;
-  int                                     _left_margin;
-  Color                                   _header;
-  Color                                   _odd;
-  Color                                   _even;
-  int                                     _intra_padding;
-  Color                                   _intra_odd;
-  Color                                   _intra_even;
-  int                                     _extra_padding;
-  Color                                   _extra_odd;
-  Color                                   _extra_even;
-  int                                     _truncate_lines;
-  int                                     _truncate_rows;
-  int                                     _lines;
-  int                                     _rows;
+  int                                     _width          {0};
+  int                                     _left_margin    {0};
+  Color                                   _header         {0};
+  Color                                   _odd            {0};
+  Color                                   _even           {0};
+  int                                     _intra_padding  {1};
+  Color                                   _intra_odd      {0};
+  Color                                   _intra_even     {0};
+  int                                     _extra_padding  {0};
+  Color                                   _extra_odd      {0};
+  Color                                   _extra_even     {0};
+  int                                     _truncate_lines {0};
+  int                                     _truncate_rows  {0};
+  int                                     _lines          {0};
+  int                                     _rows           {0};
 };
 
 #endif

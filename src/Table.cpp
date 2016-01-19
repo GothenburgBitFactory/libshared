@@ -30,26 +30,6 @@
 #include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-Table::Table ()
-: _width (0)
-, _left_margin (0)
-, _header (0)
-, _odd (0)
-, _even (0)
-, _intra_padding (1)
-, _intra_odd (0)
-, _intra_even (0)
-, _extra_padding (0)
-, _extra_odd (0)
-, _extra_even (0)
-, _truncate_lines (0)
-, _truncate_rows (0)
-, _lines (0)
-, _rows (0)
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
 int Table::addRow ()
 {
   _data.push_back (std::vector <std::string> (_columns.size (), ""));
@@ -112,12 +92,12 @@ std::string Table::render ()
 
   // Sum the minimal widths.
   int sum_minimal = 0;
-  for (auto& c : minimal)
+  for (const auto& c : minimal)
     sum_minimal += c;
 
   // Sum the ideal widths.
   int sum_ideal = 0;
-  for (auto& c : ideal)
+  for (const auto& c : ideal)
     sum_ideal += c;
 
   // Calculate final column widths.
@@ -297,7 +277,7 @@ void Table::renderCell (
   std::vector <std::string> raw;
   wrapText (raw, value, width, false);
 
-  for (auto& line : raw)
+  for (const auto& line : raw)
     if (alignLeft)
       lines.push_back (
         color.colorize (
