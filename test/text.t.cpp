@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (88);
+  UnitTest t (89);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -133,6 +133,8 @@ int main (int, char**)
   t.is (trim ("one  "),   "one",   "trim 'one  ' --> 'one'");
   t.is (trim ("  one  "), "one",   "trim '  one  ' --> 'one'");
   t.is (trim (""),        "",      "trim '' --> ''");
+  t.is (trim (" \t\r\f\nfoo\n\f\r\t "), "foo",
+                                   "trim ' \t\r\f\nfoo\n\f\r\t ' --> 'foo'");
 
   // int longestWord (const std::string&)
   t.is (longestWord ("    "),                   0, "longestWord (    ) --> 0");
