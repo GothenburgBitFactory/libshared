@@ -98,5 +98,8 @@ template <class T> void listDiff (
       rightOnly.push_back (r);
 }
 
+std::string jsonEncode (const std::string&);
+std::string jsonDecode (const std::string&);
+
 #endif
 ////////////////////////////////////////////////////////////////////////////////
