@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (89);
+  UnitTest t (109);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -202,6 +202,30 @@ int main (int, char**)
   t.notok (compare ("A", "a"),        "compare            'A' : 'a' --> false");
   t.notok (compare ("A", "a", true),  "compare sensitive  'A' : 'a' --> false");
   t.ok    (compare ("A", "a", false), "compare !sensitive 'A' : 'a' --> true");
+
+  // std::string jsonEncode (const std::string&);
+  t.is (jsonEncode (""),    "",     "jsonEncode '' --> ''");
+  t.is (jsonEncode ("foo"), "foo",  "jsonEncode 'foo' --> 'foo'");
+  t.is (jsonEncode ("\""),  "\\\"", "jsonEncode '\"' --> '\\\"'");
+  t.is (jsonEncode ("\\"),  "\\\\", "jsonEncode '\\' --> '\\\\'");
+  t.is (jsonEncode ("/"),   "\\/",  "jsonEncode '/' --> '\\/'");
+  t.is (jsonEncode ("\b"),  "\\b", "jsonEncode '\\b' --> '\\\\b'");
+  t.is (jsonEncode ("\f"),  "\\f", "jsonEncode '\\f' --> '\\\\f'");
+  t.is (jsonEncode ("\n"),  "\\n", "jsonEncode '\\n' --> '\\\\n'");
+  t.is (jsonEncode ("\r"),  "\\r", "jsonEncode '\\r' --> '\\\\r'");
+  t.is (jsonEncode ("\t"),  "\\t", "jsonEncode '\\t' --> '\\\\t'");
+
+  // std::string jsonDecode (const std::string&);
+  t.is (jsonDecode (""),    "",     "jsonDecode '' --> ''");
+  t.is (jsonDecode ("foo"), "foo",  "jsonDecode 'foo' --> 'foo'");
+  t.is (jsonDecode ("\\\""),  "\"", "jsonDecode '\\\"' --> '\"'");
+  t.is (jsonDecode ("\\\\"),  "\\", "jsonDecode '\\\\' --> '\\'");
+  t.is (jsonDecode ("\\/"),   "/",  "jsonDecode '\\/' --> '/'");
+  t.is (jsonDecode ("\\b"),  "\b", "jsonDecode '\\\\b' --> '\\b'");
+  t.is (jsonDecode ("\\f"),  "\f", "jsonDecode '\\\\f' --> '\\f'");
+  t.is (jsonDecode ("\\n"),  "\n", "jsonDecode '\\\\n' --> '\\n'");
+  t.is (jsonDecode ("\\r"),  "\r", "jsonDecode '\\\\r' --> '\\r'");
+  t.is (jsonDecode ("\\t"),  "\t", "jsonDecode '\\\\t' --> '\\t'");
 
   return 0;
 }
