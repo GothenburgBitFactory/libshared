@@ -727,9 +727,7 @@ Directory::Directory (const std::string& in)
 Directory& Directory::operator= (const Directory& other)
 {
   if (this != &other)
-  {
     File::operator= (other);
-  }
 
   return *this;
 }

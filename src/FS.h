@@ -36,7 +36,7 @@ class Path
 {
 public:
   Path ();
-  Path (const Path&);
+  explicit Path (const Path&);
   Path (const std::string&);
 
   Path& operator= (const Path&);
@@ -69,8 +69,8 @@ class File : public Path
 {
 public:
   File ();
-  File (const Path&);
-  File (const File&);
+  explicit File (const Path&);
+  explicit File (const File&);
   File (const std::string&);
   virtual ~File ();
 
@@ -117,9 +117,9 @@ class Directory : public File
 {
 public:
   Directory ();
-  Directory (const Directory&);
-  Directory (const File&);
-  Directory (const Path&);
+  explicit Directory (const Directory&);
+  explicit Directory (const File&);
+  explicit Directory (const Path&);
   Directory (const std::string&);
 
   Directory& operator= (const Directory&);
