@@ -64,6 +64,21 @@ std::vector <std::string> split (const std::string& input, const char delimiter)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string trim (const std::string& input)
+{
+  auto start = input.find_first_not_of (" ");
+  auto end   = input.find_last_not_of  (" ");
+
+  if (start == std::string::npos)
+    return "";
+
+  if (end == std::string::npos)
+    return input.substr (start);
+
+  return input.substr (start, end - start + 1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int longestWord (const std::string& input)
 {
   int longest = 0;
