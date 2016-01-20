@@ -27,9 +27,6 @@
 #include <cmake.h>
 #include <Table.h>
 #include <iostream>
-//#include <stdlib.h>
-//#include <unistd.h>
-//#include <stdio.h>
 #include <test.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,9 +55,6 @@ int main (int, char**)
     t1.intraColorOdd (odd_color);
     t1.intraColorEven (even_color);
 
-//    t1.add (Column::factory ("string", "One"));
-//    t1.add (Column::factory ("string", "Two"));
-//    t1.add (Column::factory ("string", "Three"));
     t1.add ("Header1", true);
     t1.add ("Header2", true);
     t1.add ("Header3", false);
