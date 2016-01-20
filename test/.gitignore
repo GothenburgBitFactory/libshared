@@ -2,6 +2,7 @@ all.log
 color.t
 fs.t
 list.t
+msg.t
 pig.t
 rx.t
 table.t
