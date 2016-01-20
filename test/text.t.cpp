@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (76);
+  UnitTest t (83);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -184,6 +184,15 @@ int main (int, char**)
   t.is (rightJustify ("foo", 4), " foo",  "rightJustify foo,4 -> ' foo'");
   t.is (rightJustify ("foo", 5), "  foo", "rightJustify foo,5 -> '  foo'");
   t.is (rightJustify ("föo", 5), "  föo", "rightJustify föo,5 -> '  föo'");
+
+  // bool compare (const std::string&, const std::string&, bool sensitive = true);
+  t.notok (compare ("a", "b"), "compare 'a' : 'b' --> false");
+  t.notok (compare ("a", ""),  "compare 'a' : ''  --> false");
+  t.notok (compare ("", "b"),  "compare ''  : 'b' --> false");
+  t.ok    (compare ("", ""),   "compare ''  : ''  --> true");
+  t.notok (compare ("A", "a"),        "compare            'A' : 'a' --> false");
+  t.notok (compare ("A", "a", true),  "compare sensitive  'A' : 'a' --> false");
+  t.ok    (compare ("A", "a", false), "compare !sensitive 'A' : 'a' --> true");
 
   return 0;
 }
