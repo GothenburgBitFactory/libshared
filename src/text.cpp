@@ -66,8 +66,8 @@ std::vector <std::string> split (const std::string& input, const char delimiter)
 ////////////////////////////////////////////////////////////////////////////////
 std::string trim (const std::string& input)
 {
-  auto start = input.find_first_not_of (" ");
-  auto end   = input.find_last_not_of  (" ");
+  auto start = input.find_first_not_of (" \t\n\r\f");
+  auto end   = input.find_last_not_of  (" \t\n\r\f");
 
   if (start == std::string::npos)
     return "";
