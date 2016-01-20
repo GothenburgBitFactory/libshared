@@ -32,7 +32,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (18);
+  UnitTest t (13);
 
   Msg m;
   t.is (m.serialize (), "\n\n",        "Msg::serialize '' --> '\\n\\n'");
@@ -65,13 +65,6 @@ int main (int, char**)
   t.ok (m3.all () == std::vector <std::string> {"foo", "name"},
                                        "Msg::all --> {'foo', 'name'}");
 
-  Msg m4;
-  t.is (m4.trim ("one"),     "one",    "Msg::trim 'one' --> 'one'");
-  t.is (m4.trim ("  one"),   "one",    "Msg::trim '  one' --> 'one'");
-  t.is (m4.trim ("one  "),   "one",    "Msg::trim 'one  ' --> 'one'");
-  t.is (m4.trim ("  one  "), "one",    "Msg::trim '  one  ' --> 'one'");
-  t.is (m4.trim (""),        "",       "Msg::trim '' --> ''");
-  
   return 0;
 }
 
