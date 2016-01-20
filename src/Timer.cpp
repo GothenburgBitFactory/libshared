@@ -31,11 +31,7 @@
 #include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////
-// Timer starts when the object is constructed.
 Timer::Timer ()
-: _description ("-")
-, _running (false)
-, _total (0)
 {
 }
 
@@ -43,8 +39,6 @@ Timer::Timer ()
 // Timer starts when the object is constructed with a description.
 Timer::Timer (const std::string& description)
 : _description (description)
-, _running (false)
-, _total (0)
 {
   start ();
 }
@@ -56,14 +50,11 @@ Timer::~Timer ()
   stop ();
 
   std::stringstream s;
-  s << "Timer " // No i18n
+  s << "Timer "
     << _description
     << " "
     << std::setprecision (6)
-#ifndef HAIKU
-    // Haiku fails on this - don't know why.
     << std::fixed
-#endif
     << _total / 1000000.0
     << " sec\n";
 
