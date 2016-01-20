@@ -38,6 +38,7 @@ int longestWord (const std::string&);
 int longestLine (const std::string&);
 bool extractLine (std::string&, const std::string&, int, bool, unsigned int&);
 std::vector <std::string> split (const std::string&, const char);
+bool compare (const std::string&, const std::string&, bool sensitive = true);
 const std::string format (std::string&);
 const std::string format (const char*);
 const std::string formatHex (int);

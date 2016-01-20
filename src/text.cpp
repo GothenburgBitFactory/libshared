@@ -29,6 +29,7 @@
 #include <utf8.h>
 #include <sstream>
 #include <iomanip>
+#include <strings.h>
 #include <math.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -226,6 +227,20 @@ bool extractLine (
   }
 
   return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool compare (
+  const std::string& left,
+  const std::string& right,
+  bool sensitive /*= true*/)
+{
+  // Use strcasecmp if required.
+  if (!sensitive)
+    return strcasecmp (left.c_str (), right.c_str ()) == 0 ? true : false;
+
+  // Otherwise, just use std::string::operator==.
+  return left == right;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
