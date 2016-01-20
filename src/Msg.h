@@ -42,7 +42,6 @@ public:
   std::vector <std::string> all () const;
   std::string serialize () const;
   bool parse (const std::string&);
-  std::string trim (const std::string&) const;
 
 private:
   std::map <std::string, std::string> _header {};

@@ -107,18 +107,3 @@ bool Msg::parse (const std::string& input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Msg::trim (const std::string& input) const
-{
-  auto start = input.find_first_not_of (" ");
-  auto end   = input.find_last_not_of  (" ");
-
-  if (start == std::string::npos)
-    return "";
-
-  if (end == std::string::npos)
-    return input.substr (start);
-
-  return input.substr (start, end - start + 1);
-}
-
-////////////////////////////////////////////////////////////////////////////////
