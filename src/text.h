@@ -105,5 +105,7 @@ std::string jsonDecode (const std::string&);
 std::string lowerCase (const std::string&);
 std::string upperCase (const std::string&);
 
+int autoComplete (const std::string&, const std::vector<std::string>&, std::vector<std::string>&, int minimum = 1);
+
 #endif
 ////////////////////////////////////////////////////////////////////////////////
