@@ -286,6 +286,24 @@ bool compare (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool closeEnough (
+  const std::string& reference,
+  const std::string& attempt,
+  unsigned int minLength /* = 0 */)
+{
+  // An exact match is accepted first.
+  if (compare (reference, attempt, false))
+    return true;
+
+  // A partial match will suffice.
+  if (attempt.length () < reference.length () &&
+      attempt.length () >= minLength)
+    return compare (reference.substr (0, attempt.length ()), attempt, false);
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string format (std::string& value)
 {
   return value;

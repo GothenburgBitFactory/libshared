@@ -42,6 +42,7 @@ std::string trim (const std::string&, const std::string& edible = " \t\n\f\r");
 std::string ltrim (const std::string&, const std::string& edible = " \t\n\f\r");
 std::string rtrim (const std::string&, const std::string& edible = " \t\n\f\r");
 bool compare (const std::string&, const std::string&, bool sensitive = true);
+bool closeEnough (const std::string&, const std::string&, unsigned int minLength = 0);
 const std::string format (std::string&);
 const std::string format (const char*);
 const std::string formatHex (int);
