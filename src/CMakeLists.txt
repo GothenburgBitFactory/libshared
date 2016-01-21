@@ -2,7 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/src)
 
-set (common_HEADERS Color.h
+set (common_HEADERS Args.h
+                    Color.h
                     FS.h
                     Msg.h
                     Pig.h
@@ -13,7 +14,8 @@ set (common_HEADERS Color.h
                     unicode.h
                     utf8.h)
 
-set (common_SRCS Color.cpp
+set (common_SRCS Args.cpp
+                 Color.cpp
                  FS.cpp
                  Msg.cpp
                  Pig.cpp
