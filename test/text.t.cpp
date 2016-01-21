@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (109);
+  UnitTest t (119);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -209,23 +209,37 @@ int main (int, char**)
   t.is (jsonEncode ("\""),  "\\\"", "jsonEncode '\"' --> '\\\"'");
   t.is (jsonEncode ("\\"),  "\\\\", "jsonEncode '\\' --> '\\\\'");
   t.is (jsonEncode ("/"),   "\\/",  "jsonEncode '/' --> '\\/'");
-  t.is (jsonEncode ("\b"),  "\\b", "jsonEncode '\\b' --> '\\\\b'");
-  t.is (jsonEncode ("\f"),  "\\f", "jsonEncode '\\f' --> '\\\\f'");
-  t.is (jsonEncode ("\n"),  "\\n", "jsonEncode '\\n' --> '\\\\n'");
-  t.is (jsonEncode ("\r"),  "\\r", "jsonEncode '\\r' --> '\\\\r'");
-  t.is (jsonEncode ("\t"),  "\\t", "jsonEncode '\\t' --> '\\\\t'");
+  t.is (jsonEncode ("\b"),  "\\b",  "jsonEncode '\\b' --> '\\\\b'");
+  t.is (jsonEncode ("\f"),  "\\f",  "jsonEncode '\\f' --> '\\\\f'");
+  t.is (jsonEncode ("\n"),  "\\n",  "jsonEncode '\\n' --> '\\\\n'");
+  t.is (jsonEncode ("\r"),  "\\r",  "jsonEncode '\\r' --> '\\\\r'");
+  t.is (jsonEncode ("\t"),  "\\t",  "jsonEncode '\\t' --> '\\\\t'");
 
   // std::string jsonDecode (const std::string&);
-  t.is (jsonDecode (""),    "",     "jsonDecode '' --> ''");
-  t.is (jsonDecode ("foo"), "foo",  "jsonDecode 'foo' --> 'foo'");
-  t.is (jsonDecode ("\\\""),  "\"", "jsonDecode '\\\"' --> '\"'");
-  t.is (jsonDecode ("\\\\"),  "\\", "jsonDecode '\\\\' --> '\\'");
-  t.is (jsonDecode ("\\/"),   "/",  "jsonDecode '\\/' --> '/'");
-  t.is (jsonDecode ("\\b"),  "\b", "jsonDecode '\\\\b' --> '\\b'");
-  t.is (jsonDecode ("\\f"),  "\f", "jsonDecode '\\\\f' --> '\\f'");
-  t.is (jsonDecode ("\\n"),  "\n", "jsonDecode '\\\\n' --> '\\n'");
-  t.is (jsonDecode ("\\r"),  "\r", "jsonDecode '\\\\r' --> '\\r'");
-  t.is (jsonDecode ("\\t"),  "\t", "jsonDecode '\\\\t' --> '\\t'");
+  t.is (jsonDecode (""),     "",    "jsonDecode '' --> ''");
+  t.is (jsonDecode ("foo"),  "foo", "jsonDecode 'foo' --> 'foo'");
+  t.is (jsonDecode ("\\\""), "\"",  "jsonDecode '\\\"' --> '\"'");
+  t.is (jsonDecode ("\\\\"), "\\",  "jsonDecode '\\\\' --> '\\'");
+  t.is (jsonDecode ("\\/"),  "/",   "jsonDecode '\\/' --> '/'");
+  t.is (jsonDecode ("\\b"),  "\b",  "jsonDecode '\\\\b' --> '\\b'");
+  t.is (jsonDecode ("\\f"),  "\f",  "jsonDecode '\\\\f' --> '\\f'");
+  t.is (jsonDecode ("\\n"),  "\n",  "jsonDecode '\\\\n' --> '\\n'");
+  t.is (jsonDecode ("\\r"),  "\r",  "jsonDecode '\\\\r' --> '\\r'");
+  t.is (jsonDecode ("\\t"),  "\t",  "jsonDecode '\\\\t' --> '\\t'");
+
+  // std::string lowerCase (const std::string&);
+  t.is (lowerCase (""),   "",   "lowerCase '' --> ''");
+  t.is (lowerCase ("a"),  "a",  "lowerCase 'a' --> 'a'");
+  t.is (lowerCase ("aA"), "aa", "lowerCase 'aA' --> 'aa'");
+  t.is (lowerCase ("A"),  "a",  "lowerCase 'A' --> 'a'");
+  t.is (lowerCase ("$"),  "$",  "lowerCase '$' --> '$'");
+
+  // std::string upperCase (const std::string&);
+  t.is (upperCase (""),   "",   "upperCase '' --> ''");
+  t.is (upperCase ("a"),  "A",  "upperCase 'a' --> 'A'");
+  t.is (upperCase ("aA"), "AA", "upperCase 'aA' --> 'AA'");
+  t.is (upperCase ("A"),  "A",  "upperCase 'A' --> 'A'");
+  t.is (upperCase ("$"),  "$",  "upperCase '$' --> '$'");
 
   return 0;
 }
