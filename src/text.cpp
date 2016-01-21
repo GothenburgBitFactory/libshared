@@ -66,10 +66,10 @@ std::vector <std::string> split (const std::string& input, const char delimiter)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string trim (const std::string& input)
+std::string trim (const std::string& input, const std::string& edible)
 {
-  auto start = input.find_first_not_of (" \t\n\r\f");
-  auto end   = input.find_last_not_of  (" \t\n\r\f");
+  auto start = input.find_first_not_of (edible);
+  auto end   = input.find_last_not_of  (edible);
 
   if (start == std::string::npos)
     return "";
@@ -78,6 +78,26 @@ std::string trim (const std::string& input)
     return input.substr (start);
 
   return input.substr (start, end - start + 1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ltrim (const std::string& input, const std::string& edible)
+{
+  auto start = input.find_first_not_of (edible);
+  if (start == std::string::npos)
+    return "";
+
+  return input.substr (start);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string rtrim (const std::string& input, const std::string& edible)
+{
+  auto end   = input.find_last_not_of  (edible);
+  if (end == std::string::npos)
+    return input;
+
+  return input.substr (0, end + 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
