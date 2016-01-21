@@ -100,6 +100,8 @@ template <class T> void listDiff (
 
 std::string jsonEncode (const std::string&);
 std::string jsonDecode (const std::string&);
+std::string lowerCase (const std::string&);
+std::string upperCase (const std::string&);
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////

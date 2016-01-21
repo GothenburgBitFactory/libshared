@@ -27,8 +27,10 @@
 #include <cmake.h>
 #include <text.h>
 #include <utf8.h>
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <cctype>
 #include <strings.h>
 #include <math.h>
 
@@ -496,6 +498,22 @@ std::string jsonDecode (const std::string& input)
     }
   }
 
+  return output;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string lowerCase (const std::string& input)
+{
+  std::string output = input;
+  std::transform (output.begin (), output.end (), output.begin (), tolower);
+  return output;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string upperCase (const std::string& input)
+{
+  std::string output = input;
+  std::transform (output.begin (), output.end (), output.begin (), toupper);
   return output;
 }
 
