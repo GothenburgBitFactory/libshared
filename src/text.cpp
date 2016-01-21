@@ -29,10 +29,12 @@
 #include <utf8.h>
 #include <algorithm>
 #include <sstream>
+#include <iostream>
 #include <iomanip>
 #include <cctype>
 #include <strings.h>
 #include <math.h>
+#include <csignal>
 
 ///////////////////////////////////////////////////////////////////////////////
 void wrapText (
@@ -570,6 +572,44 @@ int autoComplete (
   }
 
   return matches.size ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Uses std::getline, because std::cin eats leading whitespace, and that means
+// that if a newline is entered, std::cin eats it and never returns from the
+// "std::cin >> answer;" line, but it does display the newline.  This way, with
+// std::getline, the newline can be detected, and the prompt re-written.
+static void signal_handler (int s)
+{
+  if (s == SIGINT)
+  {
+    std::cout << "\n\nInterrupted: No changes made.\n";
+    exit (1);
+  }
+}
+
+bool confirm (const std::string& question)
+{
+  std::vector <std::string> options {"yes", "no"};
+  std::vector <std::string> matches;
+
+  signal (SIGINT, signal_handler);
+
+  do
+  {
+    std::cout << question
+              << " (yes/no) ";
+
+    std::string answer {""};
+    std::getline (std::cin, answer);
+    answer = std::cin.eof () ? "no" : lowerCase (trim (answer));
+
+    autoComplete (answer, options, matches, 1); // Hard-coded 1.
+  }
+  while (! std::cin.eof () && matches.size () != 1);
+
+  signal (SIGINT, SIG_DFL);
+  return matches.size () == 1 && matches[0] == "yes" ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
