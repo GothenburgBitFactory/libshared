@@ -1,5 +1,6 @@
 all.log
 args.t
+autocomplete.t
 color.t
 fs.t
 list.t
