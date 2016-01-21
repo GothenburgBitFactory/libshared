@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (132);
+  UnitTest t (141);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -222,6 +222,17 @@ int main (int, char**)
   t.notok (compare ("A", "a"),        "compare            'A' : 'a' --> false");
   t.notok (compare ("A", "a", true),  "compare sensitive  'A' : 'a' --> false");
   t.ok    (compare ("A", "a", false), "compare !sensitive 'A' : 'a' --> true");
+
+  // bool closeEnough (const std::string&, const std::string&, unsigned int minLength = 0);
+  t.ok (closeEnough ("foobar", "foobar"),      "closeEnough foobar == foobar");
+  t.ok (closeEnough ("foobar", "foobar", 0),   "closeEnough foobar == foobar,0");
+  t.ok (closeEnough ("foobar", "foobar", 1),   "closeEnough foobar == foobar,1");
+  t.ok (closeEnough ("foobar", "foobar", 2),   "closeEnough foobar == foobar,2");
+  t.ok (closeEnough ("foobar", "foobar", 3),   "closeEnough foobar == foobar,3");
+  t.ok (closeEnough ("foobar", "foobar", 4),   "closeEnough foobar == foobar,4");
+  t.ok (closeEnough ("foobar", "foobar", 5),   "closeEnough foobar == foobar,5");
+  t.ok (closeEnough ("foobar", "foobar", 6),   "closeEnough foobar == foobar,6");
+  t.ok (closeEnough ("foobar", "foo",    3),   "closeEnough foobar == foo,3");
 
   // std::string jsonEncode (const std::string&);
   t.is (jsonEncode (""),    "",     "jsonEncode '' --> ''");
