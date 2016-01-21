@@ -1,4 +1,5 @@
 all.log
+args.t
 color.t
 fs.t
 list.t
