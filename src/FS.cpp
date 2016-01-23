@@ -695,12 +695,19 @@ bool File::remove (const std::string& name)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void File::copy (const std::string& from, const std::string& to)
+bool File::copy (const std::string& from, const std::string& to)
 {
-  std::ifstream src (from, std::ios::binary);
-  std::ofstream dst (to,   std::ios::binary);
+  // 'from' must exist.
+  if (! access (from.c_str (), F_OK))
+  {
+    std::ifstream src (from, std::ios::binary);
+    std::ofstream dst (to,   std::ios::binary);
 
-  dst << src.rdbuf ();
+    dst << src.rdbuf ();
+    return true;
+  }
+
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -106,7 +106,7 @@ public:
   static bool write (const std::string&, const std::string&);
   static bool write (const std::string&, const std::vector <std::string>&, bool addNewlines = true);
   static bool remove (const std::string&);
-  static void copy (const std::string&, const std::string&);
+  static bool copy (const std::string&, const std::string&);
   static bool move (const std::string&, const std::string&);
 
 private:
