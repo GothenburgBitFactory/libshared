@@ -32,7 +32,7 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <pwd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
@@ -202,10 +202,10 @@ bool Path::executable () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::rename (const std::string& new_name)
 {
-  std::string expanded = expand (new_name);
+  auto expanded = expand (new_name);
   if (_data != expanded)
   {
-    if (::rename (_data.c_str (), expanded.c_str ()) == 0)
+    if (std::rename (_data.c_str (), expanded.c_str ()) == 0)
     {
       _data = expanded;
       return true;
@@ -704,9 +704,14 @@ void File::copy (const std::string& from, const std::string& to)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool File::rename (const std::string& from, const std::string& to)
+bool File::move (const std::string& from, const std::string& to)
 {
-  return rename (from.c_str (), to.c_str ()) == 0;
+  auto expanded = expand (to);
+  if (from != expanded)
+    if (std::rename (from.c_str (), to.c_str ()) == 0)
+      return true;
+
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
