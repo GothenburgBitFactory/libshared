@@ -695,6 +695,15 @@ bool File::remove (const std::string& name)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void File::copy (const std::string& from, const std::string& to)
+{
+  std::ifstream src (from, std::ios::binary);
+  std::ofstream dst (to,   std::ios::binary);
+
+  dst << src.rdbuf ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Directory::Directory ()
 {
 }
