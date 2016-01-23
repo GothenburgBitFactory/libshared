@@ -278,7 +278,7 @@ bool compare (
   bool sensitive /*= true*/)
 {
   // Use strcasecmp if required.
-  if (!sensitive)
+  if (! sensitive)
     return strcasecmp (left.c_str (), right.c_str ()) == 0 ? true : false;
 
   // Otherwise, just use std::string::operator==.
