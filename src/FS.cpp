@@ -704,6 +704,12 @@ void File::copy (const std::string& from, const std::string& to)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool File::rename (const std::string& from, const std::string& to)
+{
+  return rename (from.c_str (), to.c_str ()) == 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Directory::Directory ()
 {
 }
