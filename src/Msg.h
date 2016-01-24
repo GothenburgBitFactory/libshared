@@ -35,8 +35,9 @@ class Msg
 {
 public:
   void set (const std::string&, const std::string&);
-  void setPayload (const std::string&);
   std::string get (const std::string&) const;
+
+  void setPayload (const std::string&);
   std::string getPayload () const;
 
   std::vector <std::string> all () const;

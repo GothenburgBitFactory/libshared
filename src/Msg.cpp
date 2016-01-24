@@ -35,12 +35,6 @@ void Msg::set (const std::string& name, const std::string& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Msg::setPayload (const std::string& payload)
-{
-  _payload = payload;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 std::string Msg::get (const std::string& name) const
 {
   auto i = _header.find (name);
@@ -48,6 +42,12 @@ std::string Msg::get (const std::string& name) const
     return i->second;
 
   return "";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Msg::setPayload (const std::string& payload)
+{
+  _payload = payload;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,6 @@ std::vector <std::string> Msg::all () const
 std::string Msg::serialize () const
 {
   std::string output;
-
   for (auto& i : _header)
     output += i.first + ": " + i.second + "\n";
 
