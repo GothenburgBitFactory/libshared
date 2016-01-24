@@ -262,7 +262,7 @@ std::string Path::expand (const std::string& in)
   else if (in.length () > 2 &&
            in.substr (0, 2) == "./")
   {
-    copy = Directory::cwd () + "/" + in.substr (2);
+    copy = Directory::cwd () + in.substr (1);
   }
   else if (in.length () > 1 &&
            in[0] != '.' &&
