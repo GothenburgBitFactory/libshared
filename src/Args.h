@@ -34,7 +34,7 @@
 class Args
 {
 public:
-  Args () {};
+  Args () = default;
 
   void addOption (const std::string&, bool defaultValue = false);
   void addNamed  (const std::string&, const std::string& defaultValue = "");
