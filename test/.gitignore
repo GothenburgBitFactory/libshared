@@ -2,6 +2,7 @@ all.log
 args.t
 autocomplete.t
 color.t
+configuration.t
 fs.t
 list.t
 msg.t

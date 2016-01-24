@@ -4,6 +4,7 @@ include_directories (${CMAKE_SOURCE_DIR}
 
 set (common_HEADERS Args.h
                     Color.h
+                    Configuration.h
                     FS.h
                     Msg.h
                     Pig.h
@@ -16,6 +17,7 @@ set (common_HEADERS Args.h
 
 set (common_SRCS Args.cpp
                  Color.cpp
+                 Configuration.cpp
                  FS.cpp
                  Msg.cpp
                  Pig.cpp
