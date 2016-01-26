@@ -32,7 +32,7 @@
 #include <string>
 #include <vector>
 
-// text.cpp, Non-UTF-8 aware.
+// common.cpp, Non-UTF-8 aware.
 void wrapText (std::vector <std::string>&, const std::string&, const int, bool);
 int longestWord (const std::string&);
 int longestLine (const std::string&);
