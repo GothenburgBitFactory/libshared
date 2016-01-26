@@ -8,7 +8,7 @@ include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/test
                      ${COMMON_INCLUDE_DIRS})
 
-set (test_SRCS args.t autocomplete.t color.t configuration.t fs.t list.t msg.t pig.t rx.t table.t text.t unicode.t utf8.t)
+set (test_SRCS args.t autocomplete.t color.t common.t configuration.t fs.t list.t msg.t pig.t rx.t table.t unicode.t utf8.t)
 
 add_custom_target (test ./run_all --verbose
                         DEPENDS ${test_SRCS}
