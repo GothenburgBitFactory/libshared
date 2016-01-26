@@ -42,4 +42,3 @@ const std::string utf8_substr (const std::string&, unsigned int, unsigned int le
 int mk_wcwidth (wchar_t);
 
 #endif
-////////////////////////////////////////////////////////////////////////////////
