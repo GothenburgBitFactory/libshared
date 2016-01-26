@@ -24,8 +24,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef INCLUDED_TEXT
-#define INCLUDED_TEXT
+#ifndef INCLUDED_COMMON
+#define INCLUDED_COMMON
 
 #include <sstream>
 #include <algorithm>

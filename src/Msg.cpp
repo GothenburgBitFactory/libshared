@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <Msg.h>
-#include <text.h>
+#include <common.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 void Msg::set (const std::string& name, const std::string& value)

@@ -37,7 +37,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <string.h>
-#include <text.h>
+#include <common.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD
 #include <limits.h>

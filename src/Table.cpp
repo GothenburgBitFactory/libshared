@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <Table.h>
-#include <text.h>
+#include <common.h>
 #include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////

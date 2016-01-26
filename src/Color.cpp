@@ -30,7 +30,7 @@
 #include <vector>
 #include <cstdlib>
 //#include <Lexer.h>
-#include <text.h>
+#include <common.h>
 
 // uint to string lookup table for Color::_colorize()
 // _colorize() gets called _a lot_, having this lookup table is a cheap

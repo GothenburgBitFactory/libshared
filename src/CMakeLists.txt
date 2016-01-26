@@ -11,7 +11,7 @@ set (common_HEADERS Args.h
                     RX.h
                     Table.h
                     Timer.h
-                    text.h
+                    common.h
                     unicode.h
                     utf8.h)
 
@@ -24,7 +24,7 @@ set (common_SRCS Args.cpp
                  RX.cpp
                  Table.cpp
                  Timer.cpp
-                 text.cpp
+                 common.cpp
                  unicode.cpp
                  utf8.cpp
                  wcwidth6.cpp

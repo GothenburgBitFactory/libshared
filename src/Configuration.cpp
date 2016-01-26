@@ -29,7 +29,7 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <FS.h>
-#include <text.h>
+#include <common.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool setVariableInFile (
