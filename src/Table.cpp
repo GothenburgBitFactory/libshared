@@ -29,6 +29,7 @@
 #include <common.h>
 #include <format.h>
 #include <utf8.h>
+#include <unistd.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 int Table::addRow ()
@@ -67,6 +68,23 @@ void Table::set (int row, int col, const Color color)
 ////////////////////////////////////////////////////////////////////////////////
 std::string Table::render ()
 {
+  // Piped output disables color, unless overridden.
+  if (! _forceColor &&
+      ! isatty (STDOUT_FILENO))
+  {
+    _header     = Color ("");
+    _odd        = Color ("");
+    _even       = Color ("");
+    _intra_odd  = Color ("");
+    _intra_even = Color ("");
+    _extra_odd  = Color ("");
+    _extra_even = Color ("");
+
+    for (auto& row : _color)
+      for (auto& col : row)
+        col = Color ("");
+  }
+
   // Determine minimal, ideal column widths.
   std::vector <int> minimal;
   std::vector <int> ideal;

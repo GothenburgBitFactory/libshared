@@ -49,6 +49,7 @@ public:
   void extraColorEven (const Color& c)                     { _extra_even = c;                                        }
   void truncateLines (int n)                               { _truncate_lines = n;                                    }
   void truncateRows (int n)                                { _truncate_rows = n;                                     }
+  void forceColor ()                                       { _forceColor = true;                                     }
   int lines ()                                             { return _lines;                                          }
   int rows ()                                              { return (int) _data.size ();                             }
 
@@ -83,6 +84,7 @@ private:
   Color                                   _extra_even     {0};
   int                                     _truncate_lines {0};
   int                                     _truncate_rows  {0};
+  bool                                    _forceColor     {false};
   int                                     _lines          {0};
   int                                     _rows           {0};
 };
