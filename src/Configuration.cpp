@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <FS.h>
 #include <common.h>
+#include <format.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool setVariableInFile (

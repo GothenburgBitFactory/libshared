@@ -43,48 +43,6 @@ std::string ltrim (const std::string&, const std::string& edible = " \t\n\f\r");
 std::string rtrim (const std::string&, const std::string& edible = " \t\n\f\r");
 bool compare (const std::string&, const std::string&, bool sensitive = true);
 bool closeEnough (const std::string&, const std::string&, unsigned int minLength = 0);
-const std::string format (std::string&);
-const std::string format (const char*);
-const std::string formatHex (int);
-const std::string format (float, int, int);
-const std::string format (double, int, int);
-const std::string format (double);
-void replace_positional (std::string&, const std::string&, const std::string&);
-
-template<typename T>
-const std::string format (T value)
-{
-    std::stringstream s;
-    s << value;
-    return s.str ();
-}
-
-template<typename T>
-const std::string format (int fmt_num, const std::string& fmt, T arg)
-{
-    std::string output = fmt;
-    replace_positional (output, "{" + format (fmt_num) + "}", format (arg));
-    return output;
-}
-
-template<typename T, typename... Args>
-const std::string format (int fmt_num, const std::string& fmt, T arg, Args... args)
-{
-    const std::string fmt_replaced (format (fmt_num, fmt, arg));
-    return format (fmt_num+1, fmt_replaced, args...);
-}
-
-template<typename... Args>
-const std::string format (const std::string& fmt, Args... args)
-{
-    return format (1, fmt, args...);
-}
-
-std::string leftJustify (const int, const int);
-std::string leftJustify (const std::string&, const int);
-std::string rightJustifyZero (const int, const int);
-std::string rightJustify (const int, const int);
-std::string rightJustify (const std::string&, const int);
 
 // List operations.
 template <class T> void listDiff (

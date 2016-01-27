@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (141);
+  UnitTest t (111);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -166,53 +166,6 @@ int main (int, char**)
   t.is (longestLine ("one two three four"),    18, "longestLine (one two three four) --> 18");
   t.is (longestLine ("one\ntwo three four"),   14, "longestLine (one\\ntwo three four) --> 14");
   t.is (longestLine ("one\ntwo\nthree\nfour"),  5, "longestLine (one\\ntwo\\nthree\\nfour) --> 5");
-
-  // std::string format (char);
-  t.is (format ('A'), "A", "format ('A') -> A");
-
-  // std::string format (int);
-  t.is (format (0),  "0",  "format (0) -> 0");
-  t.is (format (-1), "-1", "format (-1) -> -1");
-
-  // std::string formatHex (int);
-  t.is (formatHex (0),   "0",  "formatHex (0) -> 0");
-  t.is (formatHex (10),  "a",  "formatHex (10) -> a");
-  t.is (formatHex (123), "7b", "formatHex (123) -> 7b");
-
-  // std::string format (float, int, int);
-  t.is (format (0.12345678, 8, 4),      "  0.1235",     "format (0.12345678,    8,   4) -> __0.1235");
-
-  t.is (format (1.23456789, 8, 1),      "       1",     "format (1.23456789,    8,   1) -> _______1");
-  t.is (format (1.23456789, 8, 2),      "     1.2",     "format (1.23456789,    8,   2) -> _____1.2");
-  t.is (format (1.23456789, 8, 3),      "    1.23",     "format (1.23456789,    8,   3) -> ____1.23");
-  t.is (format (1.23456789, 8, 4),      "   1.235",     "format (1.23456789,    8,   4) -> ___1.235");
-  t.is (format (1.23456789, 8, 5),      "  1.2346",     "format (1.23456789,    8,   5) -> __1.2346");
-  t.is (format (1.23456789, 8, 6),      " 1.23457",     "format (1.23456789,    8,   6) ->  1.23457");
-  t.is (format (1.23456789, 8, 7),      "1.234568",     "format (1.23456789,    8,   7) -> 1.234568");
-  t.is (format (1.23456789, 8, 8),      "1.2345679",    "format (1.23456789,    8,   8) -> 1.2345679");
-  t.is (format (2444238.56789, 12, 11), "2444238.5679", "format (2444238.56789, 12, 11) -> 2444238.5679");
-
-  // std::string leftJustify (const std::string&, const int);
-  t.is (leftJustify (123, 3), "123",   "leftJustify 123,3 -> '123'");
-  t.is (leftJustify (123, 4), "123 ",  "leftJustify 123,4 -> '123 '");
-  t.is (leftJustify (123, 5), "123  ", "leftJustify 123,5 -> '123  '");
-
-  // std::string leftJustify (const std::string&, const int);
-  t.is (leftJustify ("foo", 3), "foo",   "leftJustify foo,3 -> 'foo'");
-  t.is (leftJustify ("foo", 4), "foo ",  "leftJustify foo,4 -> 'foo '");
-  t.is (leftJustify ("foo", 5), "foo  ", "leftJustify foo,5 -> 'foo  '");
-  t.is (leftJustify ("föo", 5), "föo  ", "leftJustify föo,5 -> 'föo  '");
-
-  // std::string rightJustify (const std::string&, const int);
-  t.is (rightJustify (123, 3), "123",   "rightJustify 123,3 -> '123'");
-  t.is (rightJustify (123, 4), " 123",  "rightJustify 123,4 -> ' 123'");
-  t.is (rightJustify (123, 5), "  123", "rightJustify 123,5 -> '  123'");
-
-  // std::string rightJustify (const std::string&, const int);
-  t.is (rightJustify ("foo", 3), "foo",   "rightJustify foo,3 -> 'foo'");
-  t.is (rightJustify ("foo", 4), " foo",  "rightJustify foo,4 -> ' foo'");
-  t.is (rightJustify ("foo", 5), "  foo", "rightJustify foo,5 -> '  foo'");
-  t.is (rightJustify ("föo", 5), "  föo", "rightJustify föo,5 -> '  föo'");
 
   // bool compare (const std::string&, const std::string&, bool sensitive = true);
   t.notok (compare ("a", "b"), "compare 'a' : 'b' --> false");

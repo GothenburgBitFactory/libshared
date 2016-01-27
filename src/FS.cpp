@@ -38,6 +38,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <common.h>
+#include <format.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD
 #include <limits.h>

@@ -4,6 +4,7 @@ autocomplete.t
 color.t
 common.t
 configuration.t
+format.t
 fs.t
 list.t
 msg.t
