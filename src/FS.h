@@ -108,6 +108,7 @@ public:
   static bool remove (const std::string&);
   static bool copy (const std::string&, const std::string&);
   static bool move (const std::string&, const std::string&);
+  static std::string removeBOM (const std::string&);
 
 private:
   FILE* _fh;
