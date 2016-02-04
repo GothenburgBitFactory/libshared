@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (111);
+  UnitTest t (113);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -144,6 +144,7 @@ int main (int, char**)
   t.is (ltrim ("one  "),   "one  ", "ltrim 'one  ' --> 'one  '");
   t.is (ltrim ("  one  "), "one  ", "ltrim '  one  ' --> 'one  '");
   t.is (ltrim (""),        "",      "ltrim '' --> ''");
+  t.is (ltrim ("  "),      "",      "ltrim '  ' --> ''");
   t.is (ltrim (" \t\r\f\nfoo\n\f\r\t "), "foo\n\f\r\t ",
                                     "ltrim ' \t\r\f\nfoo\n\f\r\t ' --> 'foo\\n\\f\\r\\t '");
 
@@ -153,6 +154,7 @@ int main (int, char**)
   t.is (rtrim ("one  "),   "one",   "rtrim 'one  ' --> 'one'");
   t.is (rtrim ("  one  "), "  one", "rtrim '  one' --> '  one'");
   t.is (rtrim (""),        "",      "rtrim '' --> ''");
+  t.is (rtrim ("  "),      "",      "rtrim '  ' --> ''");
   t.is (rtrim (" \t\r\f\nfoo\n\f\r\t "), " \t\r\f\nfoo",
                                     "rtrim ' \t\r\f\nfoo\n\f\r\t ' --> ' \\t\\r\\f\\nfoo'");
 

@@ -98,7 +98,10 @@ std::string ltrim (const std::string& input, const std::string& edible)
 ////////////////////////////////////////////////////////////////////////////////
 std::string rtrim (const std::string& input, const std::string& edible)
 {
-  auto end   = input.find_last_not_of  (edible);
+  if (input.find_first_not_of (edible) == std::string::npos)
+    return "";
+
+  auto end = input.find_last_not_of (edible);
   if (end == std::string::npos)
     return input;
 
