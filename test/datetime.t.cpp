@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (221);
+  UnitTest t (257);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -324,6 +324,61 @@ int main (int, char**)
     t.is (quant.startOfWeek ().toString ("YMDHNS"),  "20090208000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/8/2009 0:00:00");
     t.is (quant.startOfMonth ().toString ("YMDHNS"), "20090201000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/1/2009 0:00:00");
     t.is (quant.startOfYear ().toString ("YMDHNS"),  "20090101000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 1/1/2009 0:00:00");
+
+    // Format parsing.
+    Datetime fromString1 ("1/1/2008", "m/d/Y");
+    t.is (fromString1.month (),   1, "ctor (std::string) -> m");
+    t.is (fromString1.day (),     1, "ctor (std::string) -> d");
+    t.is (fromString1.year (), 2008, "ctor (std::string) -> y");
+
+    Datetime fromString2 ("20080101", "YMD");
+    t.is (fromString2.month (),   1, "ctor (std::string) -> m");
+    t.is (fromString2.day (),     1, "ctor (std::string) -> d");
+    t.is (fromString2.year (), 2008, "ctor (std::string) -> y");
+
+    Datetime fromString3 ("12/31/2007", "m/d/Y");
+    t.is (fromString3.month (),  12, "ctor (std::string) -> m");
+    t.is (fromString3.day (),    31, "ctor (std::string) -> d");
+    t.is (fromString3.year (), 2007, "ctor (std::string) -> y");
+
+    Datetime fromString4 ("01/01/2008", "m/d/Y");
+    t.is (fromString4.month (),   1, "ctor (std::string) -> m");
+    t.is (fromString4.day (),     1, "ctor (std::string) -> d");
+    t.is (fromString4.year (), 2008, "ctor (std::string) -> y");
+
+    Datetime fromString6 ("Tuesday, February 5, 2008", "A, B d, Y");
+    t.is (fromString6.month (),   2, "ctor (std::string) -> m");
+    t.is (fromString6.day (),     5, "ctor (std::string) -> d");
+    t.is (fromString6.year (), 2008, "ctor (std::string) -> y");
+
+    Datetime fromString8 ("6/7/2010 1:23:45",  "m/d/Y h:N:S");
+    t.is (fromString8.month (),     6, "ctor (std::string) -> m");
+    t.is (fromString8.day (),       7, "ctor (std::string) -> d");
+    t.is (fromString8.year (),   2010, "ctor (std::string) -> Y");
+    t.is (fromString8.hour (),      1, "ctor (std::string) -> h");
+    t.is (fromString8.minute (),   23, "ctor (std::string) -> N");
+    t.is (fromString8.second (),   45, "ctor (std::string) -> S");
+
+    Datetime fromString9 ("6/7/2010 01:23:45", "m/d/Y H:N:S");
+    t.is (fromString9.month (),     6, "ctor (std::string) -> m");
+    t.is (fromString9.day (),       7, "ctor (std::string) -> d");
+    t.is (fromString9.year (),   2010, "ctor (std::string) -> Y");
+    t.is (fromString9.hour (),      1, "ctor (std::string) -> h");
+    t.is (fromString9.minute (),   23, "ctor (std::string) -> N");
+    t.is (fromString9.second (),   45, "ctor (std::string) -> S");
+
+    Datetime fromString10 ("6/7/2010 12:34:56", "m/d/Y H:N:S");
+    t.is (fromString10.month (),     6, "ctor (std::string) -> m");
+    t.is (fromString10.day (),       7, "ctor (std::string) -> d");
+    t.is (fromString10.year (),   2010, "ctor (std::string) -> Y");
+    t.is (fromString10.hour (),     12, "ctor (std::string) -> h");
+    t.is (fromString10.minute (),   34, "ctor (std::string) -> N");
+    t.is (fromString10.second (),   56, "ctor (std::string) -> S");
+
+    // Day of year
+    t.is (Datetime ("1/1/2011",   "m/d/Y").dayOfYear (),   1, "dayOfYear (1/1/2011)   ->   1");
+    t.is (Datetime ("5/1/2011",   "m/d/Y").dayOfYear (), 121, "dayOfYear (5/1/2011)   -> 121");
+    t.is (Datetime ("12/31/2011", "m/d/Y").dayOfYear (), 365, "dayOfYear (12/31/2011) -> 365");
 
     // Datetime::operator-
     Datetime r25 (1234567890);
