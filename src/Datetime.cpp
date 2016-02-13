@@ -60,6 +60,7 @@ static std::vector <std::string> monthNames {
 
 int Datetime::weekstart = 0; // Sunday
 int Datetime::minimumMatchLength = 3;
+bool Datetime::isoEnabled = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()

@@ -36,6 +36,7 @@ class Datetime
 public:
   static int weekstart;
   static int minimumMatchLength;
+  static bool isoEnabled;
 
   Datetime ();
   Datetime (const std::string&, const std::string& format = "");
