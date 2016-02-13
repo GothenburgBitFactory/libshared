@@ -114,6 +114,7 @@ private:
   bool parse_off_ext       (Pig&);
   bool parse_time_ext      (Pig&);
   bool parse_time_utc_ext  (Pig&);
+  bool parse_time_off_ext  (Pig&);
   bool validate ();
   void resolve ();
   std::string dump () const;

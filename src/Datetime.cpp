@@ -157,9 +157,7 @@ bool Datetime::parse (
            (Datetime::isoEnabled &&
             (parse_date_ext      (pig) ||
              parse_time_utc_ext  (pig) ||
-/*
              parse_time_off_ext  (pig) ||
-*/
              parse_time_ext      (pig)))) // Time last, as it is the most permissive.
   {
     // Check the values and determine time_t.
@@ -731,6 +729,22 @@ bool Datetime::parse_time_utc_ext (Pig& pig)
       pig.skip ('Z'))
   {
     _utc = true;
+    if (! unicodeLatinDigit (pig.peek ()))
+      return true;
+  }
+
+  pig.restore ();
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// time-ext offset-ext
+bool Datetime::parse_time_off_ext (Pig& pig)
+{
+  pig.save ();
+  if (parse_time_ext (pig) &&
+      parse_off_ext (pig))
+  {
     if (! unicodeLatinDigit (pig.peek ()))
       return true;
   }
