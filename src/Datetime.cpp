@@ -55,6 +55,7 @@ static std::vector <std::string> monthNames {
   "november",
   "december"};
 
+int Datetime::weekstart = 0; // Sunday
 int Datetime::minimumMatchLength = 3;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -662,6 +663,26 @@ int Datetime::year () const
 {
   struct tm* t = localtime (&_date);
   return t->tm_year + 1900;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Datetime::weekOfYear () const
+{
+  struct tm* t = localtime (&_date);
+
+  char weekStr[3];
+  if (Datetime::weekstart == 0)
+    strftime (weekStr, sizeof (weekStr), "%U", t);
+  else if (Datetime::weekstart == 1)
+    strftime (weekStr, sizeof (weekStr), "%V", t);
+  else
+    throw std::string ("The week may only start on a Sunday or Monday.");
+
+  int weekNumber = strtol (weekStr, NULL, 10);
+  if (weekstart == 0)
+    weekNumber += 1;
+
+  return weekNumber;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
