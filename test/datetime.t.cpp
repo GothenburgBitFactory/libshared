@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (60);
+  UnitTest t (67);
 
   try
   {
@@ -98,6 +98,14 @@ int main (int, char**)
     t.is (Datetime::dayName (4), "Thursday",  "4 == Thursday");
     t.is (Datetime::dayName (5), "Friday",    "5 == Friday");
     t.is (Datetime::dayName (6), "Saturday",  "6 == Saturday");
+
+    t.is (Datetime::dayNameShort (0), "Sun",  "0 == Sun");
+    t.is (Datetime::dayNameShort (1), "Mon",  "1 == Mon");
+    t.is (Datetime::dayNameShort (2), "Tue",  "2 == Tue");
+    t.is (Datetime::dayNameShort (3), "Wed",  "3 == Wed");
+    t.is (Datetime::dayNameShort (4), "Thu",  "4 == Thu");
+    t.is (Datetime::dayNameShort (5), "Fri",  "5 == Fri");
+    t.is (Datetime::dayNameShort (6), "Sat",  "6 == Sat");
 
     t.is (Datetime::dayOfWeek ("SUNDAY"),    0, "SUNDAY == 0");
     t.is (Datetime::dayOfWeek ("sunday"),    0, "sunday == 0");
