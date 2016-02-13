@@ -26,12 +26,31 @@
 
 #include <cmake.h>
 #include <Datetime.h>
+#include <format.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
 {
   clear ();
   _date = time (nullptr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Datetime::Datetime (const std::string& input, const std::string& format)
+{
+  clear ();
+  std::string::size_type start = 0;
+  if (! parse (input, start, format))
+    throw ::format ("'{1}' is not a valid date in the '{2}' format.", input, format);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse (
+  const std::string& input,
+  std::string::size_type& start,
+  const std::string& format)
+{
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

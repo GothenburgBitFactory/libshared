@@ -27,12 +27,15 @@
 #ifndef INCLUDED_DATETIME
 #define INCLUDED_DATETIME
 
-#include <time.h>
+#include <string>
+#include <ctime>
 
 class Datetime
 {
 public:
   Datetime ();
+  Datetime (const std::string&, const std::string& format = "");
+  bool parse (const std::string&, std::string::size_type&, const std::string& format = "");
   time_t toEpoch () const;
 
 private:
