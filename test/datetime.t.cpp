@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (53);
+  UnitTest t (60);
 
   try
   {
@@ -90,6 +90,14 @@ int main (int, char**)
     t.is (Datetime::monthOfYear ("October"),   10, "October   = 10");
     t.is (Datetime::monthOfYear ("November"),  11, "November  = 11");
     t.is (Datetime::monthOfYear ("December"),  12, "December  = 12");
+
+    t.is (Datetime::dayName (0), "Sunday",    "0 == Sunday");
+    t.is (Datetime::dayName (1), "Monday",    "1 == Monday");
+    t.is (Datetime::dayName (2), "Tuesday",   "2 == Tuesday");
+    t.is (Datetime::dayName (3), "Wednesday", "3 == Wednesday");
+    t.is (Datetime::dayName (4), "Thursday",  "4 == Thursday");
+    t.is (Datetime::dayName (5), "Friday",    "5 == Friday");
+    t.is (Datetime::dayName (6), "Saturday",  "6 == Saturday");
 
     t.is (Datetime::dayOfWeek ("SUNDAY"),    0, "SUNDAY == 0");
     t.is (Datetime::dayOfWeek ("sunday"),    0, "sunday == 0");
