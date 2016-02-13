@@ -42,6 +42,7 @@ public:
   bool parse (const std::string&, std::string::size_type&, const std::string& format = "");
   time_t toEpoch () const;
   std::string toEpochString () const;
+  std::string toISO () const;
 
   Datetime startOfDay () const;
   Datetime startOfMonth () const;

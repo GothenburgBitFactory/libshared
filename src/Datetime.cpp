@@ -26,6 +26,8 @@
 
 #include <cmake.h>
 #include <Datetime.h>
+#include <sstream>
+#include <iomanip>
 #include <common.h>
 #include <format.h>
 #include <unicode.h>
@@ -370,6 +372,25 @@ std::string Datetime::toEpochString () const
   std::stringstream epoch;
   epoch << _date;
   return epoch.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 19980119T070000Z =  YYYYMMDDThhmmssZ
+std::string Datetime::toISO () const
+{
+  struct tm* t = gmtime (&_date);
+
+  std::stringstream iso;
+  iso << std::setw (4) << std::setfill ('0') << t->tm_year + 1900
+      << std::setw (2) << std::setfill ('0') << t->tm_mon + 1
+      << std::setw (2) << std::setfill ('0') << t->tm_mday
+      << "T"
+      << std::setw (2) << std::setfill ('0') << t->tm_hour
+      << std::setw (2) << std::setfill ('0') << t->tm_min
+      << std::setw (2) << std::setfill ('0') << t->tm_sec
+      << "Z";
+
+  return iso.str ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
