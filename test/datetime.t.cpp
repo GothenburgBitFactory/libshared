@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (289);
+  UnitTest t (313);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -136,6 +136,11 @@ int main (int, char**)
   std::cout << "# ld " << ld << "\n";
   std::cout << "# ud " << ud << "\n";
 
+  // Aggregated.
+  //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
+  testParse (t, "12:34:56  ",                 8,    0,  0,  0, 0,   0,  0,   hms,     0, false, local+hms+ld );
+
+  testParse (t, "12:34",                      5,    0,  0,  0, 0,   0,  0,    hm,     0, false, local+hm+ld  );
   // datetime-ext
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
   testParse (t, "2013-12-06",                10, 2013, 12,  0, 0,   0,  6,     0,     0, false, local6    );
