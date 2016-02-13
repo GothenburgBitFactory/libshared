@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (176);
+  UnitTest t (180);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -292,6 +292,13 @@ int main (int, char**)
 
     Datetime iso (1000000000);
     t.is (iso.toISO (), "20010909T014640Z", "1,000,000,000 -> 20010909T014640Z");
+
+    // Quantization.
+    Datetime quant (1234526400);
+    t.is (quant.startOfDay ().toString ("YMDHNS"),   "20090213000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/13/2009 0:00:00");
+    t.is (quant.startOfWeek ().toString ("YMDHNS"),  "20090208000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/8/2009 0:00:00");
+    t.is (quant.startOfMonth ().toString ("YMDHNS"), "20090201000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/1/2009 0:00:00");
+    t.is (quant.startOfYear ().toString ("YMDHNS"),  "20090101000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 1/1/2009 0:00:00");
   }
 
   catch (const std::string& e)
