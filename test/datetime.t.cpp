@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (69);
+  UnitTest t (93);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -135,6 +135,10 @@ int main (int, char**)
   int ud = utc_s   > hms ? 86400 : 0;     // UTC extra day if now > hms.
   std::cout << "# ld " << ld << "\n";
   std::cout << "# ud " << ud << "\n";
+
+  // The only non-extended forms.
+  testParse (t, "20131206T123456Z",          16, 2013, 12,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
+  testParse (t, "20131206T123456",           15, 2013, 12,  0, 0,   0,  6,   hms,     0, false, local6+hms);
 
   try
   {
