@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (175);
+  UnitTest t (176);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -289,6 +289,9 @@ int main (int, char**)
 
     Datetime fromEpoch (epoch.toEpoch ());
     t.is (fromEpoch.toString (), epoch.toString (), "ctor (time_t)");
+
+    Datetime iso (1000000000);
+    t.is (iso.toISO (), "20010909T014640Z", "1,000,000,000 -> 20010909T014640Z");
   }
 
   catch (const std::string& e)
