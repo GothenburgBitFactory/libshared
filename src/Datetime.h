@@ -60,6 +60,7 @@ public:
   bool operator!= (const Datetime&) const;
   bool operator<  (const Datetime&) const;
   bool operator>  (const Datetime&) const;
+  bool operator<= (const Datetime&) const;
 
 private:
   void clear ();
