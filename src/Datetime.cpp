@@ -28,6 +28,7 @@
 #include <Datetime.h>
 #include <sstream>
 #include <iomanip>
+#include <stdlib.h>
 #include <common.h>
 #include <format.h>
 #include <unicode.h>
@@ -653,21 +654,7 @@ int Datetime::month () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Datetime::day () const
-{
-  struct tm* t = localtime (&_date);
-  return t->tm_mday;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int Datetime::year () const
-{
-  struct tm* t = localtime (&_date);
-  return t->tm_year + 1900;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int Datetime::weekOfYear () const
+int Datetime::week () const
 {
   struct tm* t = localtime (&_date);
 
@@ -684,6 +671,20 @@ int Datetime::weekOfYear () const
     weekNumber += 1;
 
   return weekNumber;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Datetime::day () const
+{
+  struct tm* t = localtime (&_date);
+  return t->tm_mday;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Datetime::year () const
+{
+  struct tm* t = localtime (&_date);
+  return t->tm_year + 1900;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
