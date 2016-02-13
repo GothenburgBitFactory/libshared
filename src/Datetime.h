@@ -39,6 +39,7 @@ public:
   bool parse (const std::string&, std::string::size_type&, const std::string& format = "");
   time_t toEpoch () const;
 
+  static bool leapYear (int);
 private:
   void clear ();
   bool parse_formatted     (Pig&, const std::string&);
