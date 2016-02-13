@@ -217,6 +217,16 @@ bool Datetime::parse_date_time (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_date_time_ext (Pig& pig)
+{
+  pig.save ();
+
+  pig.restore ();
+  return false;
+}
+
+/*
+////////////////////////////////////////////////////////////////////////////////
 // Validation via simple range checking.
 bool Datetime::validate ()
 {
