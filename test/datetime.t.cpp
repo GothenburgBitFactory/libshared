@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (257);
+  UnitTest t (289);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -424,6 +424,48 @@ int main (int, char**)
     t.is (Datetime::length ("j"), 3,  "length 'j' --> 3");
     t.is (Datetime::length ("J"), 3,  "length 'J' --> 3");
     t.is (Datetime::length (" "), 1,  "length ' ' --> 1");
+
+    // Test all format options.
+    Datetime r32 ("2015-10-28T12:55:00");
+    t.is (r32.toString ("Y"),      "2015", "2015-10-28T12:55:00 -> Y ->      2015");
+    t.is (r32.toString ("y"),        "15", "2015-10-28T12:55:00 -> y ->        15");
+    t.is (r32.toString ("M"),        "10", "2015-10-28T12:55:00 -> M ->        10");
+    t.is (r32.toString ("m"),        "10", "2015-10-28T12:55:00 -> m ->        10");
+    t.is (r32.toString ("D"),        "28", "2015-10-28T12:55:00 -> D ->        28");
+    t.is (r32.toString ("d"),        "28", "2015-10-28T12:55:00 -> d ->        28");
+    t.is (r32.toString ("S"),        "00", "2015-10-28T12:55:00 -> S ->        00");
+    t.is (r32.toString ("s"),         "0", "2015-10-28T12:55:00 -> s ->         0");
+    t.is (r32.toString ("A"), "Wednesday", "2015-10-28T12:55:00 -> A -> Wednesday");
+    t.is (r32.toString ("a"),       "Wed", "2015-10-28T12:55:00 -> a ->       Wed");
+    t.is (r32.toString ("B"),   "October", "2015-10-28T12:55:00 -> B ->   October");
+    t.is (r32.toString ("b"),       "Oct", "2015-10-28T12:55:00 -> b ->       Oct");
+    t.is (r32.toString ("V"),        "44", "2015-10-28T12:55:00 -> V ->        44");
+    t.is (r32.toString ("v"),        "44", "2015-10-28T12:55:00 -> v ->        44");
+    t.is (r32.toString ("J"),       "301", "2015-10-28T12:55:00 -> J ->       301");
+    t.is (r32.toString ("j"),       "301", "2015-10-28T12:55:00 -> j ->       301");
+
+    // Test all parse options.
+    Datetime r33 ("2015 10 28 19 28 01", "Y M D H N S");
+    t.is(r33.year (),   2015,         "Y works");
+    t.is(r33.month (),    10,         "M works");
+    t.is(r33.day (),      28,         "D works");
+    t.is(r33.hour (),     19,         "H works");
+    t.is(r33.minute (),   28,         "N works");
+    t.is(r33.second (),    1,         "S works");
+
+    Datetime r34 ("15 5 4 3 2 1", "y m d h n s");
+    t.is(r34.year (),   2015,         "y works");
+    t.is(r34.month (),     5,         "m works");
+    t.is(r34.day (),       4,         "d works");
+    t.is(r34.hour (),      3,         "h works");
+    t.is(r34.minute (),    2,         "n works");
+    t.is(r34.second (),    1,         "s works");
+
+    Datetime r35 ("Wednesday October 28 2015", "A B D Y");
+    t.is(r35.year (),    2015,        "Y works");
+    t.is(r35.month (),     10,        "B works");
+    t.is(r35.day (),       28,        "D works");
+    t.is(r35.dayOfWeek (),  3,        "A works");
   }
 
   catch (const std::string& e)
