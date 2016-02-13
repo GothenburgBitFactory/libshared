@@ -66,6 +66,7 @@ public:
   bool sameDay    (const Datetime&) const;
   bool sameMonth  (const Datetime&) const;
   bool sameYear   (const Datetime&) const;
+  Datetime operator+  (const int);
 
 private:
   void clear ();
