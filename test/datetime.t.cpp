@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (141);
+  UnitTest t (154);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -149,6 +149,28 @@ int main (int, char**)
 
   try
   {
+    Datetime now;
+    t.ok (now.toISO ().find ("1969") == std::string::npos, "'now' != 1969");
+
+    Datetime yesterday;
+    yesterday -= 86400;
+    Datetime tomorrow;
+    tomorrow += 86400;
+
+    t.ok    (yesterday <= now,       "yesterday <= now");
+    t.ok    (yesterday <  now,       "yesterday < now");
+    t.notok (yesterday == now,       "!(yesterday == now)");
+    t.ok    (yesterday != now,       "yesterday != now");
+    t.ok    (now       >= yesterday, "now >= yesterday");
+    t.ok    (now       >  yesterday, "now > yesterday");
+
+    t.ok    (tomorrow >= now,        "tomorrow >= now");
+    t.ok    (tomorrow >  now,        "tomorrow > now");
+    t.notok (tomorrow == now,        "!(tomorrow == now)");
+    t.ok    (tomorrow != now,        "tomorrow != now");
+    t.ok    (now      <= tomorrow,   "now <= tomorrow");
+    t.ok    (now      <  tomorrow,   "now < tomorrow");
+
     // Leap year.
     t.ok    (Datetime::leapYear (2008), "2008 is a leap year");
     t.notok (Datetime::leapYear (2007), "2007 is not a leap year");
