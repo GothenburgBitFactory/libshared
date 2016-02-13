@@ -51,6 +51,7 @@ public:
   void toMDY (int&, int&, int&) const;
 
   Datetime startOfDay () const;
+  Datetime startOfWeek () const;
   Datetime startOfMonth () const;
   Datetime startOfYear () const;
 

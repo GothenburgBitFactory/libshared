@@ -466,6 +466,14 @@ Datetime Datetime::startOfDay () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Datetime Datetime::startOfWeek () const
+{
+  Datetime sow (_date);
+  sow -= (dayOfWeek () * 86400);
+  return Datetime (sow.month (), sow.day (), sow.year ());
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfMonth () const
 {
   return Datetime (month (), 1, year ());
