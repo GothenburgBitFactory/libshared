@@ -187,6 +187,25 @@ bool Datetime::parse_epoch (Pig& pig)
 bool Datetime::parse_date_time (Pig& pig)
 {
   pig.save ();
+  int year, month, day, hour, minute, second;
+  if (pig.getDigit4 (year)   &&
+      pig.getDigit2 (month)  && month &&
+      pig.getDigit2 (day)    && day   &&
+      pig.skip      ('T')    &&
+      pig.getDigit2 (hour)   &&
+      pig.getDigit2 (minute) && minute < 60 &&
+      pig.getDigit2 (second) && second < 60)
+  {
+    if (pig.skip ('Z'))
+      _utc = true;
+
+    _year    = year;
+    _month   = month;
+    _day     = day;
+    _seconds = (((hour * 60) + minute) * 60) + second;
+
+    return true;
+  }
 
   _year    = 0;
   _month   = 0;
