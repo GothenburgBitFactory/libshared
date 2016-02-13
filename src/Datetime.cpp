@@ -63,6 +63,10 @@ bool Datetime::parse (
     return true;
   }
 
+  else if (parse_formatted (pig, format))
+  {
+  }
+
   return false;
 }
 
@@ -70,6 +74,12 @@ bool Datetime::parse (
 void Datetime::clear ()
 {
   _date            = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_formatted (Pig& n, const std::string& format)
+{
+  return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

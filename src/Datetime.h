@@ -41,6 +41,7 @@ public:
 
 private:
   void clear ();
+  bool parse_formatted     (Pig&, const std::string&);
   bool parse_epoch         (Pig&);
 
 public:
