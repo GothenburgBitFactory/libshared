@@ -589,6 +589,20 @@ void Datetime::operator-- ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Postfix decrement by one day.
+void Datetime::operator-- (int)
+{
+  Datetime yesterday = startOfDay () - 1;
+  yesterday = Datetime (yesterday.month (),
+                        yesterday.day (),
+                        yesterday.year (),
+                        hour (),
+                        minute (),
+                        second ());
+  _date = yesterday._date;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /*
 std::string Datetime::dump () const
 {

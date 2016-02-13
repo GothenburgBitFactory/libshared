@@ -76,6 +76,7 @@ public:
   Datetime& operator-= (const int);
   time_t operator- (const Datetime&);
   void operator-- ();    // Prefix
+  void operator-- (int); // Postfix
 
 private:
   void clear ();
