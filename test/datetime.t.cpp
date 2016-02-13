@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (29);
+  UnitTest t (53);
 
   try
   {
@@ -48,6 +48,34 @@ int main (int, char**)
     // Days in month.
     t.is (Datetime::daysInMonth (2, 2008), 29, "29 days in February 2008");
     t.is (Datetime::daysInMonth (2, 2007), 28, "28 days in February 2007");
+
+    // Names.
+    t.is (Datetime::monthName (1),  "January",   "1 = January");
+    t.is (Datetime::monthName (2),  "February",  "2 = February");
+    t.is (Datetime::monthName (3),  "March",     "3 = March");
+    t.is (Datetime::monthName (4),  "April",     "4 = April");
+    t.is (Datetime::monthName (5),  "May",       "5 = May");
+    t.is (Datetime::monthName (6),  "June",      "6 = June");
+    t.is (Datetime::monthName (7),  "July",      "7 = July");
+    t.is (Datetime::monthName (8),  "August",    "8 = August");
+    t.is (Datetime::monthName (9),  "September", "9 = September");
+    t.is (Datetime::monthName (10), "October",   "10 = October");
+    t.is (Datetime::monthName (11), "November",  "11 = November");
+    t.is (Datetime::monthName (12), "December",  "12 = December");
+
+    // Names.
+    t.is (Datetime::monthNameShort (1),  "Jan", "1 = Jan");
+    t.is (Datetime::monthNameShort (2),  "Feb", "2 = Feb");
+    t.is (Datetime::monthNameShort (3),  "Mar", "3 = Mar");
+    t.is (Datetime::monthNameShort (4),  "Apr", "4 = Apr");
+    t.is (Datetime::monthNameShort (5),  "May", "5 = May");
+    t.is (Datetime::monthNameShort (6),  "Jun", "6 = Jun");
+    t.is (Datetime::monthNameShort (7),  "Jul", "7 = Jul");
+    t.is (Datetime::monthNameShort (8),  "Aug", "8 = Aug");
+    t.is (Datetime::monthNameShort (9),  "Sep", "9 = Sep");
+    t.is (Datetime::monthNameShort (10), "Oct", "10 = Oct");
+    t.is (Datetime::monthNameShort (11), "Nov", "11 = Nov");
+    t.is (Datetime::monthNameShort (12), "Dec", "12 = Dec");
 
     // Names.
     t.is (Datetime::monthOfYear ("January"),   1,  "January   =  1");
