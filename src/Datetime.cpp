@@ -153,12 +153,12 @@ bool Datetime::parse (
   // Datetime::isoEnabled setting, because these formats are relied upon by
   // the 'import' command, JSON parser and hook system.
   else if (parse_date_time     (pig)   || // Strictest first.
-           parse_date_time_ext (pig)   /*||
+           parse_date_time_ext (pig)   ||
            (Datetime::isoEnabled &&
-            (parse_date_ext      (pig) ||
+            (parse_date_ext      (pig) /*||
              parse_time_utc_ext  (pig) ||
              parse_time_off_ext  (pig) ||
-             parse_time_ext      (pig)))*/) // Time last, as it is the most permissive.
+             parse_time_ext      (pig)*/))) // Time last, as it is the most permissive.
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -250,6 +250,55 @@ bool Datetime::parse_date_time (Pig& pig)
 bool Datetime::parse_date_time_ext (Pig& pig)
 {
   pig.save ();
+
+  pig.restore ();
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// YYYY-MM-DD
+// YYYY-DDD
+// YYYY-Www-D
+// YYYY-Www
+bool Datetime::parse_date_ext (Pig& pig)
+{
+  pig.save ();
+  int year;
+  if (pig.getDigit4 (year) &&
+      pig.skip ('-'))
+  {
+    int month;
+    int day;
+    if (pig.skip ('W') &&
+        pig.getDigit2 (_week) && _week)
+    {
+      if (pig.skip ('-') &&
+          pig.getDigit (_weekday))
+      {
+        // What is happening here - must be something to do?
+      }
+
+      _year = year;
+      if (! unicodeLatinDigit (pig.peek ()))
+        return true;
+    }
+    else if (pig.getDigit3 (_julian) && _julian)
+    {
+      _year = year;
+      if (! unicodeLatinDigit (pig.peek ()))
+        return true;
+    }
+    else if (pig.getDigit2 (month) && month &&
+             pig.skip ('-')        &&
+             pig.getDigit2 (day)   && day)
+    {
+      _year = year;
+      _month = month;
+      _day = day;
+      if (! unicodeLatinDigit (pig.peek ()))
+        return true;
+    }
+  }
 
   pig.restore ();
   return false;

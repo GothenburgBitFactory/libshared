@@ -110,6 +110,7 @@ private:
   bool parse_epoch         (Pig&);
   bool parse_date_time     (Pig&);
   bool parse_date_time_ext (Pig&);
+  bool parse_date_ext      (Pig&);
   bool validate ();
   void resolve ();
   std::string dump () const;
