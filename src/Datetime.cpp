@@ -461,6 +461,42 @@ void Datetime::toMDY (int& m, int& d, int& y) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const std::string Datetime::toString (const std::string& format) const
+{
+  std::stringstream formatted;
+  for (unsigned int i = 0; i < format.length (); ++i)
+  {
+    int c = format[i];
+    switch (c)
+    {
+    case 'm': formatted                                        << month ();               break;
+    case 'M': formatted << std::setw (2) << std::setfill ('0') << month ();               break;
+    case 'd': formatted                                        << day ();                 break;
+    case 'D': formatted << std::setw (2) << std::setfill ('0') << day ();                 break;
+    case 'y': formatted << std::setw (2) << std::setfill ('0') << (year () % 100);        break;
+    case 'Y': formatted                                        << year ();                break;
+    case 'a': formatted                                        << Datetime::dayNameShort (dayOfWeek ()); break;
+    case 'A': formatted                                        << Datetime::dayName (dayOfWeek ());      break;
+    case 'b': formatted                                        << Datetime::monthNameShort (month ());   break;
+    case 'B': formatted                                        << Datetime::monthName (month ());        break;
+    case 'v': formatted                                        << week ();                break;
+    case 'V': formatted << std::setw (2) << std::setfill ('0') << week ();                break;
+    case 'h': formatted                                        << hour ();                break;
+    case 'H': formatted << std::setw (2) << std::setfill ('0') << hour ();                break;
+    case 'n': formatted                                        << minute ();              break;
+    case 'N': formatted << std::setw (2) << std::setfill ('0') << minute ();              break;
+    case 's': formatted                                        << second ();              break;
+    case 'S': formatted << std::setw (2) << std::setfill ('0') << second ();              break;
+    case 'j': formatted                                        << dayOfYear ();           break;
+    case 'J': formatted << std::setw (3) << std::setfill ('0') << dayOfYear ();           break;
+    default:  formatted                                        << static_cast <char> (c); break;
+    }
+  }
+
+  return formatted.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
   return Datetime (month (), day (), year ());

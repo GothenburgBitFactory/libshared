@@ -49,6 +49,7 @@ public:
   std::string toISOLocalExtended () const;
   double toJulian () const;
   void toMDY (int&, int&, int&) const;
+  const std::string toString (const std::string& format = "m/d/Y") const;
 
   Datetime startOfDay () const;
   Datetime startOfWeek () const;
