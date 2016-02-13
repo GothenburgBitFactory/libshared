@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (154);
+  UnitTest t (164);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -170,6 +170,22 @@ int main (int, char**)
     t.ok    (tomorrow != now,        "tomorrow != now");
     t.ok    (now      <= tomorrow,   "now <= tomorrow");
     t.ok    (now      <  tomorrow,   "now < tomorrow");
+
+    // Validity.
+    t.ok    (Datetime::valid (2, 29, 2008), "valid: 2/29/2008");
+    t.notok (Datetime::valid (2, 29, 2007), "invalid: 2/29/2007");
+
+    t.ok    (Datetime::valid ("2/29/2008", "m/d/Y"), "valid: 2/29/2008");
+    t.notok (Datetime::valid ("2/29/2007", "m/d/Y"), "invalid: 2/29/2007");
+
+    t.ok    (Datetime::valid (366, 2008), "valid: 366 days in 2008");
+    t.notok (Datetime::valid (366, 2007), "invalid: 366 days in 2007");
+
+    // Time validity.
+    t.ok    (Datetime::valid (2, 28, 2010,  0,  0,  0), "valid 2/28/2010 0:00:00");
+    t.ok    (Datetime::valid (2, 28, 2010, 23, 59, 59), "valid 2/28/2010 23:59:59");
+    t.notok (Datetime::valid (2, 28, 2010, 24, 59, 59), "valid 2/28/2010 24:59:59");
+    t.notok (Datetime::valid (2, 28, 2010, -1,  0,  0), "valid 2/28/2010 -1:00:00");
 
     // Leap year.
     t.ok    (Datetime::leapYear (2008), "2008 is a leap year");
