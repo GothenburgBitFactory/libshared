@@ -600,7 +600,18 @@ std::string Datetime::monthNameShort (int month)
 // Static
 std::string Datetime::dayName (int dow)
 {
+  assert (dow >= 0);
+  assert (dow <= 6);
   return upperCaseFirst (dayNames[dow]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
+std::string Datetime::dayNameShort (int dow)
+{
+  assert (dow >= 0);
+  assert (dow <= 6);
+  return upperCaseFirst (dayNames[dow]).substr (0, 3);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
