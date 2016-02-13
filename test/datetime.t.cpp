@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (8);
+  UnitTest t (17);
 
   try
   {
@@ -49,6 +49,15 @@ int main (int, char**)
     t.is (Datetime::daysInMonth (2, 2008), 29, "29 days in February 2008");
     t.is (Datetime::daysInMonth (2, 2007), 28, "28 days in February 2007");
 
+    t.is (Datetime::dayOfWeek ("SUNDAY"),    0, "SUNDAY == 0");
+    t.is (Datetime::dayOfWeek ("sunday"),    0, "sunday == 0");
+    t.is (Datetime::dayOfWeek ("Sunday"),    0, "Sunday == 0");
+    t.is (Datetime::dayOfWeek ("Monday"),    1, "Monday == 1");
+    t.is (Datetime::dayOfWeek ("Tuesday"),   2, "Tuesday == 2");
+    t.is (Datetime::dayOfWeek ("Wednesday"), 3, "Wednesday == 3");
+    t.is (Datetime::dayOfWeek ("Thursday"),  4, "Thursday == 4");
+    t.is (Datetime::dayOfWeek ("Friday"),    5, "Friday == 5");
+    t.is (Datetime::dayOfWeek ("Saturday"),  6, "Saturday == 6");
   }
 
   catch (const std::string& e)
