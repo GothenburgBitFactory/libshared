@@ -26,12 +26,14 @@
 
 #ifndef INCLUDED_DATETIME
 #define INCLUDED_DATETIME
+
 #include <time.h>
 
 class Datetime
 {
 public:
   Datetime ();
+  time_t toEpoch () const;
 
 private:
   void clear ();
