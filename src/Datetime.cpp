@@ -603,6 +603,20 @@ void Datetime::operator-- (int)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Prefix increment by one day.
+void Datetime::operator++ ()
+{
+  Datetime tomorrow = (startOfDay () + 90001).startOfDay ();
+  tomorrow = Datetime (tomorrow.month (),
+                       tomorrow.day (),
+                       tomorrow.year (),
+                       hour (),
+                       minute (),
+                       second ());
+  _date = tomorrow._date;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /*
 std::string Datetime::dump () const
 {
