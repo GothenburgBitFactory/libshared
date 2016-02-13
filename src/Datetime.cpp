@@ -155,10 +155,12 @@ bool Datetime::parse (
   else if (parse_date_time     (pig)   || // Strictest first.
            parse_date_time_ext (pig)   ||
            (Datetime::isoEnabled &&
-            (parse_date_ext      (pig) /*||
+            (parse_date_ext      (pig) ||
+/*
              parse_time_utc_ext  (pig) ||
              parse_time_off_ext  (pig) ||
-             parse_time_ext      (pig)*/))) // Time last, as it is the most permissive.
+*/
+             parse_time_ext      (pig)))) // Time last, as it is the most permissive.
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -614,7 +616,45 @@ bool Datetime::parse_date_ext (Pig& pig)
   return false;
 }
 
-/*
+////////////////////////////////////////////////////////////////////////////////
+// hh:mm[:ss]
+bool Datetime::parse_time_ext (Pig& pig)
+{
+  pig.save ();
+  int seconds = 0;
+  int hh;
+  int mm;
+  int ss;
+  if (pig.getDigit2 (hh) && hh <= 24 &&
+      pig.skip (':')     &&
+      pig.getDigit2 (mm) && mm < 60)
+  {
+    seconds = (hh * 3600) + (mm * 60);
+
+    if (pig.skip (':'))
+    {
+      if (pig.getDigit2 (ss) && ss < 60)
+      {
+        seconds += ss;
+        _seconds = seconds;
+
+        if (! unicodeLatinDigit (pig.peek ()))
+          return true;
+      }
+
+      pig.restore ();
+      return false;
+    }
+
+    _seconds = seconds;
+    if (! unicodeLatinDigit (pig.peek ()))
+      return true;
+  }
+
+  pig.restore ();
+  return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Validation via simple range checking.
 bool Datetime::validate ()
