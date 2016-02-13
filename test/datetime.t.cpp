@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (937);
+  UnitTest t (977);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -138,9 +138,7 @@ int main (int, char**)
 
   // Aggregated.
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
-/*
   testParse (t, "12:34:56  ",                 8,    0,  0,  0, 0,   0,  0,   hms,     0, false, local+hms+ld );
-*/
 
   // time-ext
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
@@ -150,10 +148,8 @@ int main (int, char**)
   testParse (t, "12:34:56+01",               11,    0,  0,  0, 0,   0,  0,   hms,  3600, false, utc+hms-z+ud );
   testParse (t, "12:34+01:00",               11,    0,  0,  0, 0,   0,  0,    hm,  3600, false, utc+hm-z+ud  );
   testParse (t, "12:34+01",                   8,    0,  0,  0, 0,   0,  0,    hm,  3600, false, utc+hm-z+ud  );
-/*
   testParse (t, "12:34:56",                   8,    0,  0,  0, 0,   0,  0,   hms,     0, false, local+hms+ld );
   testParse (t, "12:34",                      5,    0,  0,  0, 0,   0,  0,    hm,     0, false, local+hm+ld  );
-*/
 
   // datetime-ext
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
@@ -503,6 +499,10 @@ int main (int, char**)
     t.is (r32.toString ("m"),        "10", "2015-10-28T12:55:00 -> m ->        10");
     t.is (r32.toString ("D"),        "28", "2015-10-28T12:55:00 -> D ->        28");
     t.is (r32.toString ("d"),        "28", "2015-10-28T12:55:00 -> d ->        28");
+    t.is (r32.toString ("H"),        "12", "2015-10-28T12:55:00 -> H ->        12");
+    t.is (r32.toString ("h"),        "12", "2015-10-28T12:55:00 -> h ->        12");
+    t.is (r32.toString ("N"),        "55", "2015-10-28T12:55:00 -> N ->        55");
+    t.is (r32.toString ("n"),        "55", "2015-10-28T12:55:00 -> n ->        55");
     t.is (r32.toString ("S"),        "00", "2015-10-28T12:55:00 -> S ->        00");
     t.is (r32.toString ("s"),         "0", "2015-10-28T12:55:00 -> s ->         0");
     t.is (r32.toString ("A"), "Wednesday", "2015-10-28T12:55:00 -> A -> Wednesday");
