@@ -589,6 +589,15 @@ std::string Datetime::monthName (int month)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static
+std::string Datetime::monthNameShort (int month)
+{
+  assert (month > 0);
+  assert (month <= 12);
+  return upperCaseFirst (monthNames[month - 1]).substr (0, 3);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
 int Datetime::dayOfWeek (const std::string& input)
 {
   if (Datetime::minimumMatchLength== 0)
