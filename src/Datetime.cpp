@@ -32,13 +32,28 @@
 #include <format.h>
 #include <unicode.h>
 
-static std::vector <std::string> dayNames {"sunday",
-                                           "monday",
-                                           "tuesday",
-                                           "wednesday",
-                                           "thursday",
-                                           "friday",
-                                           "saturday"};
+static std::vector <std::string> dayNames {
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday"};
+
+static std::vector <std::string> monthNames {
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december"};
 
 int Datetime::minimumMatchLength = 3;
 
@@ -558,7 +573,7 @@ int Datetime::dayOfWeek (const std::string& input)
   if (Datetime::minimumMatchLength== 0)
     Datetime::minimumMatchLength = 3;
 
-  for (int i = 0; i < dayNames.size (); ++i)
+  for (unsigned int i = 0; i < dayNames.size (); ++i)
     if (closeEnough (dayNames[i], input, Datetime::minimumMatchLength))
        return i;
 
@@ -574,6 +589,20 @@ int Datetime::dayOfWeek (int year, int month, int day)
   int m = month + 12 * adj - 2;
   int y = year - adj;
   return (day + (13 * m - 1) / 5 + y + y / 4 - y / 100 + y / 400) % 7;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
+int Datetime::monthOfYear (const std::string& input)
+{
+  if (Datetime::minimumMatchLength== 0)
+    Datetime::minimumMatchLength = 3;
+
+  for (unsigned int i = 0; i < monthNames.size (); ++i)
+    if (closeEnough (monthNames[i], input, Datetime::minimumMatchLength))
+       return i + 1;
+
+  return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
