@@ -466,6 +466,20 @@ bool Datetime::valid (const std::string& input, const std::string& format)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Julian
+bool Datetime::valid (const int d, const int y)
+{
+  // Check that the year is valid.
+  if (y < 0)
+    return false;
+
+  if (d < 1 || d > Datetime::daysInYear (y))
+    return false;
+
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Static
 bool Datetime::leapYear (int year)
 {
