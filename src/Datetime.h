@@ -42,6 +42,7 @@ public:
   bool parse (const std::string&, std::string::size_type&, const std::string& format = "");
   time_t toEpoch () const;
 
+  Datetime startOfDay () const;
   static bool leapYear (int);
   static int daysInMonth (int, int);
   static int daysInYear (int);
