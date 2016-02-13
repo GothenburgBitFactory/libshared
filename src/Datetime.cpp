@@ -188,8 +188,318 @@ void Datetime::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_formatted (Pig& n, const std::string& format)
+bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 {
+  // Short-circuit on missing format.
+  if (format == "")
+    return false;
+
+  pig.save ();
+
+  int month  = -1;   // So we can check later.
+  int day    = -1;
+  int year   = -1;
+  int hour   = -1;
+  int minute = -1;
+  int second = -1;
+
+  // For parsing, unused.
+  int wday   = -1;
+  int week   = -1;
+
+  for (unsigned int f = 0; f < format.length (); ++f)
+  {
+    switch (format[f])
+    {
+    case 'm':
+      if (pig.getDigit (month))
+      {
+        if (month == 0)
+          pig.getDigit (month);
+
+        if (month == 1)
+          if (pig.getDigit (month))
+            month += 10;
+      }
+      else
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'M':
+      if (! pig.getDigit2 (month))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'd':
+      if (pig.getDigit (day))
+      {
+        if (day == 0)
+          pig.getDigit (day);
+
+        if (day == 1 || day == 2 || day == 3)
+        {
+          int tens = day;
+          if (pig.getDigit (day))
+            day += 10 * tens;
+        }
+      }
+      else
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'D':
+      if (! pig.getDigit2 (day))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'y':
+      if (! pig.getDigit2 (year))
+      {
+        pig.restore ();
+        return false;
+      }
+      year += 2000;
+      break;
+
+    case 'Y':
+      if (! pig.getDigit4 (year))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'h':
+      if (pig.getDigit (hour))
+      {
+        if (hour == 0)
+          pig.getDigit (hour);
+
+        if (hour == 1 || hour == 2)
+        {
+          int tens = hour;
+          if (pig.getDigit (hour))
+            hour += 10 * tens;
+        }
+      }
+      else
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'H':
+      if (! pig.getDigit2 (hour))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'n':
+      if (pig.getDigit (minute))
+      {
+        if (minute == 0)
+          pig.getDigit (minute);
+
+        if (minute < 6)
+        {
+          int tens = minute;
+          if (pig.getDigit (minute))
+            minute += 10 * tens;
+        }
+      }
+      else
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'N':
+      if (! pig.getDigit2 (minute))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 's':
+      if (pig.getDigit (second))
+      {
+        if (second == 0)
+          pig.getDigit (second);
+
+        if (second < 6)
+        {
+          int tens = second;
+          if (pig.getDigit (second))
+            second += 10 * tens;
+        }
+      }
+      else
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'S':
+      if (! pig.getDigit2 (second))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'v':
+      if (pig.getDigit (week))
+      {
+        if (week == 0)
+          pig.getDigit (week);
+
+        if (week < 6)
+        {
+          int tens = week;
+          if (pig.getDigit (week))
+            week += 10 * tens;
+        }
+      }
+      else
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'V':
+      if (! pig.getDigit2 (week))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+
+    case 'a':
+      wday = Datetime::dayOfWeek (pig.str ().substr (3));
+      if (wday == -1)
+      {
+        pig.restore ();
+        return false;
+      }
+
+      pig.skipN (3);
+      break;
+
+    case 'A':
+      {
+        std::string dayName;
+        if (pig.getUntil (format[f + 1], dayName))
+        {
+          wday = Datetime::dayOfWeek (dayName);
+          if (wday == -1)
+          {
+            pig.restore ();
+            return false;
+          }
+        }
+      }
+      break;
+
+    case 'b':
+      month = Datetime::monthOfYear (pig.str ().substr (3));
+      if (month == -1)
+      {
+        pig.restore ();
+        return false;
+      }
+
+      pig.skipN (3);
+      break;
+
+    case 'B':
+      {
+        std::string monthName;
+        if (pig.getUntil (format[f + 1], monthName))
+        {
+          month = Datetime::monthOfYear (monthName);
+          if (month == -1)
+          {
+            pig.restore ();
+            return false;
+          }
+        }
+      }
+      break;
+
+    default:
+      if (! pig.skip (format[f]))
+      {
+        pig.restore ();
+        return false;
+      }
+      break;
+    }
+  }
+
+  // It is possible that the format='Y-M-D', and the input is Y-M-DTH:N:SZ, and
+  // this should not be considered a match.
+  if (! pig.eos () && ! unicodeWhitespace (pig.peek ()))
+  {
+    pig.restore ();
+    return false;
+  }
+
+  // Missing values are filled in from the current date.
+  if (year == -1)
+  {
+    Datetime now;
+    year = now.year ();
+    if (month == -1)
+    {
+      month = now.month ();
+      if (day == -1)
+      {
+        day = now.day ();
+        if (hour == -1)
+        {
+          hour = now.hour ();
+          if (minute == -1)
+          {
+            minute = now.minute ();
+            if (second == -1)
+              second = now.second ();
+          }
+        }
+      }
+    }
+  }
+
+  // Any remaining undefined values are assigned defaults.
+  if (month  == -1) month  = 1;
+  if (day    == -1) day    = 1;
+  if (hour   == -1) hour   = 0;
+  if (minute == -1) minute = 0;
+  if (second == -1) second = 0;
+
+  _year    = year;
+  _month   = month;
+  _day     = day;
+  _seconds = (hour * 3600) + (minute * 60) + second;
+
   return true;
 }
 
