@@ -598,6 +598,13 @@ std::string Datetime::monthNameShort (int month)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static
+std::string Datetime::dayName (int dow)
+{
+  return upperCaseFirst (dayNames[dow]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
 int Datetime::dayOfWeek (const std::string& input)
 {
   if (Datetime::minimumMatchLength== 0)
