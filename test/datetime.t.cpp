@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (17);
+  UnitTest t (29);
 
   try
   {
@@ -48,6 +48,20 @@ int main (int, char**)
     // Days in month.
     t.is (Datetime::daysInMonth (2, 2008), 29, "29 days in February 2008");
     t.is (Datetime::daysInMonth (2, 2007), 28, "28 days in February 2007");
+
+    // Names.
+    t.is (Datetime::monthOfYear ("January"),   1,  "January   =  1");
+    t.is (Datetime::monthOfYear ("February"),  2,  "February  =  2");
+    t.is (Datetime::monthOfYear ("March"),     3,  "March     =  3");
+    t.is (Datetime::monthOfYear ("April"),     4,  "April     =  4");
+    t.is (Datetime::monthOfYear ("May"),       5,  "May       =  5");
+    t.is (Datetime::monthOfYear ("June"),      6,  "June      =  6");
+    t.is (Datetime::monthOfYear ("July"),      7,  "July      =  7");
+    t.is (Datetime::monthOfYear ("August"),    8,  "August    =  8");
+    t.is (Datetime::monthOfYear ("September"), 9,  "September =  9");
+    t.is (Datetime::monthOfYear ("October"),   10, "October   = 10");
+    t.is (Datetime::monthOfYear ("November"),  11, "November  = 11");
+    t.is (Datetime::monthOfYear ("December"),  12, "December  = 12");
 
     t.is (Datetime::dayOfWeek ("SUNDAY"),    0, "SUNDAY == 0");
     t.is (Datetime::dayOfWeek ("sunday"),    0, "sunday == 0");
