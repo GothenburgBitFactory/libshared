@@ -69,6 +69,7 @@ public:
   Datetime operator+  (const int);
   Datetime operator-  (const int);
   Datetime& operator+= (const int);
+  Datetime& operator-= (const int);
 
 private:
   void clear ();
