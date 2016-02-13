@@ -40,6 +40,7 @@ public:
   time_t toEpoch () const;
 
   static bool leapYear (int);
+  static int daysInYear (int);
 private:
   void clear ();
   bool parse_formatted     (Pig&, const std::string&);
