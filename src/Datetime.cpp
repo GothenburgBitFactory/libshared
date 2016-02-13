@@ -77,6 +77,18 @@ void Datetime::clear ()
 // restriction means that '12' will not be identified as an epoch date.
 bool Datetime::parse_epoch (Pig& pig)
 {
+  pig.save ();
+
+  int epoch;
+  if (pig.getDigits (epoch) &&
+      pig.eos ()            &&
+      epoch >= 315532800)
+  {
+    _date = static_cast <time_t> (epoch);
+    return true;
+  }
+
+  pig.restore ();
   return false;
 }
 
@@ -85,7 +97,5 @@ time_t Datetime::toEpoch () const
 {
   return _date;
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
