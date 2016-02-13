@@ -422,6 +422,16 @@ double Datetime::toJulian () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Datetime::toMDY (int& m, int& d, int& y) const
+{
+  struct tm* t = localtime (&_date);
+
+  m = t->tm_mon + 1;
+  d = t->tm_mday;
+  y = t->tm_year + 1900;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
   return Datetime (month (), day (), year ());

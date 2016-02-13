@@ -45,6 +45,7 @@ public:
   std::string toISO () const;
   std::string toISOLocalExtended () const;
   double toJulian () const;
+  void toMDY (int&, int&, int&) const;
 
   Datetime startOfDay () const;
   Datetime startOfMonth () const;
