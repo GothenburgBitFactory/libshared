@@ -40,6 +40,7 @@ public:
   bool skipWS ();
   bool skipLiteral (const std::string&);
 
+  bool getUntil (int, std::string&);
   bool getUntilWS (std::string&);
   bool getDigit (int&);
   bool getDigit2 (int&);

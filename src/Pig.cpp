@@ -101,6 +101,34 @@ bool Pig::skipLiteral (const std::string& literal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Pig::getUntil (int end, std::string& result)
+{
+  auto save = _cursor;
+
+  int c;
+  auto prev = _cursor;
+  while ((c = utf8_next_char (_text, _cursor)))
+  {
+    if (eos ())
+    {
+      result = _text.substr (save, _cursor - save);
+      return true;
+    }
+
+    else if (c == end)
+    {
+      _cursor = prev;
+      result = _text.substr (save, _cursor - save);
+      return true;
+    }
+
+    prev = _cursor;
+  }
+
+  return _cursor > save;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Pig::getUntilWS (std::string& result)
 {
   auto save = _cursor;
