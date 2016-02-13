@@ -60,6 +60,7 @@ private:
   void clear ();
   bool parse_formatted     (Pig&, const std::string&);
   bool parse_epoch         (Pig&);
+  bool parse_date_time     (Pig&);
   bool validate ();
   void resolve ();
   std::string dump () const;

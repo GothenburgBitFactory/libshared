@@ -117,6 +117,28 @@ bool Datetime::parse (
     }
   }
 
+  // Allow parse_date_time and parse_date_time_ext regardless of
+  // Datetime::isoEnabled setting, because these formats are relied upon by
+  // the 'import' command, JSON parser and hook system.
+  else if (parse_date_time     (pig)   /*|| // Strictest first.
+           parse_date_time_ext (pig)   ||
+           (Datetime::isoEnabled &&
+            (parse_date_time     (pig) ||
+             parse_date_time_ext (pig) ||
+             parse_date_ext      (pig) ||
+             parse_time_utc_ext  (pig) ||
+             parse_time_off_ext  (pig) ||
+             parse_time_ext      (pig)))*/) // Time last, as it is the most permissive.
+  {
+    // Check the values and determine time_t.
+    if (validate ())
+    {
+      start = pig.cursor ();
+      resolve ();
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -156,6 +178,20 @@ bool Datetime::parse_epoch (Pig& pig)
     _date = static_cast <time_t> (epoch);
     return true;
   }
+
+  pig.restore ();
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_date_time (Pig& pig)
+{
+  pig.save ();
+
+  _year    = 0;
+  _month   = 0;
+  _day     = 0;
+  _seconds = 0;
 
   pig.restore ();
   return false;
