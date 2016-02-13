@@ -553,6 +553,44 @@ int Datetime::dayOfWeek (int year, int month, int day)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Static
+int Datetime::length (const std::string& format)
+{
+  int len = 0;
+  for (auto& i : format)
+  {
+    switch (i)
+    {
+    case 'm':
+    case 'M':
+    case 'd':
+    case 'D':
+    case 'y':
+    case 'v':
+    case 'V':
+    case 'h':
+    case 'H':
+    case 'n':
+    case 'N':
+    case 's':
+    case 'S': len += 2;  break;
+    case 'b':
+    case 'j':
+    case 'J':
+    case 'a': len += 3;  break;
+    case 'Y': len += 4;  break;
+    case 'A':
+    case 'B': len += 10; break;
+
+    // Calculate the width, don't assume a single character width.
+    default:  len += mk_wcwidth (i); break;
+    }
+  }
+
+  return len;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int Datetime::month () const
 {
   struct tm* t = localtime (&_date);
