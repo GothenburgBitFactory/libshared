@@ -49,6 +49,7 @@ private:
   bool parse_formatted     (Pig&, const std::string&);
   bool parse_epoch         (Pig&);
   bool validate ();
+  std::string dump () const;
 
 public:
   int _year    {0};

@@ -174,3 +174,25 @@ int Datetime::dayOfWeek (int year, int month, int day)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/*
+std::string Datetime::dump () const
+{
+  std::stringstream s;
+  s << "Datetime"
+    << " y"   << _year
+    << " m"   << _month
+    << " w"   << _week
+    << " wd"  << _weekday
+    << " j"   << _julian
+    << " d"   << _day
+    << " s"   << _seconds
+    << " off" << _offset
+    << " utc" << _utc
+    << " ="   << _date
+    << "  "   << (_date ? toISO () : "");
+
+  return s.str ();
+}
+*/
+
+////////////////////////////////////////////////////////////////////////////////
