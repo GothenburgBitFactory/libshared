@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (313);
+  UnitTest t (349);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -140,6 +140,11 @@ int main (int, char**)
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
   testParse (t, "12:34:56  ",                 8,    0,  0,  0, 0,   0,  0,   hms,     0, false, local+hms+ld );
 
+  // time-ext
+  //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
+  testParse (t, "12:34:56Z",                  9,    0,  0,  0, 0,   0,  0,   hms,     0,  true, utc+hms+ud   );
+  testParse (t, "12:34Z",                     6,    0,  0,  0, 0,   0,  0,    hm,     0,  true, utc+hm+ud    );
+  testParse (t, "12:34:56",                   8,    0,  0,  0, 0,   0,  0,   hms,     0, false, local+hms+ld );
   testParse (t, "12:34",                      5,    0,  0,  0, 0,   0,  0,    hm,     0, false, local+hm+ld  );
   // datetime-ext
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
