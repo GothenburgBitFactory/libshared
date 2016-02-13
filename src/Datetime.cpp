@@ -50,6 +50,19 @@ bool Datetime::parse (
   std::string::size_type& start,
   const std::string& format)
 {
+  auto i = start;
+  Pig pig (input);
+  if (i)
+    pig.skip (i);
+
+  // Parse epoch first, as it's the most common scenario.
+  if (parse_epoch (pig))
+  {
+    // ::validate and ::resolve are not needed in this case.
+    start = pig.cursor ();
+    return true;
+  }
+
   return false;
 }
 
@@ -60,10 +73,19 @@ void Datetime::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Valid epoch values are unsigned integers after 1980-01-01T00:00:00Z. This
+// restriction means that '12' will not be identified as an epoch date.
+bool Datetime::parse_epoch (Pig& pig)
+{
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 time_t Datetime::toEpoch () const
 {
   return _date;
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

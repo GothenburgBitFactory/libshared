@@ -29,6 +29,7 @@
 
 #include <string>
 #include <ctime>
+#include <Pig.h>
 
 class Datetime
 {
@@ -40,6 +41,7 @@ public:
 
 private:
   void clear ();
+  bool parse_epoch         (Pig&);
 
 public:
   time_t _date {0};
