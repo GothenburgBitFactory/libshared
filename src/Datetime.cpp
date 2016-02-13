@@ -31,6 +31,7 @@
 #include <common.h>
 #include <format.h>
 #include <unicode.h>
+#include <utf8.h>
 
 static std::vector <std::string> dayNames {
   "sunday",
