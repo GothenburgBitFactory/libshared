@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (4);
+  UnitTest t (6);
 
   try
   {
@@ -41,6 +41,9 @@ int main (int, char**)
     t.ok    (Datetime::leapYear (2000), "2000 is a leap year");
     t.notok (Datetime::leapYear (1900), "1900 is not a leap year");
 
+    // Days in year.
+    t.is (Datetime::daysInYear (2016), 366, "366 days in 2016");
+    t.is (Datetime::daysInYear (2015), 365, "365 days in 2015");
   }
 
   catch (const std::string& e)
