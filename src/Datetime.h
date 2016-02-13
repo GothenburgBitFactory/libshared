@@ -48,6 +48,7 @@ public:
   static int dayOfWeek (int, int, int);
 
   int month () const;
+  int day () const;
   int year () const;
 
 private:
