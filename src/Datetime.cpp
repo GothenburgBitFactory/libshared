@@ -96,7 +96,7 @@ bool Datetime::parse (
   auto i = start;
   Pig pig (input);
   if (i)
-    pig.skip (i);
+    pig.skipN (static_cast <int> (i));
 
   // Parse epoch first, as it's the most common scenario.
   if (parse_epoch (pig))
