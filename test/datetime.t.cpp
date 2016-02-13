@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (169);
+  UnitTest t (172);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -275,6 +275,12 @@ int main (int, char**)
     t.is (happyNewYear.day (),               1, "1/1/2008 == 1");
     t.is (happyNewYear.year (),           2008, "1/1/2008 == 2008");
     t.is (happyNewYear.toString (), "1/1/2008", "toString 1/1/2008");
+
+    int m, d, y;
+    happyNewYear.toMDY (m, d, y);
+    t.is (m, 1, "1/1/2008 == January");
+    t.is (d, 1, "1/1/2008 == 1");
+    t.is (y, 2008, "1/1/2008 == 2008");
   }
 
   catch (const std::string& e)
