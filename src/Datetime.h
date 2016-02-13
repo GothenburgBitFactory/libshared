@@ -34,6 +34,8 @@
 class Datetime
 {
 public:
+  static int minimumMatchLength;
+
   Datetime ();
   Datetime (const std::string&, const std::string& format = "");
   Datetime (time_t);
@@ -58,6 +60,7 @@ public:
   static bool leapYear (int);
   static int daysInMonth (int, int);
   static int daysInYear (int);
+  static int dayOfWeek (const std::string&);
   static int dayOfWeek (int, int, int);
   static int length (const std::string&);
 

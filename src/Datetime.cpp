@@ -32,6 +32,16 @@
 #include <format.h>
 #include <unicode.h>
 
+static std::vector <std::string> dayNames {"sunday",
+                                           "monday",
+                                           "tuesday",
+                                           "wednesday",
+                                           "thursday",
+                                           "friday",
+                                           "saturday"};
+
+int Datetime::minimumMatchLength = 3;
+
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
 {
@@ -539,6 +549,20 @@ int Datetime::daysInMonth (int month, int year)
 int Datetime::daysInYear (int year)
 {
   return Datetime::leapYear (year) ? 366 : 365;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
+int Datetime::dayOfWeek (const std::string& input)
+{
+  if (Datetime::minimumMatchLength== 0)
+    Datetime::minimumMatchLength = 3;
+
+  for (int i = 0; i < dayNames.size (); ++i)
+    if (closeEnough (dayNames[i], input, Datetime::minimumMatchLength))
+       return i;
+
+  return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
