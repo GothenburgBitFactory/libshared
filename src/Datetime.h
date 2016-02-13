@@ -51,6 +51,7 @@ public:
   Datetime startOfMonth () const;
   Datetime startOfYear () const;
 
+  static bool valid (const std::string&, const std::string& format = "");
   static bool leapYear (int);
   static int daysInMonth (int, int);
   static int daysInYear (int);

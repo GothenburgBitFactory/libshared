@@ -450,6 +450,22 @@ Datetime Datetime::startOfYear () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::valid (const std::string& input, const std::string& format)
+{
+  try
+  {
+    Datetime test (input, format);
+  }
+
+  catch (...)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Static
 bool Datetime::leapYear (int year)
 {
