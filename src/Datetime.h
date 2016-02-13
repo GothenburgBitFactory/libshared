@@ -56,6 +56,8 @@ public:
   int minute () const;
   int second () const;
 
+  bool operator== (const Datetime&) const;
+
 private:
   void clear ();
   bool parse_formatted     (Pig&, const std::string&);
