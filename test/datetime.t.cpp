@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (206);
+  UnitTest t (221);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -170,6 +170,31 @@ int main (int, char**)
     t.ok    (tomorrow != now,        "tomorrow != now");
     t.ok    (now      <= tomorrow,   "now <= tomorrow");
     t.ok    (now      <  tomorrow,   "now < tomorrow");
+
+    // Loose comparisons.
+    Datetime left ("7/4/2008", "m/d/Y");
+    Datetime comp1 ("7/4/2008", "m/d/Y");
+    t.ok (left.sameDay   (comp1), "7/4/2008 is on the same day as 7/4/2008");
+    t.ok (left.sameWeek  (comp1), "7/4/2008 is on the same week as 7/4/2008");
+    t.ok (left.sameMonth (comp1), "7/4/2008 is in the same month as 7/4/2008");
+    t.ok (left.sameYear  (comp1), "7/4/2008 is in the same year as 7/4/2008");
+
+    Datetime comp2 ("7/5/2008", "m/d/Y");
+    t.notok (left.sameDay   (comp2), "7/4/2008 is not on the same day as 7/5/2008");
+    t.ok    (left.sameMonth (comp2), "7/4/2008 is in the same month as 7/5/2008");
+    t.ok    (left.sameYear  (comp2), "7/4/2008 is in the same year as 7/5/2008");
+
+    Datetime comp3 ("8/4/2008", "m/d/Y");
+    t.notok (left.sameDay   (comp3), "7/4/2008 is not on the same day as 8/4/2008");
+    t.notok (left.sameWeek  (comp3), "7/4/2008 is not on the same week as 8/4/2008");
+    t.notok (left.sameMonth (comp3), "7/4/2008 is not in the same month as 8/4/2008");
+    t.ok    (left.sameYear  (comp3), "7/4/2008 is in the same year as 8/4/2008");
+
+    Datetime comp4 ("7/4/2009", "m/d/Y");
+    t.notok (left.sameDay   (comp4), "7/4/2008 is not on the same day as 7/4/2009");
+    t.notok (left.sameWeek  (comp3), "7/4/2008 is not on the same week as 7/4/2009");
+    t.notok (left.sameMonth (comp4), "7/4/2008 is not in the same month as 7/4/2009");
+    t.notok (left.sameYear  (comp4), "7/4/2008 is not in the same year as 7/4/2009");
 
     // Validity.
     t.ok    (Datetime::valid (2, 29, 2008), "valid: 2/29/2008");
