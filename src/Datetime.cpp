@@ -194,7 +194,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   if (format == "")
     return false;
 
-  pig.save ();
+  auto checkpoint = pig.cursor ();
 
   int month  = -1;   // So we can check later.
   int day    = -1;
@@ -223,7 +223,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       }
       else
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -231,7 +231,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'M':
       if (! pig.getDigit2 (month))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -251,7 +251,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       }
       else
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -259,7 +259,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'D':
       if (! pig.getDigit2 (day))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -267,7 +267,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'y':
       if (! pig.getDigit2 (year))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       year += 2000;
@@ -276,7 +276,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'Y':
       if (! pig.getDigit4 (year))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -296,7 +296,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       }
       else
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -304,7 +304,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'H':
       if (! pig.getDigit2 (hour))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -324,7 +324,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       }
       else
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -332,7 +332,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'N':
       if (! pig.getDigit2 (minute))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -352,7 +352,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       }
       else
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -360,7 +360,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'S':
       if (! pig.getDigit2 (second))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -380,7 +380,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       }
       else
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -388,7 +388,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     case 'V':
       if (! pig.getDigit2 (week))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -397,7 +397,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       wday = Datetime::dayOfWeek (pig.str ().substr (3));
       if (wday == -1)
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
 
@@ -412,7 +412,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
           wday = Datetime::dayOfWeek (dayName);
           if (wday == -1)
           {
-            pig.restore ();
+            pig.restoreTo (checkpoint);
             return false;
           }
         }
@@ -423,7 +423,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       month = Datetime::monthOfYear (pig.str ().substr (3));
       if (month == -1)
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
 
@@ -438,7 +438,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
           month = Datetime::monthOfYear (monthName);
           if (month == -1)
           {
-            pig.restore ();
+            pig.restoreTo (checkpoint);
             return false;
           }
         }
@@ -448,7 +448,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
     default:
       if (! pig.skip (format[f]))
       {
-        pig.restore ();
+        pig.restoreTo (checkpoint);
         return false;
       }
       break;
@@ -459,7 +459,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   // this should not be considered a match.
   if (! pig.eos () && ! unicodeWhitespace (pig.peek ()))
   {
-    pig.restore ();
+    pig.restoreTo (checkpoint);
     return false;
   }
 
@@ -503,12 +503,34 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   return true;
 }
 
+/*
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_named (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  std::string token;
+  if (n.getUntilWS (token))
+  {
+    Variant v;
+    if (namedDates (token, v))
+    {
+      _date = v.get_date ();
+      return true;
+    }
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+*/
+
 ////////////////////////////////////////////////////////////////////////////////
 // Valid epoch values are unsigned integers after 1980-01-01T00:00:00Z. This
 // restriction means that '12' will not be identified as an epoch date.
 bool Datetime::parse_epoch (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
 
   int epoch;
   if (pig.getDigits (epoch) &&
@@ -519,14 +541,15 @@ bool Datetime::parse_epoch (Pig& pig)
     return true;
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::parse_date_time (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
+
   int year, month, day, hour, minute, second;
   if (pig.getDigit4 (year)   &&
       pig.getDigit2 (month)  && month &&
@@ -552,7 +575,7 @@ bool Datetime::parse_date_time (Pig& pig)
   _day     = 0;
   _seconds = 0;
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -562,7 +585,8 @@ bool Datetime::parse_date_time (Pig& pig)
 // date-ext 'T' time-ext
 bool Datetime::parse_date_time_ext (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
+
   if (parse_date_ext (pig))
   {
     if (pig.skip ('T') &&
@@ -586,7 +610,7 @@ bool Datetime::parse_date_time_ext (Pig& pig)
     _day     = 0;
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -597,7 +621,8 @@ bool Datetime::parse_date_time_ext (Pig& pig)
 // YYYY-Www
 bool Datetime::parse_date_ext (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
+
   int year;
   if (pig.getDigit4 (year) &&
       pig.skip ('-'))
@@ -635,7 +660,7 @@ bool Datetime::parse_date_ext (Pig& pig)
     }
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -643,7 +668,7 @@ bool Datetime::parse_date_ext (Pig& pig)
 // ±hh[:mm]
 bool Datetime::parse_off_ext (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
 
   int sign = pig.peek ();
   if (sign == '+' || sign == '-')
@@ -666,7 +691,7 @@ bool Datetime::parse_off_ext (Pig& pig)
         }
         else
         {
-          pig.restore ();
+          pig.restoreTo (checkpoint);
           return false;
         }
       }
@@ -677,7 +702,7 @@ bool Datetime::parse_off_ext (Pig& pig)
     }
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -685,7 +710,8 @@ bool Datetime::parse_off_ext (Pig& pig)
 // hh:mm[:ss]
 bool Datetime::parse_time_ext (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
+
   int seconds = 0;
   int hh;
   int mm;
@@ -707,7 +733,7 @@ bool Datetime::parse_time_ext (Pig& pig)
           return true;
       }
 
-      pig.restore ();
+      pig.restoreTo (checkpoint);
       return false;
     }
 
@@ -716,7 +742,7 @@ bool Datetime::parse_time_ext (Pig& pig)
       return true;
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -724,7 +750,8 @@ bool Datetime::parse_time_ext (Pig& pig)
 // time-ext 'Z'
 bool Datetime::parse_time_utc_ext (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
+
   if (parse_time_ext (pig) &&
       pig.skip ('Z'))
   {
@@ -733,7 +760,7 @@ bool Datetime::parse_time_utc_ext (Pig& pig)
       return true;
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -741,7 +768,8 @@ bool Datetime::parse_time_utc_ext (Pig& pig)
 // time-ext offset-ext
 bool Datetime::parse_time_off_ext (Pig& pig)
 {
-  pig.save ();
+  auto checkpoint = pig.cursor ();
+
   if (parse_time_ext (pig) &&
       parse_off_ext (pig))
   {
@@ -749,7 +777,7 @@ bool Datetime::parse_time_off_ext (Pig& pig)
       return true;
   }
 
-  pig.restore ();
+  pig.restoreTo (checkpoint);
   return false;
 }
 
