@@ -466,6 +466,22 @@ bool Datetime::valid (const std::string& input, const std::string& format)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::valid (const int m, const int d, const int y, const int hr,
+                  const int mi, const int se)
+{
+  if (hr < 0 || hr > 23)
+    return false;
+
+  if (mi < 0 || mi > 59)
+    return false;
+
+  if (se < 0 || se > 59)
+    return false;
+
+  return Datetime::valid (m, d, y);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::valid (const int m, const int d, const int y)
 {
   // Check that the year is valid.
