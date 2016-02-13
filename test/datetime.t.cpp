@@ -33,11 +33,21 @@ int main (int, char**)
 {
   UnitTest t (4);
 
+  try
+  {
     // Leap year.
     t.ok    (Datetime::leapYear (2008), "2008 is a leap year");
     t.notok (Datetime::leapYear (2007), "2007 is not a leap year");
     t.ok    (Datetime::leapYear (2000), "2000 is a leap year");
     t.notok (Datetime::leapYear (1900), "1900 is not a leap year");
+
+  }
+
+  catch (const std::string& e)
+  {
+    t.fail ("Exception thrown.");
+    t.diag (e);
+  }
 
   return 0;
 }
