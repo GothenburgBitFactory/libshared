@@ -45,6 +45,15 @@ private:
   bool parse_epoch         (Pig&);
 
 public:
+  int _year    {0};
+  int _month   {0};
+  int _week    {0};
+  int _weekday {0};
+  int _julian  {0};
+  int _day     {0};
+  int _seconds {0};
+  int _offset  {0};
+  bool _utc    {false};
   time_t _date {0};
 };
 
