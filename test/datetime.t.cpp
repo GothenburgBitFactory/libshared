@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (180);
+  UnitTest t (201);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -299,6 +299,29 @@ int main (int, char**)
     t.is (quant.startOfWeek ().toString ("YMDHNS"),  "20090208000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/8/2009 0:00:00");
     t.is (quant.startOfMonth ().toString ("YMDHNS"), "20090201000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/1/2009 0:00:00");
     t.is (quant.startOfYear ().toString ("YMDHNS"),  "20090101000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 1/1/2009 0:00:00");
+
+    // int Datetime::length (const std::string&);
+    t.is (Datetime::length ("m"), 2,  "length 'm' --> 2");
+    t.is (Datetime::length ("M"), 2,  "length 'M' --> 2");
+    t.is (Datetime::length ("d"), 2,  "length 'd' --> 2");
+    t.is (Datetime::length ("D"), 2,  "length 'D' --> 2");
+    t.is (Datetime::length ("y"), 2,  "length 'y' --> 2");
+    t.is (Datetime::length ("Y"), 4,  "length 'Y' --> 4");
+    t.is (Datetime::length ("a"), 3,  "length 'a' --> 3");
+    t.is (Datetime::length ("A"), 10, "length 'A' --> 10");
+    t.is (Datetime::length ("b"), 3,  "length 'b' --> 3");
+    t.is (Datetime::length ("B"), 10, "length 'B' --> 10");
+    t.is (Datetime::length ("v"), 2,  "length 'v' --> 2");
+    t.is (Datetime::length ("V"), 2,  "length 'V' --> 2");
+    t.is (Datetime::length ("h"), 2,  "length 'h' --> 2");
+    t.is (Datetime::length ("H"), 2,  "length 'H' --> 2");
+    t.is (Datetime::length ("n"), 2,  "length 'n' --> 2");
+    t.is (Datetime::length ("N"), 2,  "length 'N' --> 2");
+    t.is (Datetime::length ("s"), 2,  "length 's' --> 2");
+    t.is (Datetime::length ("S"), 2,  "length 'S' --> 2");
+    t.is (Datetime::length ("j"), 3,  "length 'j' --> 3");
+    t.is (Datetime::length ("J"), 3,  "length 'J' --> 3");
+    t.is (Datetime::length (" "), 1,  "length ' ' --> 1");
   }
 
   catch (const std::string& e)
