@@ -68,7 +68,73 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (67);
+  UnitTest t (69);
+
+  Datetime iso;
+  std::string::size_type start = 0;
+  t.notok (iso.parse ("foo", start), "foo --> false");
+  t.is ((int)start, 0,               "foo[0]");
+
+  // Determine local and UTC time.
+  time_t now = time (nullptr);
+  struct tm* local_now = localtime (&now);
+  int local_s = (local_now->tm_hour * 3600) +
+                (local_now->tm_min  * 60)   +
+                local_now->tm_sec;
+  local_now->tm_hour  = 0;
+  local_now->tm_min   = 0;
+  local_now->tm_sec   = 0;
+  local_now->tm_isdst = -1;
+  time_t local = mktime (local_now);
+  std::cout << "# local midnight today " << local << "\n";
+
+  local_now->tm_year  = 2013 - 1900;
+  local_now->tm_mon   = 12 - 1;
+  local_now->tm_mday  = 6;
+  local_now->tm_isdst = 0;
+  time_t local6 = mktime (local_now);
+  std::cout << "# local midnight 2013-12-06 " << local6 << "\n";
+
+  local_now->tm_year  = 2013 - 1900;
+  local_now->tm_mon   = 12 - 1;
+  local_now->tm_mday  = 1;
+  local_now->tm_isdst = 0;
+  time_t local1 = mktime (local_now);
+  std::cout << "# local midnight 2013-12-01 " << local1 << "\n";
+
+  struct tm* utc_now = gmtime (&now);
+  int utc_s = (utc_now->tm_hour * 3600) +
+              (utc_now->tm_min  * 60)   +
+              utc_now->tm_sec;
+  utc_now->tm_hour  = 0;
+  utc_now->tm_min   = 0;
+  utc_now->tm_sec   = 0;
+  utc_now->tm_isdst = -1;
+  time_t utc = timegm (utc_now);
+  std::cout << "# utc midnight today " << utc << "\n";
+
+  utc_now->tm_year  = 2013 - 1900;
+  utc_now->tm_mon   = 12 - 1;
+  utc_now->tm_mday  = 6;
+  utc_now->tm_isdst = 0;
+  time_t utc6 = timegm (utc_now);
+  std::cout << "# utc midnight 2013-12-06 " << utc6 << "\n";
+
+  utc_now->tm_year  = 2013 - 1900;
+  utc_now->tm_mon   = 12 - 1;
+  utc_now->tm_mday  = 1;
+  utc_now->tm_isdst = 0;
+  time_t utc1 = timegm (utc_now);
+  std::cout << "# utc midnight 2013-12-01 " << utc1 << "\n";
+
+  int hms = (12 * 3600) + (34 * 60) + 56; // The time 12:34:56 in seconds.
+  int hm  = (12 * 3600) + (34 * 60);      // The time 12:34:00 in seconds.
+  int z   = 3600;                         // TZ offset.
+
+  int ld = local_s > hms ? 86400 : 0;     // Local extra day if now > hms.
+  int ud = utc_s   > hms ? 86400 : 0;     // UTC extra day if now > hms.
+  std::cout << "# ld " << ld << "\n";
+  std::cout << "# ud " << ud << "\n";
 
   try
   {
