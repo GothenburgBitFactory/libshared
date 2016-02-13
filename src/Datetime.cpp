@@ -504,6 +504,14 @@ bool Datetime::sameHour (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::sameDay (const Datetime& rhs) const
+{
+  return this->year ()  == rhs.year ()  &&
+         this->month () == rhs.month () &&
+         this->day ()   == rhs.day ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /*
 std::string Datetime::dump () const
 {
