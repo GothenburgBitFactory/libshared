@@ -5,6 +5,7 @@ include_directories (${CMAKE_SOURCE_DIR}
 set (common_HEADERS Args.h
                     Color.h
                     Configuration.h
+                    Datetime.h
                     FS.h
                     Msg.h
                     Pig.h
@@ -19,6 +20,7 @@ set (common_HEADERS Args.h
 set (common_SRCS Args.cpp
                  Color.cpp
                  Configuration.cpp
+                 Datetime.cpp
                  FS.cpp
                  Msg.cpp
                  Pig.cpp
