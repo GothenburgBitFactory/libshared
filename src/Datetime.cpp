@@ -163,3 +163,14 @@ int Datetime::daysInYear (int year)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Using Zeller's Congruence.
+// Static
+int Datetime::dayOfWeek (int year, int month, int day)
+{
+  int adj = (14 - month) / 12;
+  int m = month + 12 * adj - 2;
+  int y = year - adj;
+  return (day + (13 * m - 1) / 5 + y + y / 4 - y / 100 + y / 400) % 7;
+}
+
+////////////////////////////////////////////////////////////////////////////////
