@@ -65,6 +65,7 @@ public:
   bool sameHour   (const Datetime&) const;
   bool sameDay    (const Datetime&) const;
   bool sameMonth  (const Datetime&) const;
+  bool sameYear   (const Datetime&) const;
 
 private:
   void clear ();
