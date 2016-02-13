@@ -61,6 +61,7 @@ public:
   std::string::size_type save ();
   std::string::size_type restore ();
 
+  std::string str () const;
   std::string dump () const;
 
 private:
