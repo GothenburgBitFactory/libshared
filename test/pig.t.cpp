@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (128);
+  UnitTest t (131);
 
   // Pig::skip
   // Pig::skipN
@@ -255,6 +255,12 @@ int main (int, char**)
   t.ok (p25.getUntil (' ', value), "getUntil ' ', 'three' --> true");
   t.is (value, "three",            "getUntil ' ', 'three' --> 'three'");
   t.is (p25.dump (),               "≪one two three≫ l13 c13", "dump: " + p3.dump ());
+
+  // Pig::str
+  Pig p26 ("abc");
+  t.is (p26.str (), "abc", "str 'abc'+0 --> 'abc'");
+  t.ok (p26.skip ('a'),    "skip 'a' in 'abc'");
+  t.is (p26.str (), "bc",  "str 'abc'+1 --> 'bc'");
 
   return 0;
 }
