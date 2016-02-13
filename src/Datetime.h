@@ -41,6 +41,7 @@ public:
   Datetime (const int, const int, const int, const int, const int, const int);
   bool parse (const std::string&, std::string::size_type&, const std::string& format = "");
   time_t toEpoch () const;
+  std::string toEpochString () const;
 
   Datetime startOfDay () const;
   Datetime startOfMonth () const;

@@ -365,6 +365,14 @@ time_t Datetime::toEpoch () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string Datetime::toEpochString () const
+{
+  std::stringstream epoch;
+  epoch << _date;
+  return epoch.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
   return Datetime (month (), day (), year ());
