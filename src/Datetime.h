@@ -40,6 +40,7 @@ public:
   time_t toEpoch () const;
 
   static bool leapYear (int);
+  static int daysInMonth (int, int);
   static int daysInYear (int);
 private:
   void clear ();

@@ -127,6 +127,18 @@ bool Datetime::leapYear (int year)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static
+int Datetime::daysInMonth (int month, int year)
+{
+  static int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+  if (month == 2 && Datetime::leapYear (year))
+    return 29;
+
+  return days[month - 1];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
 int Datetime::daysInYear (int year)
 {
   return Datetime::leapYear (year) ? 366 : 365;
