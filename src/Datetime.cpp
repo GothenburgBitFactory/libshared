@@ -47,6 +47,13 @@ Datetime::Datetime (const std::string& input, const std::string& format)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Datetime::Datetime (const time_t t)
+{
+  clear ();
+  _date = t;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::parse (
   const std::string& input,
   std::string::size_type& start,

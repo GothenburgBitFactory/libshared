@@ -36,6 +36,7 @@ class Datetime
 public:
   Datetime ();
   Datetime (const std::string&, const std::string& format = "");
+  Datetime (time_t);
   bool parse (const std::string&, std::string::size_type&, const std::string& format = "");
   time_t toEpoch () const;
 
