@@ -156,8 +156,8 @@ bool Datetime::parse (
            parse_date_time_ext (pig)   ||
            (Datetime::isoEnabled &&
             (parse_date_ext      (pig) ||
-/*
              parse_time_utc_ext  (pig) ||
+/*
              parse_time_off_ext  (pig) ||
 */
              parse_time_ext      (pig)))) // Time last, as it is the most permissive.
@@ -647,6 +647,23 @@ bool Datetime::parse_time_ext (Pig& pig)
     }
 
     _seconds = seconds;
+    if (! unicodeLatinDigit (pig.peek ()))
+      return true;
+  }
+
+  pig.restore ();
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// time-ext 'Z'
+bool Datetime::parse_time_utc_ext (Pig& pig)
+{
+  pig.save ();
+  if (parse_time_ext (pig) &&
+      pig.skip ('Z'))
+  {
+    _utc = true;
     if (! unicodeLatinDigit (pig.peek ()))
       return true;
   }
