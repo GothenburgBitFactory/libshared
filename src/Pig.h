@@ -60,6 +60,7 @@ public:
   std::string::size_type cursor () const;
   std::string::size_type save ();
   std::string::size_type restore ();
+  std::string::size_type restoreTo (std::string::size_type);
 
   std::string str () const;
   std::string dump () const;

@@ -515,6 +515,12 @@ std::string::size_type Pig::restore ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string::size_type Pig::restoreTo (std::string::size_type previous)
+{
+  return _cursor = previous;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string Pig::str () const
 {
   return _text.substr (_cursor);
