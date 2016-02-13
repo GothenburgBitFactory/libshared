@@ -495,6 +495,15 @@ bool Datetime::operator>= (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::sameHour (const Datetime& rhs) const
+{
+  return this->year ()  == rhs.year ()  &&
+         this->month () == rhs.month () &&
+         this->day ()   == rhs.day ()   &&
+         this->hour ()  == rhs.hour ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /*
 std::string Datetime::dump () const
 {
