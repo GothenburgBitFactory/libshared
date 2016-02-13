@@ -111,6 +111,7 @@ private:
   bool parse_date_time     (Pig&);
   bool parse_date_time_ext (Pig&);
   bool parse_date_ext      (Pig&);
+  bool parse_off_ext       (Pig&);
   bool parse_time_ext      (Pig&);
   bool parse_time_utc_ext  (Pig&);
   bool validate ();

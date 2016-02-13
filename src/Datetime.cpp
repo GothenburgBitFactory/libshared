@@ -617,6 +617,48 @@ bool Datetime::parse_date_ext (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// ±hh[:mm]
+bool Datetime::parse_off_ext (Pig& pig)
+{
+  pig.save ();
+
+  int sign = pig.peek ();
+  if (sign == '+' || sign == '-')
+  {
+    pig.skipN (1);
+
+    int offset;
+    int hh;
+    int mm;
+    if (pig.getDigit2 (hh) && hh <= 12 &&
+        ! pig.getDigit (mm))
+    {
+      offset = hh * 3600;
+
+      if (pig.skip (':'))
+      {
+        if (pig.getDigit2 (mm) && mm < 60)
+        {
+          offset += mm * 60;
+        }
+        else
+        {
+          pig.restore ();
+          return false;
+        }
+      }
+
+      _offset = (sign == '-') ? -offset : offset;
+      if (! unicodeLatinDigit (pig.peek ()))
+        return true;
+    }
+  }
+
+  pig.restore ();
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // hh:mm[:ss]
 bool Datetime::parse_time_ext (Pig& pig)
 {
