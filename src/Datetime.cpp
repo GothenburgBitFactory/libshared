@@ -29,6 +29,7 @@
 #include <sstream>
 #include <iomanip>
 #include <stdlib.h>
+#include <assert.h>
 #include <common.h>
 #include <format.h>
 #include <unicode.h>
@@ -575,6 +576,15 @@ int Datetime::daysInMonth (int month, int year)
 int Datetime::daysInYear (int year)
 {
   return Datetime::leapYear (year) ? 366 : 365;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static
+std::string Datetime::monthName (int month)
+{
+  assert (month > 0);
+  assert (month <= 12);
+  return upperCaseFirst (monthNames[month - 1]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
