@@ -26,7 +26,9 @@
 
 #include <cmake.h>
 #include <Datetime.h>
+#include <common.h>
 #include <format.h>
+#include <unicode.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
@@ -294,6 +296,13 @@ int Datetime::dayOfWeek (int year, int month, int day)
   int m = month + 12 * adj - 2;
   int y = year - adj;
   return (day + (13 * m - 1) / 5 + y + y / 4 - y / 100 + y / 400) % 7;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Datetime::month () const
+{
+  struct tm* t = localtime (&_date);
+  return t->tm_mon + 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

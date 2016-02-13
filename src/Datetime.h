@@ -43,6 +43,8 @@ public:
   static int daysInMonth (int, int);
   static int daysInYear (int);
   static int dayOfWeek (int, int, int);
+
+  int month () const;
   int year () const;
 
 private:
