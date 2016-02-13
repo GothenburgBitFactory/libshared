@@ -769,38 +769,38 @@ bool Datetime::operator>= (const Datetime& rhs) const
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameHour (const Datetime& rhs) const
 {
-  return this->year ()  == rhs.year ()  &&
-         this->month () == rhs.month () &&
-         this->day ()   == rhs.day ()   &&
-         this->hour ()  == rhs.hour ();
+  return year ()  == rhs.year ()  &&
+         month () == rhs.month () &&
+         day ()   == rhs.day ()   &&
+         hour ()  == rhs.hour ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameDay (const Datetime& rhs) const
 {
-  return this->year ()  == rhs.year ()  &&
-         this->month () == rhs.month () &&
-         this->day ()   == rhs.day ();
+  return year ()  == rhs.year ()  &&
+         month () == rhs.month () &&
+         day ()   == rhs.day ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameWeek (const Datetime& rhs) const
 {
-  return this->year () == rhs.year () &&
-         this->week () == rhs.week ();
+  return year () == rhs.year () &&
+         week () == rhs.week ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameMonth (const Datetime& rhs) const
 {
-  return this->year ()  == rhs.year () &&
-         this->month () == rhs.month ();
+  return year ()  == rhs.year () &&
+         month () == rhs.month ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameYear (const Datetime& rhs) const
 {
-  return this->year () == rhs.year ();
+  return year () == rhs.year ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
