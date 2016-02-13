@@ -52,6 +52,7 @@ public:
   Datetime startOfYear () const;
 
   static bool valid (const std::string&, const std::string& format = "");
+  static bool valid (const int, const int, const int);
   static bool valid (const int, const int);
   static bool leapYear (int);
   static int daysInMonth (int, int);
