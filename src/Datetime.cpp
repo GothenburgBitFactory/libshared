@@ -784,6 +784,13 @@ bool Datetime::sameDay (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::sameWeek (const Datetime& rhs) const
+{
+  return this->year () == rhs.year () &&
+         this->week () == rhs.week ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameMonth (const Datetime& rhs) const
 {
   return this->year ()  == rhs.year () &&

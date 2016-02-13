@@ -85,6 +85,7 @@ public:
   bool operator>= (const Datetime&) const;
   bool sameHour   (const Datetime&) const;
   bool sameDay    (const Datetime&) const;
+  bool sameWeek   (const Datetime&) const;
   bool sameMonth  (const Datetime&) const;
   bool sameYear   (const Datetime&) const;
   Datetime operator+  (const int);
