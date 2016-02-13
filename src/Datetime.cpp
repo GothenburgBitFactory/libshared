@@ -65,6 +65,13 @@ bool Datetime::parse (
 
   else if (parse_formatted (pig, format))
   {
+    // Check the values and determine time_t.
+    if (validate ())
+    {
+      start = pig.cursor ();
+      resolve ();
+      return true;
+    }
   }
 
   return false;
