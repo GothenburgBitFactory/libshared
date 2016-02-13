@@ -54,6 +54,7 @@ public:
   int dayOfYear () const;
   int hour () const;
   int minute () const;
+  int second () const;
 
 private:
   void clear ();
