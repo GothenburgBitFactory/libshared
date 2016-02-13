@@ -575,6 +575,20 @@ time_t Datetime::operator- (const Datetime& rhs)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Prefix decrement by one day.
+void Datetime::operator-- ()
+{
+  Datetime yesterday = startOfDay () - 1;
+  yesterday = Datetime (yesterday.month (),
+                        yesterday.day (),
+                        yesterday.year (),
+                        hour (),
+                        minute (),
+                        second ());
+  _date = yesterday._date;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /*
 std::string Datetime::dump () const
 {

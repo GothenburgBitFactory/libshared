@@ -75,6 +75,7 @@ public:
   Datetime& operator+= (const int);
   Datetime& operator-= (const int);
   time_t operator- (const Datetime&);
+  void operator-- ();    // Prefix
 
 private:
   void clear ();
