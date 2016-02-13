@@ -29,7 +29,6 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
-//#include <Lexer.h>
 #include <common.h>
 #include <format.h>
 
@@ -140,7 +139,7 @@ Color::Color (const std::string& spec)
   int index;
   for (auto& word : words)
   {
-//    word = Lexer::lowerCase (Lexer::trim (word));
+    word = lowerCase (trim (word));
 
          if (word == "bold")      fg_value |= _COLOR_BOLD;
     else if (word == "bright")    bg_value |= _COLOR_BRIGHT;
