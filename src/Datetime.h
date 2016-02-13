@@ -68,6 +68,7 @@ public:
   bool sameYear   (const Datetime&) const;
   Datetime operator+  (const int);
   Datetime operator-  (const int);
+  Datetime& operator+= (const int);
 
 private:
   void clear ();
