@@ -416,6 +416,12 @@ std::string Datetime::toISOLocalExtended () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+double Datetime::toJulian () const
+{
+  return (_date / 86400.0) + 2440587.5;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
   return Datetime (month (), day (), year ());

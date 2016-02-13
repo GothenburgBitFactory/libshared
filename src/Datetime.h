@@ -44,6 +44,7 @@ public:
   std::string toEpochString () const;
   std::string toISO () const;
   std::string toISOLocalExtended () const;
+  double toJulian () const;
 
   Datetime startOfDay () const;
   Datetime startOfMonth () const;
