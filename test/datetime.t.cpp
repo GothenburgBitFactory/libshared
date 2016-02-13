@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (6);
+  UnitTest t (8);
 
   try
   {
@@ -44,6 +44,11 @@ int main (int, char**)
     // Days in year.
     t.is (Datetime::daysInYear (2016), 366, "366 days in 2016");
     t.is (Datetime::daysInYear (2015), 365, "365 days in 2015");
+
+    // Days in month.
+    t.is (Datetime::daysInMonth (2, 2008), 29, "29 days in February 2008");
+    t.is (Datetime::daysInMonth (2, 2007), 28, "28 days in February 2007");
+
   }
 
   catch (const std::string& e)
