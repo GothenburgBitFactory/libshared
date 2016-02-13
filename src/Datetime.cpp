@@ -130,6 +130,122 @@ bool Datetime::validate ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// int tm_sec;       seconds (0 - 60)
+// int tm_min;       minutes (0 - 59)
+// int tm_hour;      hours (0 - 23)
+// int tm_mday;      day of month (1 - 31)
+// int tm_mon;       month of year (0 - 11)
+// int tm_year;      year - 1900
+// int tm_wday;      day of week (Sunday = 0)
+// int tm_yday;      day of year (0 - 365)
+// int tm_isdst;     is summer time in effect?
+// char *tm_zone;    abbreviation of timezone name
+// long tm_gmtoff;   offset from UTC in seconds
+void Datetime::resolve ()
+{
+  // Don't touch the original values.
+  int year    = _year;
+  int month   = _month;
+  int week    = _week;
+  int weekday = _weekday;
+  int julian  = _julian;
+  int day     = _day;
+  int seconds = _seconds;
+  int offset  = _offset;
+  bool utc    = _utc;
+
+  // Get current time.
+  time_t now = time (nullptr);
+
+  // A UTC offset needs to be accommodated.  Once the offset is subtracted,
+  // only local and UTC times remain.
+  if (offset)
+  {
+    seconds -= offset;
+    now -= offset;
+    utc = true;
+  }
+
+  // Get 'now' in the relevant location.
+  struct tm* t_now = utc ? gmtime (&now) : localtime (&now);
+
+  int seconds_now = (t_now->tm_hour * 3600) +
+                    (t_now->tm_min  *   60) +
+                     t_now->tm_sec;
+
+  // Project forward one day if the specified seconds are earlier in the day
+  // than the current seconds.
+  if (year    == 0 &&
+      month   == 0 &&
+      day     == 0 &&
+      week    == 0 &&
+      weekday == 0 &&
+      seconds < seconds_now)
+  {
+    seconds += 86400;
+  }
+
+  // Convert week + weekday --> julian.
+  if (week)
+  {
+    julian = (week * 7) + weekday - dayOfWeek (year, 1, 4) - 3;
+  }
+
+  // Provide default values for year, month, day.
+  else
+  {
+    // Default values for year, month, day:
+    //
+    // y   m   d  -->  y   m   d
+    // y   m   -  -->  y   m   1
+    // y   -   -  -->  y   1   1
+    // -   -   -  -->  now now now
+    //
+    if (year == 0)
+    {
+      year  = t_now->tm_year + 1900;
+      month = t_now->tm_mon + 1;
+      day   = t_now->tm_mday;
+    }
+    else
+    {
+      if (month == 0)
+      {
+        month = 1;
+        day   = 1;
+      }
+      else if (day == 0)
+        day = 1;
+    }
+  }
+
+  if (julian)
+  {
+    month = 1;
+    day = julian;
+  }
+
+  struct tm t {};
+  t.tm_isdst = -1;  // Requests that mktime/gmtime determine summer time effect.
+  t.tm_year = year - 1900;
+  t.tm_mon = month - 1;
+  t.tm_mday = day;
+
+  if (seconds > 86400)
+  {
+    int days = seconds / 86400;
+    t.tm_mday += days;
+    seconds %= 86400;
+  }
+
+  t.tm_hour = seconds / 3600;
+  t.tm_min = (seconds % 3600) / 60;
+  t.tm_sec = seconds % 60;
+
+  _date = utc ? timegm (&t) : mktime (&t);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 time_t Datetime::toEpoch () const
 {
   return _date;
