@@ -26,9 +26,18 @@
 
 #ifndef INCLUDED_DATETIME
 #define INCLUDED_DATETIME
+#include <time.h>
 
 class Datetime
 {
+public:
+  Datetime ();
+
+private:
+  void clear ();
+
+public:
+  time_t _date {0};
 };
 
 #endif
