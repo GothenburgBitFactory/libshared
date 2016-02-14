@@ -924,6 +924,21 @@ bool Datetime::parse_day (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_hour (Pig& pig)
+{
+  int hour;
+  if (pig.getDigit2 (hour) &&
+      hour >= 0            &&
+      hour < 24)
+  {
+    _seconds += 3600 * hour;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))

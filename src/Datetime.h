@@ -122,6 +122,7 @@ private:
   bool parse_week          (Pig&);
   bool parse_julian        (Pig&);
   bool parse_day           (Pig&);
+  bool parse_hour          (Pig&);
 
   bool initializeNow            (const std::string&);
   bool initializeToday          (const std::string&);
