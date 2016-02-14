@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (977);
+  UnitTest t (991);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -412,10 +412,20 @@ int main (int, char**)
     t.is (fromString4.day (),     1, "ctor (std::string) -> d");
     t.is (fromString4.year (), 2008, "ctor (std::string) -> y");
 
+    Datetime fromString5 ("Tue 05 Feb 2008 (06)", "a D b Y (V)");
+    t.is (fromString5.month (),   2, "ctor (std::string) -> m");
+    t.is (fromString5.day (),     5, "ctor (std::string) -> d");
+    t.is (fromString5.year (), 2008, "ctor (std::string) -> y");
+
     Datetime fromString6 ("Tuesday, February 5, 2008", "A, B d, Y");
     t.is (fromString6.month (),   2, "ctor (std::string) -> m");
     t.is (fromString6.day (),     5, "ctor (std::string) -> d");
     t.is (fromString6.year (), 2008, "ctor (std::string) -> y");
+
+    Datetime fromString7 ("w01 Tue 2008-01-01", "wV a Y-M-D");
+    t.is (fromString7.month (),   1, "ctor (std::string) -> m");
+    t.is (fromString7.day (),     1, "ctor (std::string) -> d");
+    t.is (fromString7.year (), 2008, "ctor (std::string) -> y");
 
     Datetime fromString8 ("6/7/2010 1:23:45",  "m/d/Y h:N:S");
     t.is (fromString8.month (),     6, "ctor (std::string) -> m");
@@ -445,6 +455,14 @@ int main (int, char**)
     t.is (Datetime ("1/1/2011",   "m/d/Y").dayOfYear (),   1, "dayOfYear (1/1/2011)   ->   1");
     t.is (Datetime ("5/1/2011",   "m/d/Y").dayOfYear (), 121, "dayOfYear (5/1/2011)   -> 121");
     t.is (Datetime ("12/31/2011", "m/d/Y").dayOfYear (), 365, "dayOfYear (12/31/2011) -> 365");
+
+    // Datetime::sameHour
+    Datetime r20 ("6/7/2010 01:00:00", "m/d/Y H:N:S");
+    Datetime r21 ("6/7/2010 01:59:59", "m/d/Y H:N:S");
+    t.ok (r20.sameHour (r21), "two dates within the same hour");
+
+    Datetime r22 ("6/7/2010 00:59:59", "m/d/Y H:N:S");
+    t.notok (r20.sameHour (r22), "two dates not within the same hour");
 
     // Datetime::operator-
     Datetime r25 (1234567890);
@@ -491,6 +509,13 @@ int main (int, char**)
     t.is (Datetime::length ("J"), 3,  "length 'J' --> 3");
     t.is (Datetime::length (" "), 1,  "length ' ' --> 1");
 
+    // Depletion requirement.
+    Datetime r30 ("Mon Jun 30 2014", "a b D Y");
+    t.is (r30.toString ("YMDHNS"), "20140630000000", "Depletion required on complex format with spaces");
+
+    Datetime r31 ("Mon Jun 30 2014 xxx", "a b D Y");
+    t.is (r31.toString ("YMDHNS"), "20140630000000", "Depletion not required on complex format with spaces");
+
     // Test all format options.
     Datetime r32 ("2015-10-28T12:55:00");
     t.is (r32.toString ("Y"),      "2015", "2015-10-28T12:55:00 -> Y ->      2015");
@@ -536,6 +561,12 @@ int main (int, char**)
     t.is(r35.month (),     10,        "B works");
     t.is(r35.day (),       28,        "D works");
     t.is(r35.dayOfWeek (),  3,        "A works");
+
+    Datetime r36 ("Wed Oct 28 15", "a b d y");
+    t.is(r36.year (),    2015,        "y works");
+    t.is(r36.month (),     10,        "b works");
+    t.is(r36.day (),       28,        "d works");
+    t.is(r36.dayOfWeek (),  3,        "a works");
   }
 
   catch (const std::string& e)
