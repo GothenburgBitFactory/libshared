@@ -134,6 +134,7 @@ private:
   bool initializeSom       (const std::string&);
   bool initializeEom       (const std::string&);
   bool initializeSocw      (const std::string&);
+  bool initializeEow       (const std::string&);
 
   bool validate ();
   void resolve ();
