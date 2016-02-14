@@ -118,7 +118,7 @@ private:
   bool parse_time_off_ext  (Pig&);
 
   bool parse_year          (Pig&, int&);
-  bool parse_month         (Pig&);
+  bool parse_month         (Pig&, int&);
   bool parse_week          (Pig&);
   bool parse_julian        (Pig&);
   bool parse_day           (Pig&);

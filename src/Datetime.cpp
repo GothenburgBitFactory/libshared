@@ -867,17 +867,20 @@ bool Datetime::parse_year (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_month (Pig& pig)
+bool Datetime::parse_month (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int month;
   if (pig.getDigit2 (month) &&
       month > 0             &&
       month <= 12)
   {
-    _month = month;
+    value = month;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
