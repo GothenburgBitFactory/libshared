@@ -885,17 +885,20 @@ bool Datetime::parse_month (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_week (Pig& pig)
+bool Datetime::parse_week (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int week;
   if (pig.getDigit2 (week) &&
       week > 0             &&
       week <= 53)
   {
-    _week = week;
+    value = week;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
