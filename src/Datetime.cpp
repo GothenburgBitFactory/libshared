@@ -518,7 +518,8 @@ bool Datetime::parse_named (Pig& pig)
   std::string token;
   if (pig.getUntilWS (token))
   {
-    if (initializeNow      (token))
+    if (initializeNow      (token) ||
+        initializeToday    (token))
     {
       return true;
     }
@@ -790,6 +791,24 @@ bool Datetime::initializeNow (const std::string& token)
   if (closeEnough ("now", token, Datetime::minimumMatchLength))
   {
     _date = time (nullptr);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeToday (const std::string& token)
+{
+  if (closeEnough ("today", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+
     return true;
   }
 
