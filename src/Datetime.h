@@ -123,6 +123,7 @@ private:
   bool initializeEod       (const std::string&);
   bool initializeTomorrow  (const std::string&);
   bool initializeYesterday (const std::string&);
+  bool initializeDayName   (const std::string&);
 
   bool validate ();
   void resolve ();

@@ -523,7 +523,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeSod       (token) ||
         initializeEod       (token) ||
         initializeTomorrow  (token) ||
-        initializeYesterday (token))
+        initializeYesterday (token) ||
+        initializeDayName   (token))
     {
       return true;
     }
@@ -886,6 +887,29 @@ bool Datetime::initializeYesterday (const std::string& token)
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t) - 86400;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeDayName (const std::string& token)
+{
+  auto day = dayOfWeek (token);
+  if (day != -1)
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    if (t->tm_wday >= day)
+      t->tm_mday += day - t->tm_wday + 7;
+    else
+      t->tm_mday += day - t->tm_wday;
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
     return true;
   }
 
