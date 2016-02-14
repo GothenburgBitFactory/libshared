@@ -894,6 +894,21 @@ bool Datetime::parse_week (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_julian (Pig& pig)
+{
+  int julian;
+  if (pig.getDigit3 (julian) &&
+      julian > 0             &&
+      julian <= 366)
+  {
+    _julian = julian;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))
