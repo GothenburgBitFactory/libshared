@@ -394,7 +394,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       break;
 
     case 'a':
-      wday = Datetime::dayOfWeek (pig.str ().substr (3));
+      wday = Datetime::dayOfWeek (pig.str ().substr (0, 3));
       if (wday == -1)
       {
         pig.restoreTo (checkpoint);
@@ -420,7 +420,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       break;
 
     case 'b':
-      month = Datetime::monthOfYear (pig.str ().substr (3));
+      month = Datetime::monthOfYear (pig.str ().substr (0, 3));
       if (month == -1)
       {
         pig.restoreTo (checkpoint);
