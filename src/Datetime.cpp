@@ -536,7 +536,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeEom       (token) ||
         initializeSocw      (token) ||
         initializeEow       (token) ||
-        initializeSow       (token))
+        initializeSow       (token) ||
+        initializeSoww      (token))
     {
       return true;
     }
@@ -1177,6 +1178,25 @@ bool Datetime::initializeSow (const std::string& token)
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     int extra = (7 - t->tm_wday) * 86400;
+    t->tm_isdst = -1;
+    _date = mktime (t) + extra;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoww (const std::string& token)
+{
+  if (closeEnough ("soww", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    int days = (8 - t->tm_wday) % 7;
+    int extra = days * 86400;
     t->tm_isdst = -1;
     _date = mktime (t) + extra;
     return true;
