@@ -515,18 +515,14 @@ bool Datetime::parse_named (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-/*
   std::string token;
-  if (n.getUntilWS (token))
+  if (pig.getUntilWS (token))
   {
-    Variant v;
-    if (namedDates (token, v))
+    if (initializeNow      (token))
     {
-      _date = v.get_date ();
       return true;
     }
   }
-*/
 
   pig.restoreTo (checkpoint);
   return false;
@@ -785,6 +781,18 @@ bool Datetime::parse_time_off_ext (Pig& pig)
   }
 
   pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeNow (const std::string& token)
+{
+  if (closeEnough ("now", token, Datetime::minimumMatchLength))
+  {
+    _date = time (nullptr);
+    return true;
+  }
+
   return false;
 }
 
