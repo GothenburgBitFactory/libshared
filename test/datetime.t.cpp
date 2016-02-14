@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1025);
+  UnitTest t (1037);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -88,15 +88,18 @@ int main (int, char**)
   time_t local = mktime (local_now);
   std::cout << "# local midnight today " << local << "\n";
 
-  local_now->tm_year  = 2013 - 1900;
-  local_now->tm_mon   = 12 - 1;
+  int year = 2013;
+  int mo = 12;
+
+  local_now->tm_year  = year - 1900;
+  local_now->tm_mon   = mo - 1;
   local_now->tm_mday  = 6;
   local_now->tm_isdst = 0;
   time_t local6 = mktime (local_now);
   std::cout << "# local midnight 2013-12-06 " << local6 << "\n";
 
-  local_now->tm_year  = 2013 - 1900;
-  local_now->tm_mon   = 12 - 1;
+  local_now->tm_year  = year - 1900;
+  local_now->tm_mon   = mo - 1;
   local_now->tm_mday  = 1;
   local_now->tm_isdst = 0;
   time_t local1 = mktime (local_now);
@@ -113,15 +116,15 @@ int main (int, char**)
   time_t utc = timegm (utc_now);
   std::cout << "# utc midnight today " << utc << "\n";
 
-  utc_now->tm_year  = 2013 - 1900;
-  utc_now->tm_mon   = 12 - 1;
+  utc_now->tm_year  = year - 1900;
+  utc_now->tm_mon   = mo - 1;
   utc_now->tm_mday  = 6;
   utc_now->tm_isdst = 0;
   time_t utc6 = timegm (utc_now);
   std::cout << "# utc midnight 2013-12-06 " << utc6 << "\n";
 
-  utc_now->tm_year  = 2013 - 1900;
-  utc_now->tm_mon   = 12 - 1;
+  utc_now->tm_year  = year - 1900;
+  utc_now->tm_mon   = mo - 1;
   utc_now->tm_mday  = 1;
   utc_now->tm_isdst = 0;
   time_t utc1 = timegm (utc_now);
@@ -153,65 +156,66 @@ int main (int, char**)
 
   // datetime-ext
   //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
-  testParse (t, "2013-12-06",                10, 2013, 12,  0, 0,   0,  6,     0,     0, false, local6    );
-  testParse (t, "2013-340",                   8, 2013,  0,  0, 0, 340,  0,     0,     0, false, local6    );
-  testParse (t, "2013-W49-5",                10, 2013,  0, 49, 5,   0,  0,     0,     0, false, local6    );
-  testParse (t, "2013-W49",                   8, 2013,  0, 49, 0,   0,  0,     0,     0, false, local1    );
+  testParse (t, "2013-12-06",                10, year, mo,  0, 0,   0,  6,     0,     0, false, local6    );
+  testParse (t, "2013-340",                   8, year,  0,  0, 0, 340,  0,     0,     0, false, local6    );
+  testParse (t, "2013-W49-5",                10, year,  0, 49, 5,   0,  0,     0,     0, false, local6    );
+  testParse (t, "2013-W49",                   8, year,  0, 49, 0,   0,  0,     0,     0, false, local1    );
+  testParse (t, "2013-12",                    7, year, mo,  0, 0,   0,  0,     0,     0, false, local1    );
 
-  testParse (t, "2013-12-06T12:34:56",       19, 2013, 12,  0, 0,   0,  6,   hms,     0, false, local6+hms);
-  testParse (t, "2013-12-06T12:34",          16, 2013, 12,  0, 0,   0,  6,    hm,     0, false, local6+hm );
-  testParse (t, "2013-340T12:34:56",         17, 2013,  0,  0, 0, 340,  0,   hms,     0, false, local6+hms);
-  testParse (t, "2013-340T12:34",            14, 2013,  0,  0, 0, 340,  0,    hm,     0, false, local6+hm );
-  testParse (t, "2013-W49-5T12:34:56",       19, 2013,  0, 49, 5,   0,  0,   hms,     0, false, local6+hms);
-  testParse (t, "2013-W49-5T12:34",          16, 2013,  0, 49, 5,   0,  0,    hm,     0, false, local6+hm );
-  testParse (t, "2013-W49T12:34:56",         17, 2013,  0, 49, 0,   0,  0,   hms,     0, false, local1+hms);
-  testParse (t, "2013-W49T12:34",            14, 2013,  0, 49, 0,   0,  0,    hm,     0, false, local1+hm );
+  testParse (t, "2013-12-06T12:34:56",       19, year, mo,  0, 0,   0,  6,   hms,     0, false, local6+hms);
+  testParse (t, "2013-12-06T12:34",          16, year, mo,  0, 0,   0,  6,    hm,     0, false, local6+hm );
+  testParse (t, "2013-340T12:34:56",         17, year,  0,  0, 0, 340,  0,   hms,     0, false, local6+hms);
+  testParse (t, "2013-340T12:34",            14, year,  0,  0, 0, 340,  0,    hm,     0, false, local6+hm );
+  testParse (t, "2013-W49-5T12:34:56",       19, year,  0, 49, 5,   0,  0,   hms,     0, false, local6+hms);
+  testParse (t, "2013-W49-5T12:34",          16, year,  0, 49, 5,   0,  0,    hm,     0, false, local6+hm );
+  testParse (t, "2013-W49T12:34:56",         17, year,  0, 49, 0,   0,  0,   hms,     0, false, local1+hms);
+  testParse (t, "2013-W49T12:34",            14, year,  0, 49, 0,   0,  0,    hm,     0, false, local1+hm );
 
-  testParse (t, "2013-12-06T12:34:56Z",      20, 2013, 12,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
-  testParse (t, "2013-12-06T12:34Z",         17, 2013, 12,  0, 0,   0,  6,    hm,     0,  true, utc6+hm   );
-  testParse (t, "2013-340T12:34:56Z",        18, 2013,  0,  0, 0, 340,  0,   hms,     0,  true, utc6+hms  );
-  testParse (t, "2013-340T12:34Z",           15, 2013,  0,  0, 0, 340,  0,    hm,     0,  true, utc6+hm   );
-  testParse (t, "2013-W49-5T12:34:56Z",      20, 2013,  0, 49, 5,   0,  0,   hms,     0,  true, utc6+hms  );
-  testParse (t, "2013-W49-5T12:34Z",         17, 2013,  0, 49, 5,   0,  0,    hm,     0,  true, utc6+hm   );
-  testParse (t, "2013-W49T12:34:56Z",        18, 2013,  0, 49, 0,   0,  0,   hms,     0,  true, utc1+hms  );
-  testParse (t, "2013-W49T12:34Z",           15, 2013,  0, 49, 0,   0,  0,    hm,     0,  true, utc1+hm   );
+  testParse (t, "2013-12-06T12:34:56Z",      20, year, mo,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
+  testParse (t, "2013-12-06T12:34Z",         17, year, mo,  0, 0,   0,  6,    hm,     0,  true, utc6+hm   );
+  testParse (t, "2013-340T12:34:56Z",        18, year,  0,  0, 0, 340,  0,   hms,     0,  true, utc6+hms  );
+  testParse (t, "2013-340T12:34Z",           15, year,  0,  0, 0, 340,  0,    hm,     0,  true, utc6+hm   );
+  testParse (t, "2013-W49-5T12:34:56Z",      20, year,  0, 49, 5,   0,  0,   hms,     0,  true, utc6+hms  );
+  testParse (t, "2013-W49-5T12:34Z",         17, year,  0, 49, 5,   0,  0,    hm,     0,  true, utc6+hm   );
+  testParse (t, "2013-W49T12:34:56Z",        18, year,  0, 49, 0,   0,  0,   hms,     0,  true, utc1+hms  );
+  testParse (t, "2013-W49T12:34Z",           15, year,  0, 49, 0,   0,  0,    hm,     0,  true, utc1+hm   );
 
-  testParse (t, "2013-12-06T12:34:56+01:00", 25, 2013, 12,  0, 0,   0,  6,   hms,  3600, false, utc6+hms-z);
-  testParse (t, "2013-12-06T12:34:56+01",    22, 2013, 12,  0, 0,   0,  6,   hms,  3600, false, utc6+hms-z);
-  testParse (t, "2013-12-06T12:34:56-01:00", 25, 2013, 12,  0, 0,   0,  6,   hms, -3600, false, utc6+hms+z);
-  testParse (t, "2013-12-06T12:34:56-01",    22, 2013, 12,  0, 0,   0,  6,   hms, -3600, false, utc6+hms+z);
-  testParse (t, "2013-12-06T12:34+01:00",    22, 2013, 12,  0, 0,   0,  6,    hm,  3600, false, utc6+hm-z );
-  testParse (t, "2013-12-06T12:34+01",       19, 2013, 12,  0, 0,   0,  6,    hm,  3600, false, utc6+hm-z );
-  testParse (t, "2013-12-06T12:34-01:00",    22, 2013, 12,  0, 0,   0,  6,    hm, -3600, false, utc6+hm+z );
-  testParse (t, "2013-12-06T12:34-01",       19, 2013, 12,  0, 0,   0,  6,    hm, -3600, false, utc6+hm+z );
-  testParse (t, "2013-340T12:34:56+01:00",   23, 2013,  0,  0, 0, 340,  0,   hms,  3600, false, utc6+hms-z);
-  testParse (t, "2013-340T12:34:56+01",      20, 2013,  0,  0, 0, 340,  0,   hms,  3600, false, utc6+hms-z);
-  testParse (t, "2013-340T12:34:56-01:00",   23, 2013,  0,  0, 0, 340,  0,   hms, -3600, false, utc6+hms+z);
-  testParse (t, "2013-340T12:34:56-01",      20, 2013,  0,  0, 0, 340,  0,   hms, -3600, false, utc6+hms+z);
-  testParse (t, "2013-340T12:34+01:00",      20, 2013,  0,  0, 0, 340,  0,    hm,  3600, false, utc6+hm-z );
-  testParse (t, "2013-340T12:34+01",         17, 2013,  0,  0, 0, 340,  0,    hm,  3600, false, utc6+hm-z );
-  testParse (t, "2013-340T12:34-01:00",      20, 2013,  0,  0, 0, 340,  0,    hm, -3600, false, utc6+hm+z );
-  testParse (t, "2013-340T12:34-01",         17, 2013,  0,  0, 0, 340,  0,    hm, -3600, false, utc6+hm+z );
-  testParse (t, "2013-W49-5T12:34:56+01:00", 25, 2013,  0, 49, 5,   0,  0,   hms,  3600, false, utc6+hms-z);
-  testParse (t, "2013-W49-5T12:34:56+01",    22, 2013,  0, 49, 5,   0,  0,   hms,  3600, false, utc6+hms-z);
-  testParse (t, "2013-W49-5T12:34:56-01:00", 25, 2013,  0, 49, 5,   0,  0,   hms, -3600, false, utc6+hms+z);
-  testParse (t, "2013-W49-5T12:34:56-01",    22, 2013,  0, 49, 5,   0,  0,   hms, -3600, false, utc6+hms+z);
-  testParse (t, "2013-W49-5T12:34+01:00",    22, 2013,  0, 49, 5,   0,  0,    hm,  3600, false, utc6+hm-z );
-  testParse (t, "2013-W49-5T12:34+01",       19, 2013,  0, 49, 5,   0,  0,    hm,  3600, false, utc6+hm-z );
-  testParse (t, "2013-W49-5T12:34-01:00",    22, 2013,  0, 49, 5,   0,  0,    hm, -3600, false, utc6+hm+z );
-  testParse (t, "2013-W49-5T12:34-01",       19, 2013,  0, 49, 5,   0,  0,    hm, -3600, false, utc6+hm+z );
-  testParse (t, "2013-W49T12:34:56+01:00",   23, 2013,  0, 49, 0,   0,  0,   hms,  3600, false, utc1+hms-z);
-  testParse (t, "2013-W49T12:34:56+01",      20, 2013,  0, 49, 0,   0,  0,   hms,  3600, false, utc1+hms-z);
-  testParse (t, "2013-W49T12:34:56-01:00",   23, 2013,  0, 49, 0,   0,  0,   hms, -3600, false, utc1+hms+z);
-  testParse (t, "2013-W49T12:34:56-01",      20, 2013,  0, 49, 0,   0,  0,   hms, -3600, false, utc1+hms+z);
-  testParse (t, "2013-W49T12:34+01:00",      20, 2013,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
-  testParse (t, "2013-W49T12:34+01",         17, 2013,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
-  testParse (t, "2013-W49T12:34-01:00",      20, 2013,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
-  testParse (t, "2013-W49T12:34-01",         17, 2013,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
+  testParse (t, "2013-12-06T12:34:56+01:00", 25, year, mo,  0, 0,   0,  6,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013-12-06T12:34:56+01",    22, year, mo,  0, 0,   0,  6,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013-12-06T12:34:56-01:00", 25, year, mo,  0, 0,   0,  6,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013-12-06T12:34:56-01",    22, year, mo,  0, 0,   0,  6,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013-12-06T12:34+01:00",    22, year, mo,  0, 0,   0,  6,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013-12-06T12:34+01",       19, year, mo,  0, 0,   0,  6,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013-12-06T12:34-01:00",    22, year, mo,  0, 0,   0,  6,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013-12-06T12:34-01",       19, year, mo,  0, 0,   0,  6,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013-340T12:34:56+01:00",   23, year,  0,  0, 0, 340,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013-340T12:34:56+01",      20, year,  0,  0, 0, 340,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013-340T12:34:56-01:00",   23, year,  0,  0, 0, 340,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013-340T12:34:56-01",      20, year,  0,  0, 0, 340,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013-340T12:34+01:00",      20, year,  0,  0, 0, 340,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013-340T12:34+01",         17, year,  0,  0, 0, 340,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013-340T12:34-01:00",      20, year,  0,  0, 0, 340,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013-340T12:34-01",         17, year,  0,  0, 0, 340,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013-W49-5T12:34:56+01:00", 25, year,  0, 49, 5,   0,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013-W49-5T12:34:56+01",    22, year,  0, 49, 5,   0,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013-W49-5T12:34:56-01:00", 25, year,  0, 49, 5,   0,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013-W49-5T12:34:56-01",    22, year,  0, 49, 5,   0,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013-W49-5T12:34+01:00",    22, year,  0, 49, 5,   0,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013-W49-5T12:34+01",       19, year,  0, 49, 5,   0,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013-W49-5T12:34-01:00",    22, year,  0, 49, 5,   0,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013-W49-5T12:34-01",       19, year,  0, 49, 5,   0,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013-W49T12:34:56+01:00",   23, year,  0, 49, 0,   0,  0,   hms,  3600, false, utc1+hms-z);
+  testParse (t, "2013-W49T12:34:56+01",      20, year,  0, 49, 0,   0,  0,   hms,  3600, false, utc1+hms-z);
+  testParse (t, "2013-W49T12:34:56-01:00",   23, year,  0, 49, 0,   0,  0,   hms, -3600, false, utc1+hms+z);
+  testParse (t, "2013-W49T12:34:56-01",      20, year,  0, 49, 0,   0,  0,   hms, -3600, false, utc1+hms+z);
+  testParse (t, "2013-W49T12:34+01:00",      20, year,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
+  testParse (t, "2013-W49T12:34+01",         17, year,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
+  testParse (t, "2013-W49T12:34-01:00",      20, year,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
+  testParse (t, "2013-W49T12:34-01",         17, year,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
 
   // The only non-extended forms.
-  testParse (t, "20131206T123456Z",          16, 2013, 12,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
-  testParse (t, "20131206T123456",           15, 2013, 12,  0, 0,   0,  6,   hms,     0, false, local6+hms);
+  testParse (t, "20131206T123456Z",          16, year, mo,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
+  testParse (t, "20131206T123456",           15, year, mo,  0, 0,   0,  6,   hms,     0, false, local6+hms);
 
   try
   {
