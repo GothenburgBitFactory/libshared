@@ -128,6 +128,7 @@ private:
   bool initializeLater     (const std::string&);
   bool initializeEoy       (const std::string&);
   bool initializeSoy       (const std::string&);
+  bool initializeEoq       (const std::string&);
 
   bool validate ();
   void resolve ();
