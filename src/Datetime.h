@@ -138,6 +138,7 @@ private:
   bool initializeSow       (const std::string&);
   bool initializeSoww      (const std::string&);
   bool initializeEoww      (const std::string&);
+  bool initializeOrdinal   (const std::string&);
 
   bool validate ();
   void resolve ();
