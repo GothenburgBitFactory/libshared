@@ -999,6 +999,21 @@ bool Datetime::parse_off_minute (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_off_second (Pig& pig)
+{
+  int second;
+  if (pig.getDigit2 (second) &&
+      second > 0             &&
+      second < 60)
+  {
+    _offset += second;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))
