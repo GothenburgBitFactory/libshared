@@ -518,7 +518,7 @@ bool Datetime::parse_named (Pig& pig)
   std::string token;
   if (pig.getUntilWS (token))
   {
-    if (initializeNow      (token)
+    if (initializeNow      (token) ||
         initializeToday    (token) ||
         initializeSod      (token) ||
         initializeEod      (token) ||
