@@ -539,7 +539,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeSow       (token) ||
         initializeSoww      (token) ||
         initializeEoww      (token) ||
-        initializeOrdinal   (token))
+        initializeOrdinal   (token) ||
+        initializeEaster    (token))
     {
       return true;
     }
@@ -1323,6 +1324,73 @@ bool Datetime::initializeOrdinal (const std::string& token)
   }
 
   return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEaster (const std::string& token)
+{
+  if (closeEnough ("easter",       token, Datetime::minimumMatchLength) ||
+      closeEnough ("eastermonday", token, Datetime::minimumMatchLength) ||
+      closeEnough ("ascension",    token, Datetime::minimumMatchLength) ||
+      closeEnough ("pentecost",    token, Datetime::minimumMatchLength) ||
+      closeEnough ("goodfriday",   token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    easter (t);
+    _date = mktime (t);
+
+    // If the result is earlier this year, then recalc for next year.
+    if (_date < now)
+    {
+      t = localtime (&now);
+      t->tm_year++;
+      easter (t);
+    }
+
+         if (closeEnough ("goodfriday",   token, Datetime::minimumMatchLength)) t->tm_mday -= 2;
+
+    // DO NOT REMOVE THIS USELESS-LOOKING LINE.
+    // It is here to capture an exact match for 'easter', to prevent 'easter'
+    // being a partial match for 'eastermonday'.
+    else if (closeEnough ("easter",       token, Datetime::minimumMatchLength)) ;
+    else if (closeEnough ("eastermonday", token, Datetime::minimumMatchLength)) t->tm_mday += 1;
+    else if (closeEnough ("ascension",    token, Datetime::minimumMatchLength)) t->tm_mday += 39;
+    else if (closeEnough ("pentecost",    token, Datetime::minimumMatchLength)) t->tm_mday += 49;
+
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Datetime::easter (struct tm* t) const
+{
+  int Y = t->tm_year + 1900;
+  int a = Y % 19;
+  int b = Y / 100;
+  int c = Y % 100;
+  int d = b / 4;
+  int e = b % 4;
+  int f = (b + 8) / 25;
+  int g = (b - f + 1) / 3;
+  int h = (19 * a + b - d - g + 15) % 30;
+  int i = c / 4;
+  int k = c % 4;
+  int L = (32 + 2 * e + 2 * i - h - k) % 7;
+  int m = (a + 11 * h + 22 * L) / 451;
+  int month = (h + L - 7 * m + 114) / 31;
+  int day = ((h + L - 7 * m + 114) % 31) + 1;
+
+  t->tm_isdst = -1;   // Requests that mktime determine summer time effect.
+  t->tm_mday  = day;
+  t->tm_mon   = month - 1;
+  t->tm_year  = Y - 1900;
+  t->tm_isdst = -1;
+  t->tm_hour = t->tm_min = t->tm_sec = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

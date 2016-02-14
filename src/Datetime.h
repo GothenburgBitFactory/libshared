@@ -139,6 +139,8 @@ private:
   bool initializeSoww      (const std::string&);
   bool initializeEoww      (const std::string&);
   bool initializeOrdinal   (const std::string&);
+  bool initializeEaster    (const std::string&);
+  void easter (struct tm*) const;
 
   bool validate ();
   void resolve ();
