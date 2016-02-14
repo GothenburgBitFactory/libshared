@@ -850,16 +850,19 @@ bool Datetime::parse_time_off_ext (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_year (Pig& pig)
+bool Datetime::parse_year (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int year;
   if (pig.getDigit4 (year) &&
       year > 1969)
   {
-    _year = year;
+    value = year;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
