@@ -120,7 +120,7 @@ private:
   bool parse_year          (Pig&, int&);
   bool parse_month         (Pig&, int&);
   bool parse_week          (Pig&, int&);
-  bool parse_julian        (Pig&);
+  bool parse_julian        (Pig&, int&);
   bool parse_day           (Pig&);
   bool parse_hour          (Pig&);
   bool parse_minute        (Pig&);

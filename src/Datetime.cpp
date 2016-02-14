@@ -903,17 +903,20 @@ bool Datetime::parse_week (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_julian (Pig& pig)
+bool Datetime::parse_julian (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int julian;
   if (pig.getDigit3 (julian) &&
       julian > 0             &&
       julian <= 366)
   {
-    _julian = julian;
+    value = julian;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
