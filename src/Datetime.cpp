@@ -1367,6 +1367,31 @@ bool Datetime::initializeEaster (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeMidsommar (const std::string& token)
+{
+  if (closeEnough ("midsommar", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+    midsommar (t);
+    _date = mktime (t);
+
+    // If the result is earlier this year, then recalc for next year.
+    if (_date < now)
+    {
+      t = localtime (&now);
+      t->tm_year++;
+      midsommar (t);
+    }
+
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Datetime::easter (struct tm* t) const
 {
   int Y = t->tm_year + 1900;
@@ -1391,6 +1416,19 @@ void Datetime::easter (struct tm* t) const
   t->tm_year  = Y - 1900;
   t->tm_isdst = -1;
   t->tm_hour = t->tm_min = t->tm_sec = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Datetime::midsommar (struct tm* t) const
+{
+  t->tm_mon = 5;                          // June.
+  t->tm_mday = 20;                        // Saturday after 20th.
+  t->tm_hour = t->tm_min = t->tm_sec = 0; // Midnight.
+  t->tm_isdst = -1;                       // Probably DST, but check.
+
+  time_t then = mktime (t);               // Obtain the weekday of June 20th.
+  struct tm* mid = localtime (&then);
+  t->tm_mday += 6 - mid->tm_wday;         // How many days after 20th.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
