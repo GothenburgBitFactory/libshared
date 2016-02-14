@@ -121,7 +121,7 @@ private:
   bool parse_month         (Pig&, int&);
   bool parse_week          (Pig&, int&);
   bool parse_julian        (Pig&, int&);
-  bool parse_day           (Pig&);
+  bool parse_day           (Pig&, int&);
   bool parse_hour          (Pig&);
   bool parse_minute        (Pig&);
   bool parse_second        (Pig&);

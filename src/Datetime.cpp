@@ -921,17 +921,20 @@ bool Datetime::parse_julian (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_day (Pig& pig)
+bool Datetime::parse_day (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int day;
   if (pig.getDigit2 (day) &&
       day > 0             &&
       day <= 31)
   {
-    _day = day;
+    value = day;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
