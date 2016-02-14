@@ -525,7 +525,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeTomorrow  (token) ||
         initializeYesterday (token) ||
         initializeDayName   (token) ||
-        initializeMonthName (token))
+        initializeMonthName (token) ||
+        initializeLater     (token))
     {
       return true;
     }
@@ -932,6 +933,27 @@ bool Datetime::initializeMonthName (const std::string& token)
     t->tm_mon = month;
     t->tm_mday = 1;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeLater (const std::string& token)
+{
+  if (closeEnough ("later",   token, Datetime::minimumMatchLength) ||
+      closeEnough ("someday", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_year = 138;
+    t->tm_mon = 0;
+    t->tm_mday = 18;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;

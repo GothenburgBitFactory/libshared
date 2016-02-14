@@ -125,6 +125,7 @@ private:
   bool initializeYesterday (const std::string&);
   bool initializeDayName   (const std::string&);
   bool initializeMonthName (const std::string&);
+  bool initializeLater     (const std::string&);
 
   bool validate ();
   void resolve ();
