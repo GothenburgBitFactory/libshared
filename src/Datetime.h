@@ -120,6 +120,7 @@ private:
   bool initializeNow      (const std::string&);
   bool initializeToday    (const std::string&);
   bool initializeSod      (const std::string&);
+  bool initializeEod      (const std::string&);
 
   bool validate ();
   void resolve ();

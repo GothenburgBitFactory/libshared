@@ -520,7 +520,8 @@ bool Datetime::parse_named (Pig& pig)
   {
     if (initializeNow      (token)
         initializeToday    (token) ||
-        initializeSod      (token))
+        initializeSod      (token) ||
+        initializeEod      (token))
     {
       return true;
     }
@@ -829,6 +830,25 @@ bool Datetime::initializeSod (const std::string& token)
     t->tm_isdst = -1;
     _date = mktime (t);
 
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEod (const std::string& token)
+{
+  if (closeEnough ("eod", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_mday++;
+    t->tm_hour = t->tm_min = 0;
+    t->tm_sec = -1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
     return true;
   }
 
