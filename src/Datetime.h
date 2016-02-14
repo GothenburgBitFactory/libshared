@@ -129,6 +129,7 @@ private:
   bool initializeEoy       (const std::string&);
   bool initializeSoy       (const std::string&);
   bool initializeEoq       (const std::string&);
+  bool initializeSoq       (const std::string&);
 
   bool validate ();
   void resolve ();

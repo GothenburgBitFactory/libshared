@@ -529,7 +529,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeLater     (token) ||
         initializeEoy       (token) ||
         initializeSoy       (token) ||
-        initializeEoq       (token))
+        initializeEoq       (token) ||
+        initializeSoq       (token))
     {
       return true;
     }
@@ -1016,6 +1017,31 @@ bool Datetime::initializeEoq (const std::string& token)
 
     t->tm_hour = t->tm_min = 0;
     t->tm_sec = -1;
+    t->tm_mon += 3 - (t->tm_mon % 3);
+    if (t->tm_mon > 11)
+    {
+      t->tm_mon -= 12;
+      ++t->tm_year;
+    }
+
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoq (const std::string& token)
+{
+  if (closeEnough ("soq", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mon += 3 - (t->tm_mon % 3);
     if (t->tm_mon > 11)
     {
