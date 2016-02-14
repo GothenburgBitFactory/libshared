@@ -121,6 +121,7 @@ private:
   bool parse_month         (Pig&);
   bool parse_week          (Pig&);
   bool parse_julian        (Pig&);
+  bool parse_day           (Pig&);
 
   bool initializeNow            (const std::string&);
   bool initializeToday          (const std::string&);

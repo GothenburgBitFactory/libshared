@@ -909,6 +909,21 @@ bool Datetime::parse_julian (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_day (Pig& pig)
+{
+  int day;
+  if (pig.getDigit2 (day) &&
+      day > 0             &&
+      day <= 31)
+  {
+    _day = day;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))
