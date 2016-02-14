@@ -518,29 +518,31 @@ bool Datetime::parse_named (Pig& pig)
   std::string token;
   if (pig.getUntilWS (token))
   {
-    if (initializeNow       (token) ||
-        initializeToday     (token) ||
-        initializeSod       (token) ||
-        initializeEod       (token) ||
-        initializeTomorrow  (token) ||
-        initializeYesterday (token) ||
-        initializeDayName   (token) ||
-        initializeMonthName (token) ||
-        initializeLater     (token) ||
-        initializeEoy       (token) ||
-        initializeSoy       (token) ||
-        initializeEoq       (token) ||
-        initializeSoq       (token) ||
-        initializeSocm      (token) ||
-        initializeSom       (token) ||
-        initializeEom       (token) ||
-        initializeSocw      (token) ||
-        initializeEow       (token) ||
-        initializeSow       (token) ||
-        initializeSoww      (token) ||
-        initializeEoww      (token) ||
-        initializeOrdinal   (token) ||
-        initializeEaster    (token))
+    if (initializeNow            (token) ||
+        initializeToday          (token) ||
+        initializeSod            (token) ||
+        initializeEod            (token) ||
+        initializeTomorrow       (token) ||
+        initializeYesterday      (token) ||
+        initializeDayName        (token) ||
+        initializeMonthName      (token) ||
+        initializeLater          (token) ||
+        initializeEoy            (token) ||
+        initializeSoy            (token) ||
+        initializeEoq            (token) ||
+        initializeSoq            (token) ||
+        initializeSocm           (token) ||
+        initializeSom            (token) ||
+        initializeEom            (token) ||
+        initializeSocw           (token) ||
+        initializeEow            (token) ||
+        initializeSow            (token) ||
+        initializeSoww           (token) ||
+        initializeEoww           (token) ||
+        initializeOrdinal        (token) ||
+        initializeEaster         (token) ||
+        initializeMidsommar      (token) ||
+        initializeMidsommarafton (token))
     {
       return true;
     }
@@ -1392,6 +1394,31 @@ bool Datetime::initializeMidsommar (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeMidsommarafton (const std::string& token)
+{
+  if (closeEnough ("midsommarafton", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+    midsommarafton (t);
+    _date = mktime (t);
+
+    // If the result is earlier this year, then recalc for next year.
+    if (_date < now)
+    {
+      t = localtime (&now);
+      t->tm_year++;
+      midsommarafton (t);
+    }
+
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Datetime::easter (struct tm* t) const
 {
   int Y = t->tm_year + 1900;
@@ -1429,6 +1456,19 @@ void Datetime::midsommar (struct tm* t) const
   time_t then = mktime (t);               // Obtain the weekday of June 20th.
   struct tm* mid = localtime (&then);
   t->tm_mday += 6 - mid->tm_wday;         // How many days after 20th.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Datetime::midsommarafton (struct tm* t) const
+{
+  t->tm_mon = 5;                          // June.
+  t->tm_mday = 19;                        // Saturday after 20th.
+  t->tm_hour = t->tm_min = t->tm_sec = 0; // Midnight.
+  t->tm_isdst = -1;                       // Probably DST, but check.
+
+  time_t then = mktime (t);               // Obtain the weekday of June 19th.
+  struct tm* mid = localtime (&then);
+  t->tm_mday += 5 - mid->tm_wday;         // How many days after 19th.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
