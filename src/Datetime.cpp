@@ -601,6 +601,8 @@ bool Datetime::parse_epoch (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// YYYYMMDDTHHMMSSZ
+// YYYYMMDDTHHMMSS
 bool Datetime::parse_date_time (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
@@ -671,6 +673,7 @@ bool Datetime::parse_date_time_ext (Pig& pig)
 
 ////////////////////////////////////////////////////////////////////////////////
 // YYYY-MM-DD
+// YYYY-MM
 // YYYY-DDD
 // YYYY-Www-D
 // YYYY-Www
@@ -703,15 +706,25 @@ bool Datetime::parse_date_ext (Pig& pig)
       if (! unicodeLatinDigit (pig.peek ()))
         return true;
     }
-    else if (pig.getDigit2 (month) && month &&
-             pig.skip ('-')        &&
-             pig.getDigit2 (day)   && day)
+    else if (pig.getDigit2 (month) && month)
     {
-      _year = year;
-      _month = month;
-      _day = day;
-      if (! unicodeLatinDigit (pig.peek ()))
-        return true;
+      if (pig.skip ('-') &&
+          pig.getDigit2 (day) && day)
+      {
+        _year = year;
+        _month = month;
+        _day = day;
+        if (! unicodeLatinDigit (pig.peek ()))
+          return true;
+      }
+      else
+      {
+        _year = year;
+        _month = month;
+        _day = 1;
+        if (! unicodeLatinDigit (pig.peek ()))
+          return true;
+      }
     }
   }
 
@@ -820,7 +833,7 @@ bool Datetime::parse_time_utc_ext (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// time-ext offset-ext
+// time-ext off-ext
 bool Datetime::parse_time_off_ext (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
