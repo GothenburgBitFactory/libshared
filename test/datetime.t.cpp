@@ -160,7 +160,7 @@ int main (int, char**)
   testParse (t, "2013-340",                   8, year,  0,  0, 0, 340,  0,     0,     0, false, local6    );
   testParse (t, "2013-W49-5",                10, year,  0, 49, 5,   0,  0,     0,     0, false, local6    );
   testParse (t, "2013-W49",                   8, year,  0, 49, 0,   0,  0,     0,     0, false, local1    );
-  testParse (t, "2013-12",                    7, year, mo,  0, 0,   0,  0,     0,     0, false, local1    );
+  testParse (t, "2013-12",                    7, year, mo,  0, 0,   0,  1,     0,     0, false, local1    );
 
   testParse (t, "2013-12-06T12:34:56",       19, year, mo,  0, 0,   0,  6,   hms,     0, false, local6+hms);
   testParse (t, "2013-12-06T12:34",          16, year, mo,  0, 0,   0,  6,    hm,     0, false, local6+hm );
