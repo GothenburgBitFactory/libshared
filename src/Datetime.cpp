@@ -524,7 +524,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeEod       (token) ||
         initializeTomorrow  (token) ||
         initializeYesterday (token) ||
-        initializeDayName   (token))
+        initializeDayName   (token) ||
+        initializeMonthName (token))
     {
       return true;
     }
@@ -907,6 +908,29 @@ bool Datetime::initializeDayName (const std::string& token)
     else
       t->tm_mday += day - t->tm_wday;
 
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeMonthName (const std::string& token)
+{
+  auto month = monthOfYear (token);
+  if (month != -1)
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    if (t->tm_mon >= month)
+      t->tm_year++;
+
+    t->tm_mon = month;
+    t->tm_mday = 1;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
