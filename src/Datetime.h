@@ -117,6 +117,8 @@ private:
   bool parse_time_utc_ext  (Pig&);
   bool parse_time_off_ext  (Pig&);
 
+  bool parse_year          (Pig&);
+
   bool initializeNow            (const std::string&);
   bool initializeToday          (const std::string&);
   bool initializeSod            (const std::string&);

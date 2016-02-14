@@ -850,6 +850,20 @@ bool Datetime::parse_time_off_ext (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_year (Pig& pig)
+{
+  int year;
+  if (pig.getDigit4 (year) &&
+      year > 1969)
+  {
+    _year = year;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))
