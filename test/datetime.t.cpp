@@ -237,6 +237,15 @@ int main (int, char**)
     t.ok    (now      <= tomorrow,   "now <= tomorrow");
     t.ok    (now      <  tomorrow,   "now < tomorrow");
 
+    // ctor ("now")
+    Datetime::weekstart = 1;
+    Datetime relative_now;
+    t.ok (relative_now.sameHour (now),  "Datetime ().sameHour (Datetime (now))");
+    t.ok (relative_now.sameDay (now),   "Datetime ().sameDay (Datetime (now))");
+    t.ok (relative_now.sameWeek (now),  "Datetime ().sameWeek (Datetime (now))");
+    t.ok (relative_now.sameMonth (now), "Datetime ().sameMonth (Datetime (now))");
+    t.ok (relative_now.sameYear (now),  "Datetime ().sameYear (Datetime (now))");
+
     // Loose comparisons.
     Datetime left ("7/4/2008", "m/d/Y");
     Datetime comp1 ("7/4/2008", "m/d/Y");
@@ -455,6 +464,105 @@ int main (int, char**)
     t.is (Datetime ("1/1/2011",   "m/d/Y").dayOfYear (),   1, "dayOfYear (1/1/2011)   ->   1");
     t.is (Datetime ("5/1/2011",   "m/d/Y").dayOfYear (), 121, "dayOfYear (5/1/2011)   -> 121");
     t.is (Datetime ("12/31/2011", "m/d/Y").dayOfYear (), 365, "dayOfYear (12/31/2011) -> 365");
+
+    // Relative dates.
+    Datetime r1 ("today");
+    t.ok (r1.sameDay (now), "today = now");
+
+    Datetime r4 ("sunday");
+    if (now.dayOfWeek () >= 0)
+      t.ok (r4.sameDay (now + (0 - now.dayOfWeek () + 7) * 86400), "next sunday");
+    else
+      t.ok (r4.sameDay (now + (0 - now.dayOfWeek ()) * 86400), "next sunday");;
+
+    Datetime r5 ("monday");
+    if (now.dayOfWeek () >= 1)
+      t.ok (r5.sameDay (now + (1 - now.dayOfWeek () + 7) * 86400), "next monday");
+    else
+      t.ok (r5.sameDay (now + (1 - now.dayOfWeek ()) * 86400), "next monday");;
+
+    Datetime r6 ("tuesday");
+    if (now.dayOfWeek () >= 2)
+      t.ok (r6.sameDay (now + (2 - now.dayOfWeek () + 7) * 86400), "next tuesday");
+    else
+      t.ok (r6.sameDay (now + (2 - now.dayOfWeek ()) * 86400), "next tuesday");;
+
+    Datetime r7 ("wednesday");
+    if (now.dayOfWeek () >= 3)
+      t.ok (r7.sameDay (now + (3 - now.dayOfWeek () + 7) * 86400), "next wednesday");
+    else
+      t.ok (r7.sameDay (now + (3 - now.dayOfWeek ()) * 86400), "next wednesday");;
+
+    Datetime r8 ("thursday");
+    if (now.dayOfWeek () >= 4)
+      t.ok (r8.sameDay (now + (4 - now.dayOfWeek () + 7) * 86400), "next thursday");
+    else
+      t.ok (r8.sameDay (now + (4 - now.dayOfWeek ()) * 86400), "next thursday");;
+
+    Datetime r9 ("friday");
+    if (now.dayOfWeek () >= 5)
+      t.ok (r9.sameDay (now + (5 - now.dayOfWeek () + 7) * 86400), "next friday");
+    else
+      t.ok (r9.sameDay (now + (5 - now.dayOfWeek ()) * 86400), "next friday");;
+
+    Datetime r10 ("saturday");
+    if (now.dayOfWeek () >= 6)
+      t.ok (r10.sameDay (now + (6 - now.dayOfWeek () + 7) * 86400), "next saturday");
+    else
+      t.ok (r10.sameDay (now + (6 - now.dayOfWeek ()) * 86400), "next saturday");;
+
+    Datetime r11 ("eow");
+    t.ok (r11 < now + (8 * 86400), "eow < 7 days away");
+
+    Datetime r12 ("eocw");
+    t.ok (r12 > now - (8 * 86400), "eocw < 7 days in the past");
+
+    Datetime r13 ("eom");
+    t.ok (r13.sameMonth (now), "eom in same month as now");
+
+    Datetime r14 ("eocm");
+    t.ok (r14.sameMonth (now), "eocm in same month as now");
+
+    Datetime r15 ("eoy");
+    t.ok (r15.sameYear (now), "eoy in same year as now");
+
+    Datetime r16 ("sow");
+    t.ok (r16 < now + (8 * 86400), "sow < 7 days away");
+
+    Datetime r23 ("socw");
+    t.ok (r23 > now - (8 * 86400), "sow < 7 days in the past");
+
+    Datetime r17 ("som");
+    t.notok (r17.sameMonth (now), "som not in same month as now");
+
+    Datetime r18 ("socm");
+    t.ok (r18.sameMonth (now), "socm in same month as now");
+
+    Datetime r19 ("soy");
+    t.notok (r19.sameYear (now), "soy not in same year as now");
+
+    Datetime first ("1st");
+    t.notok (first.sameMonth (now), "1st not in same month as now");
+    t.is (first.day (),   1, "1st day is 1");
+
+    Datetime later ("later");
+    t.is (later.month (),   1, "later -> m = 1");
+    t.is (later.day (),    18, "later -> d = 18");
+    t.is (later.year (), 2038, "later -> y = 2038");
+
+    // Quarters
+    Datetime soq ("soq");
+    Datetime eoq ("eoq");
+    t.is (soq.day (),  1,      "soq is the first day of a month");
+    t.is (eoq.day () / 10,  3, "eoq is the 30th or 31th of a month");
+    t.is (soq.month () % 3, 1, "soq month is 1, 4, 7 or 10");
+    t.is (eoq.month () % 3, 0, "eoq month is 3, 6, 9 or 12");
+
+    // Note: these fail during the night of daylight savings end.
+    t.ok (soq.sameYear (now) ||
+          (now.month () >= 10 &&
+           soq.year () == now.year () + 1), "soq is in same year as now");
+    t.ok (eoq.sameYear (now),  "eoq is in same year as now");
 
     // Datetime::sameHour
     Datetime r20 ("6/7/2010 01:00:00", "m/d/Y H:N:S");
