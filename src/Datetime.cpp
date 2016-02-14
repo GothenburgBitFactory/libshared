@@ -527,7 +527,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeDayName   (token) ||
         initializeMonthName (token) ||
         initializeLater     (token) ||
-        initializeEoy       (token))
+        initializeEoy       (token) ||
+        initializeSoy       (token))
     {
       return true;
     }
@@ -973,6 +974,26 @@ bool Datetime::initializeEoy (const std::string& token)
 
     t->tm_hour = t->tm_min = 0;
     t->tm_sec = -1;
+    t->tm_mon = 0;
+    t->tm_mday = 1;
+    t->tm_year++;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoy (const std::string& token)
+{
+  if (closeEnough ("soy", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mon = 0;
     t->tm_mday = 1;
     t->tm_year++;
