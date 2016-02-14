@@ -107,6 +107,7 @@ public:
 private:
   void clear ();
   bool parse_formatted     (Pig&, const std::string&);
+  bool parse_named         (Pig&);
   bool parse_epoch         (Pig&);
   bool parse_date_time     (Pig&);
   bool parse_date_time_ext (Pig&);

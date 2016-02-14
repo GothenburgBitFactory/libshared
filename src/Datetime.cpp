@@ -169,6 +169,13 @@ bool Datetime::parse (
     }
   }
 
+  else if (parse_named (pig))
+  {
+    // ::validate and ::resolve are not needed in this case.
+    start = pig.cursor ();
+    return true;
+  }
+
   return false;
 }
 
@@ -503,12 +510,12 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   return true;
 }
 
-/*
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::parse_named (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
+/*
   std::string token;
   if (n.getUntilWS (token))
   {
@@ -519,11 +526,11 @@ bool Datetime::parse_named (Pig& pig)
       return true;
     }
   }
+*/
 
   pig.restoreTo (checkpoint);
   return false;
 }
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // Valid epoch values are unsigned integers after 1980-01-01T00:00:00Z. This
