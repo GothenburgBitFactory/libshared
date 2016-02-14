@@ -518,11 +518,12 @@ bool Datetime::parse_named (Pig& pig)
   std::string token;
   if (pig.getUntilWS (token))
   {
-    if (initializeNow      (token) ||
-        initializeToday    (token) ||
-        initializeSod      (token) ||
-        initializeEod      (token) ||
-        initializeTomorrow (token))
+    if (initializeNow       (token) ||
+        initializeToday     (token) ||
+        initializeSod       (token) ||
+        initializeEod       (token) ||
+        initializeTomorrow  (token) ||
+        initializeYesterday (token))
     {
       return true;
     }
@@ -868,6 +869,23 @@ bool Datetime::initializeTomorrow (const std::string& token)
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeYesterday (const std::string& token)
+{
+  if (closeEnough ("yesterday", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t) - 86400;
     return true;
   }
 

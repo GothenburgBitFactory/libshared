@@ -117,11 +117,12 @@ private:
   bool parse_time_utc_ext  (Pig&);
   bool parse_time_off_ext  (Pig&);
 
-  bool initializeNow      (const std::string&);
-  bool initializeToday    (const std::string&);
-  bool initializeSod      (const std::string&);
-  bool initializeEod      (const std::string&);
-  bool initializeTomorrow (const std::string&);
+  bool initializeNow       (const std::string&);
+  bool initializeToday     (const std::string&);
+  bool initializeSod       (const std::string&);
+  bool initializeEod       (const std::string&);
+  bool initializeTomorrow  (const std::string&);
+  bool initializeYesterday (const std::string&);
 
   bool validate ();
   void resolve ();
