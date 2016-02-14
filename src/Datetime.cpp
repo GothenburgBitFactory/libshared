@@ -511,6 +511,34 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Note how these are all single words:
+//   <day>
+//   <month>
+//   Nth
+//   socy, eocy
+//   socq, eocq
+//   socm, eocm
+//   som, eom
+//   soq, eoq
+//   soy, eoy
+//   socw, eocw
+//   sow, eow
+//   soww, eoww
+//   sod, eod
+//   yesterday
+//   today
+//   now
+//   tomorrow
+//   later          = midnight, Jan 18th, 2038.
+//   someday        = midnight, Jan 18th, 2038.
+//   easter
+//   eastermonday
+//   ascension
+//   pentecost
+//   goodfriday
+//   midsommar      = midnight, 1st Saturday after 20th June
+//   midsommarafton = midnight, 1st Friday after 19th June
+//
 bool Datetime::parse_named (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
