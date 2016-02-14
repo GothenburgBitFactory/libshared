@@ -939,6 +939,24 @@ bool Datetime::parse_day (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_weekday (Pig& pig, int& value)
+{
+  auto checkpoint = pig.cursor ();
+
+  int weekday;
+  if (pig.getDigit (weekday) &&
+      weekday >= 1           &&
+      weekday <= 7)
+  {
+    value = weekday;
+    return true;
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::parse_hour (Pig& pig)
 {
   int hour;
