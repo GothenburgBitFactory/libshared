@@ -823,7 +823,7 @@ bool Datetime::initializeToday (const std::string& token)
 {
   if (closeEnough ("today", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -841,7 +841,7 @@ bool Datetime::initializeSod (const std::string& token)
 {
   if (closeEnough ("sod", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_mday++;
@@ -860,7 +860,7 @@ bool Datetime::initializeEod (const std::string& token)
 {
   if (closeEnough ("eod", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_mday++;
@@ -879,7 +879,7 @@ bool Datetime::initializeTomorrow (const std::string& token)
 {
   if (closeEnough ("tomorrow", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_mday++;
@@ -897,7 +897,7 @@ bool Datetime::initializeYesterday (const std::string& token)
 {
   if (closeEnough ("yesterday", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -915,7 +915,7 @@ bool Datetime::initializeDayName (const std::string& token)
   auto day = dayOfWeek (token);
   if (day != -1)
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     if (t->tm_wday >= day)
@@ -938,7 +938,7 @@ bool Datetime::initializeMonthName (const std::string& token)
   auto month = monthOfYear (token);
   if (month != -1)
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     if (t->tm_mon >= month)
@@ -961,7 +961,7 @@ bool Datetime::initializeLater (const std::string& token)
   if (closeEnough ("later",   token, Datetime::minimumMatchLength) ||
       closeEnough ("someday", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -981,7 +981,7 @@ bool Datetime::initializeEoy (const std::string& token)
 {
   if (closeEnough ("eoy", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = 0;
@@ -1002,7 +1002,7 @@ bool Datetime::initializeSoy (const std::string& token)
 {
   if (closeEnough ("soy", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1022,7 +1022,7 @@ bool Datetime::initializeEoq (const std::string& token)
 {
   if (closeEnough ("eoq", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = 0;
@@ -1048,7 +1048,7 @@ bool Datetime::initializeSoq (const std::string& token)
 {
   if (closeEnough ("soq", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1073,7 +1073,7 @@ bool Datetime::initializeSocm (const std::string& token)
 {
   if (closeEnough ("socm", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1091,7 +1091,7 @@ bool Datetime::initializeSom (const std::string& token)
 {
   if (closeEnough ("som", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1118,7 +1118,7 @@ bool Datetime::initializeEom (const std::string& token)
   if (closeEnough ("eom",  token, Datetime::minimumMatchLength) ||
       closeEnough ("eocm", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = 24;
@@ -1138,7 +1138,7 @@ bool Datetime::initializeSocw (const std::string& token)
 {
   if (closeEnough ("socw", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1157,7 +1157,7 @@ bool Datetime::initializeEow (const std::string& token)
   if (closeEnough ("eow",  token, Datetime::minimumMatchLength) ||
       closeEnough ("eocw", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = 0;
@@ -1176,7 +1176,7 @@ bool Datetime::initializeSow (const std::string& token)
 {
   if (closeEnough ("sow", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1194,7 +1194,7 @@ bool Datetime::initializeSoww (const std::string& token)
 {
   if (closeEnough ("soww", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
@@ -1213,7 +1213,7 @@ bool Datetime::initializeEoww (const std::string& token)
 {
   if (closeEnough ("eoww", token, Datetime::minimumMatchLength))
   {
-    time_t now = time (NULL);
+    time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = 24;
@@ -1885,7 +1885,7 @@ int Datetime::week () const
   else
     throw std::string ("The week may only start on a Sunday or Monday.");
 
-  int weekNumber = strtol (weekStr, NULL, 10);
+  int weekNumber = strtol (weekStr, nullptr, 10);
   if (weekstart == 0)
     weekNumber += 1;
 
