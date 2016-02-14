@@ -879,6 +879,21 @@ bool Datetime::parse_month (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_week (Pig& pig)
+{
+  int week;
+  if (pig.getDigit2 (week) &&
+      week > 0             &&
+      week <= 53)
+  {
+    _week = week;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))
