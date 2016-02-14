@@ -864,6 +864,21 @@ bool Datetime::parse_year (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::parse_month (Pig& pig)
+{
+  int month;
+  if (pig.getDigit2 (month) &&
+      month > 0             &&
+      month <= 12)
+  {
+    _month = month;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
   if (closeEnough ("now", token, Datetime::minimumMatchLength))

@@ -118,6 +118,7 @@ private:
   bool parse_time_off_ext  (Pig&);
 
   bool parse_year          (Pig&);
+  bool parse_month         (Pig&);
 
   bool initializeNow            (const std::string&);
   bool initializeToday          (const std::string&);
