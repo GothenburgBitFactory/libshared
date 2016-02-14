@@ -123,6 +123,7 @@ private:
   bool parse_julian        (Pig&, int&);
   bool parse_day           (Pig&, int&);
   bool parse_weekday       (Pig&, int&);
+  bool parse_hour          (Pig&, int&);
   bool parse_minute        (Pig&);
   bool parse_second        (Pig&);
   bool parse_off_hour      (Pig&);

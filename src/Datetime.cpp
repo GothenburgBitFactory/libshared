@@ -957,17 +957,20 @@ bool Datetime::parse_weekday (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_hour (Pig& pig)
+bool Datetime::parse_hour (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int hour;
   if (pig.getDigit2 (hour) &&
       hour >= 0            &&
       hour < 24)
   {
-    _seconds += 3600 * hour;
+    value = hour;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
