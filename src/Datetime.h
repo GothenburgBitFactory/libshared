@@ -131,6 +131,7 @@ private:
   bool initializeEoq       (const std::string&);
   bool initializeSoq       (const std::string&);
   bool initializeSocm      (const std::string&);
+  bool initializeSom       (const std::string&);
 
   bool validate ();
   void resolve ();

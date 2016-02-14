@@ -531,7 +531,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeSoy       (token) ||
         initializeEoq       (token) ||
         initializeSoq       (token) ||
-        initializeSocm      (token))
+        initializeSocm      (token) ||
+        initializeSom       (token))
     {
       return true;
     }
@@ -1068,6 +1069,32 @@ bool Datetime::initializeSocm (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSom (const std::string& token)
+{
+  if (closeEnough ("som", token, Datetime::minimumMatchLength))
+  {
+    time_t now = time (NULL);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+    t->tm_mon++;
+    if (t->tm_mon == 12)
+    {
+      t->tm_year++;
+      t->tm_mon = 0;
+    }
+
     t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
