@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (991);
+  UnitTest t (1025);
 
   Datetime iso;
   std::string::size_type start = 0;
