@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1037);
+  UnitTest t (1769);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -216,6 +216,78 @@ int main (int, char**)
   // The only non-extended forms.
   testParse (t, "20131206T123456Z",          16, year, mo,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
   testParse (t, "20131206T123456",           15, year, mo,  0, 0,   0,  6,   hms,     0, false, local6+hms);
+
+  // Non-extended forms.
+
+  // time
+  //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
+  testParse (t, "123456Z",                    7,    0,  0,  0, 0,   0,  0,   hms,     0,  true, utc+hms+ud   );
+  testParse (t, "1234Z",                      5,    0,  0,  0, 0,   0,  0,    hm,     0,  true, utc+hm+ud    );
+  testParse (t, "123456+0100",               11,    0,  0,  0, 0,   0,  0,   hms,  3600, false, utc+hms-z+ud );
+  testParse (t, "123456+01",                  9,    0,  0,  0, 0,   0,  0,   hms,  3600, false, utc+hms-z+ud );
+  testParse (t, "1234+0100",                  9,    0,  0,  0, 0,   0,  0,    hm,  3600, false, utc+hm-z+ud  );
+  testParse (t, "1234+01",                    7,    0,  0,  0, 0,   0,  0,    hm,  3600, false, utc+hm-z+ud  );
+  testParse (t, "123456",                     6,    0,  0,  0, 0,   0,  0,   hms,     0, false, local+hms+ld );
+  testParse (t, "1234",                       4,    0,  0,  0, 0,   0,  0,    hm,     0, false, local+hm+ld  );
+
+  // datetime
+  //            input                         i  Year  Mo  Wk WD  Jul  Da   Secs     TZ    UTC      time_t
+  testParse (t, "20131206",                   8, year, mo,  0, 0,   0,  6,     0,     0, false, local6    );
+  testParse (t, "2013340",                    7, year,  0,  0, 0, 340,  0,     0,     0, false, local6    );
+  testParse (t, "2013W495",                   8, year,  0, 49, 5,   0,  0,     0,     0, false, local6    );
+  testParse (t, "2013W49",                    7, year,  0, 49, 0,   0,  0,     0,     0, false, local1    );
+  testParse (t, "201312",                     6, year, mo,  0, 0,   0,  1,     0,     0, false, local1    );
+
+  testParse (t, "20131206T123456",           15, year, mo,  0, 0,   0,  6,   hms,     0, false, local6+hms);
+  testParse (t, "20131206T1234",             13, year, mo,  0, 0,   0,  6,    hm,     0, false, local6+hm );
+  testParse (t, "2013340T123456",            14, year,  0,  0, 0, 340,  0,   hms,     0, false, local6+hms);
+  testParse (t, "2013340T1234",              12, year,  0,  0, 0, 340,  0,    hm,     0, false, local6+hm );
+  testParse (t, "2013W495T123456",           15, year,  0, 49, 5,   0,  0,   hms,     0, false, local6+hms);
+  testParse (t, "2013W495T1234",             13, year,  0, 49, 5,   0,  0,    hm,     0, false, local6+hm );
+  testParse (t, "2013W49T123456",            14, year,  0, 49, 0,   0,  0,   hms,     0, false, local1+hms);
+  testParse (t, "2013W49T1234",              12, year,  0, 49, 0,   0,  0,    hm,     0, false, local1+hm );
+
+  testParse (t, "20131206T123456Z",          16, year, mo,  0, 0,   0,  6,   hms,     0,  true, utc6+hms  );
+  testParse (t, "20131206T1234Z",            14, year, mo,  0, 0,   0,  6,    hm,     0,  true, utc6+hm   );
+  testParse (t, "2013340T123456Z",           15, year,  0,  0, 0, 340,  0,   hms,     0,  true, utc6+hms  );
+  testParse (t, "2013340T1234Z",             13, year,  0,  0, 0, 340,  0,    hm,     0,  true, utc6+hm   );
+  testParse (t, "2013W495T123456Z",          16, year,  0, 49, 5,   0,  0,   hms,     0,  true, utc6+hms  );
+  testParse (t, "2013W495T1234Z",            14, year,  0, 49, 5,   0,  0,    hm,     0,  true, utc6+hm   );
+  testParse (t, "2013W49T123456Z",           15, year,  0, 49, 0,   0,  0,   hms,     0,  true, utc1+hms  );
+  testParse (t, "2013W49T1234Z",             13, year,  0, 49, 0,   0,  0,    hm,     0,  true, utc1+hm   );
+
+  testParse (t, "20131206T123456+0100",      20, year, mo,  0, 0,   0,  6,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "20131206T123456+01",        18, year, mo,  0, 0,   0,  6,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "20131206T123456-0100",      20, year, mo,  0, 0,   0,  6,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "20131206T123456-01",        18, year, mo,  0, 0,   0,  6,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "20131206T1234+0100",        18, year, mo,  0, 0,   0,  6,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "20131206T1234+01",          16, year, mo,  0, 0,   0,  6,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "20131206T1234-0100",        18, year, mo,  0, 0,   0,  6,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "20131206T1234-01",          16, year, mo,  0, 0,   0,  6,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013340T123456+0100",       19, year,  0,  0, 0, 340,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013340T123456+01",         17, year,  0,  0, 0, 340,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013340T123456-0100",       19, year,  0,  0, 0, 340,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013340T123456-01",         17, year,  0,  0, 0, 340,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013340T1234+0100",         17, year,  0,  0, 0, 340,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013340T1234+01",           15, year,  0,  0, 0, 340,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013340T1234-0100",         17, year,  0,  0, 0, 340,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013340T1234-01",           15, year,  0,  0, 0, 340,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013W495T123456+0100",      20, year,  0, 49, 5,   0,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013W495T123456+01",        18, year,  0, 49, 5,   0,  0,   hms,  3600, false, utc6+hms-z);
+  testParse (t, "2013W495T123456-0100",      20, year,  0, 49, 5,   0,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013W495T123456-01",        18, year,  0, 49, 5,   0,  0,   hms, -3600, false, utc6+hms+z);
+  testParse (t, "2013W495T1234+0100",        18, year,  0, 49, 5,   0,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013W495T1234+01",          16, year,  0, 49, 5,   0,  0,    hm,  3600, false, utc6+hm-z );
+  testParse (t, "2013W495T1234-0100",        18, year,  0, 49, 5,   0,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013W495T1234-01",          16, year,  0, 49, 5,   0,  0,    hm, -3600, false, utc6+hm+z );
+  testParse (t, "2013W49T123456+0100",       19, year,  0, 49, 0,   0,  0,   hms,  3600, false, utc1+hms-z);
+  testParse (t, "2013W49T123456+01",         17, year,  0, 49, 0,   0,  0,   hms,  3600, false, utc1+hms-z);
+  testParse (t, "2013W49T123456-0100",       19, year,  0, 49, 0,   0,  0,   hms, -3600, false, utc1+hms+z);
+  testParse (t, "2013W49T123456-01",         17, year,  0, 49, 0,   0,  0,   hms, -3600, false, utc1+hms+z);
+  testParse (t, "2013W49T1234+0100",         17, year,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
+  testParse (t, "2013W49T1234+01",           15, year,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
+  testParse (t, "2013W49T1234-0100",         17, year,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
+  testParse (t, "2013W49T1234-01",           15, year,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
 
   try
   {
