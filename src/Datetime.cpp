@@ -644,27 +644,13 @@ bool Datetime::parse_date_time_ext (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  if (parse_date_ext (pig))
+  if (parse_date_ext (pig) &&
+      pig.skip ('T')       &&
+      (parse_time_utc_ext (pig) ||
+       parse_time_off_ext (pig) ||
+       parse_time_ext     (pig) ))
   {
-    if (pig.skip ('T') &&
-        parse_time_ext (pig))
-    {
-      if (pig.skip ('Z'))
-        _utc = true;
-      else if (parse_off_ext (pig))
-        ;
-
-      if (! unicodeLatinDigit (pig.peek ()))
-        return true;
-    }
-
-    // Restore date_ext
-    _year    = 0;
-    _month   = 0;
-    _week    = 0;
-    _weekday = 0;
-    _julian  = 0;
-    _day     = 0;
+    return true;
   }
 
   pig.restoreTo (checkpoint);
