@@ -156,9 +156,13 @@ bool Datetime::parse (
            parse_date_time_ext (pig)   ||
            (Datetime::isoEnabled &&
             (parse_date_ext      (pig) ||
+             parse_date          (pig) ||
              parse_time_utc_ext  (pig) ||
+             parse_time_utc      (pig) ||
              parse_time_off_ext  (pig) ||
-             parse_time_ext      (pig)))) // Time last, as it is the most permissive.
+             parse_time_off      (pig) ||
+             parse_time_ext      (pig) ||
+             parse_time          (pig)))) // Time last, as it is the most permissive.
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -601,42 +605,6 @@ bool Datetime::parse_epoch (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// YYYYMMDDTHHMMSSZ
-// YYYYMMDDTHHMMSS
-bool Datetime::parse_date_time (Pig& pig)
-{
-  auto checkpoint = pig.cursor ();
-
-  int year, month, day, hour, minute, second;
-  if (pig.getDigit4 (year)   &&
-      pig.getDigit2 (month)  && month &&
-      pig.getDigit2 (day)    && day   &&
-      pig.skip      ('T')    &&
-      pig.getDigit2 (hour)   &&
-      pig.getDigit2 (minute) && minute < 60 &&
-      pig.getDigit2 (second) && second < 60)
-  {
-    if (pig.skip ('Z'))
-      _utc = true;
-
-    _year    = year;
-    _month   = month;
-    _day     = day;
-    _seconds = (((hour * 60) + minute) * 60) + second;
-
-    return true;
-  }
-
-  _year    = 0;
-  _month   = 0;
-  _day     = 0;
-  _seconds = 0;
-
-  pig.restoreTo (checkpoint);
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // date-ext 'T' time-ext 'Z'
 // date-ext 'T' time-ext offset-ext
 // date-ext 'T' time-ext
@@ -836,6 +804,136 @@ bool Datetime::parse_time_off_ext (Pig& pig)
 
   if (parse_time_ext (pig) &&
       parse_off_ext (pig))
+  {
+    return true;
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// YYYYMMDDTHHMMSSZ
+// YYYYMMDDTHHMMSS
+bool Datetime::parse_date_time (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  if (parse_date (pig) &&
+      pig.skip ('T')   &&
+      (parse_time_utc (pig) ||
+       parse_time_off (pig) ||
+       parse_time     (pig)))
+  {
+    return true;
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// YYYYWww
+// YYYYDDD
+// YYYYMMDD
+// YYYYMM
+bool Datetime::parse_date (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  int year {};
+  int month {};
+  int julian {};
+  int week {};
+  int weekday {};
+  int day {};
+  if (parse_year (pig, year))
+  {
+    auto checkpointYear = pig.cursor ();
+
+    if (pig.skip ('W') &&
+        parse_week (pig, week))
+    {
+      if (pig.getDigit (weekday))
+        _weekday = weekday;
+
+      if (! unicodeLatinDigit (pig.peek ()))
+      {
+        _year = year;
+        _week = week;
+        return true;
+      }
+    }
+    else
+      pig.restoreTo (checkpointYear);
+
+    if (parse_julian (pig, julian) &&
+        ! unicodeLatinDigit (pig.peek ()))
+    {
+      _year = year;
+      _julian = julian;
+      return true;
+    }
+    else
+      pig.restoreTo (checkpointYear);
+
+    if (parse_month (pig, month))
+    {
+      if (parse_day (pig, day))
+      {
+        if (! unicodeLatinDigit (pig.peek ()))
+        {
+          _year = year;
+          _month = month;
+          _day = day;
+          return true;
+        }
+      }
+      else
+      {
+        if (! unicodeLatinDigit (pig.peek ()))
+        {
+          _year = year;
+          _month = month;
+          _day = 1;
+          return true;
+        }
+      }
+    }
+    else
+      pig.restoreTo (checkpointYear);
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// <time> Z
+bool Datetime::parse_time_utc (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  if (parse_time (pig) &&
+      pig.skip ('Z'))
+  {
+    _utc = true;
+    if (! unicodeLatinDigit (pig.peek ()))
+      return true;
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// <time> <off>
+bool Datetime::parse_time_off (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  if (parse_time (pig) &&
+      parse_off (pig))
   {
     if (! unicodeLatinDigit (pig.peek ()))
       return true;

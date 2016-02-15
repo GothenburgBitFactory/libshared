@@ -109,13 +109,16 @@ private:
   bool parse_formatted     (Pig&, const std::string&);
   bool parse_named         (Pig&);
   bool parse_epoch         (Pig&);
-  bool parse_date_time     (Pig&);
   bool parse_date_time_ext (Pig&);
   bool parse_date_ext      (Pig&);
   bool parse_off_ext       (Pig&);
   bool parse_time_ext      (Pig&);
   bool parse_time_utc_ext  (Pig&);
   bool parse_time_off_ext  (Pig&);
+  bool parse_date_time     (Pig&);
+  bool parse_date          (Pig&);
+  bool parse_time_utc      (Pig&);
+  bool parse_time_off      (Pig&);
   bool parse_time          (Pig&);
   bool parse_off           (Pig&);
 
