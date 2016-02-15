@@ -850,6 +850,38 @@ bool Datetime::parse_time_off_ext (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// ±hhmm
+// ±hh
+bool Datetime::parse_off (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  int sign = pig.peek ();
+  if (sign == '+' || sign == '-')
+  {
+    pig.skipN (1);
+
+    int hour {};
+    if (parse_off_hour (pig, hour))
+    {
+      int minute {};
+      parse_off_minute (pig, minute);
+      if (! unicodeLatinDigit (pig.peek ()))
+      {
+        _offset = (hour * 3600) + (minute * 60);
+        if (sign == '-')
+          _offset = - _offset;
+
+        return true;
+      }
+    }
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::parse_year (Pig& pig, int& value)
 {
   auto checkpoint = pig.cursor ();
