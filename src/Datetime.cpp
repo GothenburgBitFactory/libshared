@@ -779,34 +779,31 @@ bool Datetime::parse_time_ext (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  int seconds = 0;
-  int hh;
-  int mm;
-  int ss;
-  if (pig.getDigit2 (hh) && hh <= 24 &&
-      pig.skip (':')     &&
-      pig.getDigit2 (mm) && mm < 60)
+  int hour {};
+  int minute {};
+  if (parse_hour (pig, hour) &&
+      pig.skip (':')         &&
+      parse_minute (pig, minute))
   {
-    seconds = (hh * 3600) + (mm * 60);
-
     if (pig.skip (':'))
     {
-      if (pig.getDigit2 (ss) && ss < 60)
+      int second {};
+      if (parse_second (pig, second) &&
+          ! unicodeLatinDigit (pig.peek ()))
       {
-        seconds += ss;
-        _seconds = seconds;
-
-        if (! unicodeLatinDigit (pig.peek ()))
-          return true;
+        _seconds = (hour * 3600) + (minute * 60) + second;
+        return true;
       }
 
       pig.restoreTo (checkpoint);
       return false;
     }
 
-    _seconds = seconds;
     if (! unicodeLatinDigit (pig.peek ()))
+    {
+      _seconds = (hour * 3600) + (minute * 60);
       return true;
+    }
   }
 
   pig.restoreTo (checkpoint);
