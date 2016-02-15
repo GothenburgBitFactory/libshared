@@ -745,28 +745,25 @@ bool Datetime::parse_off_ext (Pig& pig)
   {
     pig.skipN (1);
 
-    int offset;
-    int hh;
-    int mm;
-    if (pig.getDigit2 (hh) && hh <= 12 &&
-        ! pig.getDigit (mm))
-    {
-      offset = hh * 3600;
+    int hour {0};
+    int minute {0};
 
+    if (parse_off_hour (pig, hour) &&
+        ! unicodeLatinDigit (pig.peek ()))
+    {
       if (pig.skip (':'))
       {
-        if (pig.getDigit2 (mm) && mm < 60)
-        {
-          offset += mm * 60;
-        }
-        else
+        if (! parse_off_minute (pig, minute))
         {
           pig.restoreTo (checkpoint);
           return false;
         }
       }
 
-      _offset = (sign == '-') ? -offset : offset;
+      _offset = (hour * 3600) + (minute * 60);
+      if (sign == '-')
+        _offset = - _offset;
+
       if (! unicodeLatinDigit (pig.peek ()))
         return true;
     }
