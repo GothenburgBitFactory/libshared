@@ -1029,17 +1029,20 @@ bool Datetime::parse_off_hour (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_off_minute (Pig& pig)
+bool Datetime::parse_off_minute (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int minute;
   if (pig.getDigit2 (minute) &&
       minute >= 0            &&
       minute < 60)
   {
-    _offset += 60 * minute;
+    value = minute;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
