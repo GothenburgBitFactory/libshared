@@ -203,16 +203,16 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 
   auto checkpoint = pig.cursor ();
 
-  int month  = -1;   // So we can check later.
-  int day    = -1;
-  int year   = -1;
-  int hour   = -1;
-  int minute = -1;
-  int second = -1;
+  int month  {-1};   // So we can check later.
+  int day    {-1};
+  int year   {-1};
+  int hour   {-1};
+  int minute {-1};
+  int second {-1};
 
   // For parsing, unused.
-  int wday   = -1;
-  int week   = -1;
+  int wday   {-1};
+  int week   {-1};
 
   for (unsigned int f = 0; f < format.length (); ++f)
   {
@@ -587,7 +587,7 @@ bool Datetime::parse_epoch (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  int epoch;
+  int epoch {};
   if (pig.getDigits (epoch) &&
       pig.eos ()            &&
       epoch >= 315532800)
