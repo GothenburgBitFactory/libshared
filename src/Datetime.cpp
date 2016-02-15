@@ -667,14 +667,18 @@ bool Datetime::parse_date_ext (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  int year;
-  if (pig.getDigit4 (year) &&
+  int year {};
+  if (parse_year (pig, year) &&
       pig.skip ('-'))
   {
-    int month;
-    int day;
+    auto checkpointYear = pig.cursor ();
+
+    int month {};
+    int day {};
+    int julian {};
+
     if (pig.skip ('W') &&
-        pig.getDigit2 (_week) && _week)
+        parse_week (pig, _week))
     {
       if (pig.skip ('-') &&
           pig.getDigit (_weekday))
@@ -682,36 +686,48 @@ bool Datetime::parse_date_ext (Pig& pig)
         // What is happening here - must be something to do?
       }
 
-      _year = year;
       if (! unicodeLatinDigit (pig.peek ()))
-        return true;
-    }
-    else if (pig.getDigit3 (_julian) && _julian)
-    {
-      _year = year;
-      if (! unicodeLatinDigit (pig.peek ()))
-        return true;
-    }
-    else if (pig.getDigit2 (month) && month)
-    {
-      if (pig.skip ('-') &&
-          pig.getDigit2 (day) && day)
       {
         _year = year;
-        _month = month;
-        _day = day;
-        if (! unicodeLatinDigit (pig.peek ()))
-          return true;
-      }
-      else
-      {
-        _year = year;
-        _month = month;
-        _day = 1;
-        if (! unicodeLatinDigit (pig.peek ()))
-          return true;
+        return true;
       }
     }
+    else
+      pig.restoreTo (checkpointYear);
+
+    if (parse_month (pig, month) &&
+        pig.skip ('-')           &&
+        parse_day (pig, day)     &&
+        ! unicodeLatinDigit (pig.peek ()))
+    {
+      _year = year;
+      _month = month;
+      _day = day;
+      return true;
+    }
+    else
+      pig.restoreTo (checkpointYear);
+
+    if (parse_julian (pig, julian) &&
+        ! unicodeLatinDigit (pig.peek ()))
+    {
+      _year = year;
+      _julian = julian;
+      return true;
+    }
+    else
+      pig.restoreTo (checkpointYear);
+
+    if (parse_month (pig, month) &&
+        ! unicodeLatinDigit (pig.peek ()))
+    {
+      _year = year;
+      _month = month;
+      _day = 1;
+      return true;
+    }
+    else
+      pig.restoreTo (checkpointYear);
   }
 
   pig.restoreTo (checkpoint);
