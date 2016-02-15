@@ -993,17 +993,20 @@ bool Datetime::parse_minute (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_second (Pig& pig)
+bool Datetime::parse_second (Pig& pig, int& value)
 {
+  auto checkpoint = pig.cursor ();
+
   int second;
   if (pig.getDigit2 (second) &&
-      second > 0             &&
+      second >= 0            &&
       second < 60)
   {
-    _seconds += second;
+    value = second;
     return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
