@@ -850,6 +850,31 @@ bool Datetime::parse_time_off_ext (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// hhmmss
+// hhmm
+bool Datetime::parse_time (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  int hour {};
+  int minute {};
+  int second {};
+  if (parse_hour (pig, hour) &&
+      parse_minute (pig, minute))
+  {
+    parse_second (pig, second);
+    if (! unicodeLatinDigit (pig.peek ()))
+    {
+      _seconds = (hour * 3600) + (minute * 60) + second;
+      return true;
+    }
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // ±hhmm
 // ±hh
 bool Datetime::parse_off (Pig& pig)

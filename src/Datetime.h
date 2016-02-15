@@ -116,6 +116,7 @@ private:
   bool parse_time_ext      (Pig&);
   bool parse_time_utc_ext  (Pig&);
   bool parse_time_off_ext  (Pig&);
+  bool parse_time          (Pig&);
   bool parse_off           (Pig&);
 
   bool parse_year          (Pig&, int&);
