@@ -110,6 +110,15 @@ bool Duration::parse_seconds (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
+  int epoch {};
+  if (pig.getDigits (epoch) &&
+      pig.eos ()            &&
+      epoch > 60)
+  {
+    _period = static_cast <time_t> (epoch);
+    return true;
+  }
+
   pig.restoreTo (checkpoint);
   return false;
 }
