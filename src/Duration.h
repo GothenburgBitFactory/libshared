@@ -46,6 +46,7 @@ public:
   bool parse (const std::string&, std::string::size_type&);
   bool parse_seconds (Pig&);
   bool parse_designated (Pig&);
+  bool parse_weeks (Pig&);
   bool parse_units (Pig&);
   const std::string format () const;
   const std::string formatVague () const;
@@ -58,6 +59,7 @@ private:
 public:
   int _year      {0};
   int _month     {0};
+  int _weeks     {0};
   int _day       {0};
   int _hours     {0};
   int _minutes   {0};

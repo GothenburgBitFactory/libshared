@@ -180,6 +180,7 @@ bool Duration::parse (const std::string& input, std::string::size_type& start)
   }
 
   else if (parse_designated (pig) ||
+           parse_weeks (pig)      ||
            parse_units (pig))
   {
     start = pig.cursor ();
@@ -260,6 +261,31 @@ bool Duration::parse_designated (Pig& pig)
 
     if (pig.cursor () - checkpoint >= 3)
       return true;
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 'P' [nn 'W']
+bool Duration::parse_weeks (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skip ('P') &&
+      ! pig.eos ())
+  {
+    int value;
+    pig.save ();
+    if (pig.getDigits (value) && pig.skip ('W'))
+      _weeks = value;
+    else
+      pig.restore ();
+
+    if (pig.eos () || unicodeWhitespace (pig.peek ()))
+      if (pig.cursor () - checkpoint >= 3)
+        return true;
   }
 
   pig.restoreTo (checkpoint);
@@ -351,6 +377,7 @@ void Duration::clear ()
 {
   _year    = 0;
   _month   = 0;
+  _weeks   = 0;
   _day     = 0;
   _hours   = 0;
   _minutes = 0;
@@ -421,12 +448,17 @@ const std::string Duration::formatVague () const
 void Duration::resolve ()
 {
   if (! _period)
-    _period = (_year  * 365 * 86400) +
-              (_month  * 30 * 86400) +
-              (_day         * 86400) +
-              (_hours       *  3600) +
-              (_minutes     *    60) +
-              _seconds;
+  {
+    if (_weeks)
+      _period = (_weeks * 7 * 86400);
+    else
+      _period = (_year  * 365 * 86400) +
+                (_month  * 30 * 86400) +
+                (_day         * 86400) +
+                (_hours       *  3600) +
+                (_minutes     *    60) +
+                _seconds;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
