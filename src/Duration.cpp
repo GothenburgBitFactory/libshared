@@ -202,7 +202,8 @@ bool Duration::parse_designated (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  if (pig.skip ('P'))
+  if (pig.skip ('P') &&
+      ! pig.eos ())
   {
     int value;
     pig.save ();
@@ -223,7 +224,8 @@ bool Duration::parse_designated (Pig& pig)
     else
       pig.restore ();
 
-    if (pig.skip ('T'))
+    if (pig.skip ('T') &&
+        ! pig.eos ())
     {
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('H'))
@@ -244,7 +246,8 @@ bool Duration::parse_designated (Pig& pig)
         pig.restore ();
     }
 
-    return true;
+    if (pig.cursor () - checkpoint >= 3)
+      return true;
   }
 
   pig.restoreTo (checkpoint);
