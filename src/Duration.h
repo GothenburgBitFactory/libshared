@@ -43,6 +43,7 @@ public:
   time_t toTime_t () const;
   bool parse (const std::string&, std::string::size_type&);
   bool parse_seconds (Pig&);
+  bool parse_designated (Pig&);
   const std::string format () const;
   const std::string formatVague () const;
 

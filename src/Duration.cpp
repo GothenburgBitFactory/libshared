@@ -102,6 +102,13 @@ bool Duration::parse_seconds (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// 'P' [nn 'Y'] [nn 'M'] [nn 'D'] ['T' [nn 'H'] [nn 'M'] [nn 'S']]
+bool Duration::parse_designated (Pig& pig)
+{
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Duration::clear ()
 {
   _year    = 0;
