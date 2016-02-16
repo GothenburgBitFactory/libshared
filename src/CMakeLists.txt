@@ -6,6 +6,7 @@ set (common_HEADERS Args.h
                     Color.h
                     Configuration.h
                     Datetime.h
+                    Duration.h
                     FS.h
                     Msg.h
                     Pig.h
@@ -21,6 +22,7 @@ set (common_SRCS Args.cpp
                  Color.cpp
                  Configuration.cpp
                  Datetime.cpp
+                 Duration.cpp
                  FS.cpp
                  Msg.cpp
                  Pig.cpp
