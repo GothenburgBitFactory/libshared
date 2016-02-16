@@ -89,7 +89,8 @@ bool Duration::parse (const std::string& input, std::string::size_type& start)
     return true;
   }
 
-  else if (parse_designated (pig))
+  else if (parse_designated (pig) ||
+           parse_units (pig))
   {
     // Check the values and determine time_t.
     if (validate ())
