@@ -32,7 +32,9 @@
 
 class Duration
 {
+public:
   Duration ();
+  Duration (const std::string&);
 
 private:
   void clear ();
