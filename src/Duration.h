@@ -28,6 +28,7 @@
 #define INCLUDED_DURATION
 
 #include <Pig.h>
+#include <string>
 #include <time.h>
 
 class Duration
@@ -35,6 +36,7 @@ class Duration
 public:
   Duration ();
   Duration (const std::string&);
+  bool parse (const std::string&, std::string::size_type&);
 
 private:
   void clear ();

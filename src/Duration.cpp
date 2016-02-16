@@ -37,8 +37,16 @@ Duration::Duration ()
 Duration::Duration (const std::string& input)
 {
   clear ();
+
+  std::string::size_type idx = 0;
+  parse (input, idx);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Duration::parse (const std::string& input, std::string::size_type& start)
+{
+  return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void Duration::clear ()
