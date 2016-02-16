@@ -26,6 +26,82 @@
 
 #include <cmake.h>
 #include <Duration.h>
+#include <sstream>
+#include <iomanip>
+
+#define DAY    86400
+#define HOUR    3600
+#define MINUTE    60
+#define SECOND     1
+
+static struct
+{
+  std::string unit;
+  int seconds;
+  bool standalone;
+} durations[] =
+{
+  // These are sorted by first character, then length, so that Nibbler::getOneOf
+  // returns a maximal match.
+  {"annual",     365 * DAY,    true},
+  {"biannual",   730 * DAY,    true},
+  {"bimonthly",   61 * DAY,    true},
+  {"biweekly",    14 * DAY,    true},
+  {"biyearly",   730 * DAY,    true},
+  {"daily",        1 * DAY,    true},
+  {"days",         1 * DAY,    false},
+  {"day",          1 * DAY,    true},
+  {"d",            1 * DAY,    false},
+  {"fortnight",   14 * DAY,    true},
+  {"hours",        1 * HOUR,   false},
+  {"hour",         1 * HOUR,   true},
+  {"hrs",          1 * HOUR,   false},
+  {"hr",           1 * HOUR,   true},
+  {"h",            1 * HOUR,   false},
+  {"minutes",      1 * MINUTE, false},
+  {"minute",       1 * MINUTE, true},
+  {"mins",         1 * MINUTE, false},
+  {"min",          1 * MINUTE, true},
+  {"monthly",     30 * DAY,    true},
+  {"months",      30 * DAY,    false},
+  {"month",       30 * DAY,    true},
+  {"mnths",       30 * DAY,    false},
+  {"mths",        30 * DAY,    false},
+  {"mth",         30 * DAY,    true},
+  {"mos",         30 * DAY,    false},
+  {"mo",          30 * DAY,    true},
+  {"m",           30 * DAY,    false},
+  {"quarterly",   91 * DAY,    true},
+  {"quarters",    91 * DAY,    false},
+  {"quarter",     91 * DAY,    true},
+  {"qrtrs",       91 * DAY,    false},
+  {"qrtr",        91 * DAY,    true},
+  {"qtrs",        91 * DAY,    false},
+  {"qtr",         91 * DAY,    true},
+  {"q",           91 * DAY,    false},
+  {"semiannual", 183 * DAY,    true},
+  {"sennight",    14 * DAY,    false},
+  {"seconds",      1 * SECOND, false},
+  {"second",       1 * SECOND, true},
+  {"secs",         1 * SECOND, false},
+  {"sec",          1 * SECOND, true},
+  {"s",            1 * SECOND, false},
+  {"weekdays",     1 * DAY,    true},
+  {"weekly",       7 * DAY,    true},
+  {"weeks",        7 * DAY,    false},
+  {"week",         7 * DAY,    true},
+  {"wks",          7 * DAY,    false},
+  {"wk",           7 * DAY,    true},
+  {"w",            7 * DAY,    false},
+  {"yearly",     365 * DAY,    true},
+  {"years",      365 * DAY,    false},
+  {"year",       365 * DAY,    true},
+  {"yrs",        365 * DAY,    false},
+  {"yr",         365 * DAY,    true},
+  {"y",          365 * DAY,    false},
+};
+
+#define NUM_DURATIONS (sizeof (durations) / sizeof (durations[0]))
 
 ////////////////////////////////////////////////////////////////////////////////
 Duration::Duration ()
