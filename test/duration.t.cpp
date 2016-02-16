@@ -29,6 +29,39 @@
 #include <test.h>
 
 ////////////////////////////////////////////////////////////////////////////////
+void testParse (
+  UnitTest& t,
+  const std::string& input,
+  int in_start,
+  int in_year,
+  int in_month,
+  int in_day,
+  int in_hours,
+  int in_minutes,
+  int in_seconds,
+  time_t in_period,
+  const std::string& output,
+  const std::string& vague)
+{
+  std::string label = std::string ("parse (\"") + input + "\") --> ";
+
+  Duration dur;
+  std::string::size_type start = 0;
+
+  t.ok (dur.parse (input, start),                 label + "true");
+  t.is ((int) start,          in_start,           label + "[]");
+  t.is (dur._year,            in_year,            label + "_year");
+  t.is (dur._month,           in_month,           label + "_month");
+  t.is (dur._day,             in_day,             label + "_day");
+  t.is (dur._hours,           in_hours,           label + "_hours");
+  t.is (dur._minutes,         in_minutes,         label + "_minutes");
+  t.is (dur._seconds,         in_seconds,         label + "_seconds");
+  t.is ((size_t) dur._period, (size_t) in_period, label + "_period");
+  t.is (dur.format (),        output,             label + " format");
+  t.is (dur.formatVague (),   vague,              label + " formatVague");
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
   UnitTest t (12);
