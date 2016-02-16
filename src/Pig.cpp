@@ -378,6 +378,65 @@ bool Pig::getNumber (double& result)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// number:
+//   int frac? exp?
+//
+// int:
+//   (-|+)? digit+
+//
+// frac:
+//   . digit+
+//
+bool Pig::getDecimal (std::string& result)
+{
+  auto i = _cursor;
+
+  // [+-]?
+  if (_text[i] &&
+      (_text[i] == '-' ||
+       _text[i] == '+'))
+    ++i;
+
+  // digit+
+  if (_text[i] &&
+      unicodeLatinDigit (_text[i]))
+  {
+    ++i;
+
+    while (_text[i] && unicodeLatinDigit (_text[i]))
+      ++i;
+
+    // ( . digit+ )?
+    if (_text[i] && _text[i] == '.')
+    {
+      ++i;
+
+      while (_text[i] && unicodeLatinDigit (_text[i]))
+        ++i;
+    }
+
+    result = _text.substr (_cursor, i - _cursor);
+    _cursor = i;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Pig::getDecimal (double& result)
+{
+  std::string s;
+  if (getDecimal (s))
+  {
+    result = std::strtod (s.c_str (), NULL);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Gets quote content:      "foobar" -> foobar      (for c = '"')
 // Handles escaped quotes:  "foo\"bar" -> foo\"bar  (for c = '"')
 // Returns false if first character is not c, or if there is no closing c.
