@@ -26,8 +26,10 @@
 
 #include <cmake.h>
 #include <Duration.h>
+#include <unicode.h>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 #define DAY    86400
 #define HOUR    3600
@@ -43,61 +45,61 @@ static struct
 {
   // These are sorted by first character, then length, so that Nibbler::getOneOf
   // returns a maximal match.
-  {"annual",     365 * DAY,    true},
-  {"biannual",   730 * DAY,    true},
-  {"bimonthly",   61 * DAY,    true},
-  {"biweekly",    14 * DAY,    true},
-  {"biyearly",   730 * DAY,    true},
-  {"daily",        1 * DAY,    true},
+  {"annual",     365 * DAY,    true },
+  {"biannual",   730 * DAY,    true },
+  {"bimonthly",   61 * DAY,    true },
+  {"biweekly",    14 * DAY,    true },
+  {"biyearly",   730 * DAY,    true },
+  {"daily",        1 * DAY,    true },
   {"days",         1 * DAY,    false},
-  {"day",          1 * DAY,    true},
+  {"day",          1 * DAY,    true },
   {"d",            1 * DAY,    false},
-  {"fortnight",   14 * DAY,    true},
+  {"fortnight",   14 * DAY,    true },
   {"hours",        1 * HOUR,   false},
-  {"hour",         1 * HOUR,   true},
+  {"hour",         1 * HOUR,   true },
   {"hrs",          1 * HOUR,   false},
-  {"hr",           1 * HOUR,   true},
+  {"hr",           1 * HOUR,   true },
   {"h",            1 * HOUR,   false},
   {"minutes",      1 * MINUTE, false},
-  {"minute",       1 * MINUTE, true},
+  {"minute",       1 * MINUTE, true },
   {"mins",         1 * MINUTE, false},
-  {"min",          1 * MINUTE, true},
-  {"monthly",     30 * DAY,    true},
+  {"min",          1 * MINUTE, true },
+  {"monthly",     30 * DAY,    true },
   {"months",      30 * DAY,    false},
-  {"month",       30 * DAY,    true},
+  {"month",       30 * DAY,    true },
   {"mnths",       30 * DAY,    false},
   {"mths",        30 * DAY,    false},
-  {"mth",         30 * DAY,    true},
+  {"mth",         30 * DAY,    true },
   {"mos",         30 * DAY,    false},
-  {"mo",          30 * DAY,    true},
+  {"mo",          30 * DAY,    true },
   {"m",           30 * DAY,    false},
-  {"quarterly",   91 * DAY,    true},
+  {"quarterly",   91 * DAY,    true },
   {"quarters",    91 * DAY,    false},
-  {"quarter",     91 * DAY,    true},
+  {"quarter",     91 * DAY,    true },
   {"qrtrs",       91 * DAY,    false},
-  {"qrtr",        91 * DAY,    true},
+  {"qrtr",        91 * DAY,    true },
   {"qtrs",        91 * DAY,    false},
-  {"qtr",         91 * DAY,    true},
+  {"qtr",         91 * DAY,    true },
   {"q",           91 * DAY,    false},
-  {"semiannual", 183 * DAY,    true},
+  {"semiannual", 183 * DAY,    true },
   {"sennight",    14 * DAY,    false},
   {"seconds",      1 * SECOND, false},
-  {"second",       1 * SECOND, true},
+  {"second",       1 * SECOND, true },
   {"secs",         1 * SECOND, false},
-  {"sec",          1 * SECOND, true},
+  {"sec",          1 * SECOND, true },
   {"s",            1 * SECOND, false},
-  {"weekdays",     1 * DAY,    true},
-  {"weekly",       7 * DAY,    true},
+  {"weekdays",     1 * DAY,    true },
+  {"weekly",       7 * DAY,    true },
   {"weeks",        7 * DAY,    false},
-  {"week",         7 * DAY,    true},
+  {"week",         7 * DAY,    true },
   {"wks",          7 * DAY,    false},
-  {"wk",           7 * DAY,    true},
+  {"wk",           7 * DAY,    true },
   {"w",            7 * DAY,    false},
-  {"yearly",     365 * DAY,    true},
+  {"yearly",     365 * DAY,    true },
   {"years",      365 * DAY,    false},
-  {"year",       365 * DAY,    true},
+  {"year",       365 * DAY,    true },
   {"yrs",        365 * DAY,    false},
-  {"yr",         365 * DAY,    true},
+  {"yr",         365 * DAY,    true },
   {"y",          365 * DAY,    false},
 };
 
@@ -257,6 +259,78 @@ bool Duration::parse_designated (Pig& pig)
 ////////////////////////////////////////////////////////////////////////////////
 bool Duration::parse_units (Pig& pig)
 {
+  auto checkpoint = pig.cursor ();
+
+  // Static and so preserved between calls.
+  static std::vector <std::string> units;
+  if (units.size () == 0)
+    for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+      units.push_back (durations[i].unit);
+
+  double number;
+  std::string unit;
+  if (pig.getOneOf (units, unit))
+  {
+    if (pig.eos () ||
+        unicodeWhitespace (pig.peek ()))
+    {
+      for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+      {
+        if (durations[i].unit == unit &&
+            durations[i].standalone)
+        {
+          _period = static_cast <int> (durations[i].seconds);
+          return true;
+        }
+      }
+    }
+  }
+
+  else if (pig.getDecimal (number))
+  {
+    pig.skipWS ();
+    if (pig.getOneOf (units, unit))
+    {
+      // The "d" unit is a special case, because it is the only one that can
+      // legitimately occur at the beginning of a UUID, and be followed by an
+      // operator:
+      //
+      //   1111111d-0000-0000-0000-000000000000
+      //
+      // Because Lexer::isDuration is higher precedence than Lexer::isUUID,
+      // the above UUID looks like:
+      //
+      //   <1111111d> <-> ...
+      //   duration   op  ...
+      //
+      // So as a special case, durations, with units of "d" are rejected if the
+      // quantity exceeds 10000.
+      //
+      if (unit == "d" && number > 10000.0)
+      {
+        pig.restoreTo (checkpoint);
+        return false;
+      }
+
+      if (pig.eos () ||
+          unicodeWhitespace (pig.peek ()))
+      {
+        // Linear lookup - should instead be logarithmic.
+        double seconds = 1;
+        for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+        {
+          if (durations[i].unit == unit)
+          {
+            seconds = durations[i].seconds;
+            _period = static_cast <int> (number * static_cast <double> (seconds));
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  pig.restoreTo (checkpoint);
   return false;
 }
 
