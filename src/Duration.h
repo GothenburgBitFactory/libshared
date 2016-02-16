@@ -50,7 +50,6 @@ public:
 
 private:
   void clear ();
-  bool validate ();
   void resolve ();
   std::string dump () const;
 

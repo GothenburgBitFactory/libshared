@@ -162,7 +162,7 @@ bool Duration::parse (const std::string& input, std::string::size_type& start)
 
   if (parse_seconds (pig))
   {
-    // ::validate and ::resolve are not needed in this case.
+    // ::resolve is not needed in this case.
     start = pig.cursor ();
     return true;
   }
@@ -170,14 +170,9 @@ bool Duration::parse (const std::string& input, std::string::size_type& start)
   else if (parse_designated (pig) ||
            parse_units (pig))
   {
-    // Check the values and determine time_t.
-    if (validate ())
-    {
-      // Record cursor position.
-      start = pig.cursor ();
-      resolve ();
-      return true;
-    }
+    start = pig.cursor ();
+    resolve ();
+    return true;
   }
 
   return false;
@@ -402,17 +397,6 @@ const std::string Duration::formatVague () const
   else if (_period >= 1)           formatted << static_cast <int> (_period)         << "s";
 
   return formatted.str ();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Duration::validate ()
-{
-  return _year    ||
-         _month   ||
-         _day     ||
-         _hours   ||
-         _minutes ||
-         _seconds;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
