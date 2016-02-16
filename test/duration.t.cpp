@@ -66,7 +66,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1622);
+  UnitTest t (1634);
 
   Duration dur;
   std::string::size_type start = 0;
@@ -116,6 +116,7 @@ int main (int, char**)
   testParse (t, "PT3600S",         7,    0,  0,  0,  0,  0,  0,      3600,                               h,           "PT1H",     "1h");
   testParse (t, "PT60M",           5,    0,  0,  0,  0,  0, 60,         0,                               h,           "PT1H",     "1h");
 
+  //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format     vague
   testParse (t, "0seconds",        8,    0,  0,  0,  0,  0,  0,         0,                               0,           "PT0S",       "");
   testParse (t, "2 seconds",       9,    0,  0,  0,  0,  0,  0,         0,                               2,           "PT2S",     "2s");
   testParse (t, "10seconds",       9,    0,  0,  0,  0,  0,  0,         0,                              10,          "PT10S",    "10s");
@@ -163,6 +164,7 @@ int main (int, char**)
 
   testParse (t, "weekdays",        8,    0,  0,  0,  0,  0,  0,         0,                             day,            "P1D",     "1d");
 
+  //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format     vague
   testParse (t, "daily",           5,    0,  0,  0,  0,  0,  0,         0,                             day,            "P1D",     "1d");
 
   testParse (t, "0days",           5,    0,  0,  0,  0,  0,  0,         0,                               0,           "PT0S",       "");
@@ -197,6 +199,7 @@ int main (int, char**)
   testParse (t, "10w",             3,    0,  0,  0,  0,  0,  0,         0,                        70 * day,           "P70D",    "10w");
   testParse (t, "1.5w",            4,    0,  0,  0,  0,  0,  0,         0,               10 * day + 12 * h,       "P10DT12H",    "10d");
 
+  //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format     vague
   testParse (t, "monthly",         7,    0,  0,  0,  0,  0,  0,         0,                        30 * day,           "P30D",     "4w");
 
   testParse (t, "0months",         7,    0,  0,  0,  0,  0,  0,         0,                               0,           "PT0S",       "");
@@ -231,6 +234,7 @@ int main (int, char**)
   testParse (t, "10q",             3,    0,  0,  0,  0,  0,  0,         0,                       910 * day,          "P910D",   "2.5y");
   testParse (t, "1.5q",            4,    0,  0,  0,  0,  0,  0,         0,              136 * day + 12 * h,      "P136DT12H",    "4mo");
 
+  //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format     vague
   testParse (t, "yearly",          6,    0,  0,  0,  0,  0,  0,         0,                            year,          "P365D",   "1.0y");
 
   testParse (t, "0years",          6,    0,  0,  0,  0,  0,  0,         0,                               0,           "PT0S",       "");
@@ -260,6 +264,9 @@ int main (int, char**)
   testParse (t, "2 sennight",     10,    0,  0,  0,  0,  0,  0,         0,                        28 * day,           "P28D",     "4w");
   testParse (t, "10sennight",     10,    0,  0,  0,  0,  0,  0,         0,                       140 * day,          "P140D",    "4mo");
   testParse (t, "1.5sennight",    11,    0,  0,  0,  0,  0,  0,         0,                        21 * day,           "P21D",     "3w");
+
+  //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format     vague
+  testParse (t, "P1W",             3,    0,  0,  1,  0,  0,  0,         0,                         7 * day,            "P7D",     "7d");
 
   Duration left, right;
 
