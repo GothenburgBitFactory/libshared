@@ -370,7 +370,7 @@ bool Pig::getNumber (double& result)
   std::string s;
   if (getNumber (s))
   {
-    result = std::strtof (s.c_str (), NULL);
+    result = std::strtod (s.c_str (), NULL);
     return true;
   }
 
