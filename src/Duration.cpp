@@ -127,6 +127,54 @@ bool Duration::parse_seconds (Pig& pig)
 // 'P' [nn 'Y'] [nn 'M'] [nn 'D'] ['T' [nn 'H'] [nn 'M'] [nn 'S']]
 bool Duration::parse_designated (Pig& pig)
 {
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skip ('P'))
+  {
+    int value;
+    pig.save ();
+    if (pig.getDigits (value) && pig.skip ('Y'))
+      _year = value;
+    else
+      pig.restore ();
+
+    pig.save ();
+    if (pig.getDigits (value) && pig.skip ('M'))
+      _month = value;
+    else
+      pig.restore ();
+
+    pig.save ();
+    if (pig.getDigits (value) && pig.skip ('D'))
+      _day = value;
+    else
+      pig.restore ();
+
+    if (pig.skip ('T'))
+    {
+      pig.save ();
+      if (pig.getDigits (value) && pig.skip ('H'))
+        _hours = value;
+      else
+        pig.restore ();
+
+      pig.save ();
+      if (pig.getDigits (value) && pig.skip ('M'))
+        _minutes = value;
+      else
+        pig.restore ();
+
+      pig.save ();
+      if (pig.getDigits (value) && pig.skip ('S'))
+        _seconds = value;
+      else
+        pig.restore ();
+    }
+
+    return true;
+  }
+
+  pig.restoreTo (checkpoint);
   return false;
 }
 
