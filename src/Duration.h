@@ -41,6 +41,7 @@ public:
 
 private:
   void clear ();
+  std::string dump () const;
 
 public:
   int _year;

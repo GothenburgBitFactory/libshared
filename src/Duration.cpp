@@ -68,3 +68,22 @@ void Duration::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/*
+std::string Duration::dump () const
+{
+  std::stringstream s;
+  s << "Duration"
+    << " y"  << _year
+    << " mo" << _month
+    << " d"  << _day
+    << " h"  << _hours
+    << " mi" << _minutes
+    << " s"  << _seconds
+    << " ="  << _period
+    << "  "  << (_period ? format () : "");
+
+  return s.str ();
+}
+*/
+
+////////////////////////////////////////////////////////////////////////////////
