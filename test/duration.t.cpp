@@ -31,6 +31,28 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
+  UnitTest t (12);
+
+  Duration dur;
+  std::string::size_type start = 0;
+  t.notok (dur.parse ("foo", start), "foo --> false");
+  t.is ((int)start, 0,               "foo[0]");
+
+  t.notok (dur.parse ("P", start),   "P --> false");
+  t.is ((int)start, 0,               "P[0]");
+
+  t.notok (dur.parse ("PT", start),  "PT --> false");
+  t.is ((int)start, 0,               "PT[0]");
+
+  t.notok (dur.parse ("P1", start),  "P1 --> false");
+  t.is ((int)start, 0,               "P1[0]");
+
+  t.notok (dur.parse ("P1T", start), "P1T --> false");
+  t.is ((int)start, 0,               "P1T[0]");
+
+  t.notok (dur.parse ("PT1", start), "PT1 --> false");
+  t.is ((int)start, 0,               "PT1[0]");
+
   return 0;
 }
 
