@@ -89,6 +89,18 @@ bool Duration::parse (const std::string& input, std::string::size_type& start)
     return true;
   }
 
+  else if (parse_designated (pig))
+  {
+    // Check the values and determine time_t.
+    if (validate ())
+    {
+      // Record cursor position.
+      start = pig.cursor ();
+      resolve ();
+      return true;
+    }
+  }
+
   return false;
 }
 
