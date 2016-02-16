@@ -43,6 +43,13 @@ Duration::Duration (const std::string& input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Duration::Duration (time_t input)
+{
+  clear ();
+  _period = input;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Duration::parse (const std::string& input, std::string::size_type& start)
 {
   return false;

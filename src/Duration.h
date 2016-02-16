@@ -36,6 +36,7 @@ class Duration
 public:
   Duration ();
   Duration (const std::string&);
+  Duration (time_t);
   bool parse (const std::string&, std::string::size_type&);
 
 private:
