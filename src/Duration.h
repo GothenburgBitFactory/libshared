@@ -37,6 +37,7 @@ public:
   Duration ();
   Duration (const std::string&);
   Duration (time_t);
+  bool operator< (const ISO8601p&);
   bool parse (const std::string&, std::string::size_type&);
   bool parse_seconds (Pig&);
 

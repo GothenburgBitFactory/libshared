@@ -49,6 +49,12 @@ Duration::Duration (time_t input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Duration::operator< (const Duration& other)
+{
+  return _period < other._period;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Duration::parse (const std::string& input, std::string::size_type& start)
 {
   auto i = start;
