@@ -41,6 +41,7 @@ public:
 
 private:
   void clear ();
+  void resolve ();
   std::string dump () const;
 
 public:
