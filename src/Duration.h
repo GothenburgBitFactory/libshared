@@ -33,6 +33,18 @@
 class Duration
 {
   Duration ();
+
+private:
+  void clear ();
+
+public:
+  int _year;
+  int _month;
+  int _day;
+  int _hours;
+  int _minutes;
+  int _seconds;
+  time_t _period;
 };
 
 #endif
