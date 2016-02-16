@@ -114,6 +114,33 @@ void Duration::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Range      Representation
+// ---------  ---------------------
+// >= 365d    {n.n}y
+// >= 90d     {n}mo
+// >= 14d     {n}w
+// >= 1d      {n}d
+// >= 1h      {n}h
+// >= 1min    {n}min
+//            {n}s
+//
+const std::string Duration::formatVague () const
+{
+  float days = (float) _period / 86400.0;
+
+  std::stringstream formatted;
+       if (_period >= 86400 * 365) formatted << std::fixed << std::setprecision (1) << (days / 365) << "y";
+  else if (_period >= 86400 * 90)  formatted << static_cast <int> (days / 30)       << "mo";
+  else if (_period >= 86400 * 14)  formatted << static_cast <int> (days / 7)        << "w";
+  else if (_period >= 86400)       formatted << static_cast <int> (days)            << "d";
+  else if (_period >= 3600)        formatted << static_cast <int> (_period / 3600)  << "h";
+  else if (_period >= 60)          formatted << static_cast <int> (_period / 60)    << "min";
+  else if (_period >= 1)           formatted << static_cast <int> (_period)         << "s";
+
+  return formatted.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Allow un-normalized values.
 void Duration::resolve ()
 {
