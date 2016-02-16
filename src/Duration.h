@@ -40,6 +40,7 @@ public:
   bool operator< (const Duration&);
   bool operator> (const Duration&);
   std::string toString () const;
+  time_t toTime_t () const;
   bool parse (const std::string&, std::string::size_type&);
   bool parse_seconds (Pig&);
 
