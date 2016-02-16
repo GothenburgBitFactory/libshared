@@ -61,6 +61,14 @@ bool Duration::operator> (const Duration& other)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string Duration::toString () const
+{
+  std::stringstream s;
+  s << _period;
+  return s.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Duration::parse (const std::string& input, std::string::size_type& start)
 {
   auto i = start;
