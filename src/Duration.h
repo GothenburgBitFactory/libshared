@@ -56,13 +56,13 @@ private:
   std::string dump () const;
 
 public:
-  int _year;
-  int _month;
-  int _day;
-  int _hours;
-  int _minutes;
-  int _seconds;
-  time_t _period;
+  int _year      {0};
+  int _month     {0};
+  int _day       {0};
+  int _hours     {0};
+  int _minutes   {0};
+  int _seconds   {0};
+  time_t _period {0};
 };
 
 #endif
