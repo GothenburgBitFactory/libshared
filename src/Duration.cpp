@@ -172,6 +172,17 @@ const std::string Duration::formatVague () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Duration::validate ()
+{
+  return _year    ||
+         _month   ||
+         _day     ||
+         _hours   ||
+         _minutes ||
+         _seconds;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Allow un-normalized values.
 void Duration::resolve ()
 {
