@@ -114,6 +114,37 @@ void Duration::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const std::string Duration::format () const
+{
+  if (_period)
+  {
+    time_t t = _period;
+    int seconds = t % 60; t /= 60;
+    int minutes = t % 60; t /= 60;
+    int hours   = t % 24; t /= 24;
+    int days    = t;
+
+    std::stringstream s;
+    s << 'P';
+    if (days)   s << days   << 'D';
+
+    if (hours || minutes || seconds)
+    {
+      s << 'T';
+      if (hours)   s << hours   << 'H';
+      if (minutes) s << minutes << 'M';
+      if (seconds) s << seconds << 'S';
+    }
+
+    return s.str ();
+  }
+  else
+  {
+    return "PT0S";
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Range      Representation
 // ---------  ---------------------
 // >= 365d    {n.n}y
