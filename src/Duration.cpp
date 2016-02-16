@@ -37,7 +37,6 @@ Duration::Duration ()
 Duration::Duration (const std::string& input)
 {
   clear ();
-
   std::string::size_type idx = 0;
   parse (input, idx);
 }
@@ -52,6 +51,27 @@ Duration::Duration (time_t input)
 ////////////////////////////////////////////////////////////////////////////////
 bool Duration::parse (const std::string& input, std::string::size_type& start)
 {
+  auto i = start;
+  Pig pig (input);
+  if (i)
+    pig.skipN (static_cast <int> (i));
+
+  if (parse_seconds (pig))
+  {
+    // ::validate and ::resolve are not needed in this case.
+    start = pig.cursor ();
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Duration::parse_seconds (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  pig.restoreTo (checkpoint);
   return false;
 }
 

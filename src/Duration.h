@@ -38,6 +38,7 @@ public:
   Duration (const std::string&);
   Duration (time_t);
   bool parse (const std::string&, std::string::size_type&);
+  bool parse_seconds (Pig&);
 
 private:
   void clear ();
