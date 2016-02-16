@@ -279,6 +279,8 @@ bool Duration::parse_units (Pig& pig)
         }
       }
     }
+    else
+      pig.restoreTo (checkpoint);
   }
 
   else if (pig.getDecimal (number))
