@@ -378,15 +378,7 @@ bool Pig::getNumber (double& result)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// number:
-//   int frac? exp?
-//
-// int:
-//   (-|+)? digit+
-//
-// frac:
-//   . digit+
-//
+// [ + | - ] \d+ [ . [ \d+ ]]
 bool Pig::getDecimal (std::string& result)
 {
   auto i = _cursor;
@@ -398,8 +390,7 @@ bool Pig::getDecimal (std::string& result)
     ++i;
 
   // digit+
-  if (_text[i] &&
-      unicodeLatinDigit (_text[i]))
+  if (_text[i] && unicodeLatinDigit (_text[i]))
   {
     ++i;
 
