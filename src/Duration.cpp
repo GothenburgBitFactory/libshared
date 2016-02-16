@@ -405,12 +405,13 @@ const std::string Duration::formatVague () const
 // Allow un-normalized values.
 void Duration::resolve ()
 {
-  _period = (_year  * 365 * 86400) +
-            (_month  * 30 * 86400) +
-            (_day         * 86400) +
-            (_hours       *  3600) +
-            (_minutes     *    60) +
-            _seconds;
+  if (! _period)
+    _period = (_year  * 365 * 86400) +
+              (_month  * 30 * 86400) +
+              (_day         * 86400) +
+              (_hours       *  3600) +
+              (_minutes     *    60) +
+              _seconds;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
