@@ -38,6 +38,7 @@
 #include <cerrno>
 #include <csignal>
 #include <cmath>
+#include <cstring>
 
 ///////////////////////////////////////////////////////////////////////////////
 void wrapText (
