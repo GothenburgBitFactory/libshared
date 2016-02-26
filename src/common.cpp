@@ -39,6 +39,7 @@
 #include <csignal>
 #include <cmath>
 #include <cstring>
+#include <sys/wait.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 void wrapText (
