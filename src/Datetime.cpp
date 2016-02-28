@@ -27,6 +27,7 @@
 #include <cmake.h>
 #include <Datetime.h>
 #include <sstream>
+#include <iostream> // TODO Remove
 #include <iomanip>
 #include <stdlib.h>
 #include <assert.h>
@@ -579,6 +580,29 @@ bool Datetime::parse_named (Pig& pig)
       return true;
     }
   }
+
+/////
+
+  pig.restoreTo (checkpoint);
+
+  // obtain input tokens.
+  std::vector <std::string> tokens;
+  while (pig.getUntilWS (token))
+  {
+    tokens.push_back (token);
+    if (! pig.skipWS ())
+      break;
+  }
+
+  for (const auto& t : tokens)
+    std::cout << "# token '" << t << "'\n";
+
+  if (initializeFoo (tokens))
+  {
+    return true;
+  }
+
+/////
 
   pig.restoreTo (checkpoint);
   return false;
@@ -1858,6 +1882,73 @@ void Datetime::midsommarafton (struct tm* t) const
   time_t then = mktime (t);               // Obtain the weekday of June 19th.
   struct tm* mid = localtime (&then);
   t->tm_mday += 5 - mid->tm_wday;         // How many days after 19th.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Suggested date expressions:
+//   {ordinal} {day} in|of {month}
+//   last|past|next|this {day}
+//   last|past|next|this {month}
+//   last|past|next|this week
+//   last|past|next|this month
+//   last|past|next|this weekend
+//   last|past|next|this year
+//   {day} last|past|next|this week
+//   {day} [at] {time}
+//   {time} {day}
+//
+// Candidates:
+//   <dayname> <time>
+//   <time>
+//   tue 9am
+//   Friday before easter
+//   3 days before eom
+//   in the morning
+//   am|pm
+//   4pm
+//   noon
+//   midnight
+//   tomorrow in one year
+//   in two weeks
+//   2 weeks from now
+//   2 weeks ago tuesday
+//   thursday in 2 weeks
+//   last day next month
+//   10 days from today
+//   thursday before last weekend in may
+//   friday last full week in may
+//   3rd wednesday this month
+//   3 weeks after 2nd tuesday next month
+//   100 days from the beginning of the month
+//   10 days after last monday
+//   sunday in the evening
+//   in 6 hours
+//   6 in the morning
+//   kl 18
+//   feb 11
+//   11 feb
+//   2011-02-08
+//   11/19/2011
+//   2 o'clock
+//   2pm
+//   next business day
+//   new moon
+//   full moon
+//   in 28 days
+//   3rd quarter
+//   week 23
+//   {number} {unit}
+//   - {number} {unit}
+//   {ordinal} {unit} in {larger-unit}
+//   end of day tomorrow
+//   end of {day}
+//   by {day}
+//   first thing {day}
+//
+bool Datetime::initializeFoo (const std::vector <std::string>& tokens)
+{
+
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

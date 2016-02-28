@@ -163,6 +163,8 @@ private:
   void midsommar (struct tm*) const;
   void midsommarafton (struct tm*) const;
 
+  bool initializeFoo            (const std::vector <std::string>&);
+
   bool validate ();
   void resolve ();
   std::string dump () const;
