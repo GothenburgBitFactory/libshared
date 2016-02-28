@@ -36,6 +36,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <errno.h>
 #include <string.h>
 #include <common.h>
 #include <format.h>
@@ -555,7 +556,8 @@ void File::truncate ()
     open ();
 
   if (_fh)
-    (void) ftruncate (_h, 0);
+    if (ftruncate (_h, 0))
+      throw format ("ftruncate error {1}: {2}", errno, strerror (errno));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

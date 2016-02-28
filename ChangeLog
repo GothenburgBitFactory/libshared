@@ -1,6 +1,9 @@
 
 1.0.0 () -
 
+- TW-1741 Warning "ignoring return value of ‘int ftruncate" while doing make on
+          xubuntu15.10
+          (thanks to Sunil Joshi).
 - Introduced the new common submodule
 
 
