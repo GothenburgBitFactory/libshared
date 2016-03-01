@@ -8,6 +8,7 @@ set (common_HEADERS Args.h
                     Datetime.h
                     Duration.h
                     FS.h
+                    JSON.h
                     Msg.h
                     Pig.h
                     RX.h
@@ -24,6 +25,7 @@ set (common_SRCS Args.cpp
                  Datetime.cpp
                  Duration.cpp
                  FS.cpp
+                 JSON.cpp
                  Msg.cpp
                  Pig.cpp
                  RX.cpp
