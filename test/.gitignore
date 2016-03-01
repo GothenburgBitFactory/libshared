@@ -4,6 +4,8 @@ autocomplete.t
 color.t
 common.t
 configuration.t
+datetime.t
+duration.t
 format.t
 fs.t
 json.t
