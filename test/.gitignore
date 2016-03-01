@@ -6,6 +6,8 @@ common.t
 configuration.t
 format.t
 fs.t
+json.t
+json_test
 list.t
 msg.t
 pig.t
