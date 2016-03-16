@@ -87,7 +87,6 @@ bool unsetVariableInFile (
   std::vector <std::string> contents;
   File::read (file, contents);
 
-  bool found = false;
   bool change = false;
 
   for (auto line = contents.begin (); line != contents.end (); )
@@ -102,8 +101,6 @@ bool unsetVariableInFile (
         (comment == std::string::npos ||
          comment > pos))
     {
-      found = true;
-
       // vector::erase method returns a valid iterator to the next object
       line = contents.erase (line);
       lineDeleted = true;
