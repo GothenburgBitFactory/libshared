@@ -24,15 +24,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef INCLUDED_COMMON
-#define INCLUDED_COMMON
+#ifndef INCLUDED_SHARED
+#define INCLUDED_SHARED
 
 #include <sstream>
 #include <algorithm>
 #include <string>
 #include <vector>
 
-// common.cpp, Non-UTF-8 aware.
+// shared.cpp, Non-UTF-8 aware.
 void wrapText (std::vector <std::string>&, const std::string&, const int, bool);
 int longestWord (const std::string&);
 int longestLine (const std::string&);

@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <JSON.h>
-#include <common.h>
+#include <shared.h>
 #include <format.h>
 #include <utf8.h>
 

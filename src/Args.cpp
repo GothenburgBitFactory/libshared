@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <Args.h>
-#include <common.h>
+#include <shared.h>
 #include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -6,9 +6,9 @@ endif()
 include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/src
                      ${CMAKE_SOURCE_DIR}/test
-                     ${COMMON_INCLUDE_DIRS})
+                     ${SHARED_INCLUDE_DIRS})
 
-set (test_SRCS args.t autocomplete.t color.t common.t configuration.t datetime.t duration.t format.t fs.t json.t json_test list.t msg.t pig.t rx.t table.t unicode.t utf8.t)
+set (test_SRCS args.t autocomplete.t color.t shared.t configuration.t datetime.t duration.t format.t fs.t json.t json_test list.t msg.t pig.t rx.t table.t unicode.t utf8.t)
 
 add_custom_target (test ./run_all --verbose
                         DEPENDS ${test_SRCS}
@@ -16,7 +16,7 @@ add_custom_target (test ./run_all --verbose
 
 foreach (src_FILE ${test_SRCS})
   add_executable (${src_FILE} "${src_FILE}.cpp" test.cpp)
-  target_link_libraries (${src_FILE} common ${COMMON_LIBRARIES})
+  target_link_libraries (${src_FILE} shared ${SHARED_LIBRARIES})
 endforeach (src_FILE)
 
 configure_file(run_all run_all COPYONLY)

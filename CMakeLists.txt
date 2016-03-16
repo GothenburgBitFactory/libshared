@@ -3,7 +3,7 @@ set (CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 set (HAVE_CMAKE true)
 
-project (common)
+project (shared)
 include (CXXSniffer)
 
 set (PROJECT_VERSION "1.0.0")

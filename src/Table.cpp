@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <Table.h>
-#include <common.h>
+#include <shared.h>
 #include <format.h>
 #include <utf8.h>
 #include <unistd.h>

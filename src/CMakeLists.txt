@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8)
 include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/src)
 
-set (common_HEADERS Args.h
+set (shared_HEADERS Args.h
                     Color.h
                     Configuration.h
                     Datetime.h
@@ -14,12 +14,12 @@ set (common_HEADERS Args.h
                     RX.h
                     Table.h
                     Timer.h
-                    common.h
+                    shared.h
                     format.h
                     unicode.h
                     utf8.h)
 
-set (common_SRCS Args.cpp
+set (shared_SRCS Args.cpp
                  Color.cpp
                  Configuration.cpp
                  Datetime.cpp
@@ -31,15 +31,15 @@ set (common_SRCS Args.cpp
                  RX.cpp
                  Table.cpp
                  Timer.cpp
-                 common.cpp
+                 shared.cpp
                  format.cpp
                  unicode.cpp
                  utf8.cpp
                  wcwidth6.cpp
-                 ${common_HEADERS})
+                 ${shared_HEADERS})
 
-add_library (common STATIC ${common_SRCS})
+add_library (shared STATIC ${shared_SRCS})
 
 set (CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
-install (TARGETS common DESTINATION lib)
-install (FILES ${common_HEADERS} DESTINATION include)
+install (TARGETS shared DESTINATION lib)
+install (FILES ${shared_HEADERS} DESTINATION include)

@@ -31,7 +31,7 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <assert.h>
-#include <common.h>
+#include <shared.h>
 #include <format.h>
 #include <unicode.h>
 #include <utf8.h>

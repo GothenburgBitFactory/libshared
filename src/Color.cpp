@@ -29,7 +29,7 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
-#include <common.h>
+#include <shared.h>
 #include <format.h>
 
 // uint to string lookup table for Color::_colorize()

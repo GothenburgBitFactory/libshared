@@ -38,7 +38,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <string.h>
-#include <common.h>
+#include <shared.h>
 #include <format.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD

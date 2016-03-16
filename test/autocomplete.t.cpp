@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
-#include <common.h>
+#include <shared.h>
 #include <iostream>
 #include <stdlib.h>
 #include <test.h>

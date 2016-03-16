@@ -2,7 +2,6 @@ all.log
 args.t
 autocomplete.t
 color.t
-common.t
 configuration.t
 datetime.t
 duration.t
@@ -14,6 +13,7 @@ list.t
 msg.t
 pig.t
 rx.t
+shared.t
 table.t
 unicode.t
 utf8.t
