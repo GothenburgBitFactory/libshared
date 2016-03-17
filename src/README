@@ -9,7 +9,7 @@ be met:
 
   - Shared objects may only make use of other shared objects, or external
     dependencies (libuuid, gettext, readline etc), but no objects from the
-    parent directories.
+    project directories.
 
   - Shared objects may assume only one external 'cmake.h' that defines
     platform/portability constants.

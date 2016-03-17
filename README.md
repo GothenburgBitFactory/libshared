@@ -1,6 +1,6 @@
 libshared
 =========
-
+A git submodule used by multiple projects. Not to be released independently.
 
 
 Branching
