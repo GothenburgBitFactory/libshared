@@ -9,6 +9,7 @@ set (shared_HEADERS Args.h
                     Duration.h
                     FS.h
                     JSON.h
+                    Log.h
                     Msg.h
                     Pig.h
                     RX.h
@@ -26,6 +27,7 @@ set (shared_SRCS Args.cpp
                  Duration.cpp
                  FS.cpp
                  JSON.cpp
+                 Log.cpp
                  Msg.cpp
                  Pig.cpp
                  RX.cpp
