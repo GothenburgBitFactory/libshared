@@ -38,6 +38,7 @@ int longestWord (const std::string&);
 int longestLine (const std::string&);
 bool extractLine (std::string&, const std::string&, int, bool, unsigned int&);
 std::vector <std::string> split (const std::string&, const char);
+std::string join (const std::string&, const std::vector<std::string>&);
 std::string trim (const std::string&, const std::string& edible = " \t\n\f\r");
 std::string ltrim (const std::string&, const std::string& edible = " \t\n\f\r");
 std::string rtrim (const std::string&, const std::string& edible = " \t\n\f\r");

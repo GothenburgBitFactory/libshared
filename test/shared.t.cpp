@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (118);
+  UnitTest t (124);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -126,6 +126,23 @@ int main (int, char**)
   t.is (items[1], "a",             "split '-a-bc-def' '-' -> [1] 'a'");
   t.is (items[2], "bc",            "split '-a-bc-def' '-' -> [2] 'bc'");
   t.is (items[3], "def",           "split '-a-bc-def' '-' -> [3] 'def'");
+
+  // std::string join (const std::string&r, const std::vector<std::string>&)
+  std::vector <std::string> unjoined;
+  std::string joined;
+
+  joined = join ("", unjoined);
+  t.is (joined.length (), (size_t) 0,  "join -> length 0");
+  t.is (joined,           "",          "join -> ''");
+
+  unjoined = {"", "a", "bc", "def"};
+  joined = join ("", unjoined);
+  t.is (joined.length (), (size_t) 6, "join '' 'a' 'bc' 'def' -> length 6");
+  t.is (joined,           "abcdef",   "join '' 'a' 'bc' 'def' -> 'abcdef'");
+
+  joined = join ("-", unjoined);
+  t.is (joined.length (), (size_t) 9,  "join '' - 'a' - 'bc' - 'def' -> length 9");
+  t.is (joined,           "-a-bc-def", "join '' - 'a' - 'bc' - 'def' -> '-a-bc-def'");
 
   // std::string trim (const std::string&);
   t.is (trim ("one"),     "one",   "trim 'one' --> 'one'");
