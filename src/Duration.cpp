@@ -397,6 +397,35 @@ const std::string Duration::format () const
     int days    = t;
 
     std::stringstream s;
+    if (days)
+      s << days << "d ";
+
+    s << hours
+      << ':'
+      << std::setw (2) << std::setfill ('0') << minutes
+      << ':'
+      << std::setw (2) << std::setfill ('0') << seconds;
+
+    return s.str ();
+  }
+  else
+  {
+    return "0:00:00";
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string Duration::formatISO () const
+{
+  if (_period)
+  {
+    time_t t = _period;
+    int seconds = t % 60; t /= 60;
+    int minutes = t % 60; t /= 60;
+    int hours   = t % 24; t /= 24;
+    int days    = t;
+
+    std::stringstream s;
     s << 'P';
     if (days)   s << days   << 'D';
 

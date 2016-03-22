@@ -49,6 +49,7 @@ public:
   bool parse_weeks (Pig&);
   bool parse_units (Pig&);
   const std::string format () const;
+  const std::string formatISO () const;
   const std::string formatVague () const;
 
 private:
