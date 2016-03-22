@@ -68,7 +68,7 @@ public:
   std::string dump () const;
 
 private:
-  const std::string&     _text;
+  std::string            _text;
   std::string::size_type _cursor {0};
   std::string::size_type _saved  {0};
 };
