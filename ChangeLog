@@ -4,6 +4,8 @@
 - TW-1741 Warning "ignoring return value of ‘int ftruncate" while doing make on
           xubuntu15.10
           (thanks to Sunil Joshi).
+- Added 'juhannus' as a synonym for 'midsommarafton'
+          (thanks to Lynoure Braakman).
 - Added 'join' function.
 - Introduced the new shared submodule.
 

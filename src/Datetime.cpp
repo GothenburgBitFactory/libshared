@@ -543,6 +543,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   goodfriday
 //   midsommar      = midnight, 1st Saturday after 20th June
 //   midsommarafton = midnight, 1st Friday after 19th June
+//   juhannus       = midnight, 1st Friday after 19th June
 //
 bool Datetime::parse_named (Pig& pig)
 {
@@ -1809,7 +1810,8 @@ bool Datetime::initializeMidsommar (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeMidsommarafton (const std::string& token)
 {
-  if (closeEnough ("midsommarafton", token, Datetime::minimumMatchLength))
+  if (closeEnough ("midsommarafton", token, Datetime::minimumMatchLength) ||
+      closeEnough ("juhannus",       token, Datetime::minimumMatchLength))
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
