@@ -595,9 +595,6 @@ bool Datetime::parse_named (Pig& pig)
       break;
   }
 
-  for (const auto& t : tokens)
-    std::cout << "# token '" << t << "'\n";
-
   if (initializeFoo (tokens))
   {
     return true;
