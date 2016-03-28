@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1769);
+  UnitTest t (1771);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -751,6 +751,10 @@ int main (int, char**)
     t.is(r36.month (),     10,        "b works");
     t.is(r36.day (),       28,        "d works");
     t.is(r36.dayOfWeek (),  3,        "a works");
+
+    Datetime r37 ("19th");
+    t.is (r37.day (),      19,        "'19th' --> 19");
+    t.ok (r37 >= now,                 "'19th' > 'now'");
   }
 
   catch (const std::string& e)
