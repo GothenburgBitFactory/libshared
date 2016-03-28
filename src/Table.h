@@ -50,6 +50,7 @@ public:
   void truncateLines (int n)                               { _truncate_lines = n;                                    }
   void truncateRows (int n)                                { _truncate_rows = n;                                     }
   void forceColor ()                                       { _forceColor = true;                                     }
+  void underlineHeaders ()                                 { _underline_headers = true;                              }
   int lines ()                                             { return _lines;                                          }
   int rows ()                                              { return (int) _data.size ();                             }
 
@@ -71,22 +72,23 @@ private:
   std::vector <std::vector <Color>>       _color;
   std::vector <std::string>               _columns;
   std::vector <bool>                      _align;
-  int                                     _width          {0};
-  int                                     _left_margin    {0};
-  Color                                   _header         {0};
-  Color                                   _odd            {0};
-  Color                                   _even           {0};
-  int                                     _intra_padding  {1};
-  Color                                   _intra_odd      {0};
-  Color                                   _intra_even     {0};
-  int                                     _extra_padding  {0};
-  Color                                   _extra_odd      {0};
-  Color                                   _extra_even     {0};
-  int                                     _truncate_lines {0};
-  int                                     _truncate_rows  {0};
-  bool                                    _forceColor     {false};
-  int                                     _lines          {0};
-  int                                     _rows           {0};
+  int                                     _width             {0};
+  int                                     _left_margin       {0};
+  Color                                   _header            {0};
+  Color                                   _odd               {0};
+  Color                                   _even              {0};
+  int                                     _intra_padding     {1};
+  Color                                   _intra_odd         {0};
+  Color                                   _intra_even        {0};
+  int                                     _extra_padding     {0};
+  Color                                   _extra_odd         {0};
+  Color                                   _extra_even        {0};
+  int                                     _truncate_lines    {0};
+  int                                     _truncate_rows     {0};
+  bool                                    _forceColor        {false};
+  bool                                    _underline_headers {false};
+  int                                     _lines             {0};
+  int                                     _rows              {0};
 };
 
 #endif

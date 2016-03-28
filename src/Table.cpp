@@ -83,6 +83,8 @@ std::string Table::render ()
     for (auto& row : _color)
       for (auto& col : row)
         col = Color ("");
+
+    _underline_headers = true;
   }
 
   // Determine minimal, ideal column widths.
@@ -199,6 +201,21 @@ std::string Table::render ()
     // Stop if the line limit is exceeded.
     if (++_lines >= _truncate_lines && _truncate_lines != 0)
       return out;
+  }
+
+  // Underline headers with ------ if necessary.
+  if (_underline_headers)
+  {
+    out += left_margin + extra;
+    for (unsigned int c = 0; c < _columns.size (); ++c)
+    {
+      if (c)
+        out += intra;
+
+      out += _header.colorize (std::string (widths[c], '-'));
+    }
+
+    out += "\n";
   }
 
   // Compose, render columns, in sequence.
