@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (124);
+  UnitTest t (136);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -99,7 +99,7 @@ int main (int, char**)
   t.is (line, "AAAAAAAAA-", "extractLine hyphenated unbreakable line");
   t.diag (line);
 
-  // void split (std::vector<std::string>& results, const std::string& input, const char delimiter)
+  // std::vector <std::string> split (const std::string& input, const char delimiter)
   std::string unsplit = "";
   std::vector <std::string> items = split (unsplit, '-');
   t.is (items.size (), (size_t) 0, "split '' '-' -> 0 items");
@@ -119,13 +119,38 @@ int main (int, char**)
   t.is (items[0], "",              "split '-' '-' -> [0] ''");
   t.is (items[1], "",              "split '-' '-' -> [1] ''");
 
-  unsplit = "-a-bc-def";
+  unsplit = "-a-bc--def";
   items = split (unsplit, '-');
-  t.is (items.size (), (size_t) 4, "split '-a-bc-def' '-' -> '' 'a' 'bc' 'def'");
-  t.is (items[0], "",              "split '-a-bc-def' '-' -> [0] ''");
-  t.is (items[1], "a",             "split '-a-bc-def' '-' -> [1] 'a'");
-  t.is (items[2], "bc",            "split '-a-bc-def' '-' -> [2] 'bc'");
-  t.is (items[3], "def",           "split '-a-bc-def' '-' -> [3] 'def'");
+  t.is (items.size (), (size_t) 5, "split '-a-bc--def' '-' -> '' 'a' 'bc' '' 'def'");
+  t.is (items[0], "",              "split '-a-bc--def' '-' -> [0] ''");
+  t.is (items[1], "a",             "split '-a-bc--def' '-' -> [1] 'a'");
+  t.is (items[2], "bc",            "split '-a-bc--def' '-' -> [2] 'bc'");
+  t.is (items[3], "",              "split '-a-bc--def' '-' -> [3] ''");
+  t.is (items[4], "def",           "split '-a-bc--def' '-' -> [4] 'def'");
+
+  // std::vector <std::string> split (const std::string& input);
+  unsplit = "";
+  items = split (unsplit);
+  t.is (items.size (), (size_t) 0, "split '' -> 0 items");
+
+  unsplit = "abc";
+  items = split (unsplit);
+  t.is (items.size (), (size_t) 1, "split 'abc' -> 1 item");
+  t.is (items[0], "abc",           "split 'abc' -> [0] 'abc'");
+
+  unsplit = "a b c";
+  items = split (unsplit);
+  t.is (items.size (), (size_t) 3, "split 'a b c' -> 3 items");
+  t.is (items[0], "a",             "split 'a b c' -> [0] 'a'");
+  t.is (items[1], "b",             "split 'a b c' -> [1] 'b'");
+  t.is (items[2], "c",             "split 'a b c' -> [2] 'c'");
+
+  unsplit = "  a   b   c  ";
+  items = split (unsplit);
+  t.is (items.size (), (size_t) 3, "split '  a  b  c  ' -> 3 items");
+  t.is (items[0], "a",             "split '  a  b  c  ' -> [0] 'a'");
+  t.is (items[1], "b",             "split '  a  b  c  ' -> [1] 'b'");
+  t.is (items[2], "c",             "split '  a  b  c  ' -> [2] 'c'");
 
   // std::string join (const std::string&r, const std::vector<std::string>&)
   std::vector <std::string> unjoined;
