@@ -55,6 +55,7 @@ void wrapText (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Split in a separator. Two adjacent separators means empty token.
 std::vector <std::string> split (const std::string& input, const char delimiter)
 {
   std::vector <std::string> results;
@@ -68,6 +69,32 @@ std::vector <std::string> split (const std::string& input, const char delimiter)
 
   if (input.length ())
     results.push_back (input.substr (start));
+
+  return results;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Split on words. Adjacent separators collapsed.
+std::vector <std::string> split (const std::string& input)
+{
+  static std::string delims = " \t\n\f\r";
+  std::vector <std::string> results;
+
+  std::string::size_type start = 0;
+  std::string::size_type end;
+  while ((start = input.find_first_not_of (delims, start)) != std::string::npos)
+  {
+    if ((end = input.find_first_of (delims, start)) != std::string::npos)
+    {
+      results.push_back (input.substr (start, end - start));
+      start = end;
+    }
+    else
+    {
+      results.push_back (input.substr (start));
+      start = std::string::npos;
+    }
+  }
 
   return results;
 }
