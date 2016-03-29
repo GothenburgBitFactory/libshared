@@ -137,15 +137,18 @@ bool Pig::getUntilWS (std::string& result)
   auto prev = _cursor;
   while ((c = utf8_next_char (_text, _cursor)))
   {
-    if (eos ())
+    if (unicodeWhitespace (c))
     {
+      _cursor = prev;
       result = _text.substr (save, _cursor - save);
       return true;
     }
 
-    else if (unicodeWhitespace (c))
+    // Note: This test must follow the above unicodeWhitespace(c) test because
+    //       it is testing the value of 'c', and eos() is testing _cursor,
+    //       which has already been advanced.
+    else if (eos ())
     {
-      _cursor = prev;
       result = _text.substr (save, _cursor - save);
       return true;
     }
