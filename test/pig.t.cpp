@@ -61,23 +61,23 @@ int main (int, char**)
   t.is (p2.dump (),                "≪onetwo≫ l6 c3", "dump: " + p2.dump ());
 
   // Pig::getUntilWS
-  Pig p3 ("one two three");
+  Pig p3 ("one two three  ");
   std::string value;
-  t.ok (p3.getUntilWS (value), "getUntilWS 'one two three' --> true");
-  t.is (value, "one",          "getUntilWS 'one two three' --> 'one'");
-  t.is (p3.dump (),            "≪one two three≫ l13 c3", "dump: " + p3.dump ());
+  t.ok (p3.getUntilWS (value), "getUntilWS 'one two three  ' --> true");
+  t.is (value, "one",          "getUntilWS 'one two three  ' --> 'one'");
+  t.is (p3.dump (),            "≪one two three  ≫ l15 c3", "dump: " + p3.dump ());
 
-  t.ok (p3.skipWS (),          "skipWS ' two three' --> true");
+  t.ok (p3.skipWS (),          "skipWS ' two three  ' --> true");
 
-  t.ok (p3.getUntilWS (value), "getUntilWS 'two three' --> true");
-  t.is (value, "two",          "getUntilWS 'two three' --> 'two'");
-  t.is (p3.dump (),            "≪one two three≫ l13 c7", "dump: " + p3.dump ());
+  t.ok (p3.getUntilWS (value), "getUntilWS 'two three  ' --> true");
+  t.is (value, "two",          "getUntilWS 'two three  ' --> 'two'");
+  t.is (p3.dump (),            "≪one two three  ≫ l15 c7", "dump: " + p3.dump ());
 
-  t.ok (p3.skipWS (),          "skipWS ' three' --> true");
+  t.ok (p3.skipWS (),          "skipWS ' three  ' --> true");
 
-  t.ok (p3.getUntilWS (value), "getUntilWS 'three' --> true");
-  t.is (value, "three",        "getUntilWS 'three' --> 'three'");
-  t.is (p3.dump (),            "≪one two three≫ l13 c13", "dump: " + p3.dump ());
+  t.ok (p3.getUntilWS (value), "getUntilWS 'three  ' --> true");
+  t.is (value, "three",        "getUntilWS 'three  ' --> 'three'");
+  t.is (p3.dump (),            "≪one two three  ≫ l15 c13", "dump: " + p3.dump ());
 
   // Pig::getDigit
   Pig p4 (" 123");
