@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (137);
+  UnitTest t (140);
 
   // Pig::skip
   // Pig::skipN
@@ -78,6 +78,11 @@ int main (int, char**)
   t.ok (p3.getUntilWS (value), "getUntilWS 'three  ' --> true");
   t.is (value, "three",        "getUntilWS 'three  ' --> 'three'");
   t.is (p3.dump (),            "≪one two three  ≫ l15 c13", "dump: " + p3.dump ());
+
+  Pig p3a ("9th ");
+  t.ok (p3a.getUntilWS (value), "getUntilWS '9th ' --> true");
+  t.is (value, "9th",           "getUntilWS '9th ' --> '9th'");
+  t.is (p3a.dump (),            "≪9th ≫ l4 c3", "dump: " + p3a.dump ());
 
   // Pig::getDigit
   Pig p4 (" 123");
