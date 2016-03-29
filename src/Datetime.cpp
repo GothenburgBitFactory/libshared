@@ -27,7 +27,6 @@
 #include <cmake.h>
 #include <Datetime.h>
 #include <sstream>
-#include <iostream> // TODO Remove
 #include <iomanip>
 #include <stdlib.h>
 #include <assert.h>
