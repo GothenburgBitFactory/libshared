@@ -7,6 +7,7 @@
 - Added 'juhannus' as a synonym for 'midsommarafton'
           (thanks to Lynoure Braakman).
 - Added 'join' function.
+- Added Datetime support for informal time, '8am', '2:30p'.
 - Introduced the new shared submodule.
 
 
