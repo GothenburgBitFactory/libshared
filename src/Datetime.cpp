@@ -575,7 +575,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeOrdinal        (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
-        initializeMidsommarafton (token))
+        initializeMidsommarafton (token) ||
+        initializeInformalTime   (token))
     {
       return true;
     }
@@ -1823,6 +1824,62 @@ bool Datetime::initializeMidsommarafton (const std::string& token)
     }
 
     _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 8am
+// 8a
+// 8:30am
+// 8:30a
+// 8:30
+//
+// \d+ [ : \d{2} ] [ am | a | pm | p ]
+//
+bool Datetime::initializeInformalTime (const std::string& token)
+{
+  Pig pig (token);
+
+  int digit = 0;
+  if (pig.getDigit (digit))
+  {
+    int hours = digit;
+    if (pig.getDigit (digit))
+      hours = 10 * hours + digit;
+
+    int minutes = 0;
+    int seconds = 0;
+    if (pig.skip (':') &&
+        pig.getDigit2 (minutes))
+    {
+      if (pig.skip (':') &&
+          pig.getDigits (seconds))
+      {
+        // NOP
+      }
+    }
+
+    if (pig.skipLiteral ("am") ||
+        pig.skipLiteral ("a"))
+      ;
+
+    else if (pig.skipLiteral ("pm") ||
+             pig.skipLiteral ("p"))
+      hours += 12;
+
+    // Midnight today + hours:minutes:seconds.
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = hours;
+    t->tm_min = minutes;
+    t->tm_sec = seconds;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+
     return true;
   }
 
