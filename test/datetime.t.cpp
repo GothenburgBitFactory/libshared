@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1771);
+  UnitTest t (1879);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -288,6 +288,21 @@ int main (int, char**)
   testParse (t, "2013W49T1234+01",           15, year,  0, 49, 0,   0,  0,    hm,  3600, false, utc1+hm-z );
   testParse (t, "2013W49T1234-0100",         17, year,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
   testParse (t, "2013W49T1234-01",           15, year,  0, 49, 0,   0,  0,    hm, -3600, false, utc1+hm+z );
+
+  // Informal time.
+  int t8a   = (8 * 3600);
+  int t830a = (8 * 3600) + (30 * 60);
+  int t8p   = (20 * 3600);
+  int t830p = (20 * 3600) + (30 * 60);
+  testParse (t, "8:30am",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a);
+  testParse (t, "8:30a",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a);
+  testParse (t, "8:30",                       4,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a);
+  testParse (t, "8am",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8a  );
+  testParse (t, "8a",                         2,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8a  );
+  testParse (t, "8:30pm",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830p);
+  testParse (t, "8:30p",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830p);
+  testParse (t, "8pm",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8p  );
+  testParse (t, "8p",                         2,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8p  );
 
   try
   {
