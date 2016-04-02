@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (136);
+  UnitTest t (138);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -275,6 +275,16 @@ int main (int, char**)
   t.is (upperCaseFirst ("A"),  "A",  "upperCaseFirst 'A' --> 'A'");
   t.is (upperCaseFirst ("aa"), "Aa", "upperCaseFirst 'aa' --> 'Aa'");
   t.is (upperCaseFirst ("$"),  "$",  "upperCaseFirst '$' --> '$'");
+
+  // std::string str_replace (const std::string&, const std::string&, const std::string&);
+  std::string input = "Lorem ipsum dolor sit amet, est aliquip scaevola dignissim in, vim nominavi electram te.";
+  t.is (str_replace (input, "x", "X"),
+        "Lorem ipsum dolor sit amet, est aliquip scaevola dignissim in, vim nominavi electram te.",
+        "str_replace 'x' -- 'X' (NOP)");
+
+  t.is (str_replace (input, "e", "E"),
+        "LorEm ipsum dolor sit amEt, Est aliquip scaEvola dignissim in, vim nominavi ElEctram tE.",
+        "str_replace 'e' -- 'E'");
 
   return 0;
 }

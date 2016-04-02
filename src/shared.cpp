@@ -118,6 +118,23 @@ std::string join (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string str_replace (
+  const std::string &str,
+  const std::string& search,
+  const std::string& replacement)
+{
+  std::string modified {str};
+  std::string::size_type pos = 0;
+  while ((pos = modified.find (search, pos)) != std::string::npos)
+  {
+    modified.replace (pos, search.length (), replacement);
+    pos += replacement.length ();
+  }
+
+  return modified;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string trim (const std::string& input, const std::string& edible)
 {
   auto start = input.find_first_not_of (edible);
