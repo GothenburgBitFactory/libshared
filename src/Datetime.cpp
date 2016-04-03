@@ -1844,6 +1844,8 @@ bool Datetime::initializeInformalTime (const std::string& token)
   Pig pig (token);
 
   int digit = 0;
+  bool needDesignator = true;  // Require am/pm.
+  bool haveDesignator = false;  // Require am/pm.
   if (pig.getDigit (digit))
   {
     int hours = digit;
@@ -1860,27 +1862,37 @@ bool Datetime::initializeInformalTime (const std::string& token)
       {
         // NOP
       }
+
+      needDesignator = false;
     }
 
     if (pig.skipLiteral ("am") ||
         pig.skipLiteral ("a"))
-      ;
+    {
+      haveDesignator = true;
+    }
 
     else if (pig.skipLiteral ("pm") ||
              pig.skipLiteral ("p"))
+    {
       hours += 12;
+      haveDesignator = true;
+    }
 
-    // Midnight today + hours:minutes:seconds.
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+    if (haveDesignator || ! needDesignator)
+    {
+      // Midnight today + hours:minutes:seconds.
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    t->tm_hour = hours;
-    t->tm_min = minutes;
-    t->tm_sec = seconds;
-    t->tm_isdst = -1;
-    _date = mktime (t);
+      t->tm_hour = hours;
+      t->tm_min = minutes;
+      t->tm_sec = seconds;
+      t->tm_isdst = -1;
+      _date = mktime (t);
 
-    return true;
+      return true;
+    }
   }
 
   return false;
