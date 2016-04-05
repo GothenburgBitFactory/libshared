@@ -9,6 +9,7 @@
 - Added 'join' function.
 - Added 'str_replace' function.
 - Added Datetime support for informal time, '8am', '2:30p'.
+- Added 'JSON2' SAX parser.
 - Introduced the new shared submodule.
 
 
