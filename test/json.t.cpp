@@ -25,9 +25,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
+#include <sstream>
 #include <iostream>
 #include <stdlib.h>
 #include <JSON.h>
+#include <JSON2.h>
 #include <test.h>
 
 const char *positive_tests[] =
@@ -100,10 +102,45 @@ const char *negative_tests[] =
 
 #define NUM_NEGATIVE_TESTS (sizeof (negative_tests) / sizeof (negative_tests[0]))
 
+std::stringstream combined;
+class EventSink : public JSON2::SAX
+{
+public:
+  void eventDocStart ()                            { combined << "<doc>";                            }
+  void eventDocEnd ()                              { combined << "</doc>";                           }
+  void eventObjectStart ()                         { combined << "<object>";                         }
+  void eventObjectEnd (int)                        { combined << "</object>";                        }
+  void eventArrayStart ()                          { combined << "<array>";                          }
+  void eventArrayEnd (int)                         { combined << "</array>";                         }
+  void eventName (const std::string& value)        { combined << "<name>"   << value << "</name>";   }
+  void eventValueNull ()                           { combined << "<null />";                         }
+  void eventValueBool (bool value)                 { combined << "<bool>"   << value << "</bool>";   }
+  void eventValueInt (int64_t value)               { combined << "<int>"    << value << "</int>";    }
+  void eventValueUint (uint64_t value)             { combined << "<uint>"   << value << "</uint>";   }
+  void eventValueDouble (double value)             { combined << "<double>" << value << "</double>"; }
+  void eventValueString (const std::string& value) { combined << "<string>" << value << "</string>"; }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+void saxTest (UnitTest& t, const std::string& input, const std::string& expected)
+{
+  // JSON2
+  try
+  {
+    combined.str (std::string ());
+    EventSink sink;
+    JSON2 json;
+    t.ok (json.parse (input, sink), std::string ("sax: '") + input + "' --> '" + expected + "'");
+  }
+
+  catch (const std::string& e) { t.pass (e); }
+  catch (...)                  { t.fail ("Unknown error"); }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 22);
+  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 22 + 22 + 3);
 
   // Ensure environment has no influence.
   unsetenv ("TASKDATA");
@@ -112,6 +149,7 @@ int main (int, char**)
   // Positive tests.
   for (unsigned int i = 0; i < NUM_POSITIVE_TESTS; ++i)
   {
+    // JSON
     try
     {
       json::value* root = json::parse (positive_tests[i]);
@@ -123,13 +161,14 @@ int main (int, char**)
       }
     }
 
-    catch (const std::string& e) { t.diag (e); }
+    catch (const std::string& e) { t.fail (e); }
     catch (...)                  { t.diag ("Unknown error"); }
   }
 
   // Negative tests.
   for (unsigned int i = 0; i < NUM_NEGATIVE_TESTS; ++i)
   {
+    // JSON
     try
     {
       json::value* root = json::parse (negative_tests[i]);
@@ -176,9 +215,53 @@ int main (int, char**)
     t.is (encoded[4], '\\',                  "json::encode oneslashslashslashslash[4] -> slashslash");
 
     t.is (json::decode (encoded), "one\\",   "json::decode oneslashslashslashslashslashslashslashslash -> oneslashslashslashslash");
+
+    // Regular unit tests.
+    t.is (JSON2::encode ("1\b2"), "1\\b2",    "JSON2::encode slashslashb -> slashslashslashslashb");
+    t.is (JSON2::decode ("1\\b2"), "1\b2",    "JSON2::decode slashslashslashslashb -> slashslashb");
+
+    t.is (JSON2::encode ("1\n2"), "1\\n2",    "JSON2::encode slashslashn -> slashslashslashslashn");
+    t.is (JSON2::decode ("1\\n2"), "1\n2",    "JSON2::decode slashslashslashslashn -> slashslashn");
+
+    t.is (JSON2::encode ("1\r2"), "1\\r2",    "JSON2::encode slashslashr -> slashslashslashslashr");
+    t.is (JSON2::decode ("1\\r2"), "1\r2",    "JSON2::decode slashslashslashslashr -> slashslashr");
+
+    t.is (JSON2::encode ("1\t2"), "1\\t2",    "JSON2::encode slashslasht -> slashslashslashslasht");
+    t.is (JSON2::decode ("1\\t2"), "1\t2",    "JSON2::decode slashslashslashslasht -> slashslasht");
+
+    t.is (JSON2::encode ("1\\2"), "1\\\\2",   "JSON2::encode slashslash -> slashslashslashslash");
+    t.is (JSON2::decode ("1\\\\2"), "1\\2",   "JSON2::decode slashslashslashslash -> slashslash");
+
+    t.is (JSON2::encode ("1\x2"), "1\x2",     "JSON2::encode slashslashx -> slashslashx(NOP)");
+    t.is (JSON2::decode ("1\x2"), "1\x2",     "JSON2::decode slashslashx -> slashslashx(NOP)");
+
+    t.is (JSON2::encode ("1€2"), "1€2",       "JSON2::encode € -> €");
+    t.is (JSON2::decode ("1\\u20ac2"), "1€2", "JSON2::decode slashslashu20ac -> €");
+
+    encoded = JSON2::encode ("one\\");
+    t.is (encoded, "one\\\\",                "JSON2::encode oneslashslashslashslash -> oneslashslashslashslashslashslashslashslash");
+    t.is ((int)encoded.length (), 5,         "JSON2::encode oneslashslashslashslash -> length 5");
+    t.is (encoded[0], 'o',                   "JSON2::encode oneslashslashslashslash[0] -> o");
+    t.is (encoded[1], 'n',                   "JSON2::encode oneslashslashslashslash[1] -> n");
+    t.is (encoded[2], 'e',                   "JSON2::encode oneslashslashslashslash[2] -> e");
+    t.is (encoded[3], '\\',                  "JSON2::encode oneslashslashslashslash[3] -> slashslash");
+    t.is (encoded[4], '\\',                  "JSON2::encode oneslashslashslashslash[4] -> slashslash");
+
+    t.is (JSON2::decode (encoded), "one\\",   "JSON2::decode oneslashslashslashslashslashslashslashslash -> oneslashslashslashslash");
   }
 
   catch (const std::string& e) {t.diag (e);}
+
+  // SAX tests.
+  saxTest (t,
+           "{}",
+           "<doc><object></object></doc>");
+  saxTest (t,
+           "{\"name\":\"value\"}",
+           "<doc><object><name>name</name><string>value</string></object></doc>");
+  saxTest (t,
+           "[1,\"2\",true,null]",
+           "<doc><array><int>1</int><string>2</string><bool>true</bool><null /></array></doc>");
 
   return 0;
 }
