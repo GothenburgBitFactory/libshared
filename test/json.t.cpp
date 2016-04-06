@@ -140,7 +140,7 @@ void saxTest (UnitTest& t, const std::string& input, const std::string& expected
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 22 + 22 + 3);
+  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 22 + 22 + 4);
 
   // Ensure environment has no influence.
   unsetenv ("TASKDATA");
@@ -258,6 +258,9 @@ int main (int, char**)
            "<doc><object></object></doc>");
   saxTest (t,
            "{\"name\":\"value\"}",
+           "<doc><object><name>name</name><string>value</string></object></doc>");
+  saxTest (t,
+           "\n\t {\n\t \"name\"\n\t :\n\t \"value\"\n\t }\n\t ",
            "<doc><object><name>name</name><string>value</string></object></doc>");
   saxTest (t,
            "[1,\"2\",true,null]",
