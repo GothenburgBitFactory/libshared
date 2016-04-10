@@ -152,8 +152,8 @@ bool Datetime::parse (
   // Allow parse_date_time and parse_date_time_ext regardless of
   // Datetime::isoEnabled setting, because these formats are relied upon by
   // the 'import' command, JSON parser and hook system.
-  else if (parse_date_time     (pig)   || // Strictest first.
-           parse_date_time_ext (pig)   ||
+  else if (parse_date_time_ext   (pig) || // Strictest first.
+           parse_date_time       (pig) ||
            (Datetime::isoEnabled &&
             (parse_date_ext      (pig) ||
              parse_date          (pig) ||
