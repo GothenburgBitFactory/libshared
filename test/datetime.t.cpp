@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1879);
+  UnitTest t (1887);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -631,6 +631,22 @@ int main (int, char**)
 
     Datetime r19 ("soy");
     t.notok (r19.sameYear (now), "soy not in same year as now");
+
+    Datetime r19a ("socy");
+    t.ok (r19a.sameYear (now), "socy in same year as now");
+    t.ok (r19a < now,          "socy < now");
+
+    Datetime r19b ("eocy");
+    t.ok (r19b.sameYear (now), "eocy in same year as now");
+    t.ok (r19b > now,          "eocy > now");
+
+    Datetime r19c ("socq");
+    t.ok (r19c.sameYear (now), "socq in same year as now");
+    t.ok (r19c < now,          "socq < now");
+
+    Datetime r19d ("eocq");
+    t.ok (r19d.sameYear (now), "eocq in same year as now");
+    t.ok (r19d > now,          "eocq > now");
 
     Datetime first ("1st");
     t.notok (first.sameMonth (now), "1st not in same month as now");
