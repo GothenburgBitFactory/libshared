@@ -1224,7 +1224,7 @@ bool Datetime::parse_off_minute (Pig& pig, int& value)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
-  if (closeEnough ("now", token, Datetime::minimumMatchLength))
+  if (token == "now")
   {
     _date = time (nullptr);
     return true;
@@ -1236,7 +1236,7 @@ bool Datetime::initializeNow (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeToday (const std::string& token)
 {
-  if (closeEnough ("today", token, Datetime::minimumMatchLength))
+  if (token == "today")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1254,7 +1254,7 @@ bool Datetime::initializeToday (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSod (const std::string& token)
 {
-  if (closeEnough ("sod", token, Datetime::minimumMatchLength))
+  if (token == "sod")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1273,7 +1273,7 @@ bool Datetime::initializeSod (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEod (const std::string& token)
 {
-  if (closeEnough ("eod", token, Datetime::minimumMatchLength))
+  if (token == "eod")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1394,7 +1394,8 @@ bool Datetime::initializeLater (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEoy (const std::string& token)
 {
-  if (closeEnough ("eoy", token, Datetime::minimumMatchLength))
+  if (token == "eoy" ||
+      token == "eocy")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1434,7 +1435,7 @@ bool Datetime::initializeSocy (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSoy (const std::string& token)
 {
-  if (closeEnough ("soy", token, Datetime::minimumMatchLength))
+  if (token == "soy")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1454,7 +1455,8 @@ bool Datetime::initializeSoy (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEoq (const std::string& token)
 {
-  if (closeEnough ("eoq", token, Datetime::minimumMatchLength))
+  if (token == "eoq" ||
+      token == "eocq")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1499,7 +1501,7 @@ bool Datetime::initializeSocq (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSoq (const std::string& token)
 {
-  if (closeEnough ("soq", token, Datetime::minimumMatchLength))
+  if (token == "soq")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1524,7 +1526,7 @@ bool Datetime::initializeSoq (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSocm (const std::string& token)
 {
-  if (closeEnough ("socm", token, Datetime::minimumMatchLength))
+  if (token == "socm")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1542,7 +1544,7 @@ bool Datetime::initializeSocm (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSom (const std::string& token)
 {
-  if (closeEnough ("som", token, Datetime::minimumMatchLength))
+  if (token == "som")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1568,8 +1570,8 @@ bool Datetime::initializeSom (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEom (const std::string& token)
 {
-  if (closeEnough ("eom",  token, Datetime::minimumMatchLength) ||
-      closeEnough ("eocm", token, Datetime::minimumMatchLength))
+  if (token == "eom" ||
+      token == "eocm")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1589,7 +1591,7 @@ bool Datetime::initializeEom (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSocw (const std::string& token)
 {
-  if (closeEnough ("socw", token, Datetime::minimumMatchLength))
+  if (token == "socw")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1607,8 +1609,8 @@ bool Datetime::initializeSocw (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEow (const std::string& token)
 {
-  if (closeEnough ("eow",  token, Datetime::minimumMatchLength) ||
-      closeEnough ("eocw", token, Datetime::minimumMatchLength))
+  if (token == "eow" ||
+      token == "eocw")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1627,7 +1629,7 @@ bool Datetime::initializeEow (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSow (const std::string& token)
 {
-  if (closeEnough ("sow", token, Datetime::minimumMatchLength))
+  if (token == "sow")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1645,7 +1647,7 @@ bool Datetime::initializeSow (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSoww (const std::string& token)
 {
-  if (closeEnough ("soww", token, Datetime::minimumMatchLength))
+  if (token == "soww")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1664,7 +1666,7 @@ bool Datetime::initializeSoww (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEoww (const std::string& token)
 {
-  if (closeEnough ("eoww", token, Datetime::minimumMatchLength))
+  if (token == "eoww")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
