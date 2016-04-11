@@ -561,6 +561,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeMonthName      (token) ||
         initializeLater          (token) ||
         initializeEoy            (token) ||
+        initializeSocy           (token) ||
         initializeSoy            (token) ||
         initializeEoq            (token) ||
         initializeSoq            (token) ||
@@ -1402,6 +1403,25 @@ bool Datetime::initializeEoy (const std::string& token)
     t->tm_mon = 0;
     t->tm_mday = 1;
     t->tm_year++;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSocy (const std::string& token)
+{
+  if (token == "socy")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mon = 0;
+    t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
