@@ -786,6 +786,14 @@ int main (int, char**)
     Datetime r37 ("19th");
     t.is (r37.day (),      19,        "'19th' --> 19");
     t.ok (r37 >= now,                 "'19th' > 'now'");
+
+    Datetime::lookForwards = true;
+    t.diag ("Datetime::lookForwards == true");
+    t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
+
+    Datetime::lookForwards = false;
+    t.diag ("Datetime::lookForwards == false");
+    t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
   }
 
   catch (const std::string& e)

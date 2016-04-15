@@ -37,6 +37,7 @@ public:
   static int weekstart;
   static int minimumMatchLength;
   static bool isoEnabled;
+  static bool lookForwards;
 
   Datetime ();
   Datetime (const std::string&, const std::string& format = "");

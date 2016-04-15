@@ -61,6 +61,7 @@ static std::vector <std::string> monthNames {
 int Datetime::weekstart = 0; // Sunday
 int Datetime::minimumMatchLength = 3;
 bool Datetime::isoEnabled = true;
+bool Datetime::lookForwards = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
@@ -1259,7 +1260,9 @@ bool Datetime::initializeSod (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_mday++;
+    if (Datetime::lookForwards)
+      t->tm_mday++;
+
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
