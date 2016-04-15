@@ -813,6 +813,8 @@ int main (int, char**)
     t.diag ("  soy            " + Datetime ("soy").toISOLocalExtended ());
     t.diag ("  socq           " + Datetime ("socq").toISOLocalExtended ());
     t.diag ("  soq            " + Datetime ("soq").toISOLocalExtended ());
+    t.diag ("  socm           " + Datetime ("socm").toISOLocalExtended ());
+    t.diag ("  som            " + Datetime ("som").toISOLocalExtended ());
     t.diag ("  socw           " + Datetime ("socw").toISOLocalExtended ());
     t.diag ("  sow            " + Datetime ("sow").toISOLocalExtended ());
     t.diag ("  1st            " + Datetime ("1st").toISOLocalExtended ());
@@ -829,6 +831,8 @@ int main (int, char**)
     t.diag ("  soy            " + Datetime ("soy").toISOLocalExtended ());
     t.diag ("  socq           " + Datetime ("socq").toISOLocalExtended ());
     t.diag ("  soq            " + Datetime ("soq").toISOLocalExtended ());
+    t.diag ("  socm           " + Datetime ("socm").toISOLocalExtended ());
+    t.diag ("  som            " + Datetime ("som").toISOLocalExtended ());
     t.diag ("  socw           " + Datetime ("socw").toISOLocalExtended ());
     t.diag ("  sow            " + Datetime ("sow").toISOLocalExtended ());
     t.diag ("  1st            " + Datetime ("1st").toISOLocalExtended ());

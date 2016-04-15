@@ -1577,11 +1577,14 @@ bool Datetime::initializeSom (const std::string& token)
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
 
-    t->tm_mon++;
-    if (t->tm_mon == 12)
+    if (Datetime::lookForwards)
     {
-      t->tm_year++;
-      t->tm_mon = 0;
+      t->tm_mon++;
+      if (t->tm_mon == 12)
+      {
+        t->tm_year++;
+        t->tm_mon = 0;
+      }
     }
 
     t->tm_mday = 1;
