@@ -1824,7 +1824,7 @@ bool Datetime::initializeEaster (const std::string& token)
     _date = mktime (t);
 
     // If the result is earlier this year, then recalc for next year.
-    if (_date < now)
+    if (Datetime::lookForwards && _date < now)
     {
       t = localtime (&now);
       t->tm_year++;
@@ -1859,7 +1859,8 @@ bool Datetime::initializeMidsommar (const std::string& token)
     _date = mktime (t);
 
     // If the result is earlier this year, then recalc for next year.
-    if (_date < now)
+    if (Datetime::lookForwards &&
+        _date < now)
     {
       t = localtime (&now);
       t->tm_year++;
@@ -1885,7 +1886,8 @@ bool Datetime::initializeMidsommarafton (const std::string& token)
     _date = mktime (t);
 
     // If the result is earlier this year, then recalc for next year.
-    if (_date < now)
+    if (Datetime::lookForwards &&
+        _date < now)
     {
       t = localtime (&now);
       t->tm_year++;
