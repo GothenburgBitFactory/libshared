@@ -2073,8 +2073,6 @@ void Datetime::midsommarafton (struct tm* t) const
 //   11 feb
 //   2011-02-08
 //   11/19/2011
-//   2 o'clock
-//   2pm
 //   next business day
 //   new moon
 //   full moon
