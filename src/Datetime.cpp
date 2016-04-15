@@ -1456,7 +1456,10 @@ bool Datetime::initializeSoy (const std::string& token)
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mon = 0;
     t->tm_mday = 1;
-    t->tm_year++;
+
+    if (Datetime::lookForwards)
+      t->tm_year++;
+
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
@@ -1519,14 +1522,21 @@ bool Datetime::initializeSoq (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mon += 3 - (t->tm_mon % 3);
-    if (t->tm_mon > 11)
+    if (Datetime::lookForwards)
     {
-      t->tm_mon -= 12;
-      ++t->tm_year;
+      t->tm_mon += 3 - (t->tm_mon % 3);
+      if (t->tm_mon > 11)
+      {
+        t->tm_mon -= 12;
+        ++t->tm_year;
+      }
+    }
+    else
+    {
+      t->tm_mon -= t->tm_mon % 3;
     }
 
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
