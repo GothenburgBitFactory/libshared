@@ -817,6 +817,7 @@ int main (int, char**)
     t.diag ("  som            " + Datetime ("som").toISOLocalExtended ());
     t.diag ("  socw           " + Datetime ("socw").toISOLocalExtended ());
     t.diag ("  sow            " + Datetime ("sow").toISOLocalExtended ());
+    t.diag ("  soww           " + Datetime ("soww").toISOLocalExtended ());
     t.diag ("  1st            " + Datetime ("1st").toISOLocalExtended ());
     t.diag ("  easter         " + Datetime ("easter").toISOLocalExtended ());
     t.diag ("  midsommar      " + Datetime ("midsommar").toISOLocalExtended ());
@@ -836,6 +837,7 @@ int main (int, char**)
     t.diag ("  som            " + Datetime ("som").toISOLocalExtended ());
     t.diag ("  socw           " + Datetime ("socw").toISOLocalExtended ());
     t.diag ("  sow            " + Datetime ("sow").toISOLocalExtended ());
+    t.diag ("  soww           " + Datetime ("soww").toISOLocalExtended ());
     t.diag ("  1st            " + Datetime ("1st").toISOLocalExtended ());
     t.diag ("  easter         " + Datetime ("easter").toISOLocalExtended ());
     t.diag ("  midsommar      " + Datetime ("midsommar").toISOLocalExtended ());

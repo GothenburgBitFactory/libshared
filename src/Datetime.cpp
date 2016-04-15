@@ -1684,9 +1684,22 @@ bool Datetime::initializeSoww (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
     int days = (8 - t->tm_wday) % 7;
+    if (! Datetime::lookForwards)
+    {
+      if (t->tm_wday == 0)
+      {
+        days = -6;
+      }
+      else
+      {
+        days = 1 - t->tm_wday;
+      }
+    }
+
     int extra = days * 86400;
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t) + extra;
     return true;
