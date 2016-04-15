@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1887);
+  UnitTest t (1890);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -786,6 +786,23 @@ int main (int, char**)
     Datetime r37 ("19th");
     t.is (r37.day (),      19,        "'19th' --> 19");
     t.ok (r37 >= now,                 "'19th' > 'now'");
+
+
+    // Test Datetime::lookForwards = false
+    Datetime::lookForwards = false;
+    Datetime r38 ("1st");
+    Datetime r39 ("29th");
+    t.ok (r38.sameMonth (r39),        "'1st' and '29th' always in the same month when Datetime::lookForwards = false");
+
+    Datetime::lookForwards = false;
+    Datetime r40 ("sow");
+    Datetime r41 ("socw");
+    t.ok (r40 == r41,                 "'sow' is equal to 'socw' when Datetime::lookForwards = false");
+
+    Datetime::lookForwards = true;
+    Datetime r42 ("sow");
+    Datetime r43 ("socw");
+    t.ok (r42 != r43,                 "'sow' is not equal to 'socw' when Datetime::lookForwards = true");
 
     Datetime::lookForwards = true;
     t.diag ("Datetime::lookForwards == true");
