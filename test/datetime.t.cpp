@@ -790,10 +790,12 @@ int main (int, char**)
     Datetime::lookForwards = true;
     t.diag ("Datetime::lookForwards == true");
     t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
+    t.diag ("  monday         " + Datetime ("monday").toISOLocalExtended ());
 
     Datetime::lookForwards = false;
     t.diag ("Datetime::lookForwards == false");
     t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
+    t.diag ("  monday         " + Datetime ("monday").toISOLocalExtended ());
   }
 
   catch (const std::string& e)

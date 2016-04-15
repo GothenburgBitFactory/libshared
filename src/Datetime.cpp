@@ -1336,10 +1336,20 @@ bool Datetime::initializeDayName (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    if (t->tm_wday >= day)
-      t->tm_mday += day - t->tm_wday + 7;
+    if (Datetime::lookForwards)
+    {
+      if (t->tm_wday >= day)
+        t->tm_mday += day - t->tm_wday + 7;
+      else
+        t->tm_mday += day - t->tm_wday;
+    }
     else
-      t->tm_mday += day - t->tm_wday;
+    {
+      if (t->tm_wday >= day)
+        t->tm_mday += day - t->tm_wday;
+      else
+        t->tm_mday += day - t->tm_wday;
+    }
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
