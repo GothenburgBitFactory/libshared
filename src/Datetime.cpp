@@ -1389,8 +1389,8 @@ bool Datetime::initializeMonthName (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeLater (const std::string& token)
 {
-  if (closeEnough ("later",   token, Datetime::minimumMatchLength) ||
-      closeEnough ("someday", token, Datetime::minimumMatchLength))
+  if (token == "later" ||
+      token == "someday")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
