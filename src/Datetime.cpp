@@ -1773,8 +1773,9 @@ bool Datetime::initializeOrdinal (const std::string& token)
         int d = t->tm_mday;
 
         // If it is this month.
-        if (d < number &&
-            number <= daysInMonth (m, y))
+        if (! Datetime::lookForwards ||
+            (d < number &&
+             number <= daysInMonth (m, y)))
         {
           t->tm_hour = t->tm_min = t->tm_sec = 0;
           t->tm_mon  = m - 1;
