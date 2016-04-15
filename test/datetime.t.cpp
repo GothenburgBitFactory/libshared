@@ -791,6 +791,7 @@ int main (int, char**)
     t.diag ("Datetime::lookForwards == true");
     t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
     t.diag ("  monday         " + Datetime ("monday").toISOLocalExtended ());
+    t.diag ("  january        " + Datetime ("january").toISOLocalExtended ());
     t.diag ("  socy           " + Datetime ("socy").toISOLocalExtended ());
     t.diag ("  soy            " + Datetime ("soy").toISOLocalExtended ());
     t.diag ("  socq           " + Datetime ("socq").toISOLocalExtended ());
@@ -806,6 +807,7 @@ int main (int, char**)
     t.diag ("Datetime::lookForwards == false");
     t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
     t.diag ("  monday         " + Datetime ("monday").toISOLocalExtended ());
+    t.diag ("  january        " + Datetime ("january").toISOLocalExtended ());
     t.diag ("  socy           " + Datetime ("socy").toISOLocalExtended ());
     t.diag ("  soy            " + Datetime ("soy").toISOLocalExtended ());
     t.diag ("  socq           " + Datetime ("socq").toISOLocalExtended ());

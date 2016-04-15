@@ -1369,10 +1369,13 @@ bool Datetime::initializeMonthName (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    if (t->tm_mon >= month)
-      t->tm_year++;
+    if (Datetime::lookForwards)
+    {
+      if (t->tm_mon >= month - 1)
+        t->tm_year++;
+    }
 
-    t->tm_mon = month;
+    t->tm_mon = month - 1;
     t->tm_mday = 1;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
