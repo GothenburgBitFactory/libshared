@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (140);
+  UnitTest t (148);
 
   // Pig::skip
   // Pig::skipN
@@ -277,6 +277,19 @@ int main (int, char**)
   t.ok (p28.getDecimal (value), "getDecimal '3.14' --> true");
   t.is (value, "3.14",          "getDecimal '3.14' --> '3.14'");
   t.is (p28.dump (),            "≪3.14≫ l4 c4", "dump: " + p28.dump ());
+
+  Pig p29 ("1:23:45");
+  int h, m, s;
+  t.ok (p29.getHMS (h, m, s),   "getHMS '1:23:45' --> true");
+  t.is (h,  1,                  "getHMS '1:23:45' h --> 1");
+  t.is (m, 23,                  "getHMS '1:23:45' m --> 23");
+  t.is (s, 45,                  "getHMS '1:23:45' s --> 45");
+
+  Pig p30 ("12:34:56");
+  t.ok (p30.getHMS (h, m, s),   "getHMS '12:34:56' --> true");
+  t.is (h, 12,                  "getHMS '12:34:56' h --> 12");
+  t.is (m, 34,                  "getHMS '12:34:56' m --> 34");
+  t.is (s, 56,                  "getHMS '12:34:56' s --> 56");
 
   return 0;
 }
