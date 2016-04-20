@@ -511,6 +511,26 @@ bool Pig::getOneOf (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Pig::getHMS (int& hours, int& minutes, int& seconds)
+{
+  auto save = _cursor;
+
+  if ((getDigit2 (hours) || getDigit (hours)) &&
+      skip (':')                              &&
+      getDigit2 (minutes))
+  {
+    if (skip (':') &&
+        getDigit2 (seconds))
+      ;
+
+    return true;
+  }
+
+  _cursor = save;
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Pig::getRemainder (std::string& result)
 {
   if (_text[_cursor])

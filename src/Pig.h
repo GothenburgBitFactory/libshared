@@ -54,6 +54,7 @@ public:
   bool getDecimal (double&);
   bool getQuoted (int, std::string&);
   bool getOneOf (const std::vector <std::string>&, std::string&);
+  bool getHMS (int&, int&, int&);
   bool getRemainder (std::string&);
 
   bool eos () const;
