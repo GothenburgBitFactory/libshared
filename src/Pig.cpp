@@ -519,6 +519,7 @@ bool Pig::getHMS (int& hours, int& minutes, int& seconds)
       skip (':')                              &&
       getDigit2 (minutes))
   {
+    seconds = 0;
     if (skip (':') &&
         getDigit2 (seconds))
       ;
