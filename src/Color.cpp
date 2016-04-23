@@ -533,6 +533,89 @@ std::string Color::colorize (const std::string& input, const std::string& spec)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string Color::code () const
+{
+  if (! nontrivial ())
+    return "";
+
+  std::string result;
+
+  // 256 color
+  if (_value & _COLOR_256)
+  {
+    if (_value & _COLOR_UNDERLINE)
+      result += "\033[4m";
+
+    if (_value & _COLOR_INVERSE)
+      result += "\033[7m";
+
+    if (_value & _COLOR_HASFG)
+    {
+      result += "\033[38;5;";
+      result += colorstring[(_value & _COLOR_FG)];
+      result += "m";
+    }
+
+    if (_value & _COLOR_HASBG)
+    {
+      result += "\033[48;5;";
+      result += colorstring[((_value & _COLOR_BG) >> 8)];
+      result += "m";
+    }
+  }
+
+  // 16 color
+  else
+  {
+    int count = 0;
+    result += "\033[";
+
+    if (_value & _COLOR_BOLD)
+    {
+      if (count++) result += ";";
+      result += "1";
+    }
+
+    if (_value & _COLOR_UNDERLINE)
+    {
+      if (count++) result += ";";
+      result += "4";
+    }
+
+    if (_value & _COLOR_INVERSE)
+    {
+      if (count++) result += ";";
+      result += "7";
+    }
+
+    if (_value & _COLOR_HASFG)
+    {
+      if (count++) result += ";";
+      result += colorstring[(29 + (_value & _COLOR_FG))];
+    }
+
+    if (_value & _COLOR_HASBG)
+    {
+      if (count++) result += ";";
+      result += colorstring[((_value & _COLOR_BRIGHT ? 99 : 39) + ((_value & _COLOR_BG) >> 8))];
+    }
+
+    result += "m";
+  }
+
+  return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Color::end () const
+{
+  if (! nontrivial ())
+    return "";
+
+  return "\033[0m";
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Color::nontrivial () const
 {
   return _value != 0 ? true : false;

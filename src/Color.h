@@ -61,6 +61,9 @@ public:
   void _colorize (std::string&, const std::string&) const;
   static std::string strip (const std::string&);
 
+  std::string code () const;
+  std::string end () const;
+
   bool nontrivial () const;
 
 private:
