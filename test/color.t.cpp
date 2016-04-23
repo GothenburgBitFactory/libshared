@@ -34,7 +34,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (40 + 256 + 256 + 6*6*6 + 6*6*6 + 1 + 24 + 24 + 3);
+  UnitTest t (40 + 256 + 256 + 6*6*6 + 6*6*6 + 1 + 24 + 24 + 5);
 
   // Names matched to values.
   t.is ((int) Color (""),        (int) Color (Color::nocolor), "''        == Color::nocolor");
@@ -186,6 +186,12 @@ int main (int, char**)
   t.is (Color::strip (""),                  "",    "Color::strip '' -> ''");
   t.is (Color::strip ("foo"),               "foo", "Color::strip 'foo' -> 'foo'");
   t.is (Color::strip ("f\033[1mo\033[0mo"), "foo", "Color::strip 'f<b>o</b>o' -> 'foo'");
+
+  // std::string Color::code () const;
+  t.is (Color ("rgb012 on bright yellow").code (), "[38;5;24m[48;5;11m", "Color::code 'rgb0123 on bright yellow' --> ^[[38;5;24m^[[48;5;11m");
+
+  // std::string Color::end () const;
+  t.is (Color ("red").end (), "[0m", "Color::end --> ^[[0m");
 
   return 0;
 }
