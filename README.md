@@ -1,6 +1,8 @@
 libshared
 =========
-A git submodule used by multiple projects. Not to be released independently.
+
+A git submodule used by multiple projects. Not to be released or packaged
+independently.
 
 
 Branching
@@ -14,3 +16,4 @@ be made. When an incompatible change is introduced to the common library, a
 This allows client programs to choose when to upgrade from '1.0.0' to '2.0.0',
 which by definition will require client code changes. A minor release, '1.1.0',
 will not require client code changes.
+
