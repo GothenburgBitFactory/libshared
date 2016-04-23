@@ -4,6 +4,7 @@
 - TW-1741 Warning "ignoring return value of ‘int ftruncate" while doing make on
           xubuntu15.10
           (thanks to Sunil Joshi).
+- Bug   '12pm' was getting 12 hours added because of the 'pm', which is wrong.
 - Added 'juhannus' as a synonym for 'midsommarafton'
           (thanks to Lynoure Braakman).
 - Added 'join' function.
@@ -12,7 +13,6 @@
 - Added 'JSON2' SAX parser.
 - Introduced the new shared submodule.
 - Added Datetime support for 'socq', 'eocq', 'socy', 'eocy'.
-
 
 Design completed 2015-12-XX
 Project started  2015-11-29
