@@ -38,11 +38,11 @@ int main (int argc, char** argv)
   if (argc == 1)
   {
     std::cout << "\nUsage: json_test [-q] <file | JSON> ...\n"
-              << "\n"
+              << '\n'
               << "      -q        quiet, no JSON dump\n"
               << "      <file>    file containing JSON\n"
               << "      <JSON>    JSON string, may need to be quoted\n"
-              << "\n";
+              << '\n';
     return 0;
   }
 
@@ -69,12 +69,12 @@ int main (int argc, char** argv)
           root = json::parse (argv[i]);
 
         if (root && !quiet)
-          std::cout << root->dump () << "\n";
+          std::cout << root->dump () << '\n';
 
         delete root;
       }
 
-      catch (const std::string& e) { std::cout << e << "\n";         }
+      catch (const std::string& e) { std::cout << e << '\n';         }
       catch (...)                  { std::cout << "Unknown error\n"; }
     }
   }

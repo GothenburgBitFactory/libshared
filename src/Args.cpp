@@ -127,16 +127,16 @@ std::string Args::dump () const
   out << "Args\n"
       << "  Options\n";
   for (const auto& arg : _options)
-    out << "    " << arg.first << " = " << arg.second << "\n";
+    out << "    " << arg.first << " = " << arg.second << '\n';
 
   out << "  Named\n";
   for (const auto& arg : _named)
-    out << "    " << arg.first << " = " << arg.second << "\n";
+    out << "    " << arg.first << " = " << arg.second << '\n';
 
   out << "  Positionals\n"
-      << "    limit = " << _limit << "\n";
+      << "    limit = " << _limit << '\n';
   for (const auto& arg : _positionals)
-    out << "    " << arg << "\n";
+    out << "    " << arg << '\n';
 
   return out.str ();
 }

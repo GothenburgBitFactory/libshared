@@ -196,7 +196,7 @@ std::string Table::render ()
 
     // Trim right.
     out.erase (out.find_last_not_of (" ") + 1);
-    out += "\n";
+    out += '\n';
 
     // Stop if the line limit is exceeded.
     if (++_lines >= _truncate_lines && _truncate_lines != 0)
@@ -215,7 +215,7 @@ std::string Table::render ()
       out += _header.colorize (std::string (widths[c], '-'));
     }
 
-    out += "\n";
+    out += '\n';
   }
 
   // Compose, render columns, in sequence.
@@ -274,7 +274,7 @@ std::string Table::render ()
 
       // Trim right.
       out.erase (out.find_last_not_of (" ") + 1);
-      out += "\n";
+      out += '\n';
 
       // Stop if the line limit is exceeded.
       if (++_lines >= _truncate_lines && _truncate_lines != 0)

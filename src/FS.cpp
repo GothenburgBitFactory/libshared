@@ -475,7 +475,7 @@ void File::read (std::string& contents)
         first = false;
       }
 
-      contents += line + "\n";
+      contents += line + '\n';
     }
 
     in.close ();
@@ -664,7 +664,7 @@ bool File::read (const std::string& name, std::string& contents)
         first = false;
       }
 
-      contents += line + "\n";
+      contents += line + '\n';
     }
 
     in.close ();
@@ -734,7 +734,7 @@ bool File::write (
       out << line;
 
       if (addNewlines)
-        out << "\n";
+        out << '\n';
     }
 
     out.close ();

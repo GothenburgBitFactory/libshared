@@ -71,9 +71,9 @@ std::string Msg::serialize () const
 {
   std::string output;
   for (auto& i : _header)
-    output += i.first + ": " + i.second + "\n";
+    output += i.first + ": " + i.second + '\n';
 
-  output += "\n" + _payload + "\n";
+  output += '\n' + _payload + '\n';
 
   return output;
 }

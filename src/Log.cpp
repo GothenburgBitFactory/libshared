@@ -58,7 +58,7 @@ void Log::write (const std::string& category, const std::string& line)
   if (line != "")
   {
     // If line contains newlines, split it into separate lines and log each one.
-    if (line.find ("\n") != std::string::npos)
+    if (line.find ('\n') != std::string::npos)
     {
       for (const auto& single : split (line, '\n'))
         write (category, single);
@@ -90,7 +90,7 @@ void Log::write (const std::string& category, const std::string& line)
                             + " " + PACKAGE_VERSION
                             + " " + category
                             + " " + format ("(Repeated {1} times)", _repetition)
-                            + "\n";
+                            + '\n';
 
         if (_name != "")
           _file.append (message);
@@ -104,7 +104,7 @@ void Log::write (const std::string& category, const std::string& line)
                           + " " + PACKAGE_VERSION
                           + " " + category
                           + " " + line
-                          + "\n";
+                          + '\n';
 
       if (_name != "")
         _file.append (message);

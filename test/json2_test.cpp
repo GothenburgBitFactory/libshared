@@ -53,9 +53,9 @@ int main (int argc, char** argv)
   if (argc == 1)
   {
     std::cout << "\nUsage: json2_test <file> ...\n"
-              << "\n"
+              << '\n'
               << "      <file>    file containing JSON\n"
-              << "\n";
+              << '\n';
   }
   else
   {
@@ -73,7 +73,7 @@ int main (int argc, char** argv)
           status = 1;
       }
 
-      catch (const std::string& e) { std::cout << e << "\n";         }
+      catch (const std::string& e) { std::cout << e << '\n';         }
       catch (...)                  { std::cout << "Unknown error\n"; }
     }
   }
