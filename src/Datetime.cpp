@@ -28,8 +28,8 @@
 #include <Datetime.h>
 #include <sstream>
 #include <iomanip>
+#include <cassert>
 #include <stdlib.h>
-#include <assert.h>
 #include <shared.h>
 #include <format.h>
 #include <unicode.h>
@@ -87,8 +87,13 @@ Datetime::Datetime (const time_t t)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime::Datetime (const int m, const int d, const int y)
+Datetime::Datetime (const int y, const int m, const int d)
 {
+  // Protect against arguments being passed in the wrong order.
+  assert (y >= 1969 && y < 2100);
+  assert (m >= 1 && m <= 12);
+  assert (d >= 1 && d <= 31);
+
   clear ();
 
   // Error if not valid.
@@ -102,9 +107,17 @@ Datetime::Datetime (const int m, const int d, const int y)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime::Datetime (const int m,  const int d,  const int y,
+Datetime::Datetime (const int y,  const int m,  const int d,
                     const int hr, const int mi, const int se)
 {
+  // Protect against arguments being passed in the wrong order.
+  assert (y >= 1969 && y < 2100);
+  assert (m >= 1 && m <= 12);
+  assert (d >= 1 && d <= 31);
+  assert (hr >= 0 && hr <= 24);
+  assert (mi >= 0 && mi < 60);
+  assert (se >= 0 && se < 60);
+
   clear ();
 
   // Error if not valid.
@@ -1608,7 +1621,7 @@ bool Datetime::initializeEom (const std::string& token)
     t->tm_hour = 24;
     t->tm_min = 0;
     t->tm_sec = -1;
-    t->tm_mday = daysInMonth (t->tm_mon + 1, t->tm_year + 1900);
+    t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
@@ -1794,7 +1807,7 @@ bool Datetime::initializeOrdinal (const std::string& token)
         // If it is this month.
         if (! Datetime::lookForwards ||
             (d < number &&
-             number <= daysInMonth (m, y)))
+             number <= daysInMonth (y, m)))
         {
           t->tm_hour = t->tm_min = t->tm_sec = 0;
           t->tm_mon  = m - 1;
@@ -2106,7 +2119,7 @@ void Datetime::midsommarafton (struct tm* t) const
 //   by {day}
 //   first thing {day}
 //
-bool Datetime::initializeFoo (const std::vector <std::string>& tokens)
+bool Datetime::initializeFoo (const std::vector <std::string>&)
 {
 
   return false;
@@ -2122,7 +2135,7 @@ bool Datetime::validate ()
       (_week    && (_week    <      1 || _week    >                                    53)) ||
       (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
       (_julian  && (_julian  <      1 || _julian  >          Datetime::daysInYear (_year))) ||
-      (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_month, _year))) ||
+      (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_year, _month))) ||
       (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
       (_offset  && (_offset  < -86400 || _offset  >                                 86400)))
     return false;
@@ -2308,7 +2321,7 @@ double Datetime::toJulian () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Datetime::toMDY (int& m, int& d, int& y) const
+void Datetime::toYMD (int& y, int& m, int& d) const
 {
   struct tm* t = localtime (&_date);
 
@@ -2356,7 +2369,7 @@ const std::string Datetime::toString (const std::string& format) const
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
-  return Datetime (month (), day (), year ());
+  return Datetime (year (), month (), day ());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2364,19 +2377,19 @@ Datetime Datetime::startOfWeek () const
 {
   Datetime sow (_date);
   sow -= (dayOfWeek () * 86400);
-  return Datetime (sow.month (), sow.day (), sow.year ());
+  return Datetime (sow.year (), sow.month (), sow.day ());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfMonth () const
 {
-  return Datetime (month (), 1, year ());
+  return Datetime (year (), month (), 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfYear () const
 {
-  return Datetime (1, 1, year ());
+  return Datetime (year (), 1, 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2396,8 +2409,9 @@ bool Datetime::valid (const std::string& input, const std::string& format)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::valid (const int m, const int d, const int y, const int hr,
-                  const int mi, const int se)
+bool Datetime::valid (
+  const int y, const int m, const int d,
+  const int hr, const int mi, const int se)
 {
   if (hr < 0 || hr > 23)
     return false;
@@ -2408,11 +2422,11 @@ bool Datetime::valid (const int m, const int d, const int y, const int hr,
   if (se < 0 || se > 59)
     return false;
 
-  return Datetime::valid (m, d, y);
+  return Datetime::valid (y, m, d);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::valid (const int m, const int d, const int y)
+bool Datetime::valid (const int y, const int m, const int d)
 {
   // Check that the year is valid.
   if (y < 0)
@@ -2424,7 +2438,7 @@ bool Datetime::valid (const int m, const int d, const int y)
 
   // Finally check that the days fall within the acceptable range for this
   // month, and whether or not this is a leap year.
-  if (d < 1 || d > Datetime::daysInMonth (m, y))
+  if (d < 1 || d > Datetime::daysInMonth (y, m))
     return false;
 
   return true;
@@ -2432,7 +2446,7 @@ bool Datetime::valid (const int m, const int d, const int y)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Julian
-bool Datetime::valid (const int d, const int y)
+bool Datetime::valid (const int y, const int d)
 {
   // Check that the year is valid.
   if (y < 0)
@@ -2454,8 +2468,12 @@ bool Datetime::leapYear (int year)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static
-int Datetime::daysInMonth (int month, int year)
+int Datetime::daysInMonth (int year, int month)
 {
+  // Protect against arguments being passed in the wrong order.
+  assert (year >= 1969 && year < 2100);
+  assert (month >= 1 && month <= 31);
+
   static int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
   if (month == 2 && Datetime::leapYear (year))
@@ -2770,9 +2788,9 @@ time_t Datetime::operator- (const Datetime& rhs)
 void Datetime::operator-- ()
 {
   Datetime yesterday = startOfDay () - 1;
-  yesterday = Datetime (yesterday.month (),
+  yesterday = Datetime (yesterday.year (),
+                        yesterday.month (),
                         yesterday.day (),
-                        yesterday.year (),
                         hour (),
                         minute (),
                         second ());
@@ -2784,9 +2802,9 @@ void Datetime::operator-- ()
 void Datetime::operator-- (int)
 {
   Datetime yesterday = startOfDay () - 1;
-  yesterday = Datetime (yesterday.month (),
+  yesterday = Datetime (yesterday.year (),
+                        yesterday.month (),
                         yesterday.day (),
-                        yesterday.year (),
                         hour (),
                         minute (),
                         second ());
@@ -2798,9 +2816,9 @@ void Datetime::operator-- (int)
 void Datetime::operator++ ()
 {
   Datetime tomorrow = (startOfDay () + 90001).startOfDay ();
-  tomorrow = Datetime (tomorrow.month (),
+  tomorrow = Datetime (tomorrow.year (),
+                       tomorrow.month (),
                        tomorrow.day (),
-                       tomorrow.year (),
                        hour (),
                        minute (),
                        second ());
@@ -2812,9 +2830,9 @@ void Datetime::operator++ ()
 void Datetime::operator++ (int)
 {
   Datetime tomorrow = (startOfDay () + 90001).startOfDay ();
-  tomorrow = Datetime (tomorrow.month (),
+  tomorrow = Datetime (tomorrow.year (),
+                       tomorrow.month (),
                        tomorrow.day (),
-                       tomorrow.year (),
                        hour (),
                        minute (),
                        second ());

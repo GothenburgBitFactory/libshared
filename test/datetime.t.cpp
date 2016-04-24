@@ -367,20 +367,20 @@ int main (int, char**)
     t.notok (left.sameYear  (comp4), "7/4/2008 is not in the same year as 7/4/2009");
 
     // Validity.
-    t.ok    (Datetime::valid (2, 29, 2008), "valid: 2/29/2008");
-    t.notok (Datetime::valid (2, 29, 2007), "invalid: 2/29/2007");
+    t.ok    (Datetime::valid (2008, 2, 29), "valid: 2/29/2008");
+    t.notok (Datetime::valid (2007, 2, 29), "invalid: 2/29/2007");
 
     t.ok    (Datetime::valid ("2/29/2008", "m/d/Y"), "valid: 2/29/2008");
     t.notok (Datetime::valid ("2/29/2007", "m/d/Y"), "invalid: 2/29/2007");
 
-    t.ok    (Datetime::valid (366, 2008), "valid: 366 days in 2008");
-    t.notok (Datetime::valid (366, 2007), "invalid: 366 days in 2007");
+    t.ok    (Datetime::valid (2008, 366), "valid: 366 days in 2008");
+    t.notok (Datetime::valid (2007, 366), "invalid: 366 days in 2007");
 
     // Time validity.
-    t.ok    (Datetime::valid (2, 28, 2010,  0,  0,  0), "valid 2/28/2010 0:00:00");
-    t.ok    (Datetime::valid (2, 28, 2010, 23, 59, 59), "valid 2/28/2010 23:59:59");
-    t.notok (Datetime::valid (2, 28, 2010, 24, 59, 59), "valid 2/28/2010 24:59:59");
-    t.notok (Datetime::valid (2, 28, 2010, -1,  0,  0), "valid 2/28/2010 -1:00:00");
+    t.ok    (Datetime::valid (2010, 2, 28,  0,  0,  0), "valid 2/28/2010 0:00:00");
+    t.ok    (Datetime::valid (2010, 2, 28, 23, 59, 59), "valid 2/28/2010 23:59:59");
+    t.notok (Datetime::valid (2010, 2, 28, 24, 59, 59), "valid 2/28/2010 24:59:59");
+    t.notok (Datetime::valid (2010, 2, 28, -1,  0,  0), "valid 2/28/2010 -1:00:00");
 
     // Leap year.
     t.ok    (Datetime::leapYear (2008), "2008 is a leap year");
@@ -393,8 +393,8 @@ int main (int, char**)
     t.is (Datetime::daysInYear (2015), 365, "365 days in 2015");
 
     // Days in month.
-    t.is (Datetime::daysInMonth (2, 2008), 29, "29 days in February 2008");
-    t.is (Datetime::daysInMonth (2, 2007), 28, "28 days in February 2007");
+    t.is (Datetime::daysInMonth (2008, 2), 29, "29 days in February 2008");
+    t.is (Datetime::daysInMonth (2007, 2), 28, "28 days in February 2007");
 
     // Names.
     t.is (Datetime::monthName (1),  "January",   "1 = January");
@@ -464,20 +464,20 @@ int main (int, char**)
     t.is (Datetime::dayOfWeek ("Friday"),    5, "Friday == 5");
     t.is (Datetime::dayOfWeek ("Saturday"),  6, "Saturday == 6");
 
-    Datetime happyNewYear (1, 1, 2008);
-    t.is (happyNewYear.dayOfWeek (),         2, "1/1/2008 == Tuesday");
-    t.is (happyNewYear.month (),             1, "1/1/2008 == January");
-    t.is (happyNewYear.day (),               1, "1/1/2008 == 1");
-    t.is (happyNewYear.year (),           2008, "1/1/2008 == 2008");
-    t.is (happyNewYear.toString (), "1/1/2008", "toString 1/1/2008");
+    Datetime happyNewYear (2008, 1, 1);
+    t.is (happyNewYear.dayOfWeek (),           2, "1/1/2008 == Tuesday");
+    t.is (happyNewYear.month (),               1, "1/1/2008 == January");
+    t.is (happyNewYear.day (),                 1, "1/1/2008 == 1");
+    t.is (happyNewYear.year (),             2008, "1/1/2008 == 2008");
+    t.is (happyNewYear.toString (), "2008-01-01", "toString 2008-01-01");
 
     int m, d, y;
-    happyNewYear.toMDY (m, d, y);
+    happyNewYear.toYMD (y, m, d);
     t.is (m, 1, "1/1/2008 == January");
     t.is (d, 1, "1/1/2008 == 1");
     t.is (y, 2008, "1/1/2008 == 2008");
 
-    Datetime epoch (9, 8, 2001);
+    Datetime epoch (2001, 9, 8);
     t.ok ((int)epoch.toEpoch () < 1000000000, "9/8/2001 < 1,000,000,000");
     epoch += 172800;
     t.ok ((int)epoch.toEpoch () > 1000000000, "9/10/2001 > 1,000,000,000");
@@ -688,20 +688,20 @@ int main (int, char**)
     t.is ((r25 - 1).toEpoch (), 1234567889, "1234567890 - 1 = 1234567889");
 
     // Datetime::operator--
-    Datetime r26 (11, 7, 2010, 23, 59, 59);
+    Datetime r26 (2010, 11, 7, 23, 59, 59);
     r26--;
     t.is (r26.toString ("YMDHNS"), "20101106235959", "decrement across fall DST boundary");
 
-    Datetime r27 (3, 14, 2010, 23, 59, 59);
+    Datetime r27 (2010, 3, 14, 23, 59, 59);
     r27--;
     t.is (r27.toString ("YMDHNS"), "20100313235959", "decrement across spring DST boundary");
 
     // Datetime::operator++
-    Datetime r28 (11, 6, 2010, 23, 59, 59);
+    Datetime r28 (2010, 11, 6, 23, 59, 59);
     r28++;
     t.is (r28.toString ("YMDHNS"), "20101107235959", "increment across fall DST boundary");
 
-    Datetime r29 (3, 13, 2010, 23, 59, 59);
+    Datetime r29 (2010, 3, 13, 23, 59, 59);
     r29++;
     t.is (r29.toString ("YMDHNS"), "20100314235959", "increment across spring DST boundary");
 
