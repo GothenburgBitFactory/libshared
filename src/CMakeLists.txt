@@ -4,6 +4,7 @@ include_directories (${CMAKE_SOURCE_DIR}
 
 set (shared_HEADERS Args.h
                     Color.h
+                    Composite.h
                     Configuration.h
                     Datetime.h
                     Duration.h
@@ -23,6 +24,7 @@ set (shared_HEADERS Args.h
 
 set (shared_SRCS Args.cpp
                  Color.cpp
+                 Composite.cpp
                  Configuration.cpp
                  Datetime.cpp
                  Duration.cpp

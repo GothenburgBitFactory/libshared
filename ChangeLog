@@ -13,6 +13,7 @@
 - Added 'JSON2' SAX parser.
 - Introduced the new shared submodule.
 - Added Datetime support for 'socq', 'eocq', 'socy', 'eocy'.
+- Added Composite object.
 
 Design completed 2015-12-XX
 Project started  2015-11-29
