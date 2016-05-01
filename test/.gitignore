@@ -13,6 +13,7 @@ json_test
 json2_test
 list.t
 msg.t
+palette.t
 pig.t
 rx.t
 shared.t
