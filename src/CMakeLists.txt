@@ -13,6 +13,7 @@ set (shared_HEADERS Args.h
                     JSON2.h
                     Log.h
                     Msg.h
+                    Palette.h
                     Pig.h
                     RX.h
                     Table.h
@@ -33,6 +34,7 @@ set (shared_SRCS Args.cpp
                  JSON2.cpp
                  Log.cpp
                  Msg.cpp
+                 Palette.cpp
                  Pig.cpp
                  RX.cpp
                  Table.cpp
