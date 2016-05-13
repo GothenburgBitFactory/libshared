@@ -2189,11 +2189,12 @@ void Datetime::resolve ()
 
   // Project forward one day if the specified seconds are earlier in the day
   // than the current seconds.
-  if (year    == 0 &&
-      month   == 0 &&
-      day     == 0 &&
-      week    == 0 &&
-      weekday == 0 &&
+  if (Datetime::lookForwards &&
+      year    == 0           &&
+      month   == 0           &&
+      day     == 0           &&
+      week    == 0           &&
+      weekday == 0           &&
       seconds < seconds_now)
   {
     seconds += 86400;
