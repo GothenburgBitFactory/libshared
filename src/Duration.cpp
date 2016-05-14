@@ -415,6 +415,31 @@ const std::string Duration::format () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const std::string Duration::formatHours () const
+{
+  if (_period)
+  {
+    time_t t = _period;
+    int seconds = t % 60; t /= 60;
+    int minutes = t % 60; t /= 60;
+    int hours   = t;
+
+    std::stringstream s;
+    s << hours
+      << ':'
+      << std::setw (2) << std::setfill ('0') << minutes
+      << ':'
+      << std::setw (2) << std::setfill ('0') << seconds;
+
+    return s.str ();
+  }
+  else
+  {
+    return "0:00:00";
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string Duration::formatISO () const
 {
   if (_period)
