@@ -70,7 +70,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1900);
+  UnitTest t (1906);
 
   Duration dur;
   std::string::size_type start = 0;
@@ -307,6 +307,16 @@ int main (int, char**)
   left = Duration ("2s");     right = Duration ("1s");     t.ok (left >= right,    "Duration 2s >= 1s");
   left = Duration ("2s");     right = Duration ("2s");     t.ok (left >= right,    "Duration 2s >= 2s");
   left = Duration ("1s");     right = Duration ("2s");     t.notok (left >= right, "Duration NOT 1s >= 2s");
+
+  // toString
+  Duration d (1234567890);
+  // 14288d 23:31:30
+  t.is (d.toString ("D"), "14288", "Duration 1234567890 -> 'D' = 14288");
+  t.is (d.toString ("H"), "23",    "Duration 1234567890 -> 'H' = 23");
+  t.is (d.toString ("M"), "31",    "Duration 1234567890 -> 'M' = 31");
+  t.is (d.toString ("m"), "31",    "Duration 1234567890 -> 'm' = 31");
+  t.is (d.toString ("S"), "30",    "Duration 1234567890 -> 'S' = 30");
+  t.is (d.toString ("s"), "30",    "Duration 1234567890 -> 's' = 30");
 
   return 0;
 }
