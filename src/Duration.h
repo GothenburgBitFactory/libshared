@@ -48,6 +48,7 @@ public:
   bool parse_designated (Pig&);
   bool parse_weeks (Pig&);
   bool parse_units (Pig&);
+  const std::string toString (const std::string&) const;
   const std::string format () const;
   const std::string formatHours () const;
   const std::string formatISO () const;

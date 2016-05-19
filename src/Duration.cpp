@@ -386,6 +386,34 @@ void Duration::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const std::string Duration::toString (const std::string& format) const
+{
+  time_t t = _period;
+  int seconds = t % 60; t /= 60;
+  int minutes = t % 60; t /= 60;
+  int hours   = t % 24; t /= 24;
+  int days    = t;
+
+  std::stringstream formatted;
+  for (unsigned int i = 0; i < format.length (); ++i)
+  {
+    int c = format[i];
+    switch (c)
+    {
+    case 'D': formatted                                        << days;    break;
+    case 'H': formatted                                        << hours;   break;
+    case 'M': formatted << std::setw (2) << std::setfill ('0') << minutes; break;
+    case 'm': formatted                                        << minutes; break;
+    case 'S': formatted << std::setw (2) << std::setfill ('0') << seconds; break;
+    case 's': formatted                                        << seconds; break;
+    default:  formatted                                        << static_cast <char> (c); break;
+    }
+  }
+
+  return formatted.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string Duration::format () const
 {
   if (_period)
