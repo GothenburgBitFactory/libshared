@@ -70,7 +70,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1906);
+  UnitTest t (1904);
 
   Duration dur;
   std::string::size_type start = 0;
@@ -311,12 +311,10 @@ int main (int, char**)
   // toString
   Duration d (1234567890);
   // 14288d 23:31:30
-  t.is (d.toString ("D"), "14288", "Duration 1234567890 -> 'D' = 14288");
-  t.is (d.toString ("H"), "23",    "Duration 1234567890 -> 'H' = 23");
-  t.is (d.toString ("M"), "31",    "Duration 1234567890 -> 'M' = 31");
-  t.is (d.toString ("m"), "31",    "Duration 1234567890 -> 'm' = 31");
-  t.is (d.toString ("S"), "30",    "Duration 1234567890 -> 'S' = 30");
-  t.is (d.toString ("s"), "30",    "Duration 1234567890 -> 's' = 30");
+  t.ok (d.days ()    == 14288,      "Duration 1234567890 -> days = 14288");
+  t.ok (d.hours ()   == 342935,     "Duration 1234567890 -> hours = 342935");
+  t.ok (d.minutes () == 20576131,   "Duration 1234567890 -> miniutes = 20576131");
+  t.ok (d.seconds () == 1234567890, "Duration 1234567890 -> seconds = 123456789030");
 
   return 0;
 }
