@@ -2189,6 +2189,7 @@ void Datetime::resolve ()
 
   // Project forward one day if the specified seconds are earlier in the day
   // than the current seconds.
+  // TODO This does not cover the inverse case of subtracting 86400.
   if (Datetime::lookForwards &&
       year    == 0           &&
       month   == 0           &&
