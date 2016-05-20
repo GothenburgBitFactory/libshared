@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1914);
+  UnitTest t (1915);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -757,6 +757,7 @@ int main (int, char**)
     t.is (r32.toString ("v"),        "44", "2015-10-28T12:55:01 -> v ->        44");
     t.is (r32.toString ("J"),       "301", "2015-10-28T12:55:01 -> J ->       301");
     t.is (r32.toString ("j"),       "301", "2015-10-28T12:55:01 -> j ->       301");
+    t.is (r32.toString ("w"),         "3", "2015-10-28T12:55:01 -> w ->         3");
 
     // Test all parse options.
     Datetime r33 ("2015 10 28 19 28 01", "Y M D H N S");
