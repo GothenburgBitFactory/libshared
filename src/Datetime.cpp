@@ -2361,6 +2361,7 @@ const std::string Datetime::toString (const std::string& format) const
     case 'S': formatted << std::setw (2) << std::setfill ('0') << second ();              break;
     case 'j': formatted                                        << dayOfYear ();           break;
     case 'J': formatted << std::setw (3) << std::setfill ('0') << dayOfYear ();           break;
+    case 'w': formatted                                        << dayOfWeek ();           break;
     default:  formatted                                        << static_cast <char> (c); break;
     }
   }

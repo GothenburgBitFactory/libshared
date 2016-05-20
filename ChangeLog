@@ -4,6 +4,8 @@
 - TW-1741 Warning "ignoring return value of ‘int ftruncate" while doing make on
           xubuntu15.10
           (thanks to Sunil Joshi).
+- TW-1807 dateformat lacks a flag to display day of week
+          (thanks to Ellington Santos).
 - Bug   '12pm' was getting 12 hours added because of the 'pm', which is wrong.
 - Added 'juhannus' as a synonym for 'midsommarafton'
           (thanks to Lynoure Braakman).
