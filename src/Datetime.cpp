@@ -1973,12 +1973,15 @@ bool Datetime::initializeInformalTime (const std::string& token)
         pig.skipLiteral ("a"))
     {
       haveDesignator = true;
+      if (hours == 12)
+        hours = 0;
     }
 
     else if (pig.skipLiteral ("pm") ||
              pig.skipLiteral ("p"))
     {
       // Note: '12pm is an exception:
+      //  12am = 0h
       //  11am = 11h + 12h
       //  12pm = 12h
       //  1pm  = 1h + 12h
