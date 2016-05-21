@@ -828,6 +828,8 @@ int main (int, char**)
     t.diag ("  midsommar      " + Datetime ("midsommar").toISOLocalExtended ());
     t.diag ("  midsommarafton " + Datetime ("midsommarafton").toISOLocalExtended ());
     t.diag ("  3am            " + Datetime ("3am").toISOLocalExtended ());
+    t.diag ("  12am           " + Datetime ("12am").toISOLocalExtended ());
+    t.diag ("  12pm           " + Datetime ("12pm").toISOLocalExtended ());
 
     Datetime::lookForwards = false;
     t.diag ("Datetime::lookForwards == false");
@@ -848,6 +850,8 @@ int main (int, char**)
     t.diag ("  midsommar      " + Datetime ("midsommar").toISOLocalExtended ());
     t.diag ("  midsommarafton " + Datetime ("midsommarafton").toISOLocalExtended ());
     t.diag ("  3am            " + Datetime ("3am").toISOLocalExtended ());
+    t.diag ("  12am           " + Datetime ("12am").toISOLocalExtended ());
+    t.diag ("  12pm           " + Datetime ("12pm").toISOLocalExtended ());
   }
 
   catch (const std::string& e)
