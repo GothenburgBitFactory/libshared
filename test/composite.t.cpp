@@ -113,6 +113,16 @@ int main (int, char**)
   c6.add ("z",                                                  25, Color ("blue on bright white"));
   t.diag (c6.str ());
 
+  // Bug: The background red of "one" continues for "two" and should not.
+  //      This was because the composited output was like this:
+  //        <fg><bg>one<fg>two<end>
+  //      and should have been like this:
+  //        <fg><bg>one<end><fg>two<end>
+  Composite c7;
+  c7.add ("one", 0, Color ("white on red"));
+  c7.add ("two", 3, Color ("green"));
+  t.diag (c7.str ());
+
   return 0;
 }
 
