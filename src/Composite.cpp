@@ -118,6 +118,9 @@ std::string Composite::str () const
     // A change in color triggers a code emit.
     if (prev_color != colors[i])
     {
+      if (prev_color)
+        out << std::get <2> (_layers[0]).end ();
+
       if (colors[i])
         out << std::get <2> (_layers[colors[i] - 1]).code ();
       else
