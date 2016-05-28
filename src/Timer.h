@@ -42,6 +42,7 @@ public:
   void stop ();
   unsigned long total () const;
   void subtract (unsigned long);
+  std::string str () const;
 
   static unsigned long now ();
 

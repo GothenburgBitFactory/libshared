@@ -48,17 +48,6 @@ Timer::Timer (const std::string& description)
 Timer::~Timer ()
 {
   stop ();
-
-  std::stringstream s;
-  s << "Timer "
-    << _description
-    << " "
-    << std::setprecision (6)
-    << std::fixed
-    << _total / 1000000.0
-    << " sec\n";
-
-  std::cerr << s.str ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +86,21 @@ void Timer::subtract (unsigned long value)
     _total = 0;
   else
     _total -= value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Timer::str () const
+{
+  std::stringstream s;
+  s << "Timer "
+    << _description
+    << " "
+    << std::setprecision (6)
+    << std::fixed
+    << _total / 1000000.0
+    << " sec\n";
+
+  return s.str ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
