@@ -365,7 +365,7 @@ int main (int, char**)
 
     Datetime comp4 ("7/4/2009", "m/d/Y");
     t.notok (left.sameDay     (comp4), "7/4/2008 is not on the same day as 7/4/2009");
-    t.notok (left.sameWeek    (comp3), "7/4/2008 is not on the same week as 7/4/2009");
+    t.notok (left.sameWeek    (comp4), "7/4/2008 is not on the same week as 7/4/2009");
     t.notok (left.sameMonth   (comp4), "7/4/2008 is not in the same month as 7/4/2009");
     t.notok (left.sameQuarter (comp4), "7/4/2008 is not in the same quarter as 7/4/2009");
     t.notok (left.sameYear    (comp4), "7/4/2008 is not in the same year as 7/4/2009");
