@@ -2752,6 +2752,13 @@ bool Datetime::sameMonth (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Datetime::sameQuarter (const Datetime& rhs) const
+{
+  return year () == rhs.year () &&
+         ((month () - 1) / 4) == ((rhs.month () - 1) / 4);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Datetime::sameYear (const Datetime& rhs) const
 {
   return year () == rhs.year ();

@@ -84,26 +84,27 @@ public:
   int minute () const;
   int second () const;
 
-  bool operator== (const Datetime&) const;
-  bool operator!= (const Datetime&) const;
-  bool operator<  (const Datetime&) const;
-  bool operator>  (const Datetime&) const;
-  bool operator<= (const Datetime&) const;
-  bool operator>= (const Datetime&) const;
-  bool sameHour   (const Datetime&) const;
-  bool sameDay    (const Datetime&) const;
-  bool sameWeek   (const Datetime&) const;
-  bool sameMonth  (const Datetime&) const;
-  bool sameYear   (const Datetime&) const;
+  bool operator==  (const Datetime&) const;
+  bool operator!=  (const Datetime&) const;
+  bool operator<   (const Datetime&) const;
+  bool operator>   (const Datetime&) const;
+  bool operator<=  (const Datetime&) const;
+  bool operator>=  (const Datetime&) const;
+  bool sameHour    (const Datetime&) const;
+  bool sameDay     (const Datetime&) const;
+  bool sameWeek    (const Datetime&) const;
+  bool sameMonth   (const Datetime&) const;
+  bool sameQuarter (const Datetime&) const;
+  bool sameYear    (const Datetime&) const;
   Datetime operator+  (const int);
   Datetime operator-  (const int);
   Datetime& operator+= (const int);
   Datetime& operator-= (const int);
   time_t operator- (const Datetime&);
-  void operator-- ();    // Prefix
-  void operator-- (int); // Postfix
-  void operator++ ();    // Prefix
-  void operator++ (int); // Postfix
+  void operator--  ();    // Prefix
+  void operator--  (int); // Postfix
+  void operator++  ();    // Prefix
+  void operator++  (int); // Postfix
 
 private:
   void clear ();
