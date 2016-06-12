@@ -87,7 +87,6 @@ std::string Composite::str () const
   {
     auto text   = std::get <0> (_layers[layer]);
     auto offset = std::get <1> (_layers[layer]);
-
     auto len    = utf8_text_length (text);
 
     // Make sure the vectors are large enough to support a write operator[].
@@ -119,12 +118,12 @@ std::string Composite::str () const
     if (prev_color != colors[i])
     {
       if (prev_color)
-        out << std::get <2> (_layers[0]).end ();
+        out << std::get <2> (_layers[prev_color - 1]).end ();
 
       if (colors[i])
         out << std::get <2> (_layers[colors[i] - 1]).code ();
       else
-        out << std::get <2> (_layers[0]).end ();
+        out << std::get <2> (_layers[prev_color - 1]).end ();
 
       prev_color = colors[i];
     }
@@ -134,7 +133,7 @@ std::string Composite::str () const
 
   // Terminate the color codes, if necessary.
   if (prev_color)
-    out << std::get <2> (_layers[0]).end ();
+    out << std::get <2> (_layers[prev_color - 1]).end ();
 
   return out.str ();
 }
