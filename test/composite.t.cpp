@@ -123,6 +123,16 @@ int main (int, char**)
   c7.add ("two", 3, Color ("green"));
   t.diag (c7.str ());
 
+  // Bug:        Strings that end at the same location bleed color.
+  // Cause:      Caused by layer 0 being used to terminate color, and if layer 0
+  //             has no color, there is a problem.  Replace 'bold' below with ''
+  //             to see the bug.
+  // Workaround: Always provide a color for layer 0.
+  Composite c8;
+  c8.add ("..........", 0, Color ("bold"));
+  c8.add (       "foo", 7, Color ("white on red"));
+  t.diag (c8.str ());
+
   return 0;
 }
 
