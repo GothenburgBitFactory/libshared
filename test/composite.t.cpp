@@ -113,23 +113,21 @@ int main (int, char**)
   c6.add ("z",                                                  25, Color ("blue on bright white"));
   t.diag (c6.str ());
 
-  // Bug: The background red of "one" continues for "two" and should not.
-  //      This was because the composited output was like this:
-  //        <fg><bg>one<fg>two<end>
-  //      and should have been like this:
-  //        <fg><bg>one<end><fg>two<end>
+  // Bug:   The background red of "one" continues for "two" and should not.
+  // Cause: This was because the composited output was like this:
+  //          <fg><bg>one<fg>two<end>
+  //        and should have been like this:
+  //          <fg><bg>one<end><fg>two<end>
   Composite c7;
   c7.add ("one", 0, Color ("white on red"));
   c7.add ("two", 3, Color ("green"));
   t.diag (c7.str ());
 
-  // Bug:        Strings that end at the same location bleed color.
-  // Cause:      Caused by layer 0 being used to terminate color, and if layer 0
-  //             has no color, there is a problem.  Replace 'bold' below with ''
-  //             to see the bug.
-  // Workaround: Always provide a color for layer 0.
+  // Bug:   Strings that end at the same location bleed color.
+  // Cause: Caused by layer 0 being used to terminate color, and if layer 0 had
+  //        no color, there was no termination.
   Composite c8;
-  c8.add ("..........", 0, Color ("bold"));
+  c8.add ("..........", 0, Color ());
   c8.add (       "foo", 7, Color ("white on red"));
   t.diag (c8.str ());
 
