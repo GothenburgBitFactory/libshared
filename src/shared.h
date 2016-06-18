@@ -62,6 +62,17 @@ template <class T> void listDiff (
       rightOnly.push_back (r);
 }
 
+template <class T> T listIntersect (
+  const T& left, const T& right)
+{
+  T intersection;
+  for (auto& l : left)
+    if (std::find (right.begin (), right.end (), l) != right.end ())
+      intersection.push_back (l);
+
+  return intersection;
+}
+
 std::string jsonEncode (const std::string&);
 std::string jsonDecode (const std::string&);
 std::string lowerCase (const std::string&);
