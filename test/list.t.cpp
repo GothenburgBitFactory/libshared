@@ -32,8 +32,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (8);
+  UnitTest t (16);
 
+  // listDiff
   // 1,2,3  <=>  2,3,4
   std::vector <std::string> string_one {"1", "2", "3"};
   std::vector <std::string> string_two {"2", "3", "4"};
@@ -67,6 +68,35 @@ int main (int, char**)
 
   t.is ((int) int_rightOnly.size (), 1, "int (1,2,3) <=> (2,3,4) = ->4");
   t.is (int_rightOnly[0], "4",          "int (1,2,3) <=> (2,3,4) = ->4");
+
+  // listIntersect
+  std::vector <std::string> left  {"a", "b", "c"};
+  std::vector <std::string> right {"a", "d"};
+  auto intersection = listIntersect (left, right);
+  t.is ((int) intersection.size (), 1, "intersect (a,b,c) <=> (a,d) --> (a)");
+  t.is (intersection[0], "a",          "intersect (a,b,c) <=> (a,d) --> (a)");
+
+  left = {};
+  right = {};
+  intersection = listIntersect (left, right);
+  t.is ((int) intersection.size (), 0, "intersect () <=> () --> ()");
+
+  left = {"a"};
+  right = {};
+  intersection = listIntersect (left, right);
+  t.is ((int) intersection.size (), 0, "intersect (a) <=> () --> ()");
+
+  left = {"a"};
+  right = {"b"};
+  intersection = listIntersect (left, right);
+  t.is ((int) intersection.size (), 0, "intersect (a) <=> (b) --> ()");
+
+  left = {"a", "b"};
+  right = {"a", "b"};
+  intersection = listIntersect (left, right);
+  t.is ((int) intersection.size (), 2, "intersect (a,b) <=> (a,b) --> (a,b)");
+  t.is (intersection[0], "a",          "intersect (a,b) <=> (a,b) --> (a,b)");
+  t.is (intersection[1], "b",          "intersect (a,b) <=> (a,b) --> (a,b)");
 
   return 0;
 }
