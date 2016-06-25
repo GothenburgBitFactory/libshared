@@ -40,12 +40,12 @@ int main (int, char**)
   t.is (m.serialize (), "name: value\n\n\n",
                                        "Msg::serialize 1 var");
 
-  m.set ("foo", "bar");
-  t.is (m.serialize (), "foo: bar\nname: value\n\n\n",
+  m.set ("foo", 123);
+  t.is (m.serialize (), "foo: 123\nname: value\n\n\n",
                                        "Msg::serialize 2 vars");
 
   m.setPayload ("payload");
-  t.is (m.serialize (), "foo: bar\nname: value\n\npayload\n",
+  t.is (m.serialize (), "foo: 123\nname: value\n\npayload\n",
                                        "Msg::serialize 2 vars + payload");
 
   Msg m2;
