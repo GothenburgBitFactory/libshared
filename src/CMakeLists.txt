@@ -11,6 +11,7 @@ set (shared_HEADERS Args.h
                     FS.h
                     JSON.h
                     JSON2.h
+                    Lexer.h
                     Log.h
                     Msg.h
                     Palette.h
@@ -32,6 +33,7 @@ set (shared_SRCS Args.cpp
                  FS.cpp
                  JSON.cpp
                  JSON2.cpp
+                 Lexer.cpp
                  Log.cpp
                  Msg.cpp
                  Palette.cpp
