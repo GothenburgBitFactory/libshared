@@ -231,30 +231,6 @@ int main (int, char**)
   t.ok (closeEnough ("foobar", "foobar", 6),   "closeEnough foobar == foobar,6");
   t.ok (closeEnough ("foobar", "foo",    3),   "closeEnough foobar == foo,3");
 
-  // std::string jsonEncode (const std::string&);
-  t.is (jsonEncode (""),    "",     "jsonEncode '' --> ''");
-  t.is (jsonEncode ("foo"), "foo",  "jsonEncode 'foo' --> 'foo'");
-  t.is (jsonEncode ("\""),  "\\\"", "jsonEncode '\"' --> '\\\"'");
-  t.is (jsonEncode ("\\"),  "\\\\", "jsonEncode '\\' --> '\\\\'");
-  t.is (jsonEncode ("/"),   "\\/",  "jsonEncode '/' --> '\\/'");
-  t.is (jsonEncode ("\b"),  "\\b",  "jsonEncode '\\b' --> '\\\\b'");
-  t.is (jsonEncode ("\f"),  "\\f",  "jsonEncode '\\f' --> '\\\\f'");
-  t.is (jsonEncode ("\n"),  "\\n",  "jsonEncode '\\n' --> '\\\\n'");
-  t.is (jsonEncode ("\r"),  "\\r",  "jsonEncode '\\r' --> '\\\\r'");
-  t.is (jsonEncode ("\t"),  "\\t",  "jsonEncode '\\t' --> '\\\\t'");
-
-  // std::string jsonDecode (const std::string&);
-  t.is (jsonDecode (""),     "",    "jsonDecode '' --> ''");
-  t.is (jsonDecode ("foo"),  "foo", "jsonDecode 'foo' --> 'foo'");
-  t.is (jsonDecode ("\\\""), "\"",  "jsonDecode '\\\"' --> '\"'");
-  t.is (jsonDecode ("\\\\"), "\\",  "jsonDecode '\\\\' --> '\\'");
-  t.is (jsonDecode ("\\/"),  "/",   "jsonDecode '\\/' --> '/'");
-  t.is (jsonDecode ("\\b"),  "\b",  "jsonDecode '\\\\b' --> '\\b'");
-  t.is (jsonDecode ("\\f"),  "\f",  "jsonDecode '\\\\f' --> '\\f'");
-  t.is (jsonDecode ("\\n"),  "\n",  "jsonDecode '\\\\n' --> '\\n'");
-  t.is (jsonDecode ("\\r"),  "\r",  "jsonDecode '\\\\r' --> '\\r'");
-  t.is (jsonDecode ("\\t"),  "\t",  "jsonDecode '\\\\t' --> '\\t'");
-
   // std::string lowerCase (const std::string&);
   t.is (lowerCase (""),   "",   "lowerCase '' --> ''");
   t.is (lowerCase ("a"),  "a",  "lowerCase 'a' --> 'a'");
