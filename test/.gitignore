@@ -11,6 +11,7 @@ fs.t
 json.t
 json_test
 json2_test
+lexer.t
 list.t
 msg.t
 palette.t
