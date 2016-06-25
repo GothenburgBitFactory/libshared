@@ -73,8 +73,6 @@ template <class T> T listIntersect (
   return intersection;
 }
 
-std::string jsonEncode (const std::string&);
-std::string jsonDecode (const std::string&);
 std::string lowerCase (const std::string&);
 std::string upperCase (const std::string&);
 std::string upperCaseFirst (const std::string&);
