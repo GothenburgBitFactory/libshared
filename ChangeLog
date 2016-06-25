@@ -17,6 +17,7 @@
 - Added Datetime support for 'socq', 'eocq', 'socy', 'eocy'.
 - Added Composite object.
 - Added Palette object.
+- Added Lexer object.
 
 Design completed 2015-12-XX
 Project started  2015-11-29
