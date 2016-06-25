@@ -21,3 +21,4 @@ shared.t
 table.t
 unicode.t
 utf8.t
+*.pyc
