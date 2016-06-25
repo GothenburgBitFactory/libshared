@@ -27,6 +27,13 @@
 #include <cmake.h>
 #include <Msg.h>
 #include <shared.h>
+#include <format.h>
+
+////////////////////////////////////////////////////////////////////////////////
+void Msg::set (const std::string& name, int value)
+{
+  _header[name] = format (value);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void Msg::set (const std::string& name, const std::string& value)

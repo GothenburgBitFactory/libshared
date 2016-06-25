@@ -34,6 +34,7 @@
 class Msg
 {
 public:
+  void set (const std::string&, int);
   void set (const std::string&, const std::string&);
   std::string get (const std::string&) const;
 

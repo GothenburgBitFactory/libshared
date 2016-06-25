@@ -18,6 +18,7 @@
 - Added Composite object.
 - Added Palette object.
 - Added Lexer object.
+- Added Msg::set overload.
 
 Design completed 2015-12-XX
 Project started  2015-11-29
