@@ -43,7 +43,7 @@ static struct
   bool standalone;
 } durations[] =
 {
-  // These are sorted by first character, then length, so that Nibbler::getOneOf
+  // These are sorted by first character, then length, so that Pig::getOneOf
   // returns a maximal match.
   {"annual",     365 * DAY,    true },
   {"biannual",   730 * DAY,    true },
