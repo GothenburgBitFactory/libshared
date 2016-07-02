@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1921);
+  UnitTest t (1916);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -616,16 +616,6 @@ int main (int, char**)
     Datetime r12 ("eocw");
     t.ok (r12 > now - (8 * 86400), "eocw < 7 days in the past");
 
-    Datetime r13 ("eom");
-    t.ok (r13.sameMonth (now), "eom in same month as now");
-    t.ok (r13.sameQuarter (now), "eom in same quarter as now");
-
-    Datetime r14 ("eocm");
-    t.ok (r14.sameMonth (now), "eocm in same month as now");
-
-    Datetime r15 ("eoy");
-    t.ok (r15.sameYear (now), "eoy in same year as now");
-
     Datetime r16 ("sow");
     t.ok (r16 < now + (8 * 86400), "sow < 7 days away");
 
@@ -647,7 +637,6 @@ int main (int, char**)
     t.ok (r19a < now,          "socy < now");
 
     Datetime r19b ("eocy");
-    t.ok (r19b.sameYear (now), "eocy in same year as now");
     t.ok (r19b > now,          "eocy > now");
 
     Datetime r19c ("socq");
@@ -671,9 +660,9 @@ int main (int, char**)
     Datetime soq ("soq");
     Datetime eoq ("eoq");
     t.is (soq.day (),  1,      "soq is the first day of a month");
-    t.is (eoq.day () / 10,  3, "eoq is the 30th or 31th of a month");
+    t.is (eoq.day () , 1,      "eoq is the 1st of a month");
     t.is (soq.month () % 3, 1, "soq month is 1, 4, 7 or 10");
-    t.is (eoq.month () % 3, 0, "eoq month is 3, 6, 9 or 12");
+    t.is (eoq.month () % 3, 1, "eoq month is 1, 4, 7 or 10");
 
     // Note: these fail during the night of daylight savings end.
     t.ok (soq.sameYear (now) ||
