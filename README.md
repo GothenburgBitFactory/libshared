@@ -2,18 +2,15 @@ libshared
 =========
 
 A git submodule used by multiple projects. Not to be released or packaged
-independently.
+independently. All project tarballs will include libshared.
 
 
 Branching
 ---------
 
-Development for the common library ("libshared") is done on the master branch.
-Once the first product is release using the common library, a '1.0.0' branch will
-be made. When an incompatible change is introduced to the common library, a
-'2.0.0' branch will be made. 
+Development for libshared is done on the master branch only.
 
-This allows client programs to choose when to upgrade from '1.0.0' to '2.0.0',
-which by definition will require client code changes. A minor release, '1.1.0',
-will not require client code changes.
+Each time a project is released that uses libshared, an appropriate tag is
+added to the corresponding commit.
 
+A project may choose to release with any libshared commit.

@@ -58,7 +58,7 @@ static std::vector <std::string> monthNames {
   "november",
   "december"};
 
-int Datetime::weekstart = 0; // Sunday
+int Datetime::weekstart = 1; // Monday, per ISO-8601.
 int Datetime::minimumMatchLength = 3;
 bool Datetime::isoEnabled = true;
 bool Datetime::lookForwards = true;
