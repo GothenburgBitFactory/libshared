@@ -1295,8 +1295,7 @@ bool Datetime::initializeEod (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_mday++;
-    t->tm_hour = t->tm_min = 0;
-    t->tm_sec = -1;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
@@ -1429,8 +1428,7 @@ bool Datetime::initializeEoy (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = 0;
-    t->tm_sec = -1;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mon = 0;
     t->tm_mday = 1;
     t->tm_year++;
@@ -1493,8 +1491,7 @@ bool Datetime::initializeEoq (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = 0;
-    t->tm_sec = -1;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mon += 3 - (t->tm_mon % 3);
     if (t->tm_mon > 11)
     {
@@ -1619,8 +1616,7 @@ bool Datetime::initializeEom (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_hour = 24;
-    t->tm_min = 0;
-    t->tm_sec = -1;
+    t->tm_min = t->tm_sec = 0;
     t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
     t->tm_isdst = -1;
     _date = mktime (t);
@@ -1657,8 +1653,7 @@ bool Datetime::initializeEow (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = 0;
-    t->tm_sec = -1;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     int extra = (7 - t->tm_wday) * 86400;
     t->tm_isdst = -1;
     _date = mktime (t) + extra;
@@ -1730,8 +1725,7 @@ bool Datetime::initializeEoww (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_hour = 24;
-    t->tm_min = 0;
-    t->tm_sec = -1;
+    t->tm_min = t->tm_sec = 0;
     int extra = (5 - t->tm_wday) * 86400;
     if (extra < 0)
       extra += 7 * 86400;
@@ -2419,13 +2413,18 @@ bool Datetime::valid (
   const int y, const int m, const int d,
   const int hr, const int mi, const int se)
 {
-  if (hr < 0 || hr > 23)
+  if (hr < 0 || hr > 24)
     return false;
 
   if (mi < 0 || mi > 59)
     return false;
 
   if (se < 0 || se > 59)
+    return false;
+
+  if (hr == 24 &&
+      (mi != 0 ||
+       se != 0))
     return false;
 
   return Datetime::valid (y, m, d);
