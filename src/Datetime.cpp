@@ -1964,6 +1964,21 @@ bool Datetime::initializeInformalTime (const std::string& token)
       time_t now = time (nullptr);
       struct tm* t = localtime (&now);
 
+      if (Datetime::lookForwards)
+      {
+        if (hours   < t->tm_hour ||
+            minutes < t->tm_min  ||
+            seconds < t->tm_sec)
+          ++t->tm_mday;
+      }
+      else
+      {
+        if (hours   > t->tm_hour ||
+            minutes > t->tm_min  ||
+            seconds > t->tm_sec)
+          --t->tm_mday;
+      }
+
       t->tm_hour = hours;
       t->tm_min = minutes;
       t->tm_sec = seconds;
