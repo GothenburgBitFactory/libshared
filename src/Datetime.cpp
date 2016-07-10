@@ -1331,7 +1331,8 @@ bool Datetime::initializeYesterday (const std::string& token)
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
-    _date = mktime (t) - 86400;
+    t->tm_mday -= 1;
+    _date = mktime (t);
     return true;
   }
 
