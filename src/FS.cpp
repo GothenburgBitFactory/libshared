@@ -429,8 +429,13 @@ bool File::lock ()
   _locked = false;
   if (_fh && _h != -1)
   {
+#ifdef FREEBSD
+                    // l_type   l_whence  l_start  l_len  l_pid  l_sysid
+    struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0,     0 };
+#else
                     // l_type   l_whence  l_start  l_len  l_pid
     struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0 };
+#endif
     fl.l_pid = getpid ();
     if (fcntl (_h, F_SETLKW, &fl) == 0)
       _locked = true;
@@ -444,8 +449,13 @@ void File::unlock ()
 {
   if (_locked)
   {
+#ifdef FREEBSD
+                    // l_type   l_whence  l_start  l_len  l_pid  l_sysid
+    struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0,     0 };
+#else
                     // l_type   l_whence  l_start  l_len  l_pid
-    struct flock fl = {F_UNLCK, SEEK_SET, 0,       0,     0 };
+    struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0 };
+#endif
     fl.l_pid = getpid ();
 
     fcntl (_h, F_SETLK, &fl);
