@@ -586,7 +586,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeSocw           (token) ||
         initializeEow            (token) ||
         initializeSow            (token) ||
-        initializeSoww           (token) ||
         initializeEoww           (token) ||
         initializeOrdinal        (token) ||
         initializeEaster         (token) ||
@@ -1654,11 +1653,13 @@ bool Datetime::initializeEow (const std::string& token)
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
-
     t->tm_hour = t->tm_min = t->tm_sec = 0;
-    int extra = (7 - t->tm_wday) * 86400;
+
+    int extra = (8 - t->tm_wday) % 7;
+    t->tm_mday += extra;
+
     t->tm_isdst = -1;
-    _date = mktime (t) + extra;
+    _date = mktime (t);
     return true;
   }
 
@@ -1668,50 +1669,19 @@ bool Datetime::initializeEow (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSow (const std::string& token)
 {
-  if (token == "sow")
+  if (token == "sow" || token == "soww")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    int extra = (7 - t->tm_wday) * 86400;
-    if (! Datetime::lookForwards)
-      extra = - t->tm_wday * 86400;
+    if (Datetime::lookForwards)
+      t->tm_mday += (8 - t->tm_wday) % 7;
+    else
+      t->tm_mday -= (6 + t->tm_wday) % 7;
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
-    _date = mktime (t) + extra;
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoww (const std::string& token)
-{
-  if (token == "soww")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    int days = (8 - t->tm_wday) % 7;
-    if (! Datetime::lookForwards)
-    {
-      if (t->tm_wday == 0)
-      {
-        days = -6;
-      }
-      else
-      {
-        days = 1 - t->tm_wday;
-      }
-    }
-
-    int extra = days * 86400;
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t) + extra;
+    _date = mktime (t);
     return true;
   }
 
@@ -1726,14 +1696,14 @@ bool Datetime::initializeEoww (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = 24;
-    t->tm_min = t->tm_sec = 0;
-    int extra = (5 - t->tm_wday) * 86400;
-    if (extra < 0)
-      extra += 7 * 86400;
+    if (Datetime::lookForwards)
+      t->tm_mday += 6 - t->tm_wday;
+    else
+      t->tm_mday -= (t->tm_wday + 1) % 7;
 
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
-    _date = mktime (t) + extra;
+    _date = mktime (t);
     return true;
   }
 

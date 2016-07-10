@@ -157,7 +157,6 @@ private:
   bool initializeSocw           (const std::string&);
   bool initializeEow            (const std::string&);
   bool initializeSow            (const std::string&);
-  bool initializeSoww           (const std::string&);
   bool initializeEoww           (const std::string&);
   bool initializeOrdinal        (const std::string&);
   bool initializeEaster         (const std::string&);
