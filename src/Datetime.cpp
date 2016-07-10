@@ -1360,7 +1360,7 @@ bool Datetime::initializeDayName (const std::string& token)
       if (t->tm_wday >= day)
         t->tm_mday += day - t->tm_wday;
       else
-        t->tm_mday += day - t->tm_wday;
+        t->tm_mday += day - t->tm_wday - 7;
     }
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
