@@ -296,17 +296,30 @@ int main (int, char**)
   int t830p = (20 * 3600) + (30 * 60);
   int t12p  = (12 * 3600);
   int t1p   = (13 * 3600);
-  testParse (t, "8:30am",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a);
-  testParse (t, "8:30a",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a);
-  testParse (t, "8:30",                       4,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a);
-  testParse (t, "8am",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8a  );
-  testParse (t, "8a",                         2,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8a  );
-  testParse (t, "8:30pm",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830p);
-  testParse (t, "8:30p",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830p);
-  testParse (t, "8pm",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8p  );
-  testParse (t, "8p",                         2,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8p  );
-  testParse (t, "12pm",                       4,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t12p );
-  testParse (t, "1pm",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t1p  );
+
+  Datetime time_now;
+  int adjust = (time_now.hour () > 8 || (time_now.hour () == 8 && time_now.minute () > 30)) ? 86400 : 0;
+  testParse (t, "8:30am",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust);
+  testParse (t, "8:30a",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust);
+  testParse (t, "8:30",                       4,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust);
+
+  adjust = (time_now.hour () >= 8) ? 86400 : 0;
+  testParse (t, "8am",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8a+adjust);
+  testParse (t, "8a",                         2,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8a+adjust);
+
+  adjust = (time_now.hour () > 20 || (time_now.hour () == 20 && time_now.minute () > 30)) ? 86400 : 0;
+  testParse (t, "8:30pm",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830p+adjust);
+  testParse (t, "8:30p",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830p+adjust);
+
+  adjust = (time_now.hour () >= 20) ? 86400 : 0;
+  testParse (t, "8pm",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8p+adjust);
+  testParse (t, "8p",                         2,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t8p+adjust);
+
+  adjust = (time_now.hour () >= 12) ? 86400 : 0;
+  testParse (t, "12pm",                       4,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t12p+adjust);
+
+  adjust = (time_now.hour () >= 13) ? 86400 : 0;
+  testParse (t, "1pm",                        3,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t1p+adjust);
 
   try
   {
