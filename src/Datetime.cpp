@@ -1679,7 +1679,7 @@ bool Datetime::initializeSow (const std::string& token)
     struct tm* t = localtime (&now);
 
     if (Datetime::lookForwards)
-      t->tm_mday += (8 - t->tm_wday) % 7;
+      t->tm_mday += 8 - t->tm_wday;
     else
       t->tm_mday -= (6 + t->tm_wday) % 7;
 
