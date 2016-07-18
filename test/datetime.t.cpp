@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1916);
+  UnitTest t (1915);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -811,11 +811,6 @@ int main (int, char**)
     Datetime r40 ("sow");
     Datetime r41 ("socw");
     t.ok (r40 == r41,                 "'sow' is equal to 'socw' when Datetime::lookForwards = false");
-
-    Datetime::lookForwards = true;
-    Datetime r42 ("sow");
-    Datetime r43 ("socw");
-    t.ok (r42 != r43,                 "'sow' is not equal to 'socw' when Datetime::lookForwards = true");
 
     Datetime::lookForwards = true;
     t.diag ("Datetime::lookForwards == true");
