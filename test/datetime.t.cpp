@@ -68,7 +68,7 @@ void testParse (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1915);
+  UnitTest t (1927);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -298,7 +298,10 @@ int main (int, char**)
   int t1p   = (13 * 3600);
 
   Datetime time_now;
-  int adjust = (time_now.hour () > 8 || (time_now.hour () == 8 && time_now.minute () > 30)) ? 86400 : 0;
+  int adjust = (time_now.hour () > 10 || (time_now.hour () == 10 && time_now.minute () > 30)) ? 86400 : 0;
+  testParse (t, "10:30am",                    7,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust+(2*3600));
+
+  adjust = (time_now.hour () > 8 || (time_now.hour () == 8 && time_now.minute () > 30)) ? 86400 : 0;
   testParse (t, "8:30am",                     6,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust);
   testParse (t, "8:30a",                      5,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust);
   testParse (t, "8:30",                       4,    0,  0,  0, 0,   0,  0,     0,     0, false, local+t830a+adjust);

@@ -804,7 +804,12 @@ bool Datetime::parse_time_ext (Pig& pig)
       return false;
     }
 
-    if (! unicodeLatinDigit (pig.peek ()))
+    auto following = pig.peek ();
+    if (! unicodeLatinDigit (following) &&
+        following != 'A'                &&
+        following != 'a'                &&
+        following != 'P'                &&
+        following != 'p')
     {
       _seconds = (hour * 3600) + (minute * 60);
       return true;

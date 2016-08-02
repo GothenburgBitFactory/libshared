@@ -1,5 +1,7 @@
 ? ()
 
+- TI-30   10:00am isn't recognized as date
+          (thanks to Yurї Videneev).
 - Datetime::weekStart set to 1 (Monday), per ISO-8601.
 - Datetime no longer users 23:59:59 as EOD, but 24:00:00. All date ranges should
   therefore be [...) instead of [...].
