@@ -386,12 +386,15 @@ std::string Lexer::trim (const std::string& in, const std::string& t /*= " "*/)
 //   '|"
 bool Lexer::isString (std::string& token, Lexer::Type& type, const std::string& quotes)
 {
-  std::size_t marker = _cursor;
-  if (readWord (_text, quotes, marker, token))
+  if (_enableString)
   {
-    type = Lexer::Type::string;
-    _cursor = marker;
-    return true;
+    std::size_t marker = _cursor;
+    if (readWord (_text, quotes, marker, token))
+    {
+      type = Lexer::Type::string;
+      _cursor = marker;
+      return true;
+    }
   }
 
   return false;
@@ -402,18 +405,21 @@ bool Lexer::isString (std::string& token, Lexer::Type& type, const std::string& 
 //   <Datetime> (followed by eos, WS, operator)
 bool Lexer::isDate (std::string& token, Lexer::Type& type)
 {
-  // Try an ISO date parse.
-  std::size_t i = _cursor;
-  Datetime d;
-  if (d.parse (_text, i, Lexer::dateFormat) &&
-      (i >= _eos ||
-       unicodeWhitespace (_text[i]) ||
-       isSingleCharOperator (_text[i])))
+  if (_enableDate)
   {
-    type = Lexer::Type::date;
-    token = _text.substr (_cursor, i - _cursor);
-    _cursor = i;
-    return true;
+    // Try an ISO date parse.
+    std::size_t i = _cursor;
+    Datetime d;
+    if (d.parse (_text, i, Lexer::dateFormat) &&
+        (i >= _eos ||
+         unicodeWhitespace (_text[i]) ||
+         isSingleCharOperator (_text[i])))
+    {
+      type = Lexer::Type::date;
+      token = _text.substr (_cursor, i - _cursor);
+      _cursor = i;
+      return true;
+    }
   }
 
   return false;
@@ -424,27 +430,30 @@ bool Lexer::isDate (std::string& token, Lexer::Type& type)
 //   <Duration> (followed by eos, WS, operator)
 bool Lexer::isDuration (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-
-  std::string extractedToken;
-  Lexer::Type extractedType;
-  if (isOperator(extractedToken, extractedType))
+  if (_enableDuration)
   {
-    _cursor = marker;
-    return false;
-  }
+    std::size_t marker = _cursor;
 
-  marker = _cursor;
-  Duration dur;
-  if (dur.parse (_text, marker) &&
-      (marker >= _eos ||
-       unicodeWhitespace (_text[marker]) ||
-       isSingleCharOperator (_text[marker])))
-  {
-    type = Lexer::Type::duration;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
+    std::string extractedToken;
+    Lexer::Type extractedType;
+    if (isOperator(extractedToken, extractedType))
+    {
+      _cursor = marker;
+      return false;
+    }
+
+    marker = _cursor;
+    Duration dur;
+    if (dur.parse (_text, marker) &&
+        (marker >= _eos ||
+         unicodeWhitespace (_text[marker]) ||
+         isSingleCharOperator (_text[marker])))
+    {
+      type = Lexer::Type::duration;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
   }
 
   return false;
@@ -464,33 +473,36 @@ bool Lexer::isDuration (std::string& token, Lexer::Type& type)
 //   Followed only by EOS, whitespace, or single character operator.
 bool Lexer::isUUID (std::string& token, Lexer::Type& type, bool endBoundary)
 {
-  std::size_t marker = _cursor;
-
-  // Greedy.
-  std::size_t i = 0;
-  for (; i < 36 && marker + i < _eos; i++)
+  if (_enableUUID)
   {
-    if (uuid_pattern[i] == 'x')
+    std::size_t marker = _cursor;
+
+    // Greedy.
+    std::size_t i = 0;
+    for (; i < 36 && marker + i < _eos; i++)
     {
-      if (! unicodeHexDigit (_text[marker + i]))
+      if (uuid_pattern[i] == 'x')
+      {
+        if (! unicodeHexDigit (_text[marker + i]))
+          break;
+      }
+      else if (uuid_pattern[i] != _text[marker + i])
         break;
     }
-    else if (uuid_pattern[i] != _text[marker + i])
-      break;
-  }
 
-  if (i >= uuid_min_length              &&
-      (! endBoundary                    ||
-       ! _text[marker + i]              ||
-       unicodeWhitespace (_text[marker + i]) ||
-       isSingleCharOperator (_text[marker + i])))
-  {
-    token = _text.substr (_cursor, i);
-    type = Lexer::Type::uuid;
-    _cursor += i;
-    return true;
-  }
+    if (i >= uuid_min_length              &&
+        (! endBoundary                    ||
+         ! _text[marker + i]              ||
+         unicodeWhitespace (_text[marker + i]) ||
+         isSingleCharOperator (_text[marker + i])))
+    {
+      token = _text.substr (_cursor, i);
+      type = Lexer::Type::uuid;
+      _cursor += i;
+      return true;
+    }
 
+  }
   return false;
 }
 
@@ -499,23 +511,26 @@ bool Lexer::isUUID (std::string& token, Lexer::Type& type, bool endBoundary)
 //   0xX+
 bool Lexer::isHexNumber (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-
-  if (_eos - marker >= 3 &&
-      _text[marker + 0] == '0' &&
-      _text[marker + 1] == 'x')
+  if (_enableHexNumber)
   {
-    marker += 2;
+    std::size_t marker = _cursor;
 
-    while (unicodeHexDigit (_text[marker]))
-      ++marker;
-
-    if (marker - _cursor > 2)
+    if (_eos - marker >= 3 &&
+        _text[marker + 0] == '0' &&
+        _text[marker + 1] == 'x')
     {
-      token = _text.substr (_cursor, marker - _cursor);
-      type = Lexer::Type::hex;
-      _cursor = marker;
-      return true;
+      marker += 2;
+
+      while (unicodeHexDigit (_text[marker]))
+        ++marker;
+
+      if (marker - _cursor > 2)
+      {
+        token = _text.substr (_cursor, marker - _cursor);
+        type = Lexer::Type::hex;
+        _cursor = marker;
+        return true;
+      }
     }
   }
 
@@ -527,19 +542,22 @@ bool Lexer::isHexNumber (std::string& token, Lexer::Type& type)
 //   [^\s]+
 bool Lexer::isWord (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-
-  while (_text[marker]                  &&
-         ! unicodeWhitespace (_text[marker]) &&
-         ! isSingleCharOperator (_text[marker]))
-    utf8_next_char (_text, marker);
-
-  if (marker > _cursor)
+  if (_enableWord)
   {
-    token = _text.substr (_cursor, marker - _cursor);
-    type = Lexer::Type::word;
-    _cursor = marker;
-    return true;
+    std::size_t marker = _cursor;
+
+    while (_text[marker]                  &&
+           ! unicodeWhitespace (_text[marker]) &&
+           ! isSingleCharOperator (_text[marker]))
+      utf8_next_char (_text, marker);
+
+    if (marker > _cursor)
+    {
+      token = _text.substr (_cursor, marker - _cursor);
+      type = Lexer::Type::word;
+      _cursor = marker;
+      return true;
+    }
   }
 
   return false;
@@ -550,32 +568,35 @@ bool Lexer::isWord (std::string& token, Lexer::Type& type)
 //   http [s] :// ...
 bool Lexer::isURL (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-
-  if (_eos - _cursor > 9 &&    // length 'https://*'
-      (_text[marker + 0] == 'h' || _text[marker + 0] == 'H') &&
-      (_text[marker + 1] == 't' || _text[marker + 1] == 'T') &&
-      (_text[marker + 2] == 't' || _text[marker + 2] == 'T') &&
-      (_text[marker + 3] == 'p' || _text[marker + 3] == 'P'))
+  if (_enableURL)
   {
-    marker += 4;
-    if (_text[marker + 0] == 's' || _text[marker + 0] == 'S')
-      ++marker;
+    std::size_t marker = _cursor;
 
-    if (_text[marker + 0] == ':' &&
-        _text[marker + 1] == '/' &&
-        _text[marker + 2] == '/')
+    if (_eos - _cursor > 9 &&    // length 'https://*'
+        (_text[marker + 0] == 'h' || _text[marker + 0] == 'H') &&
+        (_text[marker + 1] == 't' || _text[marker + 1] == 'T') &&
+        (_text[marker + 2] == 't' || _text[marker + 2] == 'T') &&
+        (_text[marker + 3] == 'p' || _text[marker + 3] == 'P'))
     {
-      marker += 3;
+      marker += 4;
+      if (_text[marker + 0] == 's' || _text[marker + 0] == 'S')
+        ++marker;
 
-      while (marker < _eos &&
-             ! unicodeWhitespace (_text[marker]))
-        utf8_next_char (_text, marker);
+      if (_text[marker + 0] == ':' &&
+          _text[marker + 1] == '/' &&
+          _text[marker + 2] == '/')
+      {
+        marker += 3;
 
-      token = _text.substr (_cursor, marker - _cursor);
-      type = Lexer::Type::url;
-      _cursor = marker;
-      return true;
+        while (marker < _eos &&
+               ! unicodeWhitespace (_text[marker]))
+          utf8_next_char (_text, marker);
+
+        token = _text.substr (_cursor, marker - _cursor);
+        type = Lexer::Type::url;
+        _cursor = marker;
+        return true;
+      }
     }
   }
 
@@ -587,40 +608,43 @@ bool Lexer::isURL (std::string& token, Lexer::Type& type)
 //   ( / <non-slash, non-whitespace> )+
 bool Lexer::isPath (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-  int slashCount = 0;
-
-  while (1)
+  if (_enablePath)
   {
-    if (_text[marker] == '/')
-    {
-      ++marker;
-      ++slashCount;
-    }
-    else
-      break;
+    std::size_t marker = _cursor;
+    int slashCount = 0;
 
-    if (_text[marker] &&
-        ! unicodeWhitespace (_text[marker]) &&
-        _text[marker] != '/')
+    while (1)
     {
-      utf8_next_char (_text, marker);
-      while (_text[marker] &&
-             ! unicodeWhitespace (_text[marker]) &&
-             _text[marker] != '/')
+      if (_text[marker] == '/')
+      {
+        ++marker;
+        ++slashCount;
+      }
+      else
+        break;
+
+      if (_text[marker] &&
+          ! unicodeWhitespace (_text[marker]) &&
+          _text[marker] != '/')
+      {
         utf8_next_char (_text, marker);
+        while (_text[marker] &&
+               ! unicodeWhitespace (_text[marker]) &&
+               _text[marker] != '/')
+          utf8_next_char (_text, marker);
+      }
+      else
+        break;
     }
-    else
-      break;
-  }
 
-  if (marker > _cursor &&
-      slashCount > 3)
-  {
-    type = Lexer::Type::path;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
+    if (marker > _cursor &&
+        slashCount > 3)
+    {
+      type = Lexer::Type::path;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
   }
 
   return false;
@@ -631,19 +655,23 @@ bool Lexer::isPath (std::string& token, Lexer::Type& type)
 //   / <unquoted-string> /  <EOS> | <unicodeWhitespace>
 bool Lexer::isPattern (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-
-  std::string word;
-  if (readWord (_text, "/", _cursor, word) &&
-      (isEOS () ||
-       unicodeWhitespace (_text[_cursor])))
+  if (_enablePattern)
   {
-    token = _text.substr (marker, _cursor - marker);
-    type = Lexer::Type::pattern;
-    return true;
+    std::size_t marker = _cursor;
+
+    std::string word;
+    if (readWord (_text, "/", _cursor, word) &&
+        (isEOS () ||
+         unicodeWhitespace (_text[_cursor])))
+    {
+      token = _text.substr (marker, _cursor - marker);
+      type = Lexer::Type::pattern;
+      return true;
+    }
+
+    _cursor = marker;
   }
 
-  _cursor = marker;
   return false;
 }
 
@@ -655,70 +683,73 @@ bool Lexer::isPattern (std::string& token, Lexer::Type& type)
 //   <isSingleCharOperator> |
 bool Lexer::isOperator (std::string& token, Lexer::Type& type)
 {
-  std::size_t marker = _cursor;
-
-  if (_eos - marker >= 8 && _text.substr (marker, 8) == "_hastag_")
+  if (_enableOperator)
   {
-    marker += 8;
-    type = Lexer::Type::op;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
-  }
+    std::size_t marker = _cursor;
 
-  else if (_eos - marker >= 7 && _text.substr (marker, 7) == "_notag_")
-  {
-    marker += 7;
-    type = Lexer::Type::op;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
-  }
+    if (_eos - marker >= 8 && _text.substr (marker, 8) == "_hastag_")
+    {
+      marker += 8;
+      type = Lexer::Type::op;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
 
-  else if (_eos - marker >= 5 && _text.substr (marker, 5) == "_neg_")
-  {
-    marker += 5;
-    type = Lexer::Type::op;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
-  }
+    else if (_eos - marker >= 7 && _text.substr (marker, 7) == "_notag_")
+    {
+      marker += 7;
+      type = Lexer::Type::op;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
 
-  else if (_eos - marker >= 5 && _text.substr (marker, 5) == "_pos_")
-  {
-    marker += 5;
-    type = Lexer::Type::op;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
-  }
+    else if (_eos - marker >= 5 && _text.substr (marker, 5) == "_neg_")
+    {
+      marker += 5;
+      type = Lexer::Type::op;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
 
-  else if (_eos - marker >= 3 &&
-      isTripleCharOperator (_text[marker], _text[marker + 1], _text[marker + 2], _text[marker + 3]))
-  {
-    marker += 3;
-    type = Lexer::Type::op;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
-  }
+    else if (_eos - marker >= 5 && _text.substr (marker, 5) == "_pos_")
+    {
+      marker += 5;
+      type = Lexer::Type::op;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
 
-  else if (_eos - marker >= 2 &&
-      isDoubleCharOperator (_text[marker], _text[marker + 1], _text[marker + 2]))
-  {
-    marker += 2;
-    type = Lexer::Type::op;
-    token = _text.substr (_cursor, marker - _cursor);
-    _cursor = marker;
-    return true;
-  }
+    else if (_eos - marker >= 3 &&
+        isTripleCharOperator (_text[marker], _text[marker + 1], _text[marker + 2], _text[marker + 3]))
+    {
+      marker += 3;
+      type = Lexer::Type::op;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
 
-  else if (isSingleCharOperator (_text[marker]))
-  {
-    token = _text[marker];
-    type = Lexer::Type::op;
-    _cursor = ++marker;
-    return true;
+    else if (_eos - marker >= 2 &&
+        isDoubleCharOperator (_text[marker], _text[marker + 1], _text[marker + 2]))
+    {
+      marker += 2;
+      type = Lexer::Type::op;
+      token = _text.substr (_cursor, marker - _cursor);
+      _cursor = marker;
+      return true;
+    }
+
+    else if (isSingleCharOperator (_text[marker]))
+    {
+      token = _text[marker];
+      type = Lexer::Type::op;
+      _cursor = ++marker;
+      return true;
+    }
   }
 
   return false;

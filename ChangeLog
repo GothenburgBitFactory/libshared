@@ -8,6 +8,7 @@
 - Datetime now uses whole days, not 86400 seconds for calculating date offsets.
 - Datetime now properly calculates day names when looking backwards.
 - Datetime considerѕ forwards/backwards when calculating informal time.
+- Lexer can now disable individual token types.
 
 clog-1.3.0 (2016-06-27)
 
