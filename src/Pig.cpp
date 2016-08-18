@@ -28,6 +28,7 @@
 #include <Pig.h>
 #include <unicode.h>
 #include <utf8.h>
+#include <algorithm>
 #include <sstream>
 #include <cinttypes>
 #include <cstdlib>
@@ -561,9 +562,9 @@ int Pig::peek () const
 // Peeks ahead - does not move cursor.
 std::string Pig::peek (const int quantity) const
 {
-  if (_text[_cursor] &&
-      _cursor + quantity <= _text.length ())
-    return _text.substr (_cursor, quantity);
+  std::string::size_type adjusted = std::min (static_cast <std::string::size_type> (quantity), _text.length () - _cursor);
+  if (_text[_cursor])
+    return _text.substr (_cursor, adjusted);
 
   return "";
 }

@@ -1,5 +1,10 @@
 ? ()
 
+- Lexer can now disable individual token types.
+- Pig is more careful about string bounds in ::peek.
+
+timew-1.0.0 (2016-08-17)
+
 - TI-30   10:00am isn't recognized as date
           (thanks to Yurї Videneev).
 - Datetime::weekStart set to 1 (Monday), per ISO-8601.
@@ -8,7 +13,6 @@
 - Datetime now uses whole days, not 86400 seconds for calculating date offsets.
 - Datetime now properly calculates day names when looking backwards.
 - Datetime considerѕ forwards/backwards when calculating informal time.
-- Lexer can now disable individual token types.
 
 clog-1.3.0 (2016-06-27)
 

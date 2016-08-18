@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (148);
+  UnitTest t (151);
 
   // Pig::skip
   // Pig::skipN
@@ -143,10 +143,13 @@ int main (int, char**)
 
   // Pig::peek
   Pig p12 ("123");
-  t.is (p12.peek (), '1',   "peek '123' --> '1'");
-  t.is (p12.dump (),        "≪123≫ l3 c0", "dump: " + p12.dump ());
-  t.is (p12.peek (2), "12",  "peek=2 '123' --> '12'");
-  t.is (p12.dump (),        "≪123≫ l3 c0", "dump: " + p12.dump ());
+  t.is (p12.peek (), '1',     "peek '123' --> '1'");
+  t.is (p12.dump (),          "≪123≫ l3 c0", "dump: " + p12.dump ());
+  t.is (p12.peek (2), "12",   "peek=2 '123' --> '12'");
+  t.is (p12.peek (3), "123",  "peek=3 '123' --> '123'");
+  t.is (p12.peek (4), "123",  "peek=4 '123' --> '123'");
+  t.is (p12.peek (20), "123", "peek=20 '123' --> '123'");
+  t.is (p12.dump (),          "≪123≫ l3 c0", "dump: " + p12.dump ());
 
   // Pig::save, Pig::restore
   Pig p13 ("123");
