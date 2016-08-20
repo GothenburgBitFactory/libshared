@@ -65,6 +65,7 @@ public:
   std::string::size_type restore ();
   std::string::size_type restoreTo (std::string::size_type);
 
+  std::string substr (std::string::size_type, std::string::size_type) const;
   std::string str () const;
   std::string dump () const;
 

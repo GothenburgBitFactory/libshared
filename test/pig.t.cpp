@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (151);
+  UnitTest t (160);
 
   // Pig::skip
   // Pig::skipN
@@ -293,6 +293,18 @@ int main (int, char**)
   t.is (h, 12,                  "getHMS '12:34:56' h --> 12");
   t.is (m, 34,                  "getHMS '12:34:56' m --> 34");
   t.is (s, 56,                  "getHMS '12:34:56' s --> 56");
+
+  // Pig::substr
+  Pig p31 ("abc");
+  t.is (p31.substr (0, 0), "",    "substr 0,0 --> ''");
+  t.is (p31.substr (0, 1), "a",   "substr 0,1 --> 'a'");
+  t.is (p31.substr (0, 2), "ab" , "substr 0,2 --> 'ab'");
+  t.is (p31.substr (0, 3), "abc", "substr 0,3 --> 'abc'");
+  t.is (p31.substr (1, 1), "",    "substr 1,1 --> ''");
+  t.is (p31.substr (1, 2), "b",   "substr 1,2 --> 'b'");
+  t.is (p31.substr (1, 3), "bc",  "substr 1,3 --> 'bc'");
+  t.is (p31.substr (2, 2), "",    "substr 2,2 --> ''");
+  t.is (p31.substr (2, 3), "c",   "substr 2,3 --> 'c'");
 
   return 0;
 }

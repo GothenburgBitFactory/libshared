@@ -2,6 +2,7 @@
 
 - Lexer can now disable individual token types.
 - Pig is more careful about string bounds in ::peek.
+- Pig can extract substrings.
 
 timew-1.0.0 (2016-08-17)
 
