@@ -2,6 +2,8 @@ master/HEAD
 
 - Define PATH_MAX if it's not defined
           (thanks to Iain R. Learmonth).
+- Removed 'std::' from stdtoimax call.
+          (thanks to fornwall).
 
 tasksh-1.1.0 (2016-09-05)
 

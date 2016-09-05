@@ -252,7 +252,7 @@ bool Pig::getDigits (int& result)
 
   if (_cursor > save)
   {
-    result = std::strtoimax (_text.substr (save, _cursor - save).c_str (), NULL, 10);
+    result = strtoimax (_text.substr (save, _cursor - save).c_str (), NULL, 10);
     return true;
   }
 
