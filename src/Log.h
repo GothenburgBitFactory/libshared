@@ -37,9 +37,6 @@
 class Log
 {
 public:
-  Log () = default;
-  ~Log () = default;
-
   std::string file () const;
   void file (const std::string&);
   void ignore (const std::string&);
