@@ -4,6 +4,8 @@ master/HEAD
           (thanks to Iain R. Learmonth).
 - Removed 'std::' from stdtoimax call.
           (thanks to fornwall).
+- When Lexer::noOperator () is called, prevent ::isWord boundaries from being
+  comprised of operators.
 
 tasksh-1.1.0 (2016-09-05)
 

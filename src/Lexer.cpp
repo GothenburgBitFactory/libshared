@@ -548,7 +548,7 @@ bool Lexer::isWord (std::string& token, Lexer::Type& type)
 
     while (_text[marker]                  &&
            ! unicodeWhitespace (_text[marker]) &&
-           ! isSingleCharOperator (_text[marker]))
+           (! _enableOperator || ! isSingleCharOperator (_text[marker])))
       utf8_next_char (_text, marker);
 
     if (marker > _cursor)
