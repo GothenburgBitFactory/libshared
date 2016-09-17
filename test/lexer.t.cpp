@@ -34,7 +34,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (555);
+  UnitTest t (559);
 
   std::vector <std::pair <std::string, Lexer::Type>> tokens;
   std::string token;
@@ -323,6 +323,14 @@ int main (int, char**)
   t.notok (Lexer::wasQuoted (""),        "Lexer::wasQuoted '' --> false");
   t.notok (Lexer::wasQuoted ("abc"),     "Lexer::wasQuoted 'abc' --> false");
   t.ok    (Lexer::wasQuoted ("one two"), "Lexer::wasQuoted 'one two' --> true");
+
+  // Lexing with features disabled.
+  Lexer l4 ("one+two");
+  l4.noOperator ();
+  t.ok (l4.token (token, type),    "Lexer::token 'one+two' noOperator --> 1 token");
+  t.is (token, "one+two",          "Lexer::token 'one+two' noOperator --> 'one+two'");
+  t.ok (type == Lexer::Type::word, "Lexer::token 'one+two' noOperator --> Lexer::Type::word");
+  t.notok (l4.token (token, type), "Lexer::token 'one+two' noOperator --> EOS");
 
   return 0;
 }
