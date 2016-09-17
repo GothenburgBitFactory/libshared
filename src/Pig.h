@@ -42,6 +42,7 @@ public:
 
   bool getUntil (int, std::string&);
   bool getUntilWS (std::string&);
+  bool getCharacter (int&);
   bool getDigit (int&);
   bool getDigit2 (int&);
   bool getDigit3 (int&);

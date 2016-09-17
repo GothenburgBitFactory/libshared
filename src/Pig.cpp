@@ -161,6 +161,20 @@ bool Pig::getUntilWS (std::string& result)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Pig::getCharacter (int& result)
+{
+  int c = _text[_cursor];
+  if (c)
+  {
+    result = c;
+    ++_cursor;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Pig::getDigit (int& result)
 {
   int c = _text[_cursor];

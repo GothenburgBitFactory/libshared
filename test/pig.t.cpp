@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (160);
+  UnitTest t (170);
 
   // Pig::skip
   // Pig::skipN
@@ -305,6 +305,19 @@ int main (int, char**)
   t.is (p31.substr (1, 3), "bc",  "substr 1,3 --> 'bc'");
   t.is (p31.substr (2, 2), "",    "substr 2,2 --> ''");
   t.is (p31.substr (2, 3), "c",   "substr 2,3 --> 'c'");
+
+  // Pig.getCharacter
+  Pig p32 ("abc");
+  t.ok (p32.getCharacter (n), "getcharacter 'abc' --> true");
+  t.is (n, 97,                "getcharacter 'abc ' --> 'a'");
+  t.is (p32.dump (),          "≪abc≫ l3 c1", "dump: " + p32.dump ());
+  t.ok (p32.getCharacter (n), "getcharacter 'abc' --> true");
+  t.is (n, 98,                "getcharacter 'abc ' --> 'b'");
+  t.is (p32.dump (),          "≪abc≫ l3 c2", "dump: " + p32.dump ());
+  t.ok (p32.getCharacter (n), "getcharacter 'abc' --> true");
+  t.is (n, 99,                "getcharacter 'abc ' --> 'c'");
+  t.is (p32.dump (),          "≪abc≫ l3 c3", "dump: " + p32.dump ());
+  t.ok (p32.eos (),           "eos --> true");
 
   return 0;
 }

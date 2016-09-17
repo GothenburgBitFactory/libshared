@@ -6,6 +6,7 @@ master/HEAD
           (thanks to fornwall).
 - When Lexer::noOperator () is called, prevent ::isWord boundaries from being
   comprised of operators.
+- Added Pig::getCharacter, which was oddly missing.
 
 tasksh-1.1.0 (2016-09-05)
 
