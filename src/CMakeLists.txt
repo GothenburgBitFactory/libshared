@@ -19,6 +19,7 @@ set (shared_HEADERS Args.h
                     RX.h
                     Table.h
                     Timer.h
+                    Tree.h
                     shared.h
                     format.h
                     unicode.h
@@ -41,6 +42,7 @@ set (shared_SRCS Args.cpp
                  RX.cpp
                  Table.cpp
                  Timer.cpp
+                 Tree.cpp
                  shared.cpp
                  format.cpp
                  unicode.cpp

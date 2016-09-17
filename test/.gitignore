@@ -19,6 +19,7 @@ pig.t
 rx.t
 shared.t
 table.t
+tree.t
 unicode.t
 utf8.t
 *.pyc
