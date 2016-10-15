@@ -2273,11 +2273,11 @@ std::string Datetime::toISO () const
   iso << std::setw (4) << std::setfill ('0') << t->tm_year + 1900
       << std::setw (2) << std::setfill ('0') << t->tm_mon + 1
       << std::setw (2) << std::setfill ('0') << t->tm_mday
-      << "T"
+      << 'T'
       << std::setw (2) << std::setfill ('0') << t->tm_hour
       << std::setw (2) << std::setfill ('0') << t->tm_min
       << std::setw (2) << std::setfill ('0') << t->tm_sec
-      << "Z";
+      << 'Z';
 
   return iso.str ();
 }
@@ -2290,15 +2290,15 @@ std::string Datetime::toISOLocalExtended () const
 
   std::stringstream iso;
   iso << std::setw (4) << std::setfill ('0') << t->tm_year + 1900
-      << "-"
+      << '-'
       << std::setw (2) << std::setfill ('0') << t->tm_mon + 1
-      << "-"
+      << '-'
       << std::setw (2) << std::setfill ('0') << t->tm_mday
-      << "T"
+      << 'T'
       << std::setw (2) << std::setfill ('0') << t->tm_hour
-      << ":"
+      << ':'
       << std::setw (2) << std::setfill ('0') << t->tm_min
-      << ":"
+      << ':'
       << std::setw (2) << std::setfill ('0') << t->tm_sec;
 
   return iso.str ();
@@ -2841,27 +2841,5 @@ void Datetime::operator++ (int)
                        second ());
   _date = tomorrow._date;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-/*
-std::string Datetime::dump () const
-{
-  std::stringstream s;
-  s << "Datetime"
-    << " y"   << _year
-    << " m"   << _month
-    << " w"   << _week
-    << " wd"  << _weekday
-    << " j"   << _julian
-    << " d"   << _day
-    << " s"   << _seconds
-    << " off" << _offset
-    << " utc" << _utc
-    << " ="   << _date
-    << "  "   << (_date ? toISO () : "");
-
-  return s.str ();
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////

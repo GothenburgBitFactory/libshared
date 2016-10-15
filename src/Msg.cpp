@@ -101,7 +101,7 @@ bool Msg::parse (const std::string& input)
   {
     auto delimiter = i.find (':');
     if (delimiter == std::string::npos)
-        throw std::string ("Malformed message header '") + i + "'";
+        throw std::string ("Malformed message header '") + i + '\'';
 
     _header[trim (i.substr (0, delimiter))] = trim (i.substr (delimiter + 1));
   }

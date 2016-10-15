@@ -490,9 +490,9 @@ bool Lexer::isUUID (std::string& token, Lexer::Type& type, bool endBoundary)
         break;
     }
 
-    if (i >= uuid_min_length              &&
-        (! endBoundary                    ||
-         ! _text[marker + i]              ||
+    if (i >= uuid_min_length                   &&
+        (! endBoundary                         ||
+         ! _text[marker + i]                   ||
          unicodeWhitespace (_text[marker + i]) ||
          isSingleCharOperator (_text[marker + i])))
     {

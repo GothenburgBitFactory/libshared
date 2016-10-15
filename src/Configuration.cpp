@@ -49,8 +49,8 @@ bool setVariableInFile (
   for (auto& line : contents)
   {
     // If there is a comment on the line, it must follow the pattern.
-    auto comment = line.find ("#");
-    auto pos     = line.find (name + "=");
+    auto comment = line.find ('#');
+    auto pos     = line.find (name + '=');
 
     if (pos != std::string::npos &&
         (comment == std::string::npos ||
@@ -58,9 +58,9 @@ bool setVariableInFile (
     {
       found = true;
       if (comment != std::string::npos)
-        line = name + "=" + value + " " + line.substr (comment);
+        line = name + '=' + value + ' ' + line.substr (comment);
       else
-        line = name + "=" + value;
+        line = name + '=' + value;
 
       change = true;
     }
@@ -69,7 +69,7 @@ bool setVariableInFile (
   // Not found, so append instead.
   if (! found)
   {
-    contents.push_back (name + "=" + value);
+    contents.push_back (name + '=' + value);
     change = true;
   }
 
@@ -95,8 +95,8 @@ bool unsetVariableInFile (
     bool lineDeleted = false;
 
     // If there is a comment on the line, it must follow the pattern.
-    auto comment = line->find ("#");
-    auto pos     = line->find (name + "=");
+    auto comment = line->find ('#');
+    auto pos     = line->find (name + '=');
 
     if (pos != std::string::npos &&
         (comment == std::string::npos ||
@@ -155,7 +155,7 @@ void Configuration::parse (const std::string& input, int nest /* = 1 */)
   for (auto& line : split (input, '\n'))
   {
     // Remove comments.
-    auto pound = line.find ("#");
+    auto pound = line.find ('#');
     if (pound != std::string::npos)
       line = line.substr (0, pound);
 
@@ -163,7 +163,7 @@ void Configuration::parse (const std::string& input, int nest /* = 1 */)
     line = trim (line);
     if (line.length () > 0)
     {
-      auto equal = line.find ("=");
+      auto equal = line.find ('=');
       if (equal != std::string::npos)
       {
         std::string key   = trim (line.substr (0, equal));

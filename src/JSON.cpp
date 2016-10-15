@@ -120,7 +120,7 @@ json::jtype json::string::type ()
 ////////////////////////////////////////////////////////////////////////////////
 std::string json::string::dump () const
 {
-  return std::string ("\"") + _data + "\"";
+  return std::string ("\"") + _data + '"';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -258,17 +258,17 @@ json::jtype json::array::type ()
 std::string json::array::dump () const
 {
   std::string output;
-  output += "[";
+  output += '[';
 
   for (auto i = _data.begin (); i != _data.end (); ++i)
   {
     if (i != _data.begin ())
-      output += ",";
+      output += ',';
 
     output += (*i)->dump ();
   }
 
-  output += "]";
+  output += ']';
   return output;
 }
 
@@ -365,18 +365,18 @@ json::jtype json::object::type ()
 std::string json::object::dump () const
 {
   std::string output;
-  output += "{";
+  output += '{';
 
   for (auto i = _data.begin (); i != _data.end (); ++i)
   {
     if (i != _data.begin ())
-      output += ",";
+      output += ',';
 
-    output += "\"" + i->first + "\":";
+    output += '"' + i->first + "\":";
     output += i->second->dump ();
   }
 
-  output += "}";
+  output += '}';
   return output;
 }
 

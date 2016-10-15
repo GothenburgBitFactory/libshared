@@ -77,7 +77,7 @@ Path::Path (const Path& other)
 Path::Path (const std::string& in)
 {
   _original = in;
-  _data = expand (in);
+  _data     = expand (in);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ bool Path::operator== (const Path& other)
 ////////////////////////////////////////////////////////////////////////////////
 Path& Path::operator+= (const std::string& dir)
 {
-  _data += "/" + dir;
+  _data += '/' + dir;
   return *this;
 }
 
@@ -231,7 +231,7 @@ std::string Path::expand (const std::string& in)
 {
   std::string copy = in;
 
-  auto tilde = copy.find ("~");
+  auto tilde = copy.find ('~');
   std::string::size_type slash;
 
   if (tilde != std::string::npos)
@@ -255,7 +255,7 @@ std::string Path::expand (const std::string& in)
     }
 
     // Convert: ~foo/x --> /home/foo/x
-    else if ((slash = copy.find  ("/", tilde)) != std::string::npos)
+    else if ((slash = copy.find ('/', tilde)) != std::string::npos)
     {
       std::string name = copy.substr (tilde + 1, slash - tilde - 1);
       struct passwd* pw = getpwnam (name.c_str ());
@@ -274,7 +274,7 @@ std::string Path::expand (const std::string& in)
            in[0] != '.' &&
            in[0] != '/')
   {
-    copy = Directory::cwd () + "/" + in;
+    copy = Directory::cwd () + '/' + in;
   }
 
   return copy;
@@ -846,29 +846,29 @@ bool Directory::remove_directory (const std::string& dir) const
     struct dirent* de;
     while ((de = readdir (dp)) != nullptr)
     {
-      if (!strcmp (de->d_name, ".") ||
-          !strcmp (de->d_name, ".."))
+      if (! strcmp (de->d_name, ".") ||
+          ! strcmp (de->d_name, ".."))
         continue;
 
 #if defined (SOLARIS) || defined (HAIKU)
       struct stat s;
-      lstat ((dir + "/" + de->d_name).c_str (), &s);
+      lstat ((dir + '/' + de->d_name).c_str (), &s);
       if (S_ISDIR (s.st_mode))
-        remove_directory (dir + "/" + de->d_name);
+        remove_directory (dir + '/' + de->d_name);
       else
-        unlink ((dir + "/" + de->d_name).c_str ());
+        unlink ((dir + '/' + de->d_name).c_str ());
 #else
       if (de->d_type == DT_UNKNOWN)
       {
         struct stat s;
-        lstat ((dir + "/" + de->d_name).c_str (), &s);
+        lstat ((dir + '/' + de->d_name).c_str (), &s);
         if (S_ISDIR (s.st_mode))
           de->d_type = DT_DIR;
       }
       if (de->d_type == DT_DIR)
-        remove_directory (dir + "/" + de->d_name);
+        remove_directory (dir + '/' + de->d_name);
       else
-        unlink ((dir + "/" + de->d_name).c_str ());
+        unlink ((dir + '/' + de->d_name).c_str ());
 #endif
     }
 
@@ -956,23 +956,23 @@ void Directory::list (
 
 #if defined (SOLARIS) || defined (HAIKU)
       struct stat s;
-      stat ((base + "/" + de->d_name).c_str (), &s);
+      stat ((base + '/' + de->d_name).c_str (), &s);
       if (recursive && S_ISDIR (s.st_mode))
-        list (base + "/" + de->d_name, results, recursive);
+        list (base + '/' + de->d_name, results, recursive);
       else
-        results.push_back (base + "/" + de->d_name);
+        results.push_back (base + '/' + de->d_name);
 #else
       if (recursive && de->d_type == DT_UNKNOWN)
       {
         struct stat s;
-        lstat ((base + "/" + de->d_name).c_str (), &s);
+        lstat ((base + '/' + de->d_name).c_str (), &s);
         if (S_ISDIR (s.st_mode))
           de->d_type = DT_DIR;
       }
       if (recursive && de->d_type == DT_DIR)
-        list (base + "/" + de->d_name, results, recursive);
+        list (base + '/' + de->d_name, results, recursive);
       else
-        results.push_back (base + "/" + de->d_name);
+        results.push_back (base + '/' + de->d_name);
 #endif
     }
 

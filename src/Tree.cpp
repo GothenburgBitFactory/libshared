@@ -232,13 +232,13 @@ std::string Tree::dumpNode (
   for (auto& a : t->_attributes)
   {
     if (atts != "")
-      atts += " ";
+      atts += ' ';
 
     atts += a.first + "='\033[33m" + a.second + "\033[0m'";
   }
 
   if (atts.length ())
-    out << " " << atts;
+    out << ' ' << atts;
 
   // Dump tags.
   std::string tags;
@@ -252,7 +252,7 @@ std::string Tree::dumpNode (
 
   if (tags.length ())
     out << ' ' << tags;
-  out << "\n";
+  out << '\n';
 
   // Recurse for branches.
   for (auto& b : t->_branches)

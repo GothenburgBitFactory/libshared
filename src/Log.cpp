@@ -87,9 +87,9 @@ void Log::write (const std::string& category, const std::string& line)
       if (_repetition)
       {
         std::string message = Datetime ().toISO ()
-                            + " " + PACKAGE_VERSION
-                            + " " + category
-                            + " " + format ("(Repeated {1} times)", _repetition)
+                            + ' ' + PACKAGE_VERSION
+                            + ' ' + category
+                            + ' ' + format ("(Repeated {1} times)", _repetition)
                             + '\n';
 
         if (_name != "")
@@ -101,9 +101,9 @@ void Log::write (const std::string& category, const std::string& line)
       }
 
       std::string message = Datetime ().toISO ()
-                          + " " + PACKAGE_VERSION
-                          + " " + category
-                          + " " + line
+                          + ' ' + PACKAGE_VERSION
+                          + ' ' + category
+                          + ' ' + line
                           + '\n';
 
       if (_name != "")

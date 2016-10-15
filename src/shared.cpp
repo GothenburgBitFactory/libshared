@@ -318,7 +318,7 @@ bool extractLine (
         {
           if (hyphenate)
           {
-            line = text.substr (offset, last_bytes - offset - 1) + "-";
+            line = text.substr (offset, last_bytes - offset - 1) + '-';
             offset = last_last_bytes;
           }
           else
@@ -420,7 +420,7 @@ int autoComplete (
 
       // Maintain a list of partial matches.
       else if (length >= (unsigned) minimum &&
-               length <= item.length ()    &&
+               length <= item.length ()     &&
                partial == item.substr (0, length))
         matches.push_back (item);
     }

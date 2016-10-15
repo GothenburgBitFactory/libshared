@@ -444,14 +444,14 @@ void Color::_colorize (std::string &result, const std::string& input) const
     {
       result += "\033[38;5;";
       result += colorstring[(_value & _COLOR_FG)];
-      result += "m";
+      result += 'm';
     }
 
     if (_value & _COLOR_HASBG)
     {
       result += "\033[48;5;";
       result += colorstring[((_value & _COLOR_BG) >> 8)];
-      result += "m";
+      result += 'm';
     }
 
     result += input;
@@ -465,35 +465,35 @@ void Color::_colorize (std::string &result, const std::string& input) const
 
     if (_value & _COLOR_BOLD)
     {
-      if (count++) result += ";";
-      result += "1";
+      if (count++) result += ';';
+      result += '1';
     }
 
     if (_value & _COLOR_UNDERLINE)
     {
-      if (count++) result += ";";
-      result += "4";
+      if (count++) result += ';';
+      result += '4';
     }
 
     if (_value & _COLOR_INVERSE)
     {
-      if (count++) result += ";";
-      result += "7";
+      if (count++) result += ';';
+      result += '7';
     }
 
     if (_value & _COLOR_HASFG)
     {
-      if (count++) result += ";";
+      if (count++) result += ';';
       result += colorstring[(29 + (_value & _COLOR_FG))];
     }
 
     if (_value & _COLOR_HASBG)
     {
-      if (count++) result += ";";
+      if (count++) result += ';';
       result += colorstring[((_value & _COLOR_BRIGHT ? 99 : 39) + ((_value & _COLOR_BG) >> 8))];
     }
 
-    result += "m";
+    result += 'm';
     result += input;
     result += "\033[0m";
   }
@@ -553,14 +553,14 @@ std::string Color::code () const
     {
       result += "\033[38;5;";
       result += colorstring[(_value & _COLOR_FG)];
-      result += "m";
+      result += 'm';
     }
 
     if (_value & _COLOR_HASBG)
     {
       result += "\033[48;5;";
       result += colorstring[((_value & _COLOR_BG) >> 8)];
-      result += "m";
+      result += 'm';
     }
   }
 
@@ -572,35 +572,35 @@ std::string Color::code () const
 
     if (_value & _COLOR_BOLD)
     {
-      if (count++) result += ";";
-      result += "1";
+      if (count++) result += ';';
+      result += '1';
     }
 
     if (_value & _COLOR_UNDERLINE)
     {
-      if (count++) result += ";";
-      result += "4";
+      if (count++) result += ';';
+      result += '4';
     }
 
     if (_value & _COLOR_INVERSE)
     {
-      if (count++) result += ";";
-      result += "7";
+      if (count++) result += ';';
+      result += '7';
     }
 
     if (_value & _COLOR_HASFG)
     {
-      if (count++) result += ";";
+      if (count++) result += ';';
       result += colorstring[(29 + (_value & _COLOR_FG))];
     }
 
     if (_value & _COLOR_HASBG)
     {
-      if (count++) result += ";";
+      if (count++) result += ';';
       result += colorstring[((_value & _COLOR_BRIGHT ? 99 : 39) + ((_value & _COLOR_BG) >> 8))];
     }
 
-    result += "m";
+    result += 'm';
   }
 
   return result;

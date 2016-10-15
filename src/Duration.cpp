@@ -486,13 +486,13 @@ const std::string Duration::formatVague () const
   float days = (float) _period / 86400.0;
 
   std::stringstream formatted;
-       if (_period >= 86400 * 365) formatted << std::fixed << std::setprecision (1) << (days / 365) << "y";
+       if (_period >= 86400 * 365) formatted << std::fixed << std::setprecision (1) << (days / 365) << 'y';
   else if (_period >= 86400 * 90)  formatted << static_cast <int> (days / 30)       << "mo";
-  else if (_period >= 86400 * 14)  formatted << static_cast <int> (days / 7)        << "w";
-  else if (_period >= 86400)       formatted << static_cast <int> (days)            << "d";
-  else if (_period >= 3600)        formatted << static_cast <int> (_period / 3600)  << "h";
+  else if (_period >= 86400 * 14)  formatted << static_cast <int> (days / 7)        << 'w';
+  else if (_period >= 86400)       formatted << static_cast <int> (days)            << 'd';
+  else if (_period >= 3600)        formatted << static_cast <int> (_period / 3600)  << 'h';
   else if (_period >= 60)          formatted << static_cast <int> (_period / 60)    << "min";
-  else if (_period >= 1)           formatted << static_cast <int> (_period)         << "s";
+  else if (_period >= 1)           formatted << static_cast <int> (_period)         << 's';
 
   return formatted.str ();
 }
@@ -538,24 +538,5 @@ void Duration::resolve ()
                 _seconds;
   }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-/*
-std::string Duration::dump () const
-{
-  std::stringstream s;
-  s << "Duration"
-    << " y"  << _year
-    << " mo" << _month
-    << " d"  << _day
-    << " h"  << _hours
-    << " mi" << _minutes
-    << " s"  << _seconds
-    << " ="  << _period
-    << "  "  << (_period ? format () : "");
-
-  return s.str ();
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
