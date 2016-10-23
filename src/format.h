@@ -78,5 +78,7 @@ std::string rightJustify (const std::string&, const int);
 
 std::string commify (const std::string&);
 std::string formatBytes (size_t);
+std::string printable (const std::string&);
+std::string printable (char);
 
 #endif

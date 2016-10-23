@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (68);
+  UnitTest t (76);
 
   // std::string format (char);
   t.is (format ('A'), "A", "format ('A') -> A");
@@ -128,6 +128,18 @@ int main (int, char**)
   t.is (formatBytes (999999999),  "1.0 GiB", "999999999 -> 1.0 GiB");
   t.is (formatBytes (1000000000), "1.0 GiB", "1000000000 -> 1.0 GiB");
   t.is (formatBytes (1000000001), "1.0 GiB", "1000000001 -> 1.0 GiB");
+
+  // std::string printable (const std::string&);
+  t.is (printable ("f\ro\no\tb\va\vr"), "f\\ro\\no\\tb\\va\\vr", "printable f\\ro\\no\\tb\\va\\vr --> f\\\\ro\\\\no\\\\tb\\\\va\\\\vr");
+  t.is (printable ("foobar"), "foobar",                          "printable foobar --> foobar");
+
+  // std::string printable (char);
+  t.is (printable ('\r'), "\\r", "printable \\r --> \\\\r");
+  t.is (printable ('\n'), "\\n", "printable \\n --> \\\\n");
+  t.is (printable ('\f'), "\\f", "printable \\f --> \\\\f");
+  t.is (printable ('\t'), "\\t", "printable \\t --> \\\\t");
+  t.is (printable ('\v'), "\\v", "printable \\v --> \\\\v");
+  t.is (printable ('x'), "x",    "printable x --> x");
 
   return 0;
 }
