@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (41);
+  UnitTest t (56);
 
   // std::string format (char);
   t.is (format ('A'), "A", "format ('A') -> A");
@@ -93,6 +93,24 @@ int main (int, char**)
   t.is (rightJustify ("foo", 4), " foo",  "rightJustify foo,4 -> ' foo'");
   t.is (rightJustify ("foo", 5), "  foo", "rightJustify foo,5 -> '  foo'");
   t.is (rightJustify ("föo", 5), "  föo", "rightJustify föo,5 -> '  föo'");
+
+  // std::string commify (const std::string& data)
+  t.is (commify (""),           "",              "commify '' -> ''");
+  t.is (commify ("1"),          "1",             "commify '1' -> '1'");
+  t.is (commify ("12"),         "12",            "commify '12' -> '12'");
+  t.is (commify ("123"),        "123",           "commify '123' -> '123'");
+  t.is (commify ("1234"),       "1,234",         "commify '1234' -> '1,234'");
+  t.is (commify ("12345"),      "12,345",        "commify '12345' -> '12,345'");
+  t.is (commify ("123456"),     "123,456",       "commify '123456' -> '123,456'");
+  t.is (commify ("1234567"),    "1,234,567",     "commify '1234567' -> '1,234,567'");
+  t.is (commify ("12345678"),   "12,345,678",    "commify '12345678' -> '12,345,678'");
+  t.is (commify ("123456789"),  "123,456,789",   "commify '123456789' -> '123,456,789'");
+  t.is (commify ("1234567890"), "1,234,567,890", "commify '1234567890' -> '1,234,567,890'");
+
+  t.is (commify ("pre"),         "pre",          "commify 'pre' -> 'pre'");
+  t.is (commify ("pre1234"),     "pre1,234",     "commify 'pre1234' -> 'pre1,234'");
+  t.is (commify ("1234post"),    "1,234post",    "commify '1234post' -> '1,234post'");
+  t.is (commify ("pre1234post"), "pre1,234post", "commify 'pre1234post' -> 'pre1,234post'");
 
   return 0;
 }
