@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (56);
+  UnitTest t (68);
 
   // std::string format (char);
   t.is (format ('A'), "A", "format ('A') -> A");
@@ -111,6 +111,23 @@ int main (int, char**)
   t.is (commify ("pre1234"),     "pre1,234",     "commify 'pre1234' -> 'pre1,234'");
   t.is (commify ("1234post"),    "1,234post",    "commify '1234post' -> '1,234post'");
   t.is (commify ("pre1234post"), "pre1,234post", "commify 'pre1234post' -> 'pre1,234post'");
+
+  // std::string formatBytes (size_t);
+  t.is (formatBytes (0), "0 B", "0 -> 0 B");
+
+  t.is (formatBytes (994),  "994 B", "994 -> 994 B");
+  t.is (formatBytes (995),  "1.0 KiB", "995 -> 1.0 KiB");
+  t.is (formatBytes (999),  "1.0 KiB", "999 -> 1.0 KiB");
+  t.is (formatBytes (1000), "1.0 KiB", "1000 -> 1.0 KiB");
+  t.is (formatBytes (1001), "1.0 KiB", "1001 -> 1.0 KiB");
+
+  t.is (formatBytes (999999),  "1.0 MiB", "999999 -> 1.0 MiB");
+  t.is (formatBytes (1000000), "1.0 MiB", "1000000 -> 1.0 MiB");
+  t.is (formatBytes (1000001), "1.0 MiB", "1000001 -> 1.0 MiB");
+
+  t.is (formatBytes (999999999),  "1.0 GiB", "999999999 -> 1.0 GiB");
+  t.is (formatBytes (1000000000), "1.0 GiB", "1000000000 -> 1.0 GiB");
+  t.is (formatBytes (1000000001), "1.0 GiB", "1000000001 -> 1.0 GiB");
 
   return 0;
 }
