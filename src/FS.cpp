@@ -183,11 +183,10 @@ bool Path::is_absolute () const
 bool Path::is_link () const
 {
   struct stat s {};
-  if (! lstat (_data.c_str (), &s) &&
-      S_ISLNK (s.st_mode))
-    return true;
+  if (lstat (_data.c_str (), &s))
+    throw format ("lstat error {1}: {2}", errno, strerror (errno));
 
-  return false;
+  return S_ISLNK (s.st_mode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -882,7 +881,9 @@ bool Directory::remove_directory (const std::string& dir) const
 
 #if defined (SOLARIS) || defined (HAIKU)
       struct stat s;
-      lstat ((dir + '/' + de->d_name).c_str (), &s);
+      if (lstat ((dir + '/' + de->d_name).c_str (), &s))
+        throw format ("lstat error {1}: {2}", errno, strerror (errno));
+
       if (S_ISDIR (s.st_mode))
         remove_directory (dir + '/' + de->d_name);
       else
@@ -891,7 +892,9 @@ bool Directory::remove_directory (const std::string& dir) const
       if (de->d_type == DT_UNKNOWN)
       {
         struct stat s;
-        lstat ((dir + '/' + de->d_name).c_str (), &s);
+        if (lstat ((dir + '/' + de->d_name).c_str (), &s))
+          throw format ("lstat error {1}: {2}", errno, strerror (errno));
+
         if (S_ISDIR (s.st_mode))
           de->d_type = DT_DIR;
       }
@@ -997,7 +1000,9 @@ void Directory::list (
       if (recursive && de->d_type == DT_UNKNOWN)
       {
         struct stat s;
-        lstat ((base + '/' + de->d_name).c_str (), &s);
+        if (lstat ((base + '/' + de->d_name).c_str (), &s))
+          throw format ("lstat error {1}: {2}", errno, strerror (errno));
+
         if (S_ISDIR (s.st_mode))
           de->d_type = DT_DIR;
       }
