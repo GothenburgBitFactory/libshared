@@ -153,7 +153,11 @@ std::string Path::extension () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::exists () const
 {
-  return access (_data.c_str (), F_OK) ? false : true;
+  auto status = access (_data.c_str (), F_OK);
+  if (status == -1)
+    throw format ("access error {1}: {2}", errno, strerror (errno));
+
+  return status ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,19 +194,31 @@ bool Path::is_link () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::readable () const
 {
-  return access (_data.c_str (), R_OK) ? false : true;
+  auto status = access (_data.c_str (), R_OK);
+  if (status == -1)
+    throw format ("access error {1}: {2}", errno, strerror (errno));
+
+  return status ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::writable () const
 {
-  return access (_data.c_str (), W_OK) ? false : true;
+  auto status = access (_data.c_str (), W_OK);
+  if (status == -1)
+    throw format ("access error {1}: {2}", errno, strerror (errno));
+
+  return status ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::executable () const
 {
-  return access (_data.c_str (), X_OK) ? false : true;
+  auto status = access (_data.c_str (), X_OK);
+  if (status == -1)
+    throw format ("access error {1}: {2}", errno, strerror (errno));
+
+  return status ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -764,7 +780,11 @@ bool File::remove (const std::string& name)
 bool File::copy (const std::string& from, const std::string& to)
 {
   // 'from' must exist.
-  if (! access (from.c_str (), F_OK))
+  auto status = access (from.c_str (), F_OK);
+  if (status == -1)
+    throw format ("access error {1}: {2}", errno, strerror (errno));
+
+  if (! status)
   {
     std::ifstream src (from, std::ios::binary);
     std::ofstream dst (to,   std::ios::binary);
