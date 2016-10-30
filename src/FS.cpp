@@ -154,7 +154,7 @@ std::string Path::extension () const
 bool Path::exists () const
 {
   auto status = access (_data.c_str (), F_OK);
-  if (status == -1)
+  if (status == -1 && errno != ENOENT)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status ? false : true;
@@ -792,7 +792,7 @@ bool File::copy (const std::string& from, const std::string& to)
 {
   // 'from' must exist.
   auto status = access (from.c_str (), F_OK);
-  if (status == -1)
+  if (status == -1 && errno != ENOENT)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   if (! status)
