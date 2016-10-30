@@ -672,7 +672,9 @@ bool File::create (const std::string& name, int mode /* = 0640 */)
   if (out.good ())
   {
     out.close ();
-    chmod (full_name.c_str (), mode);
+    if (chmod (full_name.c_str (), mode))
+      throw format ("chmod error {1}: {2}", errno, strerror (errno));
+
     return true;
   }
 
