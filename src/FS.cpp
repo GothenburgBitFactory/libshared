@@ -582,7 +582,8 @@ void File::write_raw (const std::string& line)
     open ();
 
   if (_fh)
-    fputs (line.c_str (), _fh);
+    if (fputs (line.c_str (), _fh) == EOF)
+      throw format ("fputs error {1}: {2}", errno, strerror (errno));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
