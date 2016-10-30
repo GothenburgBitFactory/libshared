@@ -859,6 +859,8 @@ Directory& Directory::operator= (const Directory& other)
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::create (int mode /* = 0755 */)
 {
+  // No error handling because we want failure to be silent, somewhat emulating
+  // "mkdir -p".
   return mkdir (_data.c_str (), mode) == 0 ? true : false;
 }
 
