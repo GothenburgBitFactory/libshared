@@ -164,11 +164,10 @@ bool Path::exists () const
 bool Path::is_directory () const
 {
   struct stat s {};
-  if (! stat (_data.c_str (), &s) &&
-      S_ISDIR (s.st_mode))
-    return true;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return false;
+  return S_ISDIR (s.st_mode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -616,54 +615,54 @@ void File::truncate ()
 mode_t File::mode ()
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
-    return s.st_mode;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return 0;
+  return s.st_mode;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 size_t File::size () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
-    return s.st_size;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return 0;
+  return s.st_size;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 time_t File::mtime () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
-    return s.st_mtime;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return 0;
+  return s.st_mtime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 time_t File::ctime () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
-    return s.st_ctime;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return 0;
+  return s.st_ctime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 time_t File::btime () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
-#ifdef HAVE_ST_BIRTHTIME
-    return s.st_birthtime;
-#else
-    return s.st_ctime;
-#endif
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return 0;
+#ifdef HAVE_ST_BIRTHTIME
+  return s.st_birthtime;
+#else
+  return s.st_ctime;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -987,7 +986,9 @@ void Directory::list (
 
 #if defined (SOLARIS) || defined (HAIKU)
       struct stat s;
-      stat ((base + '/' + de->d_name).c_str (), &s);
+      if (stat ((base + '/' + de->d_name).c_str (), &s))
+        throw format ("stat error {1}: {2}", errno, strerror (errno));
+
       if (recursive && S_ISDIR (s.st_mode))
         list (base + '/' + de->d_name, results, recursive);
       else
