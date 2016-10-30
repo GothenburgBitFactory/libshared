@@ -153,11 +153,7 @@ std::string Path::extension () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::exists () const
 {
-  auto status = access (_data.c_str (), F_OK);
-  if (status == -1 && errno != ENOENT)
-    throw format ("access error {1}: {2}", errno, strerror (errno));
-
-  return status ? false : true;
+  return access (_data.c_str (), F_OK) ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,8 +543,7 @@ void File::append (const std::string& line)
 
   if (_fh)
   {
-    if (fseek (_fh, 0, SEEK_END))
-      throw format ("fseek error {1}: {2}", errno, strerror (errno));
+    fseek (_fh, 0, SEEK_END);
 
     if (fputs (line.c_str (), _fh) == EOF)
       throw format ("fputs error {1}: {2}", errno, strerror (errno));
@@ -564,8 +559,7 @@ void File::append (const std::vector <std::string>& lines)
 
   if (_fh)
   {
-    if (fseek (_fh, 0, SEEK_END))
-      throw format ("fseek error {1}: {2}", errno, strerror (errno));
+    fseek (_fh, 0, SEEK_END);
 
     for (auto& line : lines)
       if (fputs (line.c_str (), _fh) == EOF)
@@ -791,11 +785,7 @@ bool File::remove (const std::string& name)
 bool File::copy (const std::string& from, const std::string& to)
 {
   // 'from' must exist.
-  auto status = access (from.c_str (), F_OK);
-  if (status == -1 && errno != ENOENT)
-    throw format ("access error {1}: {2}", errno, strerror (errno));
-
-  if (! status)
+  if (! access (from.c_str (), F_OK))
   {
     std::ifstream src (from, std::ios::binary);
     std::ofstream dst (to,   std::ios::binary);
