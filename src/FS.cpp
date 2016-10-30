@@ -545,8 +545,11 @@ void File::append (const std::string& line)
 
   if (_fh)
   {
-    fseek (_fh, 0, SEEK_END);
-    fputs (line.c_str (), _fh);
+    if (fseek (_fh, 0, SEEK_END))
+      throw format ("fseek error {1}: {2}", errno, strerror (errno));
+
+    if (fputs (line.c_str (), _fh) == EOF)
+      throw format ("fputs error {1}: {2}", errno, strerror (errno));
   }
 }
 
@@ -559,9 +562,12 @@ void File::append (const std::vector <std::string>& lines)
 
   if (_fh)
   {
-    fseek (_fh, 0, SEEK_END);
+    if (fseek (_fh, 0, SEEK_END))
+      throw format ("fseek error {1}: {2}", errno, strerror (errno));
+
     for (auto& line : lines)
-      fputs (line.c_str (), _fh);
+      if (fputs (line.c_str (), _fh) == EOF)
+        throw format ("fputs error {1}: {2}", errno, strerror (errno));
   }
 }
 
