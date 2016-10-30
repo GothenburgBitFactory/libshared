@@ -416,6 +416,8 @@ bool File::open ()
         _locked = false;
         return true;
       }
+      else
+        throw format ("fopen error {1}: {2}", errno, strerror (errno));
     }
     else
       return true;
@@ -432,7 +434,9 @@ void File::close ()
     if (_locked)
       unlock ();
 
-    fclose (_fh);
+    if (! fclose (_fh))
+      throw format ("fclose error {1}: {2}", errno, strerror (errno));
+
     _fh = nullptr;
     _h = -1;
     _locked = false;
