@@ -428,7 +428,7 @@ void File::close ()
     if (_locked)
       unlock ();
 
-    if (! fclose (_fh))
+    if (fclose (_fh))
       throw format ("fclose error {1}: {2}", errno, strerror (errno));
 
     _fh = nullptr;
