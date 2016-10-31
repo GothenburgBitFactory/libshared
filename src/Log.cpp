@@ -49,6 +49,12 @@ void Log::ignore (const std::string& category)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Log::write (const std::string& line)
+{
+  write ("info", line);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Log::write (const std::string& category, const std::string& line)
 {
   // Determine if this category is in the ignore list.

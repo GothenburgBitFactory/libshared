@@ -40,6 +40,7 @@ public:
   std::string file () const;
   void file (const std::string&);
   void ignore (const std::string&);
+  void write (const std::string&);
   void write (const std::string&, const std::string&);
 
 private:
