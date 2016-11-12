@@ -9,6 +9,7 @@ master/HEAD
 - Added Pig::getCharacter, which was oddly missing.
 - Added 'Tree' class.
 - Added FS error handling for posix call failure.
+- Updated Timer class to use std::chrono.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
