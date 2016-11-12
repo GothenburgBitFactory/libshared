@@ -26,38 +26,16 @@
 
 #include <cmake.h>
 #include <Timer.h>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-
-////////////////////////////////////////////////////////////////////////////////
-Timer::Timer ()
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Timer starts when the object is constructed with a description.
-Timer::Timer (const std::string& description)
-: _description (description)
-{
-  start ();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Timer stops when the object is destructed.
-Timer::~Timer ()
-{
-  stop ();
-}
+//#include <iostream>
+//#include <iomanip>
+//#include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////
 void Timer::start ()
 {
-  if (!_running)
-  {
-    gettimeofday (&_start, nullptr);
-    _running = true;
-  }
+  _start = std::chrono::high_resolution_clock::now ();
+  _end = {};
+  _running = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,50 +43,49 @@ void Timer::stop ()
 {
   if (_running)
   {
-    struct timeval end;
-    gettimeofday (&end, nullptr);
+    _end = std::chrono::high_resolution_clock::now ();
     _running = false;
-    _total += (end.tv_sec - _start.tv_sec) * 1000000
-            + (end.tv_usec - _start.tv_usec);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned long Timer::total () const
+double Timer::total_s () const
 {
-  return _total;
+  auto endpoint = _end;
+  if (_running)
+    endpoint = std::chrono::high_resolution_clock::now ();
+
+  return std::chrono::duration_cast<std::chrono::seconds>(endpoint - _start).count();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Timer::subtract (unsigned long value)
+double Timer::total_ms () const
 {
-  if (value > _total)
-    _total = 0;
-  else
-    _total -= value;
+  auto endpoint = _end;
+  if (_running)
+    endpoint = std::chrono::high_resolution_clock::now ();
+
+  return std::chrono::duration_cast<std::chrono::milliseconds>(endpoint - _start).count();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Timer::str () const
+double Timer::total_us () const
 {
-  std::stringstream s;
-  s << "Timer "
-    << _description
-    << ' '
-    << std::setprecision (6)
-    << std::fixed
-    << _total / 1000000.0
-    << " sec\n";
+  auto endpoint = _end;
+  if (_running)
+    endpoint = std::chrono::high_resolution_clock::now ();
 
-  return s.str ();
+  return std::chrono::duration_cast<std::chrono::microseconds>(endpoint - _start).count();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned long Timer::now ()
+double Timer::total_ns () const
 {
-  struct timeval now;
-  gettimeofday (&now, nullptr);
-  return now.tv_sec * 1000000 + now.tv_usec;
+  auto endpoint = _end;
+  if (_running)
+    endpoint = std::chrono::high_resolution_clock::now ();
+
+  return std::chrono::duration_cast<std::chrono::nanoseconds>(endpoint - _start).count();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
