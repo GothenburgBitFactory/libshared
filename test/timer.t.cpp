@@ -40,10 +40,10 @@ int main (int, char**)
 
   Timer t1;
   t1.stop ();
-  t.is (t1.total_s (),  0.0, "Timer: zero s if not started");
-  t.is (t1.total_ms (), 0.0, "Timer: zero ms if not started");
-  t.is (t1.total_us (), 0.0, "Timer: zero us if not started");
-  t.is (t1.total_ns (), 0.0, "Timer: zero ns if not started");
+  t.ok (t1.total_s ()  >= 0.0, "Timer: possibliy non-zero s if not started");
+  t.ok (t1.total_ms () >= 0.0, "Timer: possibliy non-zero ms if not started");
+  t.ok (t1.total_us () >= 0.0, "Timer: possibliy non-zero us if not started");
+  t.ok (t1.total_ns () >= 0.0, "Timer: possibliy non-zero ns if not started");
 
   t0.stop ();
   t.ok (t0.total_ms () >= t0.total_s (),  "Timer: more ms than s");

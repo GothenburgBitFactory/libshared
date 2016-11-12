@@ -33,7 +33,7 @@
 class Timer
 {
 public:
-  Timer () = default;
+  Timer ();
   ~Timer () = default;
 
   void start ();
