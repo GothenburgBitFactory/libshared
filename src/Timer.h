@@ -39,6 +39,9 @@ public:
   void start ();
   void stop ();
 
+  void add_us (int);
+  void subtract_us (int);
+
   double total_s () const;
   double total_ms () const;
   double total_us () const;
