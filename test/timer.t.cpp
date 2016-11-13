@@ -32,7 +32,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (7);
+  UnitTest t (10);
 
   // Start this timer early to allow for non-trivial elapsed time.
   Timer t0;
@@ -57,9 +57,23 @@ int main (int, char**)
 
   Timer t2;
   t2.start ();
+  t.diag (format ("Running total {1} s",  t2.total_s ()));
+  t.diag (format ("Running total {1} ms", t2.total_ms ()));
+  t.diag (format ("Running total {1} us", t2.total_us ()));
   t.diag (format ("Running total {1} ns", t2.total_ns ()));
-  t.diag (format ("Running total {1} ns", t2.total_ns ()));
-  t.diag (format ("Running total {1} ns", t2.total_ns ()));
+
+  Timer t3;
+  auto before = t3.total_ns ();
+  t.diag (format ("Before {1} ns", before));
+  t3.add_us (1000000);
+  auto after = t3.total_ns ();
+  t.diag (format ("After {1} ns", after));
+  t3.subtract_us (1000000);
+  auto restored = t3.total_ns ();
+  t.diag (format ("Restored {1} ns", restored));
+  t.ok (before   < after,  "Timer: Adding time increases the total");
+  t.ok (restored < after,  "Timer: Subtracting time decreases the total");
+  t.ok (restored > before, "Timer: Elapsed time has a positive effect");
 
   return 0;
 }
