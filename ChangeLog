@@ -1,5 +1,7 @@
 master/HEAD
 
+- TI-53 Fix musl-libc compatibility
+          (thanks to Toyam Cox).
 - Define PATH_MAX if it's not defined
           (thanks to Iain R. Learmonth).
 - Removed 'std::' from stdtoimax call.
