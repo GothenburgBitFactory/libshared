@@ -86,7 +86,7 @@ void Args::scan (int argc, const char** argv)
     }
 
     // Is a positional.
-    else 
+    else
     {
       _positionals.push_back (argv[i]);
       if (_limit != -1 &&
