@@ -159,11 +159,16 @@ bool Path::exists () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_directory () const
 {
-  struct stat s {};
-  if (stat (_data.c_str (), &s))
-    throw format ("stat error {1}: {2}", errno, strerror (errno));
+  if (exists ())
+  {
+    struct stat s {};
+    if (stat (_data.c_str (), &s))
+      throw format ("stat error {1}: {2}", errno, strerror (errno));
 
-  return S_ISDIR (s.st_mode);
+    return S_ISDIR (s.st_mode);
+  }
+
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,30 +191,36 @@ bool Path::is_link () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// EACCES is a permissions problem which is exactly what this method is trying
+// to determine.
 bool Path::readable () const
 {
   auto status = access (_data.c_str (), R_OK);
-  if (status == -1)
+  if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// EACCES is a permissions problem which is exactly what this method is trying
+// to determine.
 bool Path::writable () const
 {
   auto status = access (_data.c_str (), W_OK);
-  if (status == -1)
+  if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status ? false : true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// EACCES is a permissions problem which is exactly what this method is trying
+// to determine.
 bool Path::executable () const
 {
   auto status = access (_data.c_str (), X_OK);
-  if (status == -1)
+  if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status ? false : true;

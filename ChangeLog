@@ -23,6 +23,8 @@ anomaly-1.1.0 (2016-09-04)
 - Lexer can now disable individual token types.
 - Pig is more careful about string bounds in ::peek.
 - Pig can extract substrings.
+- FS now has strict error handling, requiring that file existence is checked before
+  readability.
 
 timew-1.0.0 (2016-08-17)
 
