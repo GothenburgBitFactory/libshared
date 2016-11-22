@@ -61,7 +61,10 @@ void Args::scan (int argc, const char** argv)
       std::string canonical;
       if (canonicalizeOption (name, canonical))
       {
-        _options[canonical] = (name.find ("no") != 0 ? true : false);
+        auto defaultValue = _options[canonical];
+        bool negated = name.find ("no") == 0;
+
+        _options[canonical] = negated? !defaultValue : defaultValue;
       }
 
       else if (canonicalizeNamed (name, canonical))
