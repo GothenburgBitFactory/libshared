@@ -28,6 +28,7 @@
 #include <Args.h>
 #include <shared.h>
 #include <sstream>
+#include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 void Args::addOption (const std::string& name, bool defaultValue)
@@ -53,39 +54,30 @@ void Args::scan (int argc, const char** argv)
   for (int i = 1; i < argc; ++i)
   {
     // Is an option or named arg.
-    if (argv[i][0] == '-')
+    if (argv[i][0] == '-' && strlen (argv[i]) > 1)
     {
       auto name = ltrim (argv[i], "-");
 
-      // Recognized option.
-      if (_options.find (name) != _options.end ())
+      std::string canonical;
+      if (canonicalizeOption (name, canonical))
       {
-        _options[name] = true;
+        _options[canonical] = (name.find ("no") != 0 ? true : false);
       }
 
-      // Recognized option, but reversed.
-      else if (name.find ("no") == 0 &&
-               _options.find (name.substr (2)) != _options.end ())
-      {
-        _options[name.substr (2)] = false;
-      }
-
-      // Recognized named arg.
-      else if (_named.find (name) != _named.end ())
+      else if (canonicalizeNamed (name, canonical))
       {
         if (i >= argc)
-          throw std::string ("Argument '" + name + "' has no value.");
+          throw std::string ("Argument '" + canonical + "' has no value.");
 
         ++i;
-        _named[name] = argv[i];
+        _named[canonical] = argv[i];
       }
 
-      // None of the above.
       else
         throw std::string ("Unrecognized argument '" + name + "'.");
     }
 
-    // Is a positional.
+    // Or a positional.
     else
     {
       _positionals.push_back (argv[i]);
@@ -108,6 +100,9 @@ bool Args::getOption (const std::string& name) const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Args::getNamed (const std::string& name) const
 {
+  if (_named.find (name) == _named.end ())
+    return "";
+
   return _named.at (name);
 }
 
