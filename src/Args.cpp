@@ -99,6 +99,9 @@ void Args::scan (int argc, const char** argv)
 ////////////////////////////////////////////////////////////////////////////////
 bool Args::getOption (const std::string& name) const
 {
+  if (_options.find (name) == _options.end ())
+    return false;
+
   return _options.at (name);
 }
 

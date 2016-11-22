@@ -12,6 +12,7 @@ master/HEAD
 - Added 'Tree' class.
 - Added FS error handling for posix call failure.
 - Updated Timer class to use std::chrono.
+- Args now tolerates undeclared option queries.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
