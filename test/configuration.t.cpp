@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (17);
+  UnitTest t (20);
 
   // bool has (const std::string&);
   Configuration c1;
@@ -86,6 +86,17 @@ int main (int, char**)
   // std::vector <std::string> all () const;
   t.ok (c2.all ().size () == 5, "Configuration::all --> 'integer', 'boolean', 'real', 'string', 'foo'");
   t.ok (c2.size () == 5,        "Configuration::size --> 'integer', 'boolean', 'real', 'string', 'foo'");
+
+  // void setIfBlank (const std::string& key, const std::string& value)
+  Configuration c3;
+  c3.set ("foo", 1);
+  c3.set ("bar", "");
+  c3.setIfBlank ("foo", "1plus");
+  c3.setIfBlank ("bar", "2plus");
+  c3.setIfBlank ("baz", "3plus");
+  t.is (c3.get ("foo"), "1",     "Configuration::setIfBlank doesn't change non-blank values.");
+  t.is (c3.get ("bar"), "2plus", "Configuration::setIfBlank changes blank values.");
+  t.is (c3.get ("baz"), "3plus", "Configuration::setIfBlank sets missing values.");
 
   return 0;
 }
