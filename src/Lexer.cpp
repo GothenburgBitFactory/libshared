@@ -295,7 +295,7 @@ bool Lexer::isPunctuation (int c)
 // characters.
 std::string Lexer::dequote (const std::string& input, const std::string& quotes)
 {
-  if (input.length ())
+  if (input.length () > 1)
   {
     int quote = input[0];
     if (quotes.find (quote) != std::string::npos)
