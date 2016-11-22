@@ -36,7 +36,7 @@ class Args
 public:
   Args () = default;
 
-  void addOption (const std::string&, bool defaultValue = false);
+  void addOption (const std::string&, bool defaultValue = true);
   void addNamed  (const std::string&, const std::string& defaultValue = "");
   void limitPositionals (int);
 

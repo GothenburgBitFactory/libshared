@@ -61,9 +61,10 @@ void Args::scan (int argc, const char** argv)
       std::string canonical;
       if (canonicalizeOption (name, canonical))
       {
+        // TODO Store default values separately, because this code will flipflop
+        //      the values for multiple options, i.e.:   --nofoo --nofoo
         auto defaultValue = _options[canonical];
         bool negated = name.find ("no") == 0;
-
         _options[canonical] = negated? !defaultValue : defaultValue;
       }
 
