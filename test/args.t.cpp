@@ -31,13 +31,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (12);
+  UnitTest t (15);
 
   // Success case.
   Args a1;
   a1.limitPositionals (2);
   a1.addOption ("option1");
-  a1.addOption ("option2", true);
+  a1.addOption ("option2", false);
   a1.addOption ("option3", true);
   a1.addNamed ("named1");
   a1.addNamed ("named2");
@@ -69,8 +69,19 @@ int main (int, char**)
   t.is (a2.getOption ("present"), true,    "Args2 --> present 'true'");
   t.is (a2.getOption ("missing"), false,   "Args2 --> missing 'false'");
 
+  // Negation
+  Args a3;
+  a3.addOption ("positive", true);
+  a3.addOption ("negative", false);
+  const char* argv3[] = {"binary", "--nopositive", "--nonegative"};
+  a3.scan (3, argv3);
+  t.diag (a3.dump ());
+
+  t.is (a3.getPositionalCount (), 0,       "Args3 --> positionals 0");
+  t.is (a3.getOption ("positive"), false,  "Args3 --> nopositive 'false'");
+  t.is (a3.getOption ("negative"), true,   "Args3 --> nonegative 'true'");
+
   // TODO Test ambiguous abbreviations.
-  // TODO Test negation.
 
   return 0;
 }
