@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (9);
+  UnitTest t (12);
 
   // Success case.
   Args a1;
@@ -46,29 +46,31 @@ int main (int, char**)
   a1.scan (9, argv1);
   t.diag (a1.dump ());
 
-  t.is (a1.getPositionalCount (), 2,       "Args --> positionals 2");
-  t.is (a1.getPositional (0), "pos1",      "Args --> positional[0] 'pos1'");
-  t.is (a1.getPositional (1), "pos2",      "Args --> positional[1] 'pos2'");
+  t.is (a1.getPositionalCount (), 2,       "Args1 --> positionals 2");
+  t.is (a1.getPositional (0), "pos1",      "Args1 --> positional[0] 'pos1'");
+  t.is (a1.getPositional (1), "pos2",      "Args1 --> positional[1] 'pos2'");
 
-  t.is (a1.getOption ("option1"), true,    "Args --> option1 'true'");
-  t.is (a1.getOption ("option2"), false,   "Args --> option2 'false'");
-  t.is (a1.getOption ("option3"), true,    "Args --> option3 'true'");
+  t.is (a1.getOption ("option1"), true,    "Args1 --> option1 'true'");
+  t.is (a1.getOption ("option2"), false,   "Args1 --> option2 'false'");
+  t.is (a1.getOption ("option3"), true,    "Args1 --> option3 'true'");
 
-  t.is (a1.getNamed ("named1"), "value1",  "Args --> named1 'value1'");
-  t.is (a1.getNamed ("named2"), "value2",  "Args --> named2 'value2'");
-  t.is (a1.getNamed ("named3"), "default", "Args --> named3 'default'");
+  t.is (a1.getNamed ("named1"), "value1",  "Args1 --> named1 'value1'");
+  t.is (a1.getNamed ("named2"), "value2",  "Args1 --> named2 'value2'");
+  t.is (a1.getNamed ("named3"), "default", "Args1 --> named3 'default'");
 
-  // TODO Test errors
-/*
-  try
-  {
-  }
+  // Long/short arg names.
+  Args a2;
+  a2.addOption ("present");
+  const char* argv2[] = {"binary", "--present"};
+  a2.scan (2, argv2);
+  t.diag (a2.dump ());
 
-  catch (std::string& e)
-  {
-    t.diag (e);
-  }
-*/
+  t.is (a2.getPositionalCount (), 0,       "Args2 --> positionals 0");
+  t.is (a2.getOption ("present"), true,    "Args2 --> present 'true'");
+  t.is (a2.getOption ("missing"), false,   "Args2 --> missing 'false'");
+
+  // TODO Test ambiguous abbreviations.
+  // TODO Test negation.
 
   return 0;
 }
