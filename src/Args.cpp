@@ -130,12 +130,32 @@ std::string Args::getPositional (int n) const
 //
 bool Args::canonicalizeOption (const std::string& partial, std::string& canonical) const
 {
+  bool negated = partial.find ("no") == 0;
+
   // Look for exact positive or negative matches first, which should succeed
-  // regardless of longer partial matches.
+  // regardless of any longer partial matches.
   if (_options.find (partial) != _options.end () ||
-      (partial.find ("no") == 0 && _options.find (partial.substr (2)) != _options.end ()))
+      (negated && _options.find (partial.substr (2)) != _options.end ()))
   {
     canonical = partial;
+    return true;
+  }
+
+  // Iterate over all options, and look for partial matches.  If there is only
+  // one, we have canonicalization.
+  std::vector <std::string> candidates;
+  for (const auto& option : _options)
+  {
+    if (option.first.find (partial) == 0 ||
+        (negated && option.first.find (partial, 2) == 2))
+    {
+      candidates.push_back (option.first);
+    }
+  }
+
+  if (candidates.size () == 1)
+  {
+    canonical = candidates[0];
     return true;
   }
 
@@ -154,12 +174,32 @@ bool Args::canonicalizeOption (const std::string& partial, std::string& canonica
 //
 bool Args::canonicalizeNamed (const std::string& partial, std::string& canonical) const
 {
+  bool negated = partial.find ("no") == 0;
+
   // Look for exact positive or negative matches first, which should succeed
   // regardless of longer partial matches.
   if (_named.find (partial) != _named.end () ||
-      (partial.find ("no") == 0 && _named.find (partial.substr (2)) != _named.end ()))
+      (negated && _named.find (partial.substr (2)) != _named.end ()))
   {
     canonical = partial;
+    return true;
+  }
+
+  // Iterate over all options, and look for partial matches.  If there is only
+  // one, we have canonicalization.
+  std::vector <std::string> candidates;
+  for (const auto& name : _named)
+  {
+    if (name.first.find (partial) == 0 ||
+        (negated && name.first.find (partial, 2) == 2))
+    {
+      candidates.push_back (name.first);
+    }
+  }
+
+  if (candidates.size () == 1)
+  {
+    canonical = candidates[0];
     return true;
   }
 
