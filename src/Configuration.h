@@ -51,6 +51,7 @@ public:
   void set (const std::string&, const int);
   void set (const std::string&, const double);
   void set (const std::string&, const std::string&);
+  void setIfBlank (const std::string&, const std::string&);
   std::vector <std::string> all () const;
 
   std::string file () const;

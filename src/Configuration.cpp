@@ -291,6 +291,17 @@ void Configuration::set (const std::string& key, const std::string& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Autovivification is ok here.
+void Configuration::setIfBlank (const std::string& key, const std::string& value)
+{
+  if ((*this)[key] == "")
+  {
+    (*this)[key] = value;
+    _dirty = true;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Provide a vector of all configuration keys.
 std::vector <std::string> Configuration::all () const
 {
