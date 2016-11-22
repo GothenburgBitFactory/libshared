@@ -124,6 +124,54 @@ std::string Args::getPositional (int n) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Assuming "abc" is a declared option, support the following canonicalization:
+//
+//   abc --> abc (exact match always canonicalizes)
+//    ab --> abc (if unique)
+//     a --> abc (if unique)
+// noabc --> abc (exact negation match always canonicalizes)
+//  noab --> abc (if unique)
+//   noa --> abc (if unique)
+//
+bool Args::canonicalizeOption (const std::string& partial, std::string& canonical) const
+{
+  // Look for exact positive or negative matches first, which should succeed
+  // regardless of longer partial matches.
+  if (_options.find (partial) != _options.end () ||
+      (partial.find ("no") == 0 && _options.find (partial.substr (2)) != _options.end ()))
+  {
+    canonical = partial;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Assuming "abc" is a declared name, support the following canonicalization:
+//
+//   abc --> abc (exact match always canonicalizes)
+//    ab --> abc (if unique)
+//     a --> abc (if unique)
+// noabc --> abc (exact negation match always canonicalizes)
+//  noab --> abc (if unique)
+//   noa --> abc (if unique)
+//
+bool Args::canonicalizeNamed (const std::string& partial, std::string& canonical) const
+{
+  // Look for exact positive or negative matches first, which should succeed
+  // regardless of longer partial matches.
+  if (_named.find (partial) != _named.end () ||
+      (partial.find ("no") == 0 && _named.find (partial.substr (2)) != _named.end ()))
+  {
+    canonical = partial;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string Args::dump () const
 {
   std::stringstream out;

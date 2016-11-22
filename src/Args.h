@@ -50,6 +50,10 @@ public:
   std::string dump () const;
 
 private:
+  bool canonicalizeOption (const std::string&, std::string&) const;
+  bool canonicalizeNamed (const std::string&, std::string&) const;
+
+private:
   std::map <std::string, bool>        _options     {};
   std::map <std::string, std::string> _named       {};
   std::vector <std::string>           _positionals {};
