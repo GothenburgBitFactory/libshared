@@ -136,12 +136,30 @@ void Configuration::load (const std::string& file, int nest /* = 1 */)
   {
     // This is where defaults would be set.
     _original_file = File (file);
+
+    if (! _original_file.exists ())
+      throw std::string ("ERROR: Configuration file not found.");
+
+    if (! _original_file.readable ())
+      throw std::string ("ERROR: Configuration file cannot be read (insufficient privileges).");
   }
 
   // Read the file, then parse the contents.
   std::string contents;
   if (File::read (file, contents) && contents.length ())
     parse (contents, nest);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Write the Configuration file.
+void Configuration::save ()
+{
+  std::string contents;
+  for (const auto& i : *this)
+    contents += i.first + "=" + i.second + '\n';
+
+  File::write (_original_file, contents);
+  _dirty = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -192,6 +210,8 @@ void Configuration::parse (const std::string& input, int nest /* = 1 */)
       }
     }
   }
+
+  _dirty = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,18 +273,21 @@ bool Configuration::getBoolean (const std::string& key) const
 void Configuration::set (const std::string& key, const int value)
 {
   (*this)[key] = format (value);
+  _dirty = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Configuration::set (const std::string& key, const double value)
 {
   (*this)[key] = format (value, 1, 8);
+  _dirty = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Configuration::set (const std::string& key, const std::string& value)
 {
   (*this)[key] = value;
+  _dirty = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -282,6 +305,12 @@ std::vector <std::string> Configuration::all () const
 std::string Configuration::file () const
 {
   return _original_file._data;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Configuration::dirty ()
+{
+  return _dirty;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

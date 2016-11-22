@@ -39,6 +39,7 @@ class Configuration : public std::map <std::string, std::string>
 {
 public:
   void load  (const std::string&, int nest = 1);
+  void save ();
   void parse (const std::string&, int nest = 1);
 
   bool        has        (const std::string&) const;
@@ -54,8 +55,11 @@ public:
 
   std::string file () const;
 
+  bool dirty ();
+
 private:
   File _original_file {};
+  bool _dirty         {false};
 };
 
 #endif
