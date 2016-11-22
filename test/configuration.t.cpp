@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (16);
+  UnitTest t (17);
 
   // bool has (const std::string&);
   Configuration c1;
@@ -85,6 +85,7 @@ int main (int, char**)
 
   // std::vector <std::string> all () const;
   t.ok (c2.all ().size () == 5, "Configuration::all --> 'integer', 'boolean', 'real', 'string', 'foo'");
+  t.ok (c2.size () == 5,        "Configuration::size --> 'integer', 'boolean', 'real', 'string', 'foo'");
 
   return 0;
 }
