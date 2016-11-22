@@ -171,18 +171,12 @@ bool Args::canonicalizeOption (const std::string& partial, std::string& canonica
 //   abc --> abc (exact match always canonicalizes)
 //    ab --> abc (if unique)
 //     a --> abc (if unique)
-// noabc --> abc (exact negation match always canonicalizes)
-//  noab --> abc (if unique)
-//   noa --> abc (if unique)
 //
 bool Args::canonicalizeNamed (const std::string& partial, std::string& canonical) const
 {
-  bool negated = partial.find ("no") == 0;
-
   // Look for exact positive or negative matches first, which should succeed
   // regardless of longer partial matches.
-  if (_named.find (partial) != _named.end () ||
-      (negated && _named.find (partial.substr (2)) != _named.end ()))
+  if (_named.find (partial) != _named.end ())
   {
     canonical = partial;
     return true;
@@ -192,13 +186,8 @@ bool Args::canonicalizeNamed (const std::string& partial, std::string& canonical
   // one, we have canonicalization.
   std::vector <std::string> candidates;
   for (const auto& name : _named)
-  {
-    if (name.first.find (partial) == 0 ||
-        (negated && name.first.find (partial, 2) == 2))
-    {
+    if (name.first.find (partial) == 0)
       candidates.push_back (name.first);
-    }
-  }
 
   if (candidates.size () == 1)
   {
