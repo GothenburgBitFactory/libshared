@@ -42,6 +42,7 @@ int main (int, char**)
   a1.addNamed ("named1");
   a1.addNamed ("named2");
   a1.addNamed ("named3", "default");
+  a1.enableNegatives ();
   const char* argv1[] = {"binary", "-option1", "--nooption2", "--named1", "value1", "pos1", "--named2", "value2", "pos2"};
   a1.scan (9, argv1);
   t.diag (a1.dump ());
@@ -73,13 +74,14 @@ int main (int, char**)
   Args a3;
   a3.addOption ("positive", true);
   a3.addOption ("negative", false);
+  a3.enableNegatives ();
   const char* argv3[] = {"binary", "--nopositive", "--nonegative"};
   a3.scan (3, argv3);
   t.diag (a3.dump ());
 
   t.is (a3.getPositionalCount (), 0,       "Args3 --> positionals 0");
   t.is (a3.getOption ("positive"), false,  "Args3 --> nopositive 'false'");
-  t.is (a3.getOption ("negative"), true,   "Args3 --> nonegative 'true'");
+  t.is (a3.getOption ("negative"), false,   "Args3 --> nonegative 'true'");
 
   // TODO Test ambiguous abbreviations.
 
