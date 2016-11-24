@@ -49,6 +49,12 @@ void Args::limitPositionals (int limit)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Args::enableNegatives ()
+{
+  _negatives = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Args::scan (int argc, const char** argv)
 {
   for (int i = 1; i < argc; ++i)
@@ -64,7 +70,7 @@ void Args::scan (int argc, const char** argv)
         // TODO Store default values separately, because this code will flipflop
         //      the values for multiple options, i.e.:   --nofoo --nofoo
         auto defaultValue = _options[canonical];
-        bool negated = name.find ("no") == 0;
+        bool negated = _negatives && name.find ("no") == 0;
         _options[canonical] = negated? !defaultValue : defaultValue;
       }
 
@@ -134,7 +140,7 @@ std::string Args::getPositional (int n) const
 //
 bool Args::canonicalizeOption (const std::string& partial, std::string& canonical) const
 {
-  bool negated = partial.find ("no") == 0;
+  bool negated = _negatives && partial.find ("no") == 0;
 
   // Look for exact positive or negative matches first, which should succeed
   // regardless of any longer partial matches.
@@ -216,6 +222,9 @@ std::string Args::dump () const
       << "    limit = " << _limit << '\n';
   for (const auto& arg : _positionals)
     out << "    " << arg << '\n';
+
+  out << "  Negatives\n"
+      << "    enabled = " << _negatives << '\n';
 
   return out.str ();
 }

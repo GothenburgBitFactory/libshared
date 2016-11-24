@@ -39,6 +39,7 @@ public:
   void addOption (const std::string&, bool defaultValue = true);
   void addNamed  (const std::string&, const std::string& defaultValue = "");
   void limitPositionals (int);
+  void enableNegatives ();
 
   void scan (int, const char**);
 
@@ -58,6 +59,7 @@ private:
   std::map <std::string, std::string> _named       {};
   std::vector <std::string>           _positionals {};
   int                                 _limit       {-1};
+  bool                                _negatives   {false};
 };
 
 #endif
