@@ -67,11 +67,8 @@ void Args::scan (int argc, const char** argv)
       std::string canonical;
       if (canonicalizeOption (name, canonical))
       {
-        // TODO Store default values separately, because this code will flipflop
-        //      the values for multiple options, i.e.:   --nofoo --nofoo
-        auto defaultValue = _options[canonical];
         bool negated = _negatives && name.find ("no") == 0;
-        _options[canonical] = negated? !defaultValue : defaultValue;
+        _options[canonical] = negated? false : true;
       }
 
       else if (canonicalizeNamed (name, canonical))
@@ -144,10 +141,16 @@ bool Args::canonicalizeOption (const std::string& partial, std::string& canonica
 
   // Look for exact positive or negative matches first, which should succeed
   // regardless of any longer partial matches.
-  if (_options.find (partial) != _options.end () ||
-      (negated && _options.find (partial.substr (2)) != _options.end ()))
+  if (_options.find (partial) != _options.end ())
   {
     canonical = partial;
+    return true;
+  }
+
+  if (negated &&
+      _options.find (partial.substr (2)) != _options.end ())
+  {
+    canonical = partial.substr (2);
     return true;
   }
 
