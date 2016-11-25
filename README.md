@@ -4,7 +4,6 @@ libshared
 A git submodule used by multiple projects. Not to be released or packaged
 independently. All project tarballs will include libshared.
 
-
 Branching
 ---------
 
