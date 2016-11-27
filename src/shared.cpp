@@ -102,6 +102,24 @@ std::vector <std::string> split (const std::string& input)
 ////////////////////////////////////////////////////////////////////////////////
 std::string join (
   const std::string& separator,
+  const std::vector<int>& items)
+{
+  std::stringstream s;
+  auto size = items.size ();
+  for (unsigned int i = 0; i < size; ++i)
+  {
+    if (i)
+      s << separator;
+
+    s << items[i];
+  }
+
+  return s.str ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string join (
+  const std::string& separator,
   const std::vector<std::string>& items)
 {
   std::stringstream s;

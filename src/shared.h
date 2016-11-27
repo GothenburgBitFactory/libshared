@@ -39,6 +39,7 @@ int longestLine (const std::string&);
 bool extractLine (std::string&, const std::string&, int, bool, unsigned int&);
 std::vector <std::string> split (const std::string&, const char);
 std::vector <std::string> split (const std::string&);
+std::string join (const std::string&, const std::vector<int>&);
 std::string join (const std::string&, const std::vector<std::string>&);
 std::string str_replace (const std::string&, const std::string&, const std::string&);
 std::string trim (const std::string&, const std::string& edible = " \t\n\f\r");
