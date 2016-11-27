@@ -46,6 +46,8 @@ std::string ltrim (const std::string&, const std::string& edible = " \t\n\f\r");
 std::string rtrim (const std::string&, const std::string& edible = " \t\n\f\r");
 bool compare (const std::string&, const std::string&, bool sensitive = true);
 bool closeEnough (const std::string&, const std::string&, unsigned int minLength = 0);
+std::string::size_type find (const std::string&, const std::string&, bool sensitive = true);
+std::string::size_type find (const std::string&, const std::string&, std::string::size_type, bool sensitive = true);
 
 // List operations.
 template <class T> void listDiff (
