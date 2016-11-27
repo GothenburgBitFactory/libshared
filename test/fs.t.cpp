@@ -33,7 +33,7 @@
 
 int main (int, char**)
 {
-  UnitTest t (116);
+  UnitTest t (117);
 
   try
   {
@@ -75,6 +75,7 @@ int main (int, char**)
     // bool exists () const;
     t.ok (p2.exists (), "~ exists");
     t.ok (p3.exists (), "/tmp exists");
+    t.notok (p4.exists (), "/a/b/c/file.ext does not exist");
 
     // bool is_directory () const;
     t.ok (p2.is_directory (), "~ is_directory");
