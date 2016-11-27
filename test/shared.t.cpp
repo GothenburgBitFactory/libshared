@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (122);
+  UnitTest t (126);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -269,6 +269,10 @@ int main (int, char**)
   t.ok (find ("   AAAaaa", "a", false) == 3, "find 'a' (insensitive) in '   AAAaaa' --> 3");
 
   // std::string::size_type find (const std::string&, const std::string&, std::string::size_type, bool sensitive = true);
+  t.ok (find ("aA AAAaaa", "A", 2, true)  == 3, "find 'A',2 (sensitive)   in 'aA AAAaaa' --> 3");
+  t.ok (find ("aA AAAaaa", "A", 2, false) == 3, "find 'A',2 (insensitive) in 'aA AAAaaa' --> 3");
+  t.ok (find ("aA AAAaaa", "a", 2, true)  == 6, "find 'a',2 (sensitive)   in 'aA AAAaaa' --> 6");
+  t.ok (find ("aA AAAaaa", "a", 2, false) == 3, "find 'a',2 (insensitive) in 'aA AAAaaa' --> 3");
 
   return 0;
 }
