@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (126);
+  UnitTest t (138);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -98,6 +98,56 @@ int main (int, char**)
   extractLine (line, text, 10, true, offset);
   t.is (line, "AAAAAAAAA-", "extractLine hyphenated unbreakable line");
   t.diag (line);
+
+/*
+  TODO Resolve above against below, from Taskwarrior 2.6.0
+
+  // void extractLine (std::string& text, std::string& line, int length, bool hyphenate, unsigned int& offset)
+  std::string text = "This ☺ is a test of utf8 line extraction.";
+  unsigned int offset = 0;
+  std::string line;
+  extractLine (line, text, 7, true, offset);
+  t.is (line, "This ☺", "extractLine 7 'This ☺ is a test of utf8 line extraction.' -> 'This ☺'");
+
+  // void extractLine (std::string& text, std::string& line, int length, bool hyphenate, unsigned int& offset)
+  text = "line 1\nlengthy second line that exceeds width";
+  offset = 0;
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "line 1", "extractLine 10 'line 1\\nlengthy second line that exceeds width' -> 'line 1'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "lengthy", "extractLine 10 'lengthy second line that exceeds width' -> 'lengthy'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "second", "extractLine 10 'second line that exceeds width' -> 'second'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "line that", "extractLine 10 'line that exceeds width' -> 'line that'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "exceeds", "extractLine 10 'exceeds width' -> 'exceeds'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "width", "extractLine 10 'width' -> 'width'");
+
+  t.notok (extractLine (line, text, 10, true, offset), "extractLine 10 '' -> ''");
+
+  text = "AAAAAAAAAABBBBBBBBBB";
+  offset = 0;
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "AAAAAAAAA-", "extractLine hyphenated unbreakable line 'AAAAAAAAAABBBBBBBBBB'/10 -> 'AAAAAAAAA-'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "ABBBBBBBB-", "extractLine hyphenated unbreakable line 'AAAAAAAAAABBBBBBBBBB'/10 -> 'ABBBBBBBB-'");
+
+  extractLine (line, text, 10, true, offset);
+  t.is (line, "BB", "extractLine hyphenated unbreakable line 'AAAAAAAAAABBBBBBBBBB'/10 -> 'BB'");
+
+  text = "4444 333  ";
+  offset = 0;
+  while (extractLine (line, text, 9, true, offset))
+    std::cout << "# line '" << line << "' offset " << offset << "\n";
+*/
 
   // std::vector <std::string> split (const std::string& input, const char delimiter)
   std::string unsplit = "";
@@ -263,16 +313,39 @@ int main (int, char**)
         "str_replace 'e' -- 'E'");
 
   // std::string::size_type find (const std::string&, const std::string&, bool sensitive = true);
-  t.ok (find ("   AAAaaa", "A", true)  == 3, "find 'A' (sensitive)   in '   AAAaaa' --> 3");
-  t.ok (find ("   AAAaaa", "A", false) == 3, "find 'A' (insensitive) in '   AAAaaa' --> 3");
-  t.ok (find ("   AAAaaa", "a", true)  == 6, "find 'a' (sensitive)   in '   AAAaaa' --> 6");
-  t.ok (find ("   AAAaaa", "a", false) == 3, "find 'a' (insensitive) in '   AAAaaa' --> 3");
-
   // std::string::size_type find (const std::string&, const std::string&, std::string::size_type, bool sensitive = true);
-  t.ok (find ("aA AAAaaa", "A", 2, true)  == 3, "find 'A',2 (sensitive)   in 'aA AAAaaa' --> 3");
-  t.ok (find ("aA AAAaaa", "A", 2, false) == 3, "find 'A',2 (insensitive) in 'aA AAAaaa' --> 3");
-  t.ok (find ("aA AAAaaa", "a", 2, true)  == 6, "find 'a',2 (sensitive)   in 'aA AAAaaa' --> 6");
-  t.ok (find ("aA AAAaaa", "a", 2, false) == 3, "find 'a',2 (insensitive) in 'aA AAAaaa' --> 3");
+  // Make sure degenerate cases are handled.
+  t.is ((int) find ("foo", ""), (int) 0,                           "find foo !contains ''");
+  t.is ((int) find ("", "foo"), (int) std::string::npos,           "find '' !contains foo");
+
+  // Make sure the default is case-sensitive.
+  t.is ((int) find ("foo", "fo"), 0,                               "find foo contains fo");
+  t.is ((int) find ("foo", "FO"), (int) std::string::npos,         "find foo !contains fo");
+
+  // Test case-sensitive.
+  t.is ((int) find ("foo", "xx", true), (int) std::string::npos,   "find foo !contains xx");
+  t.is ((int) find ("foo", "oo", true), 1,                         "find foo contains oo");
+
+  t.is ((int) find ("foo", "fo", true), 0,                         "find foo contains fo");
+  t.is ((int) find ("foo", "FO", true), (int) std::string::npos,   "find foo !contains fo");
+  t.is ((int) find ("FOO", "fo", true), (int) std::string::npos,   "find foo !contains fo");
+  t.is ((int) find ("FOO", "FO", true), 0,                         "find foo contains fo");
+
+  // Test case-insensitive.
+  t.is ((int) find ("foo", "xx", false),  (int) std::string::npos, "find foo !contains xx (caseless)");
+  t.is ((int) find ("foo", "oo", false),  1,                       "find foo contains oo (caseless)");
+
+  t.is ((int) find ("foo", "fo", false),  0,                       "find foo contains fo (caseless)");
+  t.is ((int) find ("foo", "FO", false),  0,                       "find foo contains FO (caseless)");
+  t.is ((int) find ("FOO", "fo", false),  0,                       "find FOO contains fo (caseless)");
+  t.is ((int) find ("FOO", "FO", false),  0,                       "find FOO contains FO (caseless)");
+
+  // Test start offset.
+  t.is ((int) find ("one two three", "e",  3, true), (int) 11,     "find offset obeyed");
+  t.is ((int) find ("one two three", "e", 11, true), (int) 11,     "find offset obeyed");
+
+  t.is ((int) find ("one two three", "e",  3, false), (int) 11,    "find offset obeyed");
+  t.is ((int) find ("one two three", "e", 11, false), (int) 11,    "find offset obeyed");
 
   return 0;
 }
