@@ -29,6 +29,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 class Pig
 {
@@ -71,9 +72,9 @@ public:
   std::string dump () const;
 
 private:
-  std::string            _text;
-  std::string::size_type _cursor {0};
-  std::string::size_type _saved  {0};
+  std::shared_ptr<std::string> _text;
+  std::string::size_type       _cursor {0};
+  std::string::size_type       _saved  {0};
 };
 
 #endif

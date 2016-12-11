@@ -35,14 +35,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 Pig::Pig (const std::string& text)
-: _text {text}
+: _text {std::make_shared <std::string> (text)}
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::skip (int c)
 {
-  if (_text[_cursor] == c)
+  if ((*_text)[_cursor] == c)
   {
     ++_cursor;
     return true;
@@ -59,7 +59,7 @@ bool Pig::skipN (const int quantity)
   auto count = 0;
   while (count++ < quantity)
   {
-    if (! utf8_next_char (_text, _cursor))
+    if (! utf8_next_char (*_text, _cursor))
     {
       _cursor = save;
       return false;
@@ -76,7 +76,7 @@ bool Pig::skipWS ()
 
   int c;
   auto prev = _cursor;
-  while ((c = utf8_next_char (_text, _cursor)))
+  while ((c = utf8_next_char (*_text, _cursor)))
   {
     if (! unicodeWhitespace (c))
     {
@@ -92,7 +92,7 @@ bool Pig::skipWS ()
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::skipLiteral (const std::string& literal)
 {
-  if (_text.find (literal, _cursor) == _cursor)
+  if (_text->find (literal, _cursor) == _cursor)
   {
     _cursor += literal.length ();
     return true;
@@ -108,18 +108,18 @@ bool Pig::getUntil (int end, std::string& result)
 
   int c;
   auto prev = _cursor;
-  while ((c = utf8_next_char (_text, _cursor)))
+  while ((c = utf8_next_char (*_text, _cursor)))
   {
     if (eos ())
     {
-      result = _text.substr (save, _cursor - save);
+      result = _text->substr (save, _cursor - save);
       return true;
     }
 
     else if (c == end)
     {
       _cursor = prev;
-      result = _text.substr (save, _cursor - save);
+      result = _text->substr (save, _cursor - save);
       return true;
     }
 
@@ -136,12 +136,12 @@ bool Pig::getUntilWS (std::string& result)
 
   int c;
   auto prev = _cursor;
-  while ((c = utf8_next_char (_text, _cursor)))
+  while ((c = utf8_next_char (*_text, _cursor)))
   {
     if (unicodeWhitespace (c))
     {
       _cursor = prev;
-      result = _text.substr (save, _cursor - save);
+      result = _text->substr (save, _cursor - save);
       return true;
     }
 
@@ -150,7 +150,7 @@ bool Pig::getUntilWS (std::string& result)
     //       which has already been advanced.
     else if (eos ())
     {
-      result = _text.substr (save, _cursor - save);
+      result = _text->substr (save, _cursor - save);
       return true;
     }
 
@@ -163,7 +163,7 @@ bool Pig::getUntilWS (std::string& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getCharacter (int& result)
 {
-  int c = _text[_cursor];
+  int c = (*_text)[_cursor];
   if (c)
   {
     result = c;
@@ -177,7 +177,7 @@ bool Pig::getCharacter (int& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getDigit (int& result)
 {
-  int c = _text[_cursor];
+  int c = (*_text)[_cursor];
   if (c &&
       unicodeLatinDigit (c))
   {
@@ -192,11 +192,11 @@ bool Pig::getDigit (int& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getDigit2 (int& result)
 {
-  if (unicodeLatinDigit (_text[_cursor + 0]))
+  if (unicodeLatinDigit ((*_text)[_cursor + 0]))
   {
-    if (unicodeLatinDigit (_text[_cursor + 1]))
+    if (unicodeLatinDigit ((*_text)[_cursor + 1]))
     {
-      result = strtoimax (_text.substr (_cursor, 2).c_str (), NULL, 10);
+      result = strtoimax (_text->substr (_cursor, 2).c_str (), NULL, 10);
       _cursor += 2;
       return true;
     }
@@ -208,13 +208,13 @@ bool Pig::getDigit2 (int& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getDigit3 (int& result)
 {
-  if (unicodeLatinDigit (_text[_cursor + 0]))
+  if (unicodeLatinDigit ((*_text)[_cursor + 0]))
   {
-    if (unicodeLatinDigit (_text[_cursor + 1]))
+    if (unicodeLatinDigit ((*_text)[_cursor + 1]))
     {
-      if (unicodeLatinDigit (_text[_cursor + 2]))
+      if (unicodeLatinDigit ((*_text)[_cursor + 2]))
       {
-        result = strtoimax (_text.substr (_cursor, 3).c_str (), NULL, 10);
+        result = strtoimax (_text->substr (_cursor, 3).c_str (), NULL, 10);
         _cursor += 3;
         return true;
       }
@@ -227,15 +227,15 @@ bool Pig::getDigit3 (int& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getDigit4 (int& result)
 {
-  if (unicodeLatinDigit (_text[_cursor + 0]))
+  if (unicodeLatinDigit ((*_text)[_cursor + 0]))
   {
-    if (unicodeLatinDigit (_text[_cursor + 1]))
+    if (unicodeLatinDigit ((*_text)[_cursor + 1]))
     {
-      if (unicodeLatinDigit (_text[_cursor + 2]))
+      if (unicodeLatinDigit ((*_text)[_cursor + 2]))
       {
-        if (unicodeLatinDigit (_text[_cursor + 3]))
+        if (unicodeLatinDigit ((*_text)[_cursor + 3]))
         {
-          result = strtoimax (_text.substr (_cursor, 4).c_str (), NULL, 10);
+          result = strtoimax (_text->substr (_cursor, 4).c_str (), NULL, 10);
           _cursor += 4;
           return true;
         }
@@ -253,7 +253,7 @@ bool Pig::getDigits (int& result)
 
   int c;
   auto prev = _cursor;
-  while ((c = utf8_next_char (_text, _cursor)))
+  while ((c = utf8_next_char (*_text, _cursor)))
   {
     if (! unicodeLatinDigit (c))
     {
@@ -266,7 +266,7 @@ bool Pig::getDigits (int& result)
 
   if (_cursor > save)
   {
-    result = strtoimax (_text.substr (save, _cursor - save).c_str (), NULL, 10);
+    result = strtoimax (_text->substr (save, _cursor - save).c_str (), NULL, 10);
     return true;
   }
 
@@ -276,7 +276,7 @@ bool Pig::getDigits (int& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getHexDigit (int& result)
 {
-  int c = _text[_cursor];
+  int c = (*_text)[_cursor];
   if (c &&
       unicodeHexDigit (c))
   {
@@ -324,49 +324,49 @@ bool Pig::getNumber (std::string& result)
   auto i = _cursor;
 
   // [+-]?
-  if (_text[i] &&
-      (_text[i] == '-' ||
-       _text[i] == '+'))
+  if ((*_text)[i] &&
+      ((*_text)[i] == '-' ||
+       (*_text)[i] == '+'))
     ++i;
 
   // digit+
-  if (_text[i] &&
-      unicodeLatinDigit (_text[i]))
+  if ((*_text)[i] &&
+      unicodeLatinDigit ((*_text)[i]))
   {
     ++i;
 
-    while (_text[i] && unicodeLatinDigit (_text[i]))
+    while ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
       ++i;
 
     // ( . digit+ )?
-    if (_text[i] && _text[i] == '.')
+    if ((*_text)[i] && (*_text)[i] == '.')
     {
       ++i;
 
-      while (_text[i] && unicodeLatinDigit (_text[i]))
+      while ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
         ++i;
     }
 
     // ( [eE] [+-]? digit+ )?
-    if (_text[i] &&
-        (_text[i] == 'e' ||
-         _text[i] == 'E'))
+    if ((*_text)[i] &&
+        ((*_text)[i] == 'e' ||
+         (*_text)[i] == 'E'))
     {
       ++i;
 
-      if (_text[i] &&
-          (_text[i] == '+' ||
-           _text[i] == '-'))
+      if ((*_text)[i] &&
+          ((*_text)[i] == '+' ||
+           (*_text)[i] == '-'))
         ++i;
 
-      if (_text[i] && unicodeLatinDigit (_text[i]))
+      if ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
       {
         ++i;
 
-        while (_text[i] && unicodeLatinDigit (_text[i]))
+        while ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
           ++i;
 
-        result = _text.substr (_cursor, i - _cursor);
+        result = _text->substr (_cursor, i - _cursor);
         _cursor = i;
         return true;
       }
@@ -374,7 +374,7 @@ bool Pig::getNumber (std::string& result)
       return false;
     }
 
-    result = _text.substr (_cursor, i - _cursor);
+    result = _text->substr (_cursor, i - _cursor);
     _cursor = i;
     return true;
   }
@@ -402,29 +402,29 @@ bool Pig::getDecimal (std::string& result)
   auto i = _cursor;
 
   // [+-]?
-  if (_text[i] &&
-      (_text[i] == '-' ||
-       _text[i] == '+'))
+  if ((*_text)[i] &&
+      ((*_text)[i] == '-' ||
+       (*_text)[i] == '+'))
     ++i;
 
   // digit+
-  if (_text[i] && unicodeLatinDigit (_text[i]))
+  if ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
   {
     ++i;
 
-    while (_text[i] && unicodeLatinDigit (_text[i]))
+    while ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
       ++i;
 
     // ( . digit+ )?
-    if (_text[i] && _text[i] == '.')
+    if ((*_text)[i] && (*_text)[i] == '.')
     {
       ++i;
 
-      while (_text[i] && unicodeLatinDigit (_text[i]))
+      while ((*_text)[i] && unicodeLatinDigit ((*_text)[i]))
         ++i;
     }
 
-    result = _text.substr (_cursor, i - _cursor);
+    result = _text->substr (_cursor, i - _cursor);
     _cursor = i;
     return true;
   }
@@ -452,16 +452,16 @@ bool Pig::getDecimal (double& result)
 // Does not modify content between quotes.
 bool Pig::getQuoted (int quote, std::string& result)
 {
-  if (! _text[_cursor] ||
-      _text[_cursor] != quote)
+  if (! (*_text)[_cursor] ||
+      (*_text)[_cursor] != quote)
     return false;
 
   auto start = _cursor + utf8_sequence (quote);
   auto i = start;
 
-  while (_text[i])
+  while ((*_text)[i])
   {
-    i = _text.find (quote, i);
+    i = _text->find (quote, i);
     if (i == std::string::npos)
       return false;  // Unclosed quote.  Short cut, not definitive.
 
@@ -473,14 +473,14 @@ bool Pig::getQuoted (int quote, std::string& result)
       return true;
     }
 
-    if (_text[i - 1] == '\\')
+    if ((*_text)[i - 1] == '\\')
     {
       // Check for escaped backslashes.  Backtracking like this is not very
       // efficient, but is only done in extreme corner cases.
 
       auto j = i - 2;  // Start one character further left
       bool is_escaped_quote = true;
-      while (j >= start && _text[j] == '\\')
+      while (j >= start && (*_text)[j] == '\\')
       {
         // Toggle flag for each further backslash encountered.
         is_escaped_quote = is_escaped_quote ? false : true;
@@ -496,7 +496,7 @@ bool Pig::getQuoted (int quote, std::string& result)
     }
 
     // None of the above applied, we must have found the closing quote char.
-    result.assign (_text, start, i - start);
+    result.assign (*_text, start, i - start);
     _cursor = i + utf8_sequence (quote);  // Skip closing quote char
     return true;
   }
@@ -549,9 +549,9 @@ bool Pig::getHMS (int& hours, int& minutes, int& seconds)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getRemainder (std::string& result)
 {
-  if (_text[_cursor])
+  if ((*_text)[_cursor])
   {
-    result = _text.substr (_cursor);
+    result = _text->substr (_cursor);
     _cursor += result.length ();
     return true;
   }
@@ -562,23 +562,23 @@ bool Pig::getRemainder (std::string& result)
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::eos () const
 {
-  return _text[_cursor] == '\0';
+  return (*_text)[_cursor] == '\0';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Peeks ahead - does not move cursor.
 int Pig::peek () const
 {
-  return _text[_cursor];
+  return (*_text)[_cursor];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Peeks ahead - does not move cursor.
 std::string Pig::peek (const int quantity) const
 {
-  std::string::size_type adjusted = std::min (static_cast <std::string::size_type> (quantity), _text.length () - _cursor);
-  if (_text[_cursor])
-    return _text.substr (_cursor, adjusted);
+  std::string::size_type adjusted = std::min (static_cast <std::string::size_type> (quantity), _text->length () - _cursor);
+  if ((*_text)[_cursor])
+    return _text->substr (_cursor, adjusted);
 
   return "";
 }
@@ -614,21 +614,21 @@ std::string Pig::substr (
   std::string::size_type start,
   std::string::size_type end) const
 {
-  return _text.substr (start, end - start);
+  return _text->substr (start, end - start);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Pig::str () const
 {
-  return _text.substr (_cursor);
+  return _text->substr (_cursor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Pig::dump () const
 {
   std::stringstream out;
-  out << "≪" << _text << "≫"
-      << " l" << _text.length ()
+  out << "≪" << *_text << "≫"
+      << " l" << _text->length ()
       << " c" << _cursor;
 
   return out.str ();

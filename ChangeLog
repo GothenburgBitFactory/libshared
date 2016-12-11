@@ -14,6 +14,7 @@ master/HEAD
 - Updated Timer class to use std::chrono.
 - Args now tolerates undeclared option queries.
 - Added case (in)sentitive find functions.
+- Pig no longer makes a copy of the input string.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
