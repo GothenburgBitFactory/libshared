@@ -110,15 +110,15 @@ bool Pig::getUntil (int end, std::string& result)
   auto prev = _cursor;
   while ((c = utf8_next_char (*_text, _cursor)))
   {
-    if (eos ())
+    if (c == end)
     {
+      _cursor = prev;
       result = _text->substr (save, _cursor - save);
       return true;
     }
 
-    else if (c == end)
+    else if (eos ())
     {
-      _cursor = prev;
       result = _text->substr (save, _cursor - save);
       return true;
     }
