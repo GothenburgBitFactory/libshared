@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (76);
+  UnitTest t (79);
 
   // std::string format (char);
   t.is (format ('A'), "A", "format ('A') -> A");
@@ -140,6 +140,11 @@ int main (int, char**)
   t.is (printable ('\t'), "\\t", "printable \\t --> \\\\t");
   t.is (printable ('\v'), "\\v", "printable \\v --> \\\\v");
   t.is (printable ('x'), "x",    "printable x --> x");
+
+  // std::string obfuscateText (const std::string&);
+  t.is (obfuscateText ("foo"),                    "xxx",                    "obfuscateText 'foo' --> 'xxx'");
+  t.is (obfuscateText ("[33mfoo[0m"),         "[33mxxx[0m",         "obfuscateText '<red>foo</red>' --> '<red>xxx</red>'");
+  t.is (obfuscateText ("one[33mtwo[0mthree"), "xxx[33mxxx[0mxxxxx", "obfuscateText 'one<red>two</red>three' --> 'xxx<red>xxx</red>xxxxx'");
 
   return 0;
 }
