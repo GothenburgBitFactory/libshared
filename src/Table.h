@@ -24,8 +24,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef INCLUDED_VIEWTEXT
-#define INCLUDED_VIEWTEXT
+#ifndef INCLUDED_TABLE
+#define INCLUDED_TABLE
 
 #include <string>
 #include <vector>

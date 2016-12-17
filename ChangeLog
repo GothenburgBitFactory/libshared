@@ -17,6 +17,7 @@ master/HEAD
 - Pig no longer makes a copy of the input string.
 - Fixed bug where Pig::getUntil included the terminator if it was the last
   character.
+- Table now uses the correct include latch.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
