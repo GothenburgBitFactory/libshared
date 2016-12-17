@@ -82,4 +82,6 @@ std::string formatTime (time_t);
 std::string printable (const std::string&);
 std::string printable (char);
 
+std::string obfuscateText (const std::string&);
+
 #endif

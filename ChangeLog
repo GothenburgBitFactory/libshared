@@ -18,6 +18,7 @@ master/HEAD
 - Fixed bug where Pig::getUntil included the terminator if it was the last
   character.
 - Table now uses the correct include latch.
+- Migrated obfuscateText from Taskwarrior.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
