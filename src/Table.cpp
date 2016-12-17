@@ -244,6 +244,10 @@ std::string Table::render ()
 
       if (cells[col].size () > max_lines)
         max_lines = cells[col].size ();
+
+      if (_obfuscate)
+        for (auto& value : cells[col])
+          value = obfuscateText (value);
     }
 
     for (unsigned int i = 0; i < max_lines; ++i)

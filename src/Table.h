@@ -50,6 +50,7 @@ public:
   void truncateLines (int n)                               { _truncate_lines = n;                                    }
   void truncateRows (int n)                                { _truncate_rows = n;                                     }
   void forceColor ()                                       { _forceColor = true;                                     }
+  void obfuscate ()                                        { _obfuscate = true;                                      }
   void underlineHeaders ()                                 { _underline_headers = true;                              }
   int lines ()                                             { return _lines;                                          }
   int rows ()                                              { return (int) _data.size ();                             }
@@ -86,6 +87,7 @@ private:
   int                                     _truncate_lines    {0};
   int                                     _truncate_rows     {0};
   bool                                    _forceColor        {false};
+  bool                                    _obfuscate         {false};
   bool                                    _underline_headers {false};
   int                                     _lines             {0};
   int                                     _rows              {0};
