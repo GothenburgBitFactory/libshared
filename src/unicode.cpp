@@ -29,21 +29,24 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // Complete Unicode whitespace list.
+bool unicodeWhitespace (unsigned int c)
+{
+  return unicodeHorizontalWhitespace (c) ||
+         unicodeVerticalWhitespace   (c);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Complete Unicode whitespace list.
 //
 // http://en.wikipedia.org/wiki/Whitespace_character
 // Updated 2015-09-13
 // Static
 //
 // TODO This list should be derived from the Unicode database.
-bool unicodeWhitespace (unsigned int c)
+bool unicodeHorizontalWhitespace (unsigned int c)
 {
   return (c == 0x0020 ||   // space Common  Separator, space
           c == 0x0009 ||   // Common  Other, control  HT, Horizontal Tab
-          c == 0x000A ||   // Common  Other, control  LF, Line feed
-          c == 0x000B ||   // Common  Other, control  VT, Vertical Tab
-          c == 0x000C ||   // Common  Other, control  FF, Form feed
-          c == 0x000D ||   // Common  Other, control  CR, Carriage return
-          c == 0x0085 ||   // Common  Other, control  NEL, Next line
           c == 0x00A0 ||   // no-break space  Common  Separator, space
           c == 0x1680 ||   // ogham space mark  Ogham Separator, space
           c == 0x180E ||   // mongolian vowel separator Mongolian Separator, space
@@ -61,12 +64,29 @@ bool unicodeWhitespace (unsigned int c)
           c == 0x200B ||   // zero width space
           c == 0x200C ||   // zero width non-joiner
           c == 0x200D ||   // zero width joiner
-          c == 0x2028 ||   // line separator  Common  Separator, line
-          c == 0x2029 ||   // paragraph separator Common  Separator, paragraph
           c == 0x202F ||   // narrow no-break space Common  Separator, space
           c == 0x205F ||   // medium mathematical space Common  Separator, space
           c == 0x2060 ||   // word joiner
           c == 0x3000);    // ideographic space Common  Separator, space
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Complete Unicode whitespace list.
+//
+// http://en.wikipedia.org/wiki/Whitespace_character
+// Updated 2015-09-13
+// Static
+//
+// TODO This list should be derived from the Unicode database.
+bool unicodeVerticalWhitespace (unsigned int c)
+{
+  return (c == 0x000A ||   // Common  Other, control  LF, Line feed
+          c == 0x000B ||   // Common  Other, control  VT, Vertical Tab
+          c == 0x000C ||   // Common  Other, control  FF, Form feed
+          c == 0x000D ||   // Common  Other, control  CR, Carriage return
+          c == 0x0085 ||   // Common  Other, control  NEL, Next line
+          c == 0x2028 ||   // line separator  Common  Separator, line
+          c == 0x2029);    // paragraph separator Common  Separator, paragraph
 }
 
 ////////////////////////////////////////////////////////////////////////////////

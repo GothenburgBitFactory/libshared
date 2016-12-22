@@ -27,9 +27,11 @@
 #ifndef INCLUDED_UNICODE
 #define INCLUDED_UNICODE
 
-bool unicodeWhitespace (unsigned int);
-bool unicodeLatinAlpha (unsigned int);
-bool unicodeLatinDigit (unsigned int);
-bool unicodeHexDigit   (unsigned int);
+bool unicodeWhitespace           (unsigned int);
+bool unicodeHorizontalWhitespace (unsigned int);
+bool unicodeVerticalWhitespace   (unsigned int);
+bool unicodeLatinAlpha           (unsigned int);
+bool unicodeLatinDigit           (unsigned int);
+bool unicodeHexDigit             (unsigned int);
 
 #endif
