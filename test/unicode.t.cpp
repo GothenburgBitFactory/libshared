@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (66);
+  UnitTest t (120);
 
   // White space detection.
   t.notok (unicodeWhitespace (0x0041), "U+0041 (A) ! unicodeWhitespace");
@@ -61,6 +61,64 @@ int main (int, char**)
   t.ok    (unicodeWhitespace (0x202F), "U+202F unicodeWhitespace");
   t.ok    (unicodeWhitespace (0x205F), "U+205F unicodeWhitespace");
   t.ok    (unicodeWhitespace (0x3000), "U+3000 unicodeWhitespace");
+
+  // Horizontal white space detection.
+  t.notok (unicodeHorizontalWhitespace (0x0041), "U+0041 (A) ! unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x0020), "U+0020 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x0009), "U+0009 unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x000A), "U+000A ! unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x000B), "U+000B ! unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x000C), "U+000C ! unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x000D), "U+000D ! unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x0085), "U+0085 ! unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x00A0), "U+00A0 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x1680), "U+1680 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x180E), "U+180E unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2000), "U+2000 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2001), "U+2001 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2002), "U+2002 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2003), "U+2003 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2004), "U+2004 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2005), "U+2005 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2006), "U+2006 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2007), "U+2007 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2008), "U+2008 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x2009), "U+2009 unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x200A), "U+200A unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x2028), "U+2028 ! unicodeHorizontalWhitespace");
+  t.notok (unicodeHorizontalWhitespace (0x2029), "U+2029 ! unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x202F), "U+202F unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x205F), "U+205F unicodeHorizontalWhitespace");
+  t.ok    (unicodeHorizontalWhitespace (0x3000), "U+3000 unicodeHorizontalWhitespace");
+
+  // Vertical white space detection.
+  t.notok (unicodeVerticalWhitespace (0x0041), "U+0041 (A) ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x0020), "U+0020 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x0009), "U+0009 ! unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x000A), "U+000A unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x000B), "U+000B unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x000C), "U+000C unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x000D), "U+000D unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x0085), "U+0085 unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x00A0), "U+00A0 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x1680), "U+1680 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x180E), "U+180E ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2000), "U+2000 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2001), "U+2001 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2002), "U+2002 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2003), "U+2003 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2004), "U+2004 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2005), "U+2005 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2006), "U+2006 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2007), "U+2007 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2008), "U+2008 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x2009), "U+2009 ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x200A), "U+200A ! unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x2028), "U+2028 unicodeVerticalWhitespace");
+  t.ok    (unicodeVerticalWhitespace (0x2029), "U+2029 unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x202F), "U+202F ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x205F), "U+205F ! unicodeVerticalWhitespace");
+  t.notok (unicodeVerticalWhitespace (0x3000), "U+3000 ! unicodeVerticalWhitespace");
 
   // Latin Alpha
   t.notok (unicodeLatinAlpha (0x0033), "U+0033 (3) ! unicodeLatinAlpha");
