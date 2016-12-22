@@ -26,6 +26,7 @@
 
 #include <cmake.h>
 #include <unicode.h>
+#include <cwctype>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Complete Unicode whitespace list.
@@ -87,6 +88,12 @@ bool unicodeVerticalWhitespace (unsigned int c)
           c == 0x0085 ||   // Common  Other, control  NEL, Next line
           c == 0x2028 ||   // line separator  Common  Separator, line
           c == 0x2029);    // paragraph separator Common  Separator, paragraph
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool unicodePunctuation (unsigned int c)
+{
+  return iswpunct (c) ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
