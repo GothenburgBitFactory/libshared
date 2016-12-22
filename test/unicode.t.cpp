@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (120);
+  UnitTest t (126);
 
   // White space detection.
   t.notok (unicodeWhitespace (0x0041), "U+0041 (A) ! unicodeWhitespace");
@@ -164,6 +164,14 @@ int main (int, char**)
   t.ok    (unicodeHexDigit (0x0064), "U+0064 (d) unicodeHexDigit");
   t.ok    (unicodeHexDigit (0x0065), "U+0065 (e) unicodeHexDigit");
   t.ok    (unicodeHexDigit (0x0066), "U+0066 (f) unicodeHexDigit");
+
+  // Punctuation
+  t.notok (unicodePunctuation (0x0033), "U+0033 (3) ! unicodePunctuation");
+  t.ok    (unicodePunctuation (0x002C), "U+002C (,) unicodePunctuation");
+  t.ok    (unicodePunctuation (0x002E), "U+002E (.) unicodePunctuation");
+  t.ok    (unicodePunctuation (0x003A), "U+003A (:) unicodePunctuation");
+  t.ok    (unicodePunctuation (0x0021), "U+0021 (!) unicodePunctuation");
+  t.ok    (unicodePunctuation (0x003F), "U+003F (?) unicodePunctuation");
 
   return 0;
 }
