@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (138);
+  UnitTest t (139);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -202,6 +202,7 @@ int main (int, char**)
   t.is (items[1], "b",             "split '  a  b  c  ' -> [1] 'b'");
   t.is (items[2], "c",             "split '  a  b  c  ' -> [2] 'c'");
 
+  // std::string join (const std::string&r, const std::vector<int>&)
   // std::string join (const std::string&r, const std::vector<std::string>&)
   std::vector <std::string> unjoined;
   std::string joined;
@@ -218,6 +219,9 @@ int main (int, char**)
   joined = join ("-", unjoined);
   t.is (joined.length (), (size_t) 9,  "join '' - 'a' - 'bc' - 'def' -> length 9");
   t.is (joined,           "-a-bc-def", "join '' - 'a' - 'bc' - 'def' -> '-a-bc-def'");
+
+  std::vector <int> unjoined_ints {1, 2, 3, 4};
+  t.is (join ("-", unjoined_ints), "1-2-3-4", "join 1 - 2 - 3 - 4 -> '1-2-3-4'");
 
   // std::string trim (const std::string&);
   t.is (trim ("one"),     "one",   "trim 'one' --> 'one'");
