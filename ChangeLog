@@ -21,6 +21,7 @@ master/HEAD
 - Migrated obfuscateText from Taskwarrior.
 - Added unicodeHorizontalWhitespace and unicodeVerticalWhitespace.
 - Added unicodePunctuation.
+- Added unicodeAlpha.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)

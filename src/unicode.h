@@ -31,6 +31,7 @@ bool unicodeWhitespace           (unsigned int);
 bool unicodeHorizontalWhitespace (unsigned int);
 bool unicodeVerticalWhitespace   (unsigned int);
 bool unicodePunctuation          (unsigned int);
+bool unicodeAlpha                (unsigned int);
 bool unicodeLatinAlpha           (unsigned int);
 bool unicodeLatinDigit           (unsigned int);
 bool unicodeHexDigit             (unsigned int);
