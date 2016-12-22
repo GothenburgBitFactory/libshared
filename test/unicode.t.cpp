@@ -177,6 +177,9 @@ int main (int, char**)
   // Alpha
   std::setlocale (LC_ALL, "en_US.utf8");
   t.ok    (unicodeAlpha (0x0041), "U+0041 (A) unicodeAlpha");
+//  t.ok    (unicodeAlpha (0x00DF), "U+00DF (ß) unicodeAlpha");
+//  t.ok    (unicodeAlpha (0x00E9), "U+00E9 (é) unicodeAlpha");
+//  t.ok    (unicodeAlpha (0x00F6), "U+00F6 (ö) unicodeAlpha");
   t.notok (unicodeAlpha (0x3004), "U+3004 (〄) ! unicodeAlpha");
 
   return 0;
