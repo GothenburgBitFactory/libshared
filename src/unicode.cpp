@@ -99,7 +99,9 @@ bool unicodePunctuation (unsigned int c)
 ////////////////////////////////////////////////////////////////////////////////
 bool unicodeAlpha (unsigned int c)
 {
-  return iswalpha (c) ? true : false;
+  return iswprint (c)             &&
+         ! iswpunct (c)           &&
+         ! unicodeWhitespace (c);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
