@@ -26,12 +26,13 @@
 
 #include <cmake.h>
 #include <unicode.h>
+#include <clocale>
 #include <test.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (126);
+  UnitTest t (128);
 
   // White space detection.
   t.notok (unicodeWhitespace (0x0041), "U+0041 (A) ! unicodeWhitespace");
@@ -172,6 +173,11 @@ int main (int, char**)
   t.ok    (unicodePunctuation (0x003A), "U+003A (:) unicodePunctuation");
   t.ok    (unicodePunctuation (0x0021), "U+0021 (!) unicodePunctuation");
   t.ok    (unicodePunctuation (0x003F), "U+003F (?) unicodePunctuation");
+
+  // Alpha
+  std::setlocale (LC_ALL, "en_US.utf8");
+  t.ok    (unicodeAlpha (0x0041), "U+0041 (A) unicodeAlpha");
+  t.notok (unicodeAlpha (0x3004), "U+3004 (〄) ! unicodeAlpha");
 
   return 0;
 }
