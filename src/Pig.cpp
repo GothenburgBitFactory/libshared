@@ -624,12 +624,22 @@ std::string Pig::str () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Show the text, with the matched part in white on green, and the unmatched
+// part white on red, followed by the index equivalent.
 std::string Pig::dump () const
 {
   std::stringstream out;
-  out << "≪" << *_text << "≫"
-      << " l" << _text->length ()
-      << " c" << _cursor;
+  if (_cursor)
+    out << "[37;42m"
+        << _text->substr (0, _cursor)
+        << "[0m";
+
+  out << "[37;41m"
+      << _text->substr (_cursor)
+      << "[0m "
+      << _cursor
+      << '/'
+      << _text->length ();
 
   return out.str ();
 }
