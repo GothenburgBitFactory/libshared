@@ -26,6 +26,7 @@
 
 #include <cmake.h>
 #include <Pig.h>
+#include <shared.h>
 #include <unicode.h>
 #include <utf8.h>
 #include <algorithm>
@@ -641,7 +642,7 @@ std::string Pig::dump () const
       << '/'
       << _text->length ();
 
-  return out.str ();
+  return str_replace (out.str (), "\n", "\\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
