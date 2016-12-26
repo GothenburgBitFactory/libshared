@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (15);
+  UnitTest t (16);
 
   // Success case.
   Args a1;
@@ -81,7 +81,14 @@ int main (int, char**)
 
   t.is (a3.getPositionalCount (), 0,       "Args3 --> positionals 0");
   t.is (a3.getOption ("positive"), false,  "Args3 --> nopositive 'false'");
-  t.is (a3.getOption ("negative"), false,   "Args3 --> nonegative 'true'");
+  t.is (a3.getOption ("negative"), false,  "Args3 --> nonegative 'true'");
+
+  // Option counting.
+  Args a4;
+  a4.addOption ("debug");
+  const char* argv4[] = {"binary", "--debug", "-d"};
+  a4.scan (3, argv4);
+  t.is (a4.getOptionCount ("debug"), 2,    "Args4 --> optionCount 2");
 
   // TODO Test ambiguous abbreviations.
 
