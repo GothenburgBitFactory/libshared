@@ -34,10 +34,11 @@
 void Args::addOption (const std::string& name, bool defaultValue)
 {
   _options[name] = defaultValue;
+  _optionCount[name] = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Args::addNamed  (const std::string& name, const std::string& defaultValue)
+void Args::addNamed (const std::string& name, const std::string& defaultValue)
 {
   _named[name] = defaultValue;
 }
@@ -68,7 +69,8 @@ void Args::scan (int argc, const char** argv)
       if (canonicalizeOption (name, canonical))
       {
         bool negated = _negatives && name.find ("no") == 0;
-        _options[canonical] = negated? false : true;
+        _options[canonical] = ! negated;
+        _optionCount[canonical]++;
       }
 
       else if (canonicalizeNamed (name, canonical))
@@ -102,6 +104,15 @@ bool Args::getOption (const std::string& name) const
     return false;
 
   return _options.at (name);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Args::getOptionCount (const std::string& name) const
+{
+  if (_optionCount.find (name) == _optionCount.end ())
+    return false;
+
+  return _optionCount.at (name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +226,7 @@ std::string Args::dump () const
   out << "Args\n"
       << "  Options\n";
   for (const auto& arg : _options)
-    out << "    " << arg.first << " = " << arg.second << '\n';
+    out << "    " << arg.first << " = " << arg.second << " (" << _optionCount.at (arg.first) << ")\n";
 
   out << "  Named\n";
   for (const auto& arg : _named)

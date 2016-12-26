@@ -44,6 +44,7 @@ public:
   void scan (int, const char**);
 
   bool getOption (const std::string&) const;
+  int getOptionCount (const std::string&) const;
   std::string getNamed (const std::string&) const;
   int getPositionalCount () const;
   std::string getPositional (int) const;
@@ -56,6 +57,7 @@ private:
 
 private:
   std::map <std::string, bool>        _options     {};
+  std::map <std::string, int>         _optionCount {};
   std::map <std::string, std::string> _named       {};
   std::vector <std::string>           _positionals {};
   int                                 _limit       {-1};
