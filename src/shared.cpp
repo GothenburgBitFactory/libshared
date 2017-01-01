@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2016, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2017, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -355,6 +355,98 @@ bool extractLine (
 
   return true;
 }
+/*
+
+TODO Resolve above against below, which is from Taskwarrior 2.6.0, and known to
+     be wrong.
+////////////////////////////////////////////////////////////////////////////////
+// Break UTF8 text into chunks no more than width characters.
+bool extractLine (
+  std::string& line,
+  const std::string& text,
+  int width,
+  bool hyphenate,
+  unsigned int& offset)
+{
+  // Terminate processing.
+  if (offset >= text.length ())
+    return false;
+
+  int line_length                     {0};
+  int character                       {0};
+  std::string::size_type lastWordEnd  {std::string::npos};
+  bool something                      {false};
+  std::string::size_type cursor       {offset};
+  std::string::size_type prior_cursor {offset};
+  while ((character = utf8_next_char (text, cursor)))
+  {
+    // Premature EOL.
+    if (character == '\n')
+    {
+      line = text.substr (offset, line_length);
+      offset = cursor;
+      return true;
+    }
+
+    if (! Lexer::isWhitespace (character))
+    {
+      something = true;
+      if (! text[cursor] || Lexer::isWhitespace (text[cursor]))
+        lastWordEnd = prior_cursor;
+    }
+
+    line_length += mk_wcwidth (character);
+
+    if (line_length >= width)
+    {
+      // Backtrack to previous word end.
+      if (lastWordEnd != std::string::npos)
+      {
+        // Eat one WS after lastWordEnd.
+        std::string::size_type lastBreak = lastWordEnd;
+        utf8_next_char (text, lastBreak);
+
+        // Position offset at following char.
+        std::string::size_type nextStart = lastBreak;
+        utf8_next_char (text, nextStart);
+
+        line = text.substr (offset, lastBreak - offset);
+        offset = nextStart;
+        return true;
+      }
+
+      // No backtrack, possible hyphenation.
+      else if (hyphenate)
+      {
+        line = text.substr (offset, prior_cursor - offset) + '-';
+        offset = prior_cursor;
+        return true;
+      }
+
+      // No hyphenation, just truncation.
+      else
+      {
+        line = text.substr (offset, cursor - offset);
+        offset = cursor;
+        return true;
+      }
+    }
+
+    // Hindsight.
+    prior_cursor = cursor;
+  }
+
+  // Residual text.
+  if (something)
+  {
+    line = text.substr (offset, cursor - offset);
+     offset = cursor;
+    return true;
+  }
+
+  return false;
+}
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 bool compare (

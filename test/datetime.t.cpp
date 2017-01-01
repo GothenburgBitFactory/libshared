@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 - 2016, Göteborg Bit Factory.
+// Copyright 2013 - 2017, Göteborg Bit Factory.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -801,7 +801,6 @@ int main (int, char**)
     t.is (r37.day (),      19,        "'19th' --> 19");
     t.ok (r37 >= now,                 "'19th' > 'now'");
 
-
     // Test Datetime::lookForwards = false
     Datetime::lookForwards = false;
     Datetime r38 ("1st");
@@ -812,6 +811,9 @@ int main (int, char**)
     Datetime r40 ("sow");
     Datetime r41 ("socw");
     t.ok (r40 == r41,                 "'sow' is equal to 'socw' when Datetime::lookForwards = false");
+
+    // Phrases.
+    Datetime r42 ("4th thursday in november");
 
     Datetime::lookForwards = true;
     t.diag ("Datetime::lookForwards == true");

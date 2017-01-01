@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2016, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2017, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@
 
 #include <cmake.h>
 #include <Datetime.h>
+#include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <cassert>
@@ -562,7 +563,26 @@ bool Datetime::parse_named (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
+  // Experimental handling of date expressions, such as "first monday in march".
   std::string token;
+  std::vector <std::string> tokens;
+  while (pig.getUntilWS (token))
+  {
+    tokens.push_back (token);
+    if (! pig.skipWS ())
+      break;
+  }
+
+  if (initializeNthDayInMonth (tokens))
+  {
+    return true;
+  }
+
+  // Restoration necessary because of the tokenization.
+  pig.restoreTo (checkpoint);
+
+  // The above contains "1st monday ..." which must be processed before
+  // initializeOrdinal below.
   if (pig.getUntilWS (token))
   {
     if (initializeNow            (token) ||
@@ -596,26 +616,6 @@ bool Datetime::parse_named (Pig& pig)
       return true;
     }
   }
-
-/////
-
-  pig.restoreTo (checkpoint);
-
-  // obtain input tokens.
-  std::vector <std::string> tokens;
-  while (pig.getUntilWS (token))
-  {
-    tokens.push_back (token);
-    if (! pig.skipWS ())
-      break;
-  }
-
-  if (initializeFoo (tokens))
-  {
-    return true;
-  }
-
-/////
 
   pig.restoreTo (checkpoint);
   return false;
@@ -2107,8 +2107,62 @@ void Datetime::midsommarafton (struct tm* t) const
 //   by {day}
 //   first thing {day}
 //
-bool Datetime::initializeFoo (const std::vector <std::string>&)
+
+////////////////////////////////////////////////////////////////////////////////
+// <ordinal> <weekday> in|of <month>
+bool Datetime::initializeNthDayInMonth (const std::vector <std::string>& tokens)
 {
+  if (tokens.size () == 4)
+  {
+    int ordinal {0};
+    if (isOrdinal (tokens[0], ordinal))
+    {
+      auto day = Datetime::dayOfWeek (tokens[1]);
+      if (day != -1)
+      {
+        if (tokens[2] == "in" ||
+            tokens[2] == "of")
+        {
+          auto month = Datetime::monthOfYear (tokens[3]);
+          if (month != -1)
+          {
+            std::cout << "# ordinal=" << ordinal << " day=" << day << " in month=" << month << '\n';
+
+            // TODO Assume 1st of the month
+            // TODO Assume current year
+            // TODO Determine the day
+            // TODO Project forwards, if necessary, to the desired day
+            // TODO Add ((ordinal - 1) * 7) days
+
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::isOrdinal (const std::string& token, int& ordinal)
+{
+  Pig p (token);
+  int number;
+  std::string suffix;
+  if (p.getDigits (number) &&
+      p.getRemainder (suffix))
+  {
+    if (((number >= 11 || number <= 13) && suffix == "th") ||
+        (number % 10 == 1               && suffix == "st") ||
+        (number % 10 == 2               && suffix == "nd") ||
+        (number % 10 == 3               && suffix == "rd") ||
+        (                                  suffix == "th"))
+    {
+      ordinal = number;
+      return true;
+    }
+  }
 
   return false;
 }
