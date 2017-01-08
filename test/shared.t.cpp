@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (140);
+  UnitTest t (141);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -351,8 +351,11 @@ int main (int, char**)
   t.is ((int) find ("one two three", "e",  3, false), (int) 11,    "find offset obeyed");
   t.is ((int) find ("one two three", "e", 11, false), (int) 11,    "find offset obeyed");
 
-  // Test osName actually reocngizes OS.
-  t.ok (osName() != "<unknown>",                                   "osName: Recognizes OS as: " + osName ());
+  // Test osName actually recognizes OS.
+  t.ok (osName () != "<unknown>",                                  "osName: Recognizes OS as: " + osName ());
+
+  // Test cppCompliance actually recognizes compliance level.
+  t.ok (cppCompliance () != "non-compliant",                       "cppCompliance: Recognizes compiler compliance level as: " + cppCompliance ());
 
   return 0;
 }
