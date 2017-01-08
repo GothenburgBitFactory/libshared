@@ -84,5 +84,6 @@ int autoComplete (const std::string&, const std::vector<std::string>&, std::vect
 bool confirm (const std::string&);
 
 int execute (const std::string&, const std::vector <std::string>&, const std::string&, std::string&);
+std::string osName ();
 
 #endif

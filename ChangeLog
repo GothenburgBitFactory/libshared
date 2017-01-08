@@ -10,7 +10,7 @@ master/HEAD
   comprised of operators.
 - Added Pig::getCharacter, which was oddly missing.
 - Added 'Tree' class.
-- Added FS error handling for posix call failure.
+- Added FS error handling for POSIX call failure.
 - Updated Timer class to use std::chrono.
 - Args now tolerates undeclared option queries.
 - Added case (in)sentitive find functions.
@@ -22,6 +22,7 @@ master/HEAD
 - Added unicodeHorizontalWhitespace and unicodeVerticalWhitespace.
 - Added unicodePunctuation.
 - Added unicodeAlpha.
+- Added osName.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)

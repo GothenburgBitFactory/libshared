@@ -783,3 +783,31 @@ int execute (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string osName ()
+{
+#if defined (DARWIN)
+  return "Darwin";
+#elif defined (SOLARIS)
+  return "Solaris";
+#elif defined (CYGWIN)
+  return "Cygwin";
+#elif defined (HAIKU)
+  return "Haiku";
+#elif defined (OPENBSD)
+  return "OpenBSD";
+#elif defined (FREEBSD)
+  return "FreeBSD";
+#elif defined (NETBSD)
+  return "NetBSD";
+#elif defined (LINUX)
+  return "Linux";
+#elif defined (KFREEBSD)
+  return "GNU/kFreeBSD";
+#elif defined (GNUHURD)
+  return "GNU/Hurd";
+#else
+  return "<unknown>";
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
