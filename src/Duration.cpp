@@ -481,18 +481,18 @@ const std::string Duration::formatISO () const
 // >= 1min    {n}min
 //            {n}s
 //
-const std::string Duration::formatVague () const
+const std::string Duration::formatVague (bool padding) const
 {
   float days = (float) _period / 86400.0;
 
   std::stringstream formatted;
-       if (_period >= 86400 * 365) formatted << std::fixed << std::setprecision (1) << (days / 365) << 'y';
-  else if (_period >= 86400 * 90)  formatted << static_cast <int> (days / 30)       << "mo";
-  else if (_period >= 86400 * 14)  formatted << static_cast <int> (days / 7)        << 'w';
-  else if (_period >= 86400)       formatted << static_cast <int> (days)            << 'd';
-  else if (_period >= 3600)        formatted << static_cast <int> (_period / 3600)  << 'h';
-  else if (_period >= 60)          formatted << static_cast <int> (_period / 60)    << "min";
-  else if (_period >= 1)           formatted << static_cast <int> (_period)         << 's';
+       if (_period >= 86400 * 365) formatted << std::fixed << std::setprecision (1) << (days / 365) << (padding ? "y  " : "y");
+  else if (_period >= 86400 * 90)  formatted << static_cast <int> (days / 30)       << (padding ? "mo " : "mo");
+  else if (_period >= 86400 * 14)  formatted << static_cast <int> (days / 7)        << (padding ? "w  " : "w");
+  else if (_period >= 86400)       formatted << static_cast <int> (days)            << (padding ? "d  " : "d");
+  else if (_period >= 3600)        formatted << static_cast <int> (_period / 3600)  << (padding ? "h  " : "h");
+  else if (_period >= 60)          formatted << static_cast <int> (_period / 60)    << "min";  // Longest suffix - no padding
+  else if (_period >= 1)           formatted << static_cast <int> (_period)         << (padding ? "s  " : "s");
 
   return formatted.str ();
 }

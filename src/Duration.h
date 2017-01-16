@@ -51,7 +51,7 @@ public:
   const std::string format () const;
   const std::string formatHours () const;
   const std::string formatISO () const;
-  const std::string formatVague () const;
+  const std::string formatVague (bool padding = false) const;
 
   int days () const;
   int hours () const;
