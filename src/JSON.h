@@ -129,6 +129,54 @@ namespace json
   // Encode/decode for JSON entities.
   std::string encode (const std::string&);
   std::string decode (const std::string&);
+
+  class SAX
+  {
+  public:
+    class Sink
+    {
+    public:
+      virtual void eventDocStart () {}
+      virtual void eventDocEnd () {}
+      virtual void eventObjectStart () {}
+      virtual void eventObjectEnd (int) {}
+      virtual void eventArrayStart () {}
+      virtual void eventArrayEnd (int) {}
+      virtual void eventName (const std::string&) {}
+      virtual void eventValueNull () {}
+      virtual void eventValueBool (bool) {}
+      virtual void eventValueInt (int64_t) {}
+      virtual void eventValueUint (uint64_t) {}
+      virtual void eventValueDouble (double) {}
+      virtual void eventValueString (const std::string&) {}
+    };
+
+    bool parse (const std::string&, json::SAX::Sink&);
+
+  private:
+    void ignoreWhitespace (const std::string&, std::string::size_type&);
+    bool isObject         (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isArray          (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isPair           (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isValue          (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isKey            (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isString         (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isStringValue    (const std::string&, std::string::size_type&, std::string&);
+    bool isNumber         (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isInt            (const std::string&, std::string::size_type&, std::string&);
+    bool isFrac           (const std::string&, std::string::size_type&, std::string&);
+    bool isDigits         (const std::string&, std::string::size_type&);
+    bool isDecDigit       (int);
+    bool isHexDigit       (int);
+    int  hexToInt         (int);
+    int  hexToInt         (int, int, int, int);
+    bool isExp            (const std::string&, std::string::size_type&, std::string&);
+    bool isE              (const std::string&, std::string::size_type&);
+    bool isBool           (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isNull           (const std::string&, std::string::size_type&, SAX::Sink&);
+    bool isLiteral        (const std::string&, char, std::string::size_type&);
+    void error            (const std::string&, std::string::size_type);
+  };
 }
 
 #endif

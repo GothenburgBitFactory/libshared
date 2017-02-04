@@ -29,7 +29,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <JSON.h>
-#include <JSON2.h>
 #include <test.h>
 
 const char *positive_tests[] =
@@ -103,7 +102,7 @@ const char *negative_tests[] =
 #define NUM_NEGATIVE_TESTS (sizeof (negative_tests) / sizeof (negative_tests[0]))
 
 std::stringstream combined;
-class EventSink : public JSON2::SAX
+class EventSink : public json::SAX::Sink
 {
 public:
   void eventDocStart ()                            { combined << "<doc>";                            }
@@ -124,13 +123,12 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 void saxTest (UnitTest& t, const std::string& input, const std::string& expected)
 {
-  // JSON2
   try
   {
     combined.str (std::string ());
     EventSink sink;
-    JSON2 json;
-    t.ok (json.parse (input, sink), std::string ("sax: '") + input + "' --> '" + expected + "'");
+    json::SAX sax;
+    t.ok (sax.parse (input, sink), std::string ("sax: '") + input + "' --> '" + expected + "'");
   }
 
   catch (const std::string& e) { t.pass (e); }
@@ -140,7 +138,7 @@ void saxTest (UnitTest& t, const std::string& input, const std::string& expected
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 28 + 28 + 4);
+  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 28 + 4);
 
   // Ensure environment has no influence.
   unsetenv ("TASKDATA");
@@ -224,48 +222,6 @@ int main (int, char**)
     t.is (encoded[4], '\\',                  "json::encode one<backslash>[4] -> <backslash>");
 
     t.is (json::decode (encoded), "one\\",   "json::decode one<backslash><backslash> -> one<backslash>");
-
-    // JSON2: Regular unit tests.
-    t.is (JSON2::encode ("1\"2"), "1\\\"2",   "JSON2::encode <quote> -> <backslash><quote>");
-    t.is (JSON2::decode ("1\\\"2"), "1\"2",   "JSON2::decode <backslash><quote> -> <quote>");
-
-    t.is (JSON2::encode ("1/2"), "1\\/2",     "JSON2::encode <slash> -> <backslash><slash>");
-    t.is (JSON2::decode ("1\\/2"), "1/2",     "JSON2::decode <backslash><slash> -> <slash>");
-
-    t.is (JSON2::encode ("1\b2"), "1\\b2",    "JSON2::encode <bell> -> <backslash><backslash><b>");
-    t.is (JSON2::decode ("1\\b2"), "1\b2",    "JSON2::decode <backslash><backslash><b> -> <bell>");
-
-    t.is (JSON2::encode ("1\f2"), "1\\f2",    "JSON2::encode <formfeed> -> <backslash><backslash><f>");
-    t.is (JSON2::decode ("1\\f2"), "1\f2",    "JSON2::decode <backslash><backslash><f> -> <formfeed>");
-
-    t.is (JSON2::encode ("1\n2"), "1\\n2",    "JSON2::encode <newline> -> <backslash><newline>");
-    t.is (JSON2::decode ("1\\n2"), "1\n2",    "JSON2::decode <backslash><newline> -> <newline>");
-
-    t.is (JSON2::encode ("1\r2"), "1\\r2",    "JSON2::encode <cr> -> <backslash><r>");
-    t.is (JSON2::decode ("1\\r2"), "1\r2",    "JSON2::decode <backslash><r> -> <cr>");
-
-    t.is (JSON2::encode ("1\t2"), "1\\t2",    "JSON2::encode <tab> -> <backslash><t>");
-    t.is (JSON2::decode ("1\\t2"), "1\t2",    "JSON2::decode <backslash><t> -> <tab>");
-
-    t.is (JSON2::encode ("1\\2"), "1\\\\2",   "JSON2::encode <backslash> -> <backslash><backslash>");
-    t.is (JSON2::decode ("1\\\\2"), "1\\2",   "JSON2::decode <backslash><backslash> -> <backslash>");
-
-    t.is (JSON2::encode ("1\x2"), "1\x2",     "JSON2::encode <backslash><x> -> <backslash><x>(NOP)");
-    t.is (JSON2::decode ("1\x2"), "1\x2",     "JSON2::decode <backslash><x> -> <backslash><x>(NOP)");
-
-    t.is (JSON2::encode ("1€2"), "1€2",       "JSON2::encode € -> €");
-    t.is (JSON2::decode ("1\\u20ac2"), "1€2", "JSON2::decode <backslash>u20ac -> €");
-
-    encoded = JSON2::encode ("one\\");
-    t.is (encoded, "one\\\\",                "JSON2::encode one<backslash> -> one<backslash><backslash>");
-    t.is ((int)encoded.length (), 5,         "JSON2::encode one<backslash> -> length 5");
-    t.is (encoded[0], 'o',                   "JSON2::encode one<backslash>[0] -> o");
-    t.is (encoded[1], 'n',                   "JSON2::encode one<backslash>[1] -> n");
-    t.is (encoded[2], 'e',                   "JSON2::encode one<backslash>[2] -> e");
-    t.is (encoded[3], '\\',                  "JSON2::encode one<backslash>[3] -> <backslash>");
-    t.is (encoded[4], '\\',                  "JSON2::encode one<backslash>[4] -> <backslash>");
-
-    t.is (JSON2::decode (encoded), "one\\",   "JSON2::decode one<backslash><backslash> -> one<backslash>");
   }
 
   catch (const std::string& e) {t.diag (e);}

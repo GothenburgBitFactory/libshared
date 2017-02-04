@@ -28,9 +28,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <JSON2.h>
+#include <JSON.h>
 
-class EventSink : public JSON2::SAX
+class EventSink : public json::SAX::Sink
 {
 public:
   void eventObjectStart ()                         { std::cout << "# object start\n";                                 }
@@ -68,8 +68,8 @@ int main (int argc, char** argv)
         input << inputFile.rdbuf ();
 
         EventSink sink;
-        JSON2 json;
-        if (! json.parse (input.str (), sink))
+        json::SAX sax;
+        if (! sax.parse (input.str (), sink))
           status = 1;
       }
 

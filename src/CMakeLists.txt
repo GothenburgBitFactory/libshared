@@ -10,7 +10,6 @@ set (shared_HEADERS Args.h
                     Duration.h
                     FS.h
                     JSON.h
-                    JSON2.h
                     Lexer.h
                     Log.h
                     Msg.h
@@ -33,13 +32,13 @@ set (shared_SRCS Args.cpp
                  Duration.cpp
                  FS.cpp
                  JSON.cpp
-                 JSON2.cpp
                  Lexer.cpp
                  Log.cpp
                  Msg.cpp
                  Palette.cpp
                  Pig.cpp
                  RX.cpp
+                 SAX.cpp
                  Table.cpp
                  Timer.cpp
                  Tree.cpp

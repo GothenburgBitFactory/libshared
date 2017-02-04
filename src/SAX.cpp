@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
-#include <JSON2.h>
+#include <JSON.h>
 #include <utf8.h>
 #include <sstream>
 #include <stdlib.h>
@@ -33,7 +33,7 @@
 #include <errno.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JSON2::parse (const std::string& input, JSON2::SAX& sink)
+bool json::SAX::parse (const std::string& input, SAX::Sink& sink)
 {
   sink.eventDocStart ();
   std::string::size_type cursor = 0;
@@ -58,7 +58,7 @@ bool JSON2::parse (const std::string& input, JSON2::SAX& sink)
 //
 // http://en.wikipedia.org/wiki/Whitespace_character
 // Updated 2015-09-13
-void JSON2::ignoreWhitespace (const std::string& input, std::string::size_type& cursor)
+void json::SAX::ignoreWhitespace (const std::string& input, std::string::size_type& cursor)
 {
   int c = input[cursor];
   while (c == 0x0020 ||   // space Common  Separator, space
@@ -98,7 +98,7 @@ void JSON2::ignoreWhitespace (const std::string& input, std::string::size_type& 
 
 ////////////////////////////////////////////////////////////////////////////////
 // object := '{' [<pair> [, <pair> ...]] '}'
-bool JSON2::isObject (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isObject (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
   auto backup = cursor;
@@ -134,7 +134,7 @@ bool JSON2::isObject (const std::string& input, std::string::size_type& cursor, 
 
 ////////////////////////////////////////////////////////////////////////////////
 // array := '[' [<value> [, <value> ...]] ']'
-bool JSON2::isArray (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isArray (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
   auto backup = cursor;
@@ -170,7 +170,7 @@ bool JSON2::isArray (const std::string& input, std::string::size_type& cursor, J
 
 ////////////////////////////////////////////////////////////////////////////////
 // pair := <string> ':' <value>
-bool JSON2::isPair (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isPair (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
   auto backup = cursor;
@@ -200,7 +200,7 @@ bool JSON2::isPair (const std::string& input, std::string::size_type& cursor, JS
 //         | 'true'
 //         | 'false'
 //         | 'null'
-bool JSON2::isValue (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isValue (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
 
@@ -213,7 +213,7 @@ bool JSON2::isValue (const std::string& input, std::string::size_type& cursor, J
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JSON2::isKey (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isKey (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
 
@@ -228,7 +228,7 @@ bool JSON2::isKey (const std::string& input, std::string::size_type& cursor, JSO
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JSON2::isString (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isString (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
 
@@ -254,7 +254,7 @@ bool JSON2::isString (const std::string& input, std::string::size_type& cursor, 
 //         | '\r'
 //         | '\t'
 //         | \uXXXX
-bool JSON2::isStringValue (const std::string& input, std::string::size_type& cursor, std::string& value)
+bool json::SAX::isStringValue (const std::string& input, std::string::size_type& cursor, std::string& value)
 {
   auto backup = cursor;
 
@@ -329,7 +329,7 @@ bool JSON2::isStringValue (const std::string& input, std::string::size_type& cur
 
 ////////////////////////////////////////////////////////////////////////////////
 // number := <int> [<frac>] [<exp>]
-bool JSON2::isNumber (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isNumber (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
   auto backup = cursor;
@@ -376,7 +376,7 @@ bool JSON2::isNumber (const std::string& input, std::string::size_type& cursor, 
 
 ////////////////////////////////////////////////////////////////////////////////
 // int := ['-'] <digits>
-bool JSON2::isInt (const std::string& input, std::string::size_type& cursor, std::string& value)
+bool json::SAX::isInt (const std::string& input, std::string::size_type& cursor, std::string& value)
 {
   auto backup = cursor;
 
@@ -393,7 +393,7 @@ bool JSON2::isInt (const std::string& input, std::string::size_type& cursor, std
 
 ////////////////////////////////////////////////////////////////////////////////
 // frac := '.' <digits>
-bool JSON2::isFrac (const std::string& input, std::string::size_type& cursor, std::string& value)
+bool json::SAX::isFrac (const std::string& input, std::string::size_type& cursor, std::string& value)
 {
   auto backup = cursor;
 
@@ -410,7 +410,7 @@ bool JSON2::isFrac (const std::string& input, std::string::size_type& cursor, st
 
 ////////////////////////////////////////////////////////////////////////////////
 // digits := <digit> [<digit> ...]
-bool JSON2::isDigits (const std::string& input, std::string::size_type& cursor)
+bool json::SAX::isDigits (const std::string& input, std::string::size_type& cursor)
 {
   int c = input[cursor];
   if (isDecDigit (c))
@@ -428,14 +428,14 @@ bool JSON2::isDigits (const std::string& input, std::string::size_type& cursor)
 
 ////////////////////////////////////////////////////////////////////////////////
 // digit := 0x30 ('0') .. 0x39 ('9')
-bool JSON2::isDecDigit (int c)
+bool json::SAX::isDecDigit (int c)
 {
   return c >= 0x30 && c <= 0x39;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // hex := 0x30 ('0') .. 0x39 ('9')
-bool JSON2::isHexDigit (int c)
+bool json::SAX::isHexDigit (int c)
 {
   return (c >= 0x30 && c <= 0x39) ||
          (c >= 0x61 && c <= 0x66) ||
@@ -444,7 +444,7 @@ bool JSON2::isHexDigit (int c)
 
 ////////////////////////////////////////////////////////////////////////////////
 // exp := <e> <digits>
-bool JSON2::isExp (const std::string& input, std::string::size_type& cursor, std::string& value)
+bool json::SAX::isExp (const std::string& input, std::string::size_type& cursor, std::string& value)
 {
   auto backup = cursor;
 
@@ -466,7 +466,7 @@ bool JSON2::isExp (const std::string& input, std::string::size_type& cursor, std
 //    | E
 //    | E+
 //    | E-
-bool JSON2::isE (const std::string& input, std::string::size_type& cursor)
+bool json::SAX::isE (const std::string& input, std::string::size_type& cursor)
 {
   int c = input[cursor];
   if (c == 'e' ||
@@ -487,7 +487,7 @@ bool JSON2::isE (const std::string& input, std::string::size_type& cursor)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JSON2::isBool (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isBool (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
 
@@ -515,7 +515,7 @@ bool JSON2::isBool (const std::string& input, std::string::size_type& cursor, JS
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JSON2::isNull (const std::string& input, std::string::size_type& cursor, JSON2::SAX& sink)
+bool json::SAX::isNull (const std::string& input, std::string::size_type& cursor, SAX::Sink& sink)
 {
   ignoreWhitespace (input, cursor);
 
@@ -533,7 +533,7 @@ bool JSON2::isNull (const std::string& input, std::string::size_type& cursor, JS
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JSON2::isLiteral (const std::string& input, char literal, std::string::size_type& cursor)
+bool json::SAX::isLiteral (const std::string& input, char literal, std::string::size_type& cursor)
 {
   ignoreWhitespace (input, cursor);
 
@@ -551,7 +551,7 @@ bool JSON2::isLiteral (const std::string& input, char literal, std::string::size
 //          '9'     -> 9
 //          'a'/'A' -> 10
 //          'f'/'F' -> 15
-int JSON2::hexToInt (int c)
+int json::SAX::hexToInt (int c)
 {
        if (c >= 0x30 && c <= 0x39) return (c - 0x30);
   else if (c >= 0x41 && c <= 0x46) return (c - 0x41 + 10);
@@ -559,7 +559,7 @@ int JSON2::hexToInt (int c)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int JSON2::hexToInt (int c0, int c1, int c2, int c3)
+int json::SAX::hexToInt (int c0, int c1, int c2, int c3)
 {
   return (hexToInt (c0) << 12) +
          (hexToInt (c1) << 8)  +
@@ -568,79 +568,11 @@ int JSON2::hexToInt (int c0, int c1, int c2, int c3)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JSON2::error (const std::string& message, std::string::size_type cursor)
+void json::SAX::error (const std::string& message, std::string::size_type cursor)
 {
   std::stringstream error;
   error << message << cursor;
   throw error.str ();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string JSON2::encode (const std::string& input)
-{
-  std::string output;
-
-  for (auto& i : input)
-  {
-    switch (i)
-    {
-    // Simple translations.
-    case '"':  output += "\\\"";   break;
-    case '\\': output += "\\\\";   break;
-    case '/':  output += "\\/";    break;
-    case '\b': output += "\\b";    break;
-    case '\f': output += "\\f";    break;
-    case '\n': output += "\\n";    break;
-    case '\r': output += "\\r";    break;
-    case '\t': output += "\\t";    break;
-
-    // Default NOP.
-    default:   output += i; break;
-    }
-  }
-
-  return output;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string JSON2::decode (const std::string& input)
-{
-  std::string output;
-  for (unsigned int i = 0; i < input.length (); ++i)
-  {
-    if (input[i] == '\\')
-    {
-      ++i;
-      switch (input[i])
-      {
-      // Simple translations.
-      case '"':  output += '"';  break;
-      case '\\': output += '\\'; break;
-      case '/':  output += '/';  break;
-      case 'b':  output += '\b'; break;
-      case 'f':  output += '\f'; break;
-      case 'n':  output += '\n'; break;
-      case 'r':  output += '\r'; break;
-      case 't':  output += '\t'; break;
-
-      // Compose a UTF8 unicode character.
-      case 'u':
-        output += utf8_character (utf8_codepoint (input.substr (++i)));
-        i += 3;
-        break;
-
-      // If it is an unrecognized sequence, do nothing.
-      default:
-        output += '\\';
-        output += input[i];
-        break;
-      }
-    }
-    else
-      output += input[i];
-  }
-
-  return output;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

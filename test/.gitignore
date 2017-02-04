@@ -10,7 +10,7 @@ format.t
 fs.t
 json.t
 json_test
-json2_test
+sax_test
 lexer.t
 list.t
 msg.t
