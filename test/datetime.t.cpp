@@ -804,8 +804,8 @@ int main (int, char**)
     // Test Datetime::lookForwards = false
     Datetime::lookForwards = false;
     Datetime r38 ("1st");
-    Datetime r39 ("29th");
-    t.ok (r38.sameMonth (r39),        "'1st' and '29th' always in the same month when Datetime::lookForwards = false");
+    Datetime r39 ("28th");
+    t.ok (r38.sameMonth (r39),        "'1st' and '28th' always in the same month when Datetime::lookForwards = false");
 
     Datetime::lookForwards = false;
     Datetime r40 ("sow");
