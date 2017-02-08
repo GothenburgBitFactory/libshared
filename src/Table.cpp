@@ -36,6 +36,25 @@ int Table::addRow ()
 {
   _data.push_back (std::vector <std::string> (_columns.size (), ""));
   _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
+  _oddness.push_back (_data.size () % 2 ? true : false);
+  return _data.size () - 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Table::addRowOdd ()
+{
+  _data.push_back (std::vector <std::string> (_columns.size (), ""));
+  _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
+  _oddness.push_back (true);
+  return _data.size () - 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Table::addRowEven ()
+{
+  _data.push_back (std::vector <std::string> (_columns.size (), ""));
+  _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
+  _oddness.push_back (false);
   return _data.size () - 1;
 }
 
@@ -226,8 +245,8 @@ std::string Table::render ()
     max_lines = 0;
 
     // Alternate rows based on |s % 2|
-    bool odd = (row % 2) ? true : false;
-    Color row_color = odd ? _odd : _even;
+    auto oddness = _oddness[row];
+    Color row_color = oddness ? _odd : _even;
 
     // TODO row_color.blend (provided color);
     // TODO Problem: colors for columns are specified, not rows,
@@ -252,7 +271,7 @@ std::string Table::render ()
 
     for (unsigned int i = 0; i < max_lines; ++i)
     {
-      out += left_margin + (odd ? extra_odd : extra_even);
+      out += left_margin + (oddness ? extra_odd : extra_even);
 
       for (unsigned int col = 0; col < _columns.size (); ++col)
       {
@@ -261,7 +280,7 @@ std::string Table::render ()
           if (row_color.nontrivial ())
             out += row_color.colorize (intra);
           else
-            out += (odd ? intra_odd : intra_even);
+            out += (oddness ? intra_odd : intra_even);
         }
 
         if (i < cells[col].size ())
@@ -274,7 +293,7 @@ std::string Table::render ()
         }
       }
 
-      out += (odd ? extra_odd : extra_even);
+      out += (oddness ? extra_odd : extra_even);
 
       // Trim right.
       out.erase (out.find_last_not_of (" ") + 1);

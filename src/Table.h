@@ -57,6 +57,8 @@ public:
 
   // Data provision.
   int addRow ();
+  int addRowOdd ();
+  int addRowEven ();
   void set (int, int, const std::string&, const Color color = Color::nocolor);
   void set (int, int, int, const Color color = Color::nocolor);
   void set (int, int, const Color);
@@ -73,6 +75,7 @@ private:
   std::vector <std::vector <Color>>       _color;
   std::vector <std::string>               _columns;
   std::vector <bool>                      _align;
+  std::vector <bool>                      _oddness;
   int                                     _width             {0};
   int                                     _left_margin       {0};
   Color                                   _header            {0};
