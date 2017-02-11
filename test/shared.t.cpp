@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (141);
+  UnitTest t (189);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -356,6 +356,81 @@ int main (int, char**)
 
   // Test cppCompliance actually recognizes compliance level.
   t.ok (cppCompliance () != "non-compliant",                       "cppCompliance: Recognizes compiler compliance level as: " + cppCompliance ());
+
+  // Test IPv4/IPv6 address parsing.
+  std::string address;
+  int port;
+  input = "127.0.0.1";
+  t.ok    (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> yes");
+  t.is    (address, "127.0.0.1",                           "isIPv4Address " + input + " --> address correct");
+  t.is    (port, 0,                                        "isIPv4Address " + input + " --> port correct");
+  t.notok (isIPv6Address (input, address, port),           "isIPv6Address " + input + " --> no");
+
+  input = "127.0.0.1:80";
+  t.ok    (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> yes");
+  t.is    (address, "127.0.0.1",                           "isIPv4Address " + input + " --> address correct");
+  t.is    (port, 80,                                       "isIPv4Address " + input + " --> port correct");
+  t.notok (isIPv6Address (input, address, port),           "isIPv6Address " + input + " --> no");
+
+  input = "::1";
+  t.notok (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),           "isIPv6Address " + input + " --> yes");
+  t.is    (address, "::1",                                 "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 0,                                        "isIPv6Address " + input + " --> port correct");
+
+  input = "[::1]:80";
+  t.notok (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),           "isIPv6Address " + input + " --> yes");
+  t.is    (address, "::1",                                 "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 80,                                       "isIPv6Address " + input + " --> port correct");
+
+  input = "2605:2700:0:3::4713:93e3";
+  t.notok (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),           "isIPv6Address " + input + " --> yes");
+  t.is    (address, "2605:2700:0:3::4713:93e3",            "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 0,                                        "isIPv6Address " + input + " --> port correct");
+
+  input = "[2605:2700:0:3::4713:93e3]:80";
+  t.notok (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),           "isIPv6Address " + input + " --> yes");
+  t.is    (address, "2605:2700:0:3::4713:93e3",            "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 80,                                       "isIPv6Address " + input + " --> port correct");
+
+  input = "2001:db8:85a3:0:0:8a2e:370:7334";
+  t.notok (isIPv4Address (input, address, port),            "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),            "isIPv6Address " + input + " --> yes");
+  t.is    (address, "2001:db8:85a3:0:0:8a2e:370:7334",      "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 0,                                         "isIPv6Address " + input + " --> port correct");
+
+  input = "2001:db8:85a3::8a2e:370:7334";
+  t.notok (isIPv4Address (input, address, port),            "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),            "isIPv6Address " + input + " --> yes");
+  t.is    (address, "2001:db8:85a3::8a2e:370:7334",         "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 0,                                         "isIPv6Address " + input + " --> port correct");
+
+  input = "[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443";
+  t.notok (isIPv4Address (input, address, port),            "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),            "isIPv6Address " + input + " --> yes");
+  t.is    (address, "2001:db8:85a3:8d3:1319:8a2e:370:7348", "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 443,                                       "isIPv6Address " + input + " --> port correct");
+
+  input = "::ffff:192.168.0.1";
+  t.notok (isIPv4Address (input, address, port),            "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),            "isIPv6Address " + input + " --> yes");
+  t.is    (address, "::ffff:192.168.0.1",                   "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 0,                                         "isIPv6Address " + input + " --> port correct");
+
+  input = "[::ffff:71.19.147.227]:80";
+  t.notok (isIPv4Address (input, address, port),            "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),            "isIPv6Address " + input + " --> yes");
+  t.is    (address, "::ffff:71.19.147.227",                 "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 80,                                        "isIPv6Address " + input + " --> port correct");
+
+  input = "::";
+  t.notok (isIPv4Address (input, address, port),            "isIPv4Address " + input + " --> no");
+  t.ok    (isIPv6Address (input, address, port),            "isIPv6Address " + input + " --> yes");
+  t.is    (address, "::",                                   "isIPv6Address " + input + " --> address correct");
+  t.is    (port, 00,                                        "isIPv6Address " + input + " --> port correct");
 
   return 0;
 }
