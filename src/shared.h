@@ -87,4 +87,8 @@ int execute (const std::string&, const std::vector <std::string>&, const std::st
 std::string osName ();
 std::string cppCompliance ();
 
+// ip.cpp
+bool isIPv4Address (const std::string&, std::string&, int&);
+bool isIPv6Address (const std::string&, std::string&, int&);
+
 #endif

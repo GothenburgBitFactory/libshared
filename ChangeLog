@@ -26,6 +26,7 @@ master/HEAD
 - Duration::formatVague can now pad all values to the same length.
 - Combined JSON.h, JSON2.h, eliminated duplicate encode/decode implementations.
 - Table::addRow{,Odd,Even} allows a user-specified notion of 'odd' row.
+- Added isIPv4Address and isIPv6Address.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)

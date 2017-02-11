@@ -42,8 +42,9 @@ set (shared_SRCS Args.cpp
                  Table.cpp
                  Timer.cpp
                  Tree.cpp
-                 shared.cpp
                  format.cpp
+                 ip.cpp
+                 shared.cpp
                  unicode.cpp
                  utf8.cpp
                  wcwidth6.cpp
