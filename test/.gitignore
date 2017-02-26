@@ -15,6 +15,7 @@ sax_test
 lexer.t
 list.t
 msg.t
+negative.t
 palette.t
 peg.t
 pig.t
