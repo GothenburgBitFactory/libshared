@@ -9,9 +9,9 @@ datetime.t
 duration.t
 format.t
 fs.t
+intrinsic.t
 json.t
 json_test
-sax_test
 lexer.t
 list.t
 msg.t
@@ -23,6 +23,7 @@ plus.t
 positive.t
 question.t
 rx.t
+sax_test
 shared.t
 star.t
 stringliteral.t
