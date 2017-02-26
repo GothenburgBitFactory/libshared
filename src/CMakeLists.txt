@@ -14,6 +14,7 @@ set (shared_HEADERS Args.h
                     Log.h
                     Msg.h
                     Palette.h
+                    PEG.h
                     Pig.h
                     RX.h
                     Table.h
@@ -36,6 +37,7 @@ set (shared_SRCS Args.cpp
                  Log.cpp
                  Msg.cpp
                  Palette.cpp
+                 PEG.cpp
                  Pig.cpp
                  RX.cpp
                  SAX.cpp
