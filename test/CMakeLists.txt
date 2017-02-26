@@ -11,7 +11,7 @@ include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/test
                      ${SHARED_INCLUDE_DIRS})
 
-set (test_SRCS args.t autocomplete.t charliteral.t composite.t color.t configuration.t datetime.t duration.t format.t fs.t json.t json_test sax_test lexer.t list.t msg.t palette.t peg.t pig.t plus.t question.t rx.t shared.t star.t stringliteral.t table.t timer.t tree.t unicode.t utf8.t)
+set (test_SRCS args.t autocomplete.t charliteral.t composite.t color.t configuration.t datetime.t duration.t format.t fs.t json.t json_test sax_test lexer.t list.t msg.t palette.t peg.t pig.t plus.t positive.t question.t rx.t shared.t star.t stringliteral.t table.t timer.t tree.t unicode.t utf8.t)
 
 add_custom_target (test ./run_all --verbose
                         DEPENDS ${test_SRCS}
