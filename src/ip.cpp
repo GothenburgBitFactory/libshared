@@ -39,7 +39,7 @@ static bool isIPv6BlockSet (const std::string&, unsigned int&);
 ////////////////////////////////////////////////////////////////////////////////
 static bool isPort (const std::string& input, unsigned int& c)
 {
-  auto start {c};
+  auto start = c;
   while (std::isdigit (input[c]))
     ++c;
 
@@ -68,7 +68,7 @@ static bool isEOS (const std::string& input, unsigned int& c)
 ////////////////////////////////////////////////////////////////////////////////
 static bool isIPv4Block (const std::string& input, unsigned int& c)
 {
-  auto start {c};
+  auto start = c;
   while (std::isdigit (input[c]))
     ++c;
 
@@ -87,7 +87,7 @@ static bool isIPv4Block (const std::string& input, unsigned int& c)
 ////////////////////////////////////////////////////////////////////////////////
 static bool isIPv4BlockSet (const std::string& input, unsigned int& c)
 {
-  auto start {c};
+  auto start = c;
 
   if (isIPv4Block (input,      c) &&
       isChar      (input, '.', c) &&
@@ -108,7 +108,7 @@ static bool isIPv4BlockSet (const std::string& input, unsigned int& c)
 ////////////////////////////////////////////////////////////////////////////////
 static bool isIPv6Block (const std::string& input, unsigned int& c)
 {
-  auto start {c};
+  auto start = c;
   while (std::isxdigit (input[c]))
     ++c;
 
@@ -128,7 +128,7 @@ static bool isIPv6Block (const std::string& input, unsigned int& c)
 // 8 or less blocks
 static bool isIPv6BlockSet (const std::string& input, unsigned int& c)
 {
-  auto start {c};
+  auto start = c;
   int count_colons {0};
   int count_blocks {0};
 
@@ -182,7 +182,7 @@ bool isIPv4Address (const std::string& input, std::string& address, int& port)
   unsigned int c = 0;
   if (isIPv4BlockSet (input, c))
   {
-    auto colon {c};
+    auto colon = c;
     if (isChar (input, ':', c))
       if (! isPort (input, c))
         return false;
@@ -211,7 +211,7 @@ bool isIPv6Address (const std::string& input, std::string& address, int& port)
       isIPv6BlockSet (input,      c) &&
       isChar         (input, ']', c))
   {
-    auto colon {c};
+    auto colon = c;
     if (isChar         (input, ':', c) &&
         isPort         (input,      c) &&
         isEOS          (input,      c))
