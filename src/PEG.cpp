@@ -301,7 +301,7 @@ std::vector <std::string> PEG::loadImports (const std::vector <std::string>& lin
 
   for (auto& line : lines)
   {
-    auto copy {trim (line)};
+    auto copy = trim (line);
 
     auto hash = copy.find ('#');
     if (hash != std::string::npos)
