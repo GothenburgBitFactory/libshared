@@ -18,6 +18,7 @@ msg.t
 palette.t
 peg.t
 pig.t
+plus.t
 rx.t
 shared.t
 stringliteral.t
