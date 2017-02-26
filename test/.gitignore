@@ -21,6 +21,7 @@ pig.t
 plus.t
 rx.t
 shared.t
+star.t
 stringliteral.t
 table.t
 timer.t
