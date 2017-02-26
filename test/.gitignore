@@ -20,6 +20,7 @@ peg.t
 pig.t
 rx.t
 shared.t
+stringliteral.t
 table.t
 timer.t
 tree.t
