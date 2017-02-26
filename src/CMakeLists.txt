@@ -13,6 +13,7 @@ set (shared_HEADERS Args.h
                     Lexer.h
                     Log.h
                     Msg.h
+                    Packrat.h
                     Palette.h
                     PEG.h
                     Pig.h
@@ -36,6 +37,7 @@ set (shared_SRCS Args.cpp
                  Lexer.cpp
                  Log.cpp
                  Msg.cpp
+                 Packrat.cpp
                  Palette.cpp
                  PEG.cpp
                  Pig.cpp
