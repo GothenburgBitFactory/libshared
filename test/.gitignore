@@ -15,6 +15,7 @@ lexer.t
 list.t
 msg.t
 palette.t
+peg.t
 pig.t
 rx.t
 shared.t
