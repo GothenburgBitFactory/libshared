@@ -37,7 +37,6 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <time.h>
-#include <cerrno>
 #include <csignal>
 #include <cmath>
 
