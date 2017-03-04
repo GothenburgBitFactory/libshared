@@ -980,11 +980,14 @@ bool Datetime::parse_time_off (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  if (parse_time (pig) &&
+  if (parse_time (pig, false) &&
       parse_off (pig))
   {
-    if (! unicodeLatinDigit (pig.peek ()))
+    auto terminator = pig.peek ();
+    if (terminator != '-' && ! unicodeLatinDigit (terminator))
+    {
       return true;
+    }
   }
 
   pig.restoreTo (checkpoint);
