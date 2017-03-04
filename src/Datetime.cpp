@@ -634,17 +634,19 @@ bool Datetime::parse_epoch (Pig& pig)
       epoch >= 315532800)
   {
     _date = static_cast <time_t> (epoch);
+    std::cout << "# parse_epoch [33msucceed[0m " << pig.dump () << "\n";
     return true;
   }
 
+  std::cout << "# parse_epoch fail\n";
   pig.restoreTo (checkpoint);
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// date-ext 'T' time-ext 'Z'
-// date-ext 'T' time-ext offset-ext
-// date-ext 'T' time-ext
+// date_ext 'T' time_utc_ext 'Z'
+// date_ext 'T' time_off_ext
+// date_ext 'T' time_ext
 bool Datetime::parse_date_time_ext (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
