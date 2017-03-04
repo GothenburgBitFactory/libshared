@@ -832,12 +832,14 @@ bool Datetime::parse_time_utc_ext (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  if (parse_time_ext (pig) &&
-      pig.skip ('Z')       &&
-      ! unicodeLatinDigit (pig.peek ()))
+  if (parse_time_ext (pig, false) &&
+      pig.skip ('Z'))
   {
-    _utc = true;
-    return true;
+    if (! unicodeLatinDigit (pig.peek ()))
+    {
+      _utc = true;
+      return true;
+    }
   }
 
   pig.restoreTo (checkpoint);
