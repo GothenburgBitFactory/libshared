@@ -992,11 +992,12 @@ bool Datetime::parse_time (Pig& pig)
 
   int hour {};
   int minute {};
-  int second {};
   if (parse_hour (pig, hour) &&
       parse_minute (pig, minute))
   {
+    int second {};
     parse_second (pig, second);
+
     if (! unicodeLatinDigit (pig.peek ()))
     {
       _seconds = (hour * 3600) + (minute * 60) + second;
