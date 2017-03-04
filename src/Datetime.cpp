@@ -1975,6 +1975,16 @@ bool Datetime::initializeInformalTime (const std::string& token)
       haveDesignator = true;
     }
 
+    // Informal time need to terminate.
+    auto following = pig.peek ();
+    if (unicodeLatinDigit (following) ||
+        following == ':'              ||
+        following == '-'              ||
+        following == '+')
+    {
+      return false;
+    }
+
     if (haveDesignator || ! needDesignator)
     {
       // Midnight today + hours:minutes:seconds.
