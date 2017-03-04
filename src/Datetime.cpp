@@ -577,10 +577,12 @@ bool Datetime::parse_named (Pig& pig)
       break;
   }
 
+/*
   if (initializeNthDayInMonth (tokens))
   {
     return true;
   }
+*/
 
   // Restoration necessary because of the tokenization.
   pig.restoreTo (checkpoint);
