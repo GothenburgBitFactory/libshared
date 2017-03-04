@@ -758,8 +758,7 @@ bool Datetime::parse_off_ext (Pig& pig)
     int hour {0};
     int minute {0};
 
-    if (parse_off_hour (pig, hour) &&
-        ! unicodeLatinDigit (pig.peek ()))
+    if (parse_off_hour (pig, hour))
     {
       if (pig.skip (':'))
       {
