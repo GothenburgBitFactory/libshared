@@ -699,8 +699,8 @@ bool Datetime::parse_date_ext (Pig& pig)
         return true;
       }
     }
-    else
-      pig.restoreTo (checkpointYear);
+
+    pig.restoreTo (checkpointYear);
 
     if (parse_month (pig, month) &&
         pig.skip ('-')           &&
@@ -712,8 +712,8 @@ bool Datetime::parse_date_ext (Pig& pig)
       _day = day;
       return true;
     }
-    else
-      pig.restoreTo (checkpointYear);
+
+    pig.restoreTo (checkpointYear);
 
     if (parse_julian (pig, julian) &&
         ! unicodeLatinDigit (pig.peek ()))
@@ -722,8 +722,8 @@ bool Datetime::parse_date_ext (Pig& pig)
       _julian = julian;
       return true;
     }
-    else
-      pig.restoreTo (checkpointYear);
+
+    pig.restoreTo (checkpointYear);
 
     if (parse_month (pig, month) &&
         ! unicodeLatinDigit (pig.peek ()))
@@ -733,8 +733,6 @@ bool Datetime::parse_date_ext (Pig& pig)
       _day = 1;
       return true;
     }
-    else
-      pig.restoreTo (checkpointYear);
   }
 
   pig.restoreTo (checkpoint);
@@ -908,8 +906,8 @@ bool Datetime::parse_date (Pig& pig)
         return true;
       }
     }
-    else
-      pig.restoreTo (checkpointYear);
+
+    pig.restoreTo (checkpointYear);
 
     if (parse_julian (pig, julian) &&
         ! unicodeLatinDigit (pig.peek ()))
@@ -918,8 +916,8 @@ bool Datetime::parse_date (Pig& pig)
       _julian = julian;
       return true;
     }
-    else
-      pig.restoreTo (checkpointYear);
+
+    pig.restoreTo (checkpointYear);
 
     if (parse_month (pig, month))
     {
@@ -944,8 +942,6 @@ bool Datetime::parse_date (Pig& pig)
         }
       }
     }
-    else
-      pig.restoreTo (checkpointYear);
   }
 
   pig.restoreTo (checkpoint);
