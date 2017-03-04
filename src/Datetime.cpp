@@ -730,6 +730,7 @@ bool Datetime::parse_date_ext (Pig& pig)
     pig.restoreTo (checkpointYear);
 
     if (parse_month (pig, month) &&
+        pig.peek () != '-'       &&
         ! unicodeLatinDigit (pig.peek ()))
     {
       _year = year;
