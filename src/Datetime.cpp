@@ -145,6 +145,8 @@ bool Datetime::parse (
   if (i)
     pig.skipN (static_cast <int> (i));
 
+  auto checkpoint = pig.cursor ();
+
   // Parse epoch first, as it's the most common scenario.
   if (parse_epoch (pig))
   {
@@ -153,7 +155,7 @@ bool Datetime::parse (
     return true;
   }
 
-  else if (parse_formatted (pig, format))
+  if (parse_formatted (pig, format))
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -167,17 +169,17 @@ bool Datetime::parse (
   // Allow parse_date_time and parse_date_time_ext regardless of
   // Datetime::isoEnabled setting, because these formats are relied upon by
   // the 'import' command, JSON parser and hook system.
-  else if (parse_date_time_ext   (pig) || // Strictest first.
-           parse_date_time       (pig) ||
-           (Datetime::isoEnabled &&
-            (parse_date_ext      (pig) ||
-             parse_date          (pig) ||
-             parse_time_utc_ext  (pig) ||
-             parse_time_utc      (pig) ||
-             parse_time_off_ext  (pig) ||
-             parse_time_off      (pig) ||
-             parse_time_ext      (pig) ||
-             parse_time          (pig)))) // Time last, as it is the most permissive.
+  if (parse_date_time_ext   (pig) || // Strictest first.
+      parse_date_time       (pig) ||
+      (Datetime::isoEnabled &&
+       (parse_date_ext      (pig) ||
+        parse_date          (pig) ||
+        parse_time_utc_ext  (pig) ||
+        parse_time_utc      (pig) ||
+        parse_time_off_ext  (pig) ||
+        parse_time_off      (pig) ||
+        parse_time_ext      (pig) ||
+        parse_time          (pig)))) // Time last, as it is the most permissive.
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -188,7 +190,9 @@ bool Datetime::parse (
     }
   }
 
-  else if (parse_named (pig))
+  pig.restoreTo (checkpoint);
+
+  if (parse_named (pig))
   {
     // ::validate and ::resolve are not needed in this case.
     start = pig.cursor ();
