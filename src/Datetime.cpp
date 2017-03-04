@@ -638,11 +638,9 @@ bool Datetime::parse_epoch (Pig& pig)
       epoch >= 315532800)
   {
     _date = static_cast <time_t> (epoch);
-    std::cout << "# parse_epoch [33msucceed[0m " << pig.dump () << "\n";
     return true;
   }
 
-  std::cout << "# parse_epoch fail\n";
   pig.restoreTo (checkpoint);
   return false;
 }
@@ -659,7 +657,7 @@ bool Datetime::parse_date_time_ext (Pig& pig)
       pig.skip ('T')       &&
       (parse_time_utc_ext (pig) ||
        parse_time_off_ext (pig) ||
-       parse_time_ext     (pig) ))
+       parse_time_ext     (pig)))
   {
     return true;
   }
@@ -1033,6 +1031,7 @@ bool Datetime::parse_off (Pig& pig)
     {
       int minute {};
       parse_off_minute (pig, minute);
+
       if (! unicodeLatinDigit (pig.peek ()))
       {
         _offset = (hour * 3600) + (minute * 60);
@@ -1924,8 +1923,8 @@ bool Datetime::initializeInformalTime (const std::string& token)
   Pig pig (token);
 
   int digit = 0;
-  bool needDesignator = true;  // Require am/pm.
-  bool haveDesignator = false;  // Require am/pm.
+  bool needDesignator = true;   // Require am/pm.
+  bool haveDesignator = false;  // Provided am/pm.
   if (pig.getDigit (digit))
   {
     int hours = digit;
