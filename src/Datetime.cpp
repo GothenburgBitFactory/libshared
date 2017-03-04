@@ -1941,14 +1941,14 @@ bool Datetime::initializeInformalTime (const std::string& token)
 
     int minutes = 0;
     int seconds = 0;
-    if (pig.skip (':') &&
-        pig.getDigit2 (minutes))
+    if (pig.skip (':'))
     {
-      if (pig.skip (':') &&
-          pig.getDigits (seconds))
-      {
-        // NOP
-      }
+      if (! pig.getDigit2 (minutes))
+        return false;
+
+      if (pig.skip (':'))
+        if (! pig.getDigits (seconds))
+          return false;
 
       needDesignator = false;
     }
