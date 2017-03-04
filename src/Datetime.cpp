@@ -987,7 +987,7 @@ bool Datetime::parse_time_off (Pig& pig)
 ////////////////////////////////////////////////////////////////////////////////
 // hhmmss
 // hhmm
-bool Datetime::parse_time (Pig& pig)
+bool Datetime::parse_time (Pig& pig, bool terminated)
 {
   auto checkpoint = pig.cursor ();
 
@@ -999,7 +999,9 @@ bool Datetime::parse_time (Pig& pig)
     int second {};
     parse_second (pig, second);
 
-    if (! unicodeLatinDigit (pig.peek ()))
+    auto terminator = pig.peek ();
+    if (! terminated ||
+        (! unicodeLatinDigit (terminator) && terminator != '-' && terminator != '+'))
     {
       _seconds = (hour * 3600) + (minute * 60) + second;
       return true;

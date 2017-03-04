@@ -121,7 +121,7 @@ private:
   bool parse_date          (Pig&);
   bool parse_time_utc      (Pig&);
   bool parse_time_off      (Pig&);
-  bool parse_time          (Pig&);
+  bool parse_time          (Pig&, bool terminated = true);
   bool parse_off           (Pig&);
 
   bool parse_year          (Pig&, int&);
