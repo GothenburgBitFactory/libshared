@@ -2005,13 +2005,19 @@ bool Datetime::initializeInformalTime (const std::string& token)
           --t->tm_mday;
       }
 
-      t->tm_hour = hours;
-      t->tm_min = minutes;
-      t->tm_sec = seconds;
-      t->tm_isdst = -1;
-      _date = mktime (t);
+      // Basic validation.
+      if (hours   >= 0 && hours   < 24 &&
+          minutes >= 0 && minutes < 60 &&
+          seconds >= 0 && seconds < 60)
+      {
+        t->tm_hour = hours;
+        t->tm_min = minutes;
+        t->tm_sec = seconds;
+        t->tm_isdst = -1;
+        _date = mktime (t);
 
-      return true;
+        return true;
+      }
     }
   }
 
