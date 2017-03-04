@@ -46,7 +46,7 @@ void testParse (
   bool in_utc,
   time_t in_date)
 {
-  std::string label = std::string ("parse (\"") + input + "\") --> ";
+  std::string label = std::string ("Datetime::parse (\"") + input + "\") --> ";
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -66,9 +66,21 @@ void testParse (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void testParseError (
+  UnitTest& t,
+  const std::string& input)
+{
+  std::string label = std::string ("Datetime::parse negative '") + input + "' --> fail";
+
+  Datetime neg;
+  std::string::size_type pos {0};
+  t.notok (neg.parse (input, pos), label);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1925);
+  UnitTest t (2062);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -812,8 +824,150 @@ int main (int, char**)
     Datetime r41 ("socw");
     t.ok (r40 == r41,                 "'sow' is equal to 'socw' when Datetime::lookForwards = false");
 
+/*
     // Phrases.
     Datetime r42 ("4th thursday in november");
+*/
+
+    // Negative tests, all expected to fail.
+    testParseError (t, "");
+    testParseError (t, "foo");
+    testParseError (t, "-2014-07-07");
+    testParseError (t, "2014-07-");
+    testParseError (t, "2014-0-12");
+    testParseError (t, "abcd-ab-ab");
+    testParseError (t, "2014-000");
+    testParseError (t, "2014-366");
+    testParseError (t, "2014-999");
+    testParseError (t, "2014-999999999");
+    testParseError (t, "2014-W00");
+    testParseError (t, "2014-W54");
+    testParseError (t, "2014-W240");
+    testParseError (t, "2014-W248");
+    testParseError (t, "2014-W24200");
+    //testParseError (t, "2014-00");        // Looks like Datetime::parse_time_off 'hhmm-hh'
+    testParseError (t, "2014-13");
+    testParseError (t, "2014-99");
+    testParseError (t, "25:00");
+    testParseError (t, "99:00");
+    testParseError (t, "12:60");
+    testParseError (t, "12:99");
+    testParseError (t, "12:ab");
+    testParseError (t, "ab:12");
+    testParseError (t, "ab:cd");
+    testParseError (t, "-12:12");
+    testParseError (t, "12:-12");
+    testParseError (t, "25:00Z");
+    testParseError (t, "99:00Z");
+    testParseError (t, "12:60Z");
+    testParseError (t, "12:99Z");
+    testParseError (t, "12:abZ");
+    testParseError (t, "ab:12Z");
+    testParseError (t, "ab:cdZ");
+    testParseError (t, "-12:12Z");
+    testParseError (t, "12:-12Z");
+    testParseError (t, "25:00+01:00");
+    testParseError (t, "99:00+01:00");
+    testParseError (t, "12:60+01:00");
+    testParseError (t, "12:99+01:00");
+    testParseError (t, "12:ab+01:00");
+    testParseError (t, "ab:12+01:00");
+    testParseError (t, "ab:cd+01:00");
+    testParseError (t, "-12:12+01:00");
+    testParseError (t, "12:-12+01:00");
+    testParseError (t, "25:00-01:00");
+    testParseError (t, "99:00-01:00");
+    testParseError (t, "12:60-01:00");
+    testParseError (t, "12:99-01:00");
+    testParseError (t, "12:ab-01:00");
+    testParseError (t, "ab:12-01:00");
+    testParseError (t, "ab:cd-01:00");
+    testParseError (t, "-12:12-01:00");
+    testParseError (t, "12:-12-01:00");
+    testParseError (t, "25:00:00");
+    testParseError (t, "99:00:00");
+    testParseError (t, "12:60:00");
+    testParseError (t, "12:99:00");
+    testParseError (t, "12:12:60");
+    testParseError (t, "12:12:99");
+    testParseError (t, "12:ab:00");
+    testParseError (t, "ab:12:00");
+    testParseError (t, "12:12:ab");
+    testParseError (t, "ab:cd:ef");
+    testParseError (t, "-12:12:12");
+    testParseError (t, "12:-12:12");
+    testParseError (t, "12:12:-12");
+    testParseError (t, "25:00:00Z");
+    testParseError (t, "99:00:00Z");
+    testParseError (t, "12:60:00Z");
+    testParseError (t, "12:99:00Z");
+    testParseError (t, "12:12:60Z");
+    testParseError (t, "12:12:99Z");
+    testParseError (t, "12:ab:00Z");
+    testParseError (t, "ab:12:00Z");
+    testParseError (t, "12:12:abZ");
+    testParseError (t, "ab:cd:efZ");
+    testParseError (t, "-12:12:12Z");
+    testParseError (t, "12:-12:12Z");
+    testParseError (t, "12:12:-12Z");
+    testParseError (t, "25:00:00+01:00");
+    testParseError (t, "95:00:00+01:00");
+    testParseError (t, "12:60:00+01:00");
+    testParseError (t, "12:99:00+01:00");
+    testParseError (t, "12:12:60+01:00");
+    testParseError (t, "12:12:99+01:00");
+    testParseError (t, "12:ab:00+01:00");
+    testParseError (t, "ab:12:00+01:00");
+    testParseError (t, "12:12:ab+01:00");
+    testParseError (t, "ab:cd:ef+01:00");
+    testParseError (t, "-12:12:12+01:00");
+    testParseError (t, "12:-12:12+01:00");
+    testParseError (t, "12:12:-12+01:00");
+    testParseError (t, "25:00:00-01:00");
+    testParseError (t, "95:00:00-01:00");
+    testParseError (t, "12:60:00-01:00");
+    testParseError (t, "12:99:00-01:00");
+    testParseError (t, "12:12:60-01:00");
+    testParseError (t, "12:12:99-01:00");
+    testParseError (t, "12:ab:00-01:00");
+    testParseError (t, "ab:12:00-01:00");
+    testParseError (t, "12:12:ab-01:00");
+    testParseError (t, "ab:cd:ef-01:00");
+    testParseError (t, "-12:12:12-01:00");
+    testParseError (t, "12:-12:12-01:00");
+    testParseError (t, "12:12:-12-01:00");
+    testParseError (t, "12:12:12-13:00");
+    testParseError (t, "12:12:12-24:00");
+    testParseError (t, "12:12:12-99:00");
+    testParseError (t, "12:12:12-03:60");
+    testParseError (t, "12:12:12-03:99");
+    testParseError (t, "12:12:12-3:20");
+    testParseError (t, "12:12:12-03:2");
+    testParseError (t, "12:12:12-3:2");
+    testParseError (t, "12:12:12+13:00");
+    testParseError (t, "12:12:12+24:00");
+    testParseError (t, "12:12:12+99:00");
+    testParseError (t, "12:12:12+03:60");
+    testParseError (t, "12:12:12+03:99");
+    testParseError (t, "12:12:12+3:20");
+    testParseError (t, "12:12:12+03:2");
+    testParseError (t, "12:12:12+3:2");
+    testParseError (t, "12:12-13:00");
+    testParseError (t, "12:12-24:00");
+    testParseError (t, "12:12-99:00");
+    testParseError (t, "12:12-03:60");
+    testParseError (t, "12:12-03:99");
+    testParseError (t, "12:12-3:20");
+    testParseError (t, "12:12-03:2");
+    testParseError (t, "12:12-3:2");
+    testParseError (t, "12:12+13:00");
+    testParseError (t, "12:12+24:00");
+    testParseError (t, "12:12+99:00");
+    testParseError (t, "12:12+03:60");
+    testParseError (t, "12:12+03:99");
+    testParseError (t, "12:12+3:20");
+    testParseError (t, "12:12+03:2");
+    testParseError (t, "12:12+3:2");
 
     Datetime::lookForwards = true;
     t.diag ("Datetime::lookForwards == true");
