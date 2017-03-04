@@ -780,7 +780,7 @@ bool Datetime::parse_off_ext (Pig& pig)
 
 ////////////////////////////////////////////////////////////////////////////////
 // hh:mm[:ss]
-bool Datetime::parse_time_ext (Pig& pig)
+bool Datetime::parse_time_ext (Pig& pig, bool terminated)
 {
   auto checkpoint = pig.cursor ();
 
@@ -794,7 +794,8 @@ bool Datetime::parse_time_ext (Pig& pig)
     {
       int second {};
       if (parse_second (pig, second) &&
-          ! unicodeLatinDigit (pig.peek ()))
+          ! unicodeLatinDigit (pig.peek ()) &&
+          (! terminated || (pig.peek () != '-' && pig.peek () != '+')))
       {
         _seconds = (hour * 3600) + (minute * 60) + second;
         return true;
