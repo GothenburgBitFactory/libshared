@@ -960,7 +960,7 @@ bool Datetime::parse_time_utc (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  if (parse_time (pig) &&
+  if (parse_time (pig, false) &&
       pig.skip ('Z'))
   {
     _utc = true;
