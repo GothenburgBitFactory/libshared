@@ -5,6 +5,7 @@ charliteral.t
 color.t
 composite.t
 configuration.t
+dates.t
 datetime.t
 duration.t
 external.t
