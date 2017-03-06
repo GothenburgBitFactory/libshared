@@ -592,6 +592,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sopy           2016-01-01T00:00:00  2016-01-01T00:00:00  Unaffected
 //   socy           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
 //   sony           2018-01-01T00:00:00  2018-01-01T00:00:00  Unaffected
+//   soy            2018-01-01T00:00:00  2017-01-01T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -673,9 +674,9 @@ bool Datetime::parse_named (Pig& pig)
         initializeSopy           (token) ||
         initializeSocy           (token) ||
         initializeSony           (token) ||
+        initializeSoy            (token) ||
 
         initializeEoy            (token) ||
-        initializeSoy            (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -2252,6 +2253,20 @@ bool Datetime::initializeSony (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoy (const std::string& token)
+{
+  if (token == "soy")
+  {
+    if (Datetime::lookForwards)
+      return initializeSony ("sony");
+    else
+      return initializeSocy ("socy");
+  }
+
+  return false;
+}
+
 
 
 
@@ -2281,29 +2296,6 @@ bool Datetime::initializeEoy (const std::string& token)
     t->tm_mon = 0;
     t->tm_mday = 1;
     t->tm_year++;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoy (const std::string& token)
-{
-  if (token == "soy")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mon = 0;
-    t->tm_mday = 1;
-
-    if (Datetime::lookForwards)
-      t->tm_year++;
-
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
