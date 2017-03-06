@@ -566,10 +566,12 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eonw           2017-03-19T00:00:00  2017-03-19T00:00:00  Unaffected
 //   eow            2017-03-12T00:00:00  2017-03-05T00:00:00
 //   sopww          2017-02-27T00:00:00  2017-02-27T00:00:00  Unaffected
-//   socww          ?                    ?                    Unaffected unimplemented   errors on weekend
+//   socww          ?                    ?                    Unaffected unimplemented   errors on weekend?
 //   sonww          2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
 //   soww           2017-03-06T00:00:00  2017-02-27T00:00:00
 //   eopww          2017-03-03T00:00:00  2017-03-03T00:00:00  Unaffected
+//   eocww          ?                    ?                    Unaffected unimplemented   errors on weekend?
+//   eonww          2017-03-17T00:00:00  2017-03-17T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -629,6 +631,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSonww          (token) ||  // Must appear after sonw
         initializeSoww           (token) ||  // Must appear after sow
         initializeEopww          (token) ||  // Must appear after eopw
+        initializeEonww          (token) ||  // Must appear after eonw
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1819,6 +1822,25 @@ bool Datetime::initializeEopww (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_mday -= (t->tm_wday + 1) % 7;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEonww (const std::string& token)
+{
+  if (token == "eonww")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_mday -= (t->tm_wday + 1) % 7;
+    t->tm_mday += 14;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
