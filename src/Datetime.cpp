@@ -577,6 +577,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   socm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
 //   sonm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 //   som            2017-04-01T00:00:00  2017-03-01T00:00:00
+//   eopm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -643,6 +644,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSocm           (token) ||
         initializeSonm           (token) ||
         initializeSom            (token) ||
+        initializeEopm           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1963,6 +1965,15 @@ bool Datetime::initializeSom (const std::string& token)
     else
       return initializeSonw ("socm");
   }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEopm (const std::string& token)
+{
+  if (token == "eopm")
+    return initializeSocm ("socm");
 
   return false;
 }
