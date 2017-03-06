@@ -562,6 +562,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sonw           2017-03-12T00:00:00  2017-03-12T00:00:00  Unaffected
 //   sow            2017-03-12T00:00:00  2017-03-05T00:00:00
 //   eopw           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
+//   eocw           2017-03-12T00:00:00  2017-03-12T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -613,6 +614,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSonw           (token) ||
         initializeSow            (token) ||
         initializeEopw           (token) ||
+        initializeEocw           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1696,6 +1698,15 @@ bool Datetime::initializeEopw (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEocw (const std::string& token)
+{
+  if (token == "eocw")
+    return initializeSonw ("sonw");
+
+  return false;
+}
+
 
 
 
@@ -1917,8 +1928,7 @@ bool Datetime::initializeEom (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEow (const std::string& token)
 {
-  if (token == "eow" ||
-      token == "eocw")
+  if (token == "eow")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
