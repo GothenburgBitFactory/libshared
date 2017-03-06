@@ -554,6 +554,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sond           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
 //   sod            2017-03-06T00:00:00  2017-03-05T00:00:00
 //   eopd           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected unimplemented
+//   eocd           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected unimplemented
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -597,6 +598,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSond           (token) ||
         initializeSod            (token) ||
         initializeEopd           (token) ||
+        initializeEocd           (token) ||
 
         initializeEod            (token) ||
         initializeEoy            (token) ||
@@ -1547,6 +1549,16 @@ bool Datetime::initializeEopd (const std::string& token)
 {
   if (token == "eopd")
     return initializeToday ("today");
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Unaffected by Datetime::lookForwards.
+bool Datetime::initializeEocd (const std::string& token)
+{
+  if (token == "eocd")
+    return initializeTomorrow ("tomorrow");
 
   return false;
 }
