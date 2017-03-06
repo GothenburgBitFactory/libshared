@@ -584,6 +584,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sopq           2017-10-01T00:00:00  2017-10-01T00:00:00  Unaffected
 //   socq           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
 //   sonq           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
+//   soq            2017-04-01T00:00:00  2017-01-01T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -657,12 +658,12 @@ bool Datetime::parse_named (Pig& pig)
         initializeSopq           (token) ||
         initializeSocq           (token) ||
         initializeSonq           (token) ||
+        initializeSoq            (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
         initializeSoy            (token) ||
         initializeEoq            (token) ||
-        initializeSoq            (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -2109,6 +2110,21 @@ bool Datetime::initializeSonq (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoq (const std::string& token)
+{
+  if (token == "soq")
+  {
+    if (Datetime::lookForwards)
+      return initializeSonq ("sonq");
+    else
+      return initializeSocq ("socq");
+  }
+
+  return false;
+}
+
+
 
 
 
@@ -2203,38 +2219,6 @@ bool Datetime::initializeEoq (const std::string& token)
       ++t->tm_year;
     }
 
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoq (const std::string& token)
-{
-  if (token == "soq")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    if (Datetime::lookForwards)
-    {
-      t->tm_mon += 3 - (t->tm_mon % 3);
-      if (t->tm_mon > 11)
-      {
-        t->tm_mon -= 12;
-        ++t->tm_year;
-      }
-    }
-    else
-    {
-      t->tm_mon -= t->tm_mon % 3;
-    }
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
