@@ -145,12 +145,12 @@ int main (int, char**)
   Datetime eow;            testInit (t, "eow", eow);
   Datetime sopww;          testInit (t, "sopww", sopww);
   Datetime sonww;          testInit (t, "sonww", sonww);
+  Datetime soww;           testInit (t, "soww", soww);
 
   Datetime soy;            testInit (t, "soy", soy);
   Datetime eoy;            testInit (t, "eoy", eoy);
   Datetime socm;           testInit (t, "socm", socm);
   Datetime eocm;           testInit (t, "eocm", eocm);
-  Datetime soww;           testInit (t, "soww", soww);
   Datetime eoww;           testInit (t, "eoww", eoww);
   Datetime som;            testInit (t, "som", som);
   Datetime eom;            testInit (t, "eom", eom);
@@ -191,7 +191,7 @@ int main (int, char**)
   t.ok (eonw > sonw,                "eonw > sonw");
   t.ok (eow == eocw,                "eow == eocw");
   t.ok (sopww < soww,               "sopww < soww");
-  t.ok (soww < sonww,               "soww < sonww");
+  t.ok (soww == sonww,              "soww == sonww");
 
   t.ok (yesterday < today,          "yesterday < today");
   t.ok (today < tomorrow,           "today < tomorrow");
