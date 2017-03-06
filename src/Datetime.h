@@ -150,6 +150,7 @@ private:
   bool initializeSod            (const std::string&);
   bool initializeEopd           (const std::string&);
   bool initializeEocd           (const std::string&);
+  bool initializeEond           (const std::string&);
 
   bool initializeEod            (const std::string&);
   bool initializeEoy            (const std::string&);
