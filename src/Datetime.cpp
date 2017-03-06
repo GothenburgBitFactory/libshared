@@ -574,6 +574,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eonww          2017-03-17T00:00:00  2017-03-17T00:00:00  Unaffected
 //   eoww           2017-03-10T00:00:00  2017-03-04T00:00:00
 //   sopm           2017-02-01T00:00:00  2017-02-01T00:00:00  Unaffected
+//   socm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -636,6 +637,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEonww          (token) ||  // Must appear after eonw
         initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
+        initializeSocm           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -643,7 +645,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeEoq            (token) ||
         initializeSocq           (token) ||
         initializeSoq            (token) ||
-        initializeSocm           (token) ||
         initializeSom            (token) ||
         initializeEom            (token) ||
         initializeEaster         (token) ||
@@ -1902,6 +1903,25 @@ bool Datetime::initializeSopm (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Unaffected by Datetime::lookForwards.
+bool Datetime::initializeSocm (const std::string& token)
+{
+  if (token == "socm")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
 
 
 
@@ -2045,24 +2065,6 @@ bool Datetime::initializeSoq (const std::string& token)
     {
       t->tm_mon -= t->tm_mon % 3;
     }
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocm (const std::string& token)
-{
-  if (token == "socm")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mday = 1;
