@@ -1705,7 +1705,7 @@ bool Datetime::initializeSow (const std::string& token)
     if (Datetime::lookForwards)
       return initializeSonw ("sonw");
     else
-      return initializeSonw ("socw");
+      return initializeSocw ("socw");
   }
 
   return false;
