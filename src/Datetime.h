@@ -182,6 +182,7 @@ private:
   bool initializeEocq           (const std::string&);
   bool initializeEonq           (const std::string&);
   bool initializeEoq            (const std::string&);
+  bool initializeSopy           (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSocy           (const std::string&);
