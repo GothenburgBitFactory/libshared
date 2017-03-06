@@ -556,6 +556,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eopd           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected unimplemented
 //   eocd           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected unimplemented
 //   eond           2017-03-07T00:00:00  2017-03-07T00:00:00  Unaffected unimplemented
+//   eod            2017-03-06T00:00:00  2017-03-05T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -601,8 +602,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeEopd           (token) ||
         initializeEocd           (token) ||
         initializeEond           (token) ||
-
         initializeEod            (token) ||
+
         initializeEoy            (token) ||
         initializeSocy           (token) ||
         initializeSoy            (token) ||
@@ -1584,35 +1585,30 @@ bool Datetime::initializeEond (const std::string& token)
   return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
-// TODO Datetime::lookForwards.
 bool Datetime::initializeEod (const std::string& token)
 {
   if (token == "eod")
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_mday++;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+    if (Datetime::lookForwards)
+      return initializeTomorrow ("tomorrow");
+    else
+      return initializeToday ("today");
   }
 
   return false;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // TODO Datetime::lookForwards.
