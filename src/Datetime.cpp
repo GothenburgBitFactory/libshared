@@ -591,6 +591,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eoq            2017-04-01T00:00:00  2017-01-01T00:00:00
 //   sopy           2016-01-01T00:00:00  2016-01-01T00:00:00  Unaffected
 //   socy           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
+//   sony           2018-01-01T00:00:00  2018-01-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -671,6 +672,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEoq            (token) ||
         initializeSopy           (token) ||
         initializeSocy           (token) ||
+        initializeSony           (token) ||
 
         initializeEoy            (token) ||
         initializeSoy            (token) ||
@@ -2229,6 +2231,27 @@ bool Datetime::initializeSocy (const std::string& token)
 
   return false;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSony (const std::string& token)
+{
+  if (token == "sony")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mon = 0;
+    t->tm_mday = 1;
+    t->tm_year++;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
 
 
 

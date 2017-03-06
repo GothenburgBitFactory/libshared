@@ -184,6 +184,7 @@ private:
   bool initializeEoq            (const std::string&);
   bool initializeSopy           (const std::string&);
   bool initializeSocy           (const std::string&);
+  bool initializeSony           (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSoy            (const std::string&);
