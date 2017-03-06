@@ -52,7 +52,7 @@ void testInit (UnitTest& t, const std::string& value, Datetime& var)
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (101);
+  UnitTest t (102);
 
   Datetime sunday;    testInit (t, "sunday",    sunday);
   Datetime monday;    testInit (t, "monday",    monday);
@@ -118,10 +118,17 @@ int main (int, char**)
 
   // Simply instantiate these for now.  Test later.
   Datetime now;            testInit (t, "now", now);
-  Datetime today;          testInit (t, "today", today);
-  Datetime sod;            testInit (t, "sod", sod);
   Datetime yesterday;      testInit (t, "yesterday", yesterday);
+  Datetime today;          testInit (t, "today", today);
   Datetime tomorrow;       testInit (t, "tomorrow", tomorrow);
+  Datetime first;          testInit (t, "1st", first);
+  Datetime second;         testInit (t, "2nd", second);
+  Datetime third;          testInit (t, "3rd", third);
+  Datetime fourth;         testInit (t, "4th", fourth);
+  Datetime later;          testInit (t, "later", later);
+  Datetime someday;        testInit (t, "someday", someday);
+
+  Datetime sod;            testInit (t, "sod", sod);
   Datetime eod;            testInit (t, "eod", eod);
   Datetime soy;            testInit (t, "soy", soy);
   Datetime eoy;            testInit (t, "eoy", eoy);
@@ -131,8 +138,6 @@ int main (int, char**)
   Datetime eoww;           testInit (t, "eoww", eoww);
   Datetime som;            testInit (t, "som", som);
   Datetime eom;            testInit (t, "eom", eom);
-  Datetime later;          testInit (t, "later", later);
-  Datetime someday;        testInit (t, "someday", someday);
   Datetime easter;         testInit (t, "easter", easter);
   Datetime eastermonday;   testInit (t, "eastermonday", eastermonday);
   Datetime ascension;      testInit (t, "ascension", ascension);
@@ -141,10 +146,6 @@ int main (int, char**)
   Datetime midsommar;      testInit (t, "midsommar", midsommar);
   Datetime midsommarafton; testInit (t, "midsommarafton", midsommarafton);
   Datetime juhannus;       testInit (t, "juhannus", juhannus);
-  Datetime first;          testInit (t, "1st", first);
-  Datetime second;         testInit (t, "2nd", second);
-  Datetime third;          testInit (t, "3rd", third);
-  Datetime fourth;         testInit (t, "4th", fourth);
 
   // Check abbreviations.
   // TW-1515: abbreviation.minimum does not apply to date recognition
@@ -157,6 +158,7 @@ int main (int, char**)
   Datetime yesterday8;      testInit (t, "yes",       yesterday8);
 
   t.ok (now >= today,               "now >= today");
+  t.ok (later == someday,           "later == someday");
   t.ok (sod == tomorrow,            "sod == tomorrow");
   t.ok (yesterday < today,          "yesterday < today");
   t.ok (today < tomorrow,           "today < tomorrow");
