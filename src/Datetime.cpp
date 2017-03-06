@@ -541,6 +541,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //                  Forwards             Backwards            Notes
 //                  -------------------  -------------------  ------------------
 //   now            2017-03-05T12:34:56  2017-03-05T12:34:56  Unaffected
+//   yesterday      2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected
 //   today          2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 
 //
@@ -573,11 +574,11 @@ bool Datetime::parse_named (Pig& pig)
   if (pig.getUntilWS (token))
   {
     if (initializeNow            (token) ||
+        initializeYesterday      (token) ||
         initializeToday          (token) ||
         initializeSod            (token) ||
         initializeEod            (token) ||
         initializeTomorrow       (token) ||
-        initializeYesterday      (token) ||
         initializeDayName        (token) ||
         initializeMonthName      (token) ||
         initializeLater          (token) ||
@@ -1248,17 +1249,17 @@ bool Datetime::initializeNow (const std::string& token)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Unaffected by Datetime::lookForwards.
-bool Datetime::initializeToday (const std::string& token)
+bool Datetime::initializeYesterday (const std::string& token)
 {
-  if (token == "today")
+  if (closeEnough ("yesterday", token, Datetime::minimumMatchLength))
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
+    t->tm_mday -= 1;
     _date = mktime (t);
-
     return true;
   }
 
@@ -1266,15 +1267,13 @@ bool Datetime::initializeToday (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSod (const std::string& token)
+// Unaffected by Datetime::lookForwards.
+bool Datetime::initializeToday (const std::string& token)
 {
-  if (token == "sod")
+  if (token == "today")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
-
-    if (Datetime::lookForwards)
-      t->tm_mday++;
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
