@@ -557,6 +557,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eocd           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected unimplemented
 //   eond           2017-03-07T00:00:00  2017-03-07T00:00:00  Unaffected unimplemented
 //   eod            2017-03-06T00:00:00  2017-03-05T00:00:00
+//   sopw           2017-02-26T00:00:00  2017-02-26T00:00:00  Unaffected unimplemented
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -603,6 +604,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEocd           (token) ||
         initializeEond           (token) ||
         initializeEod            (token) ||
+        initializeSopw           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1594,6 +1596,26 @@ bool Datetime::initializeEod (const std::string& token)
       return initializeTomorrow ("tomorrow");
     else
       return initializeToday ("today");
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSopw (const std::string& token)
+{
+  if (token == "sopw")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+    int extra = (t->tm_wday + 6) % 7 + 7;
+    t->tm_mday -= extra;
+
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
   }
 
   return false;
