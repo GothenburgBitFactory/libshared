@@ -583,6 +583,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eom            2017-04-01T00:00:00  2017-03-01T00:00:00
 //   sopq           2017-10-01T00:00:00  2017-10-01T00:00:00  Unaffected
 //   socq           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
+//   sonq           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -655,6 +656,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEom            (token) ||
         initializeSopq           (token) ||
         initializeSocq           (token) ||
+        initializeSonq           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -2073,6 +2075,31 @@ bool Datetime::initializeSocq (const std::string& token)
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mon -= t->tm_mon % 3;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSonq (const std::string& token)
+{
+  if (token == "sonq")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_mon += 3 - (t->tm_mon % 3);
+    if (t->tm_mon > 11)
+    {
+      t->tm_mon -= 12;
+      ++t->tm_year;
+    }
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);

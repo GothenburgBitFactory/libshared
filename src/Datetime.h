@@ -176,6 +176,7 @@ private:
   bool initializeEom            (const std::string&);
   bool initializeSopq           (const std::string&);
   bool initializeSocq           (const std::string&);
+  bool initializeSonq           (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSocy           (const std::string&);
