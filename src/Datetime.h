@@ -146,6 +146,7 @@ private:
   bool initializeLater          (const std::string&);
   bool initializeSopd           (const std::string&);
   bool initializeSocd           (const std::string&);
+  bool initializeSond           (const std::string&);
 
   bool initializeSod            (const std::string&);
   bool initializeEod            (const std::string&);
