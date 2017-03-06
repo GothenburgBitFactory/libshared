@@ -568,6 +568,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sopww          2017-02-27T00:00:00  2017-02-27T00:00:00  Unaffected
 //   socww          ?                    ?                    Unaffected unimplemented   errors on weekend
 //   sonww          2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
+//   soww           2017-03-06T00:00:00  2017-02-27T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -625,6 +626,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSopww          (token) ||  // Must appear after sopw
                                              // socww missing
         initializeSonww          (token) ||  // Must appear after sonw
+        initializeSoww           (token) ||  // Must appear after sow
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -635,7 +637,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeSocm           (token) ||
         initializeSom            (token) ||
         initializeEom            (token) ||
-        initializeSoww           (token) ||  // Must appear after sow
         initializeEoww           (token) ||  // Must appear after eow
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
@@ -1784,6 +1785,30 @@ bool Datetime::initializeSonww (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoww (const std::string& token)
+{
+  if (token == "soww")
+  {
+    if (Datetime::lookForwards)
+      return initializeSonww ("sonww");
+    else
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday -= (6 + t->tm_wday) % 7;
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
+  }
+
+  return false;
+}
+
 
 
 
@@ -1992,28 +2017,6 @@ bool Datetime::initializeEom (const std::string& token)
     t->tm_hour = 24;
     t->tm_min = t->tm_sec = 0;
     t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoww (const std::string& token)
-{
-  if (token == "soww")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    if (Datetime::lookForwards)
-      t->tm_mday += 8 - t->tm_wday;
-    else
-      t->tm_mday -= (6 + t->tm_wday) % 7;
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
