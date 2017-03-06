@@ -575,6 +575,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eoww           2017-03-10T00:00:00  2017-03-04T00:00:00
 //   sopm           2017-02-01T00:00:00  2017-02-01T00:00:00  Unaffected
 //   socm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
+//   sonm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -638,6 +639,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
         initializeSocm           (token) ||
+        initializeSonm           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1913,6 +1915,33 @@ bool Datetime::initializeSocm (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Unaffected by Datetime::lookForwards.
+bool Datetime::initializeSonm (const std::string& token)
+{
+  if (token == "sonm")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+    t->tm_mon++;
+    if (t->tm_mon > 11)
+    {
+      t->tm_year++;
+      t->tm_mon = 0;
+    }
+
     t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
