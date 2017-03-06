@@ -152,11 +152,11 @@ int main (int, char**)
   Datetime sopm;           testInit (t, "sopm", sopm);
   Datetime socm;           testInit (t, "socm", socm);
   Datetime sonm;           testInit (t, "sonm", sonm);
+  Datetime som;            testInit (t, "som", som);
 
   Datetime soy;            testInit (t, "soy", soy);
   Datetime eoy;            testInit (t, "eoy", eoy);
   Datetime eocm;           testInit (t, "eocm", eocm);
-  Datetime som;            testInit (t, "som", som);
   Datetime eom;            testInit (t, "eom", eom);
   Datetime easter;         testInit (t, "easter", easter);
   Datetime eastermonday;   testInit (t, "eastermonday", eastermonday);
