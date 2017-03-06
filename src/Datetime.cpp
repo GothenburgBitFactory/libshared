@@ -1961,9 +1961,9 @@ bool Datetime::initializeSom (const std::string& token)
   if (token == "som")
   {
     if (Datetime::lookForwards)
-      return initializeSonw ("sonm");
+      return initializeSonm ("sonm");
     else
-      return initializeSonw ("socm");
+      return initializeSocm ("socm");
   }
 
   return false;
