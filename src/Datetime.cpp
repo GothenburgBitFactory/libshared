@@ -560,6 +560,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sopw           2017-02-26T00:00:00  2017-02-26T00:00:00  Unaffected
 //   socw           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 //   sonw           2017-03-12T00:00:00  2017-03-12T00:00:00  Unaffected
+//   sow            2017-03-12T00:00:00  2017-03-05T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -609,6 +610,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSopw           (token) ||
         initializeSocw           (token) ||
         initializeSonw           (token) ||
+        initializeSow            (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -620,8 +622,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeSom            (token) ||
         initializeEom            (token) ||
         initializeEow            (token) ||
-        initializeSow            (token) ||
-        initializeEoww           (token) ||
+        initializeSoww           (token) ||  // Must appear after sow
+        initializeEoww           (token) ||  // Must appear after eow
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -1668,6 +1670,20 @@ bool Datetime::initializeSonw (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSow (const std::string& token)
+{
+  if (token == "sow")
+  {
+    if (Datetime::lookForwards)
+      return initializeSonw ("sonw");
+    else
+      return initializeSonw ("socw");
+  }
+
+  return false;
+}
+
 
 
 
@@ -1909,9 +1925,9 @@ bool Datetime::initializeEow (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSow (const std::string& token)
+bool Datetime::initializeSoww (const std::string& token)
 {
-  if (token == "sow" || token == "soww")
+  if (token == "soww")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
