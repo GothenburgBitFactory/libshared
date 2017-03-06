@@ -541,6 +541,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //                  Forwards             Backwards            Notes
 //                  -------------------  -------------------  ------------------
 //   now            2017-03-05T12:34:56  2017-03-05T12:34:56  Unaffected
+//   today          2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -1246,6 +1247,7 @@ bool Datetime::initializeNow (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeToday (const std::string& token)
 {
   if (token == "today")
