@@ -580,6 +580,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eopm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
 //   eocm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 //   eonm           2017-05-01T00:00:00  2017-05-01T00:00:00  Unaffected
+//   eom            2017-04-01T00:00:00  2017-03-01T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -649,6 +650,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEopm           (token) ||
         initializeEocm           (token) ||
         initializeEonm           (token) ||
+        initializeEom            (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -656,7 +658,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeEoq            (token) ||
         initializeSocq           (token) ||
         initializeSoq            (token) ||
-        initializeEom            (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -2017,6 +2018,20 @@ bool Datetime::initializeEonm (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEom (const std::string& token)
+{
+  if (token == "eom")
+  {
+    if (Datetime::lookForwards)
+      return initializeSonm ("sonm");
+    else
+      return initializeEopm ("eopm");
+  }
+
+  return false;
+}
+
 
 
 
@@ -2163,25 +2178,6 @@ bool Datetime::initializeSoq (const std::string& token)
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEom (const std::string& token)
-{
-  if (token == "eom")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = 24;
-    t->tm_min = t->tm_sec = 0;
-    t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
