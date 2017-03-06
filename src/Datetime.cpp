@@ -586,6 +586,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sonq           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 //   soq            2017-04-01T00:00:00  2017-01-01T00:00:00
 //   eopq           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
+//   eocq           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -661,6 +662,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSonq           (token) ||
         initializeSoq            (token) ||
         initializeEopq           (token) ||
+        initializeEocq           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -2131,6 +2133,15 @@ bool Datetime::initializeEopq (const std::string& token)
 {
   if (token == "eopq")
     return initializeSocq ("socq");
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEocq (const std::string& token)
+{
+  if (token == "eocq")
+    return initializeSonq ("sonq");
 
   return false;
 }
