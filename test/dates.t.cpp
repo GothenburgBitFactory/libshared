@@ -130,8 +130,8 @@ int main (int, char**)
   Datetime sopd;           testInit (t, "sopd", sopd);
   Datetime socd;           testInit (t, "socd", socd);
   Datetime sond;           testInit (t, "sond", sond);
-
   Datetime sod;            testInit (t, "sod", sod);
+
   Datetime eod;            testInit (t, "eod", eod);
   Datetime soy;            testInit (t, "soy", soy);
   Datetime eoy;            testInit (t, "eoy", eoy);

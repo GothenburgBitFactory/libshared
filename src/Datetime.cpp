@@ -549,9 +549,10 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   <month> april  2017-04-01T00:00:00  2016-04-01T00:00:00
 //   later          2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
 //   someday        2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
-//   sopd           2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected unimplemented
-//   socd           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected unimplemented
-//   sond           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected unimplemented
+//   sopd           2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected
+//   socd           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
+//   sond           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
+//   sod            2017-03-06T00:00:00  2017-03-05T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -593,8 +594,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeSopd           (token) ||
         initializeSocd           (token) ||
         initializeSond           (token) ||
-
         initializeSod            (token) ||
+
         initializeEod            (token) ||
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1524,37 +1525,30 @@ bool Datetime::initializeSond (const std::string& token)
   return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSod (const std::string& token)
 {
   if (token == "sod")
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
     if (Datetime::lookForwards)
-      t->tm_mday++;
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-
-    return true;
+      return initializeTomorrow ("tomorrow");
+    else
+      return initializeToday ("today");
   }
 
   return false;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // TODO Datetime::lookForwards.
