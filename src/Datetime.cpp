@@ -590,6 +590,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eonq           2017-07-01T00:00:00  2017-07-01T00:00:00  Unaffected
 //   eoq            2017-04-01T00:00:00  2017-01-01T00:00:00
 //   sopy           2016-01-01T00:00:00  2016-01-01T00:00:00  Unaffected
+//   socy           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -669,9 +670,9 @@ bool Datetime::parse_named (Pig& pig)
         initializeEonq           (token) ||
         initializeEoq            (token) ||
         initializeSopy           (token) ||
+        initializeSocy           (token) ||
 
         initializeEoy            (token) ||
-        initializeSocy           (token) ||
         initializeSoy            (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
@@ -2210,6 +2211,25 @@ bool Datetime::initializeSopy (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSocy (const std::string& token)
+{
+  if (token == "socy")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mon = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
 
 
 
@@ -2238,25 +2258,6 @@ bool Datetime::initializeEoy (const std::string& token)
     t->tm_mon = 0;
     t->tm_mday = 1;
     t->tm_year++;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocy (const std::string& token)
-{
-  if (token == "socy")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mon = 0;
-    t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
