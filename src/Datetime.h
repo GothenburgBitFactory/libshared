@@ -180,6 +180,7 @@ private:
   bool initializeSoq            (const std::string&);
   bool initializeEopq           (const std::string&);
   bool initializeEocq           (const std::string&);
+  bool initializeEonq           (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSocy           (const std::string&);
