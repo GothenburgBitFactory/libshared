@@ -544,6 +544,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   yesterday      2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected
 //   today          2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 //   tomorrow       2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
+//   <ordinal> 12th 2017-03-12T00:00:00  2017-02-12T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -578,6 +579,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeYesterday      (token) ||
         initializeToday          (token) ||
         initializeTomorrow       (token) ||
+        initializeOrdinal        (token) ||
 
         initializeSod            (token) ||
         initializeEod            (token) ||
@@ -597,7 +599,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeEow            (token) ||
         initializeSow            (token) ||
         initializeEoww           (token) ||
-        initializeOrdinal        (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -1306,6 +1307,102 @@ bool Datetime::initializeTomorrow (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeOrdinal (const std::string& token)
+{
+  if (
+      (
+       token.length () == 3                  &&
+       unicodeLatinDigit (token[0])          &&
+       ((token[1] == 's' && token[2] == 't') ||
+        (token[1] == 'n' && token[2] == 'd') ||
+        (token[1] == 'r' && token[2] == 'd') ||
+        (token[1] == 't' && token[2] == 'h'))
+      )
+      ||
+      (
+       token.length () == 4                  &&
+       unicodeLatinDigit (token[0])          &&
+       unicodeLatinDigit (token[1])          &&
+       ((token[2] == 's' && token[3] == 't') ||
+        (token[2] == 'n' && token[3] == 'd') ||
+        (token[2] == 'r' && token[3] == 'd') ||
+        (token[2] == 't' && token[3] == 'h'))
+      )
+     )
+  {
+    int number;
+    std::string ordinal;
+
+    if (unicodeLatinDigit (token[1]))
+    {
+      number = strtol (token.substr (0, 2).c_str (), nullptr, 10);
+      ordinal = lowerCase (token.substr (2));
+    }
+    else
+    {
+      number = strtol (token.substr (0, 1).c_str (), nullptr, 10);
+      ordinal = lowerCase (token.substr (1));
+    }
+
+    // Sanity check.
+    if (number <= 31)
+    {
+      // Make sure the digits and suffix agree.
+      int remainder1 = number % 10;
+      int remainder2 = number % 100;
+      if ((remainder2 != 11 && remainder1 == 1 && ordinal == "st") ||
+          (remainder2 != 12 && remainder1 == 2 && ordinal == "nd") ||
+          (remainder2 != 13 && remainder1 == 3 && ordinal == "rd") ||
+          ((remainder2 == 11 ||
+            remainder2 == 12 ||
+            remainder2 == 13 ||
+            remainder1 == 0 ||
+            remainder1 > 3) && ordinal == "th"))
+      {
+        time_t now = time (nullptr);
+        struct tm* t = localtime (&now);
+
+        int y = t->tm_year + 1900;
+        int m = t->tm_mon + 1;
+        int d = t->tm_mday;
+
+        // If it is this month.
+        if (! Datetime::lookForwards ||
+            (d < number &&
+             number <= daysInMonth (y, m)))
+        {
+          t->tm_hour = t->tm_min = t->tm_sec = 0;
+          t->tm_mon  = m - 1;
+          t->tm_mday = number;
+          t->tm_year = y - 1900;
+          t->tm_isdst = -1;
+          _date = mktime (t);
+        }
+        else
+        {
+          if (++m > 12)
+          {
+            m = 1;
+            y++;
+          }
+
+          t->tm_hour = t->tm_min = t->tm_sec = 0;
+          t->tm_mon  = m - 1;
+          t->tm_mday = number;
+          t->tm_year = y - 1900;
+          t->tm_isdst = -1;
+          _date = mktime (t);
+        }
+
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 
 
 
@@ -1724,102 +1821,6 @@ bool Datetime::initializeEoww (const std::string& token)
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeOrdinal (const std::string& token)
-{
-  if (
-      (
-       token.length () == 3                  &&
-       unicodeLatinDigit (token[0])          &&
-       ((token[1] == 's' && token[2] == 't') ||
-        (token[1] == 'n' && token[2] == 'd') ||
-        (token[1] == 'r' && token[2] == 'd') ||
-        (token[1] == 't' && token[2] == 'h'))
-      )
-      ||
-      (
-       token.length () == 4                  &&
-       unicodeLatinDigit (token[0])          &&
-       unicodeLatinDigit (token[1])          &&
-       ((token[2] == 's' && token[3] == 't') ||
-        (token[2] == 'n' && token[3] == 'd') ||
-        (token[2] == 'r' && token[3] == 'd') ||
-        (token[2] == 't' && token[3] == 'h'))
-      )
-     )
-  {
-    int number;
-    std::string ordinal;
-
-    if (unicodeLatinDigit (token[1]))
-    {
-      number = strtol (token.substr (0, 2).c_str (), nullptr, 10);
-      ordinal = lowerCase (token.substr (2));
-    }
-    else
-    {
-      number = strtol (token.substr (0, 1).c_str (), nullptr, 10);
-      ordinal = lowerCase (token.substr (1));
-    }
-
-    // Sanity check.
-    if (number <= 31)
-    {
-      // Make sure the digits and suffix agree.
-      int remainder1 = number % 10;
-      int remainder2 = number % 100;
-      if ((remainder2 != 11 && remainder1 == 1 && ordinal == "st") ||
-          (remainder2 != 12 && remainder1 == 2 && ordinal == "nd") ||
-          (remainder2 != 13 && remainder1 == 3 && ordinal == "rd") ||
-          ((remainder2 == 11 ||
-            remainder2 == 12 ||
-            remainder2 == 13 ||
-            remainder1 == 0 ||
-            remainder1 > 3) && ordinal == "th"))
-      {
-        time_t now = time (nullptr);
-        struct tm* t = localtime (&now);
-
-        int y = t->tm_year + 1900;
-        int m = t->tm_mon + 1;
-        int d = t->tm_mday;
-
-        // If it is this month.
-        if (! Datetime::lookForwards ||
-            (d < number &&
-             number <= daysInMonth (y, m)))
-        {
-          t->tm_hour = t->tm_min = t->tm_sec = 0;
-          t->tm_mon  = m - 1;
-          t->tm_mday = number;
-          t->tm_year = y - 1900;
-          t->tm_isdst = -1;
-          _date = mktime (t);
-        }
-        else
-        {
-          if (++m > 12)
-          {
-            m = 1;
-            y++;
-          }
-
-          t->tm_hour = t->tm_min = t->tm_sec = 0;
-          t->tm_mon  = m - 1;
-          t->tm_mday = number;
-          t->tm_year = y - 1900;
-          t->tm_isdst = -1;
-          _date = mktime (t);
-        }
-
-        return true;
-      }
-    }
   }
 
   return false;

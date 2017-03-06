@@ -140,6 +140,7 @@ private:
   bool initializeYesterday      (const std::string&);
   bool initializeToday          (const std::string&);
   bool initializeTomorrow       (const std::string&);
+  bool initializeOrdinal        (const std::string&);
 
   bool initializeSod            (const std::string&);
   bool initializeEod            (const std::string&);
@@ -159,7 +160,6 @@ private:
   bool initializeEow            (const std::string&);
   bool initializeSow            (const std::string&);
   bool initializeEoww           (const std::string&);
-  bool initializeOrdinal        (const std::string&);
   bool initializeEaster         (const std::string&);
   bool initializeMidsommar      (const std::string&);
   bool initializeMidsommarafton (const std::string&);
