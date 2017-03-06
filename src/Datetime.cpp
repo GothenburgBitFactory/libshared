@@ -573,6 +573,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eocww          ?                    ?                    Unaffected unimplemented   errors on weekend?
 //   eonww          2017-03-17T00:00:00  2017-03-17T00:00:00  Unaffected
 //   eoww           2017-03-10T00:00:00  2017-03-04T00:00:00
+//   sopm           2017-02-01T00:00:00  2017-02-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -634,6 +635,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEopww          (token) ||  // Must appear after eopw
         initializeEonww          (token) ||  // Must appear after eonw
         initializeEoww           (token) ||  // Must appear after eow
+        initializeSopm           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1872,6 +1874,38 @@ bool Datetime::initializeEoww (const std::string& token)
 
   return false;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSopm (const std::string& token)
+{
+  if (token == "sopm")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+    if (t->tm_mon == 0)
+    {
+      t->tm_year--;
+      t->tm_mon = 11;
+    }
+    else
+      t->tm_mon--;
+
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
 
 
 
