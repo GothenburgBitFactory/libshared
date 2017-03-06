@@ -1780,7 +1780,7 @@ bool Datetime::initializeSonww (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_mday += 15 - t->tm_wday;
+    t->tm_mday += 8 - t->tm_wday;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);

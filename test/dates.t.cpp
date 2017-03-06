@@ -193,9 +193,9 @@ int main (int, char**)
   t.ok (eonw > sonw,                "eonw > sonw");
   t.ok (eow == eocw,                "eow == eocw");
   t.ok (sopww < soww,               "sopww < soww");
-  t.ok (soww < sonww,               "soww < sonww");
+  t.ok (soww == sonww,              "soww == sonww");
   t.ok (eopww < soww,               "eopww < soww");
-  t.ok (eonww > eoww,               "eonww > eoww");
+  t.ok (eonww > sonww,              "eonww > sonww");
 
   t.ok (yesterday < today,          "yesterday < today");
   t.ok (today < tomorrow,           "today < tomorrow");
