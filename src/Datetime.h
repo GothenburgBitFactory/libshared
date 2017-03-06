@@ -171,6 +171,7 @@ private:
   bool initializeSonm           (const std::string&);
   bool initializeSom            (const std::string&);
   bool initializeEopm           (const std::string&);
+  bool initializeEocm           (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSocy           (const std::string&);
