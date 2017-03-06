@@ -572,6 +572,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eopww          2017-03-03T00:00:00  2017-03-03T00:00:00  Unaffected
 //   eocww          ?                    ?                    Unaffected unimplemented   errors on weekend?
 //   eonww          2017-03-17T00:00:00  2017-03-17T00:00:00  Unaffected
+//   eoww           2017-03-10T00:00:00  2017-03-04T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -632,6 +633,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSoww           (token) ||  // Must appear after sow
         initializeEopww          (token) ||  // Must appear after eopw
         initializeEonww          (token) ||  // Must appear after eonw
+        initializeEoww           (token) ||  // Must appear after eow
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -642,7 +644,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeSocm           (token) ||
         initializeSom            (token) ||
         initializeEom            (token) ||
-        initializeEoww           (token) ||  // Must appear after eow
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -1839,12 +1840,34 @@ bool Datetime::initializeEonww (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_mday -= (t->tm_wday + 1) % 7;
-    t->tm_mday += 14;
+    t->tm_mday += 13 - t->tm_wday;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEoww (const std::string& token)
+{
+  if (token == "eoww")
+  {
+    if (Datetime::lookForwards)
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday += 6 - t->tm_wday;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
+    else
+      return initializeEopww ("eopww");
   }
 
   return false;
@@ -2058,28 +2081,6 @@ bool Datetime::initializeEom (const std::string& token)
     t->tm_hour = 24;
     t->tm_min = t->tm_sec = 0;
     t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEoww (const std::string& token)
-{
-  if (token == "eoww")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    if (Datetime::lookForwards)
-      t->tm_mday += 6 - t->tm_wday;
-    else
-      t->tm_mday -= (t->tm_wday + 1) % 7;
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
     return true;
