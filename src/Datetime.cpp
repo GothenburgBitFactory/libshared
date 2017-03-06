@@ -1986,7 +1986,7 @@ bool Datetime::initializeEopm (const std::string& token)
 bool Datetime::initializeEocm (const std::string& token)
 {
   if (token == "eocm")
-    return initializeSocm ("sonm");
+    return initializeSonm ("sonm");
 
   return false;
 }
