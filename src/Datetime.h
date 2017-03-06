@@ -144,6 +144,7 @@ private:
   bool initializeDayName        (const std::string&);
   bool initializeMonthName      (const std::string&);
   bool initializeLater          (const std::string&);
+  bool initializeSopd           (const std::string&);
 
   bool initializeSod            (const std::string&);
   bool initializeEod            (const std::string&);

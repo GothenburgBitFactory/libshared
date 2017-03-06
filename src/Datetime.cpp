@@ -549,6 +549,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   <month> april  2017-04-01T00:00:00  2016-04-01T00:00:00
 //   later          2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
 //   someday        2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
+//   sopd           2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected unimplemented
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -587,6 +588,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeDayName        (token) ||
         initializeMonthName      (token) ||
         initializeLater          (token) ||
+        initializeSopd           (token) ||
 
         initializeSod            (token) ||
         initializeEod            (token) ||
@@ -1487,6 +1489,14 @@ bool Datetime::initializeLater (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSopd (const std::string& token)
+{
+  if (token == "sopd")
+    return initializeYesterday ("yesterday");
+
+  return false;
+}
 
 
 
