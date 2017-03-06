@@ -141,10 +141,10 @@ private:
   bool initializeToday          (const std::string&);
   bool initializeTomorrow       (const std::string&);
   bool initializeOrdinal        (const std::string&);
+  bool initializeDayName        (const std::string&);
 
   bool initializeSod            (const std::string&);
   bool initializeEod            (const std::string&);
-  bool initializeDayName        (const std::string&);
   bool initializeMonthName      (const std::string&);
   bool initializeLater          (const std::string&);
   bool initializeEoy            (const std::string&);

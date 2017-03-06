@@ -545,6 +545,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   today          2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 //   tomorrow       2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
 //   <ordinal> 12th 2017-03-12T00:00:00  2017-02-12T00:00:00
+//   <day> monday   2017-03-06T00:00:00  2017-02-27T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -580,10 +581,10 @@ bool Datetime::parse_named (Pig& pig)
         initializeToday          (token) ||
         initializeTomorrow       (token) ||
         initializeOrdinal        (token) ||
+        initializeDayName        (token) ||
 
         initializeSod            (token) ||
         initializeEod            (token) ||
-        initializeDayName        (token) ||
         initializeMonthName      (token) ||
         initializeLater          (token) ||
         initializeEoy            (token) ||
@@ -1403,6 +1404,39 @@ bool Datetime::initializeOrdinal (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeDayName (const std::string& token)
+{
+  auto day = dayOfWeek (token);
+  if (day != -1)
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    if (Datetime::lookForwards)
+    {
+      if (t->tm_wday >= day)
+        t->tm_mday += day - t->tm_wday + 7;
+      else
+        t->tm_mday += day - t->tm_wday;
+    }
+    else
+    {
+      if (t->tm_wday >= day)
+        t->tm_mday += day - t->tm_wday;
+      else
+        t->tm_mday += day - t->tm_wday - 7;
+    }
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
 
 
 
@@ -1446,39 +1480,6 @@ bool Datetime::initializeEod (const std::string& token)
     struct tm* t = localtime (&now);
 
     t->tm_mday++;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeDayName (const std::string& token)
-{
-  auto day = dayOfWeek (token);
-  if (day != -1)
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    if (Datetime::lookForwards)
-    {
-      if (t->tm_wday >= day)
-        t->tm_mday += day - t->tm_wday + 7;
-      else
-        t->tm_mday += day - t->tm_wday;
-    }
-    else
-    {
-      if (t->tm_wday >= day)
-        t->tm_mday += day - t->tm_wday;
-      else
-        t->tm_mday += day - t->tm_wday - 7;
-    }
-
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
