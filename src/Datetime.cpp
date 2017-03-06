@@ -578,8 +578,9 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sonm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 //   som            2017-04-01T00:00:00  2017-03-01T00:00:00
 //   eopm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
-
 //   eocm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
+//   eonm           2017-05-01T00:00:00  2017-05-01T00:00:00  Unaffected
+
 //
 bool Datetime::parse_named (Pig& pig)
 {
@@ -646,6 +647,8 @@ bool Datetime::parse_named (Pig& pig)
         initializeSonm           (token) ||
         initializeSom            (token) ||
         initializeEopm           (token) ||
+        initializeEocm           (token) ||
+        initializeEonm           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1988,6 +1991,32 @@ bool Datetime::initializeEocm (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEonm (const std::string& token)
+{
+  if (token == "eonm")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = 24;
+    t->tm_min = t->tm_sec = 0;
+    t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
+    t->tm_mon += 2;
+    if (t->tm_mon > 11)
+    {
+      t->tm_year++;
+      t->tm_mon -= 12;
+    }
+
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
 
 
 
@@ -2145,8 +2174,7 @@ bool Datetime::initializeSoq (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEom (const std::string& token)
 {
-  if (token == "eom" ||
-      token == "eocm")
+  if (token == "eom")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
