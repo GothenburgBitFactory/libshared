@@ -137,6 +137,7 @@ private:
   bool parse_off_minute    (Pig&, int&);
 
   bool initializeNow            (const std::string&);
+
   bool initializeToday          (const std::string&);
   bool initializeSod            (const std::string&);
   bool initializeEod            (const std::string&);
