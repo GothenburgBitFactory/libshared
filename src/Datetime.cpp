@@ -581,6 +581,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eocm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
 //   eonm           2017-05-01T00:00:00  2017-05-01T00:00:00  Unaffected
 //   eom            2017-04-01T00:00:00  2017-03-01T00:00:00
+//   sopq           2017-10-01T00:00:00  2017-10-01T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -651,6 +652,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeEocm           (token) ||
         initializeEonm           (token) ||
         initializeEom            (token) ||
+        initializeSopq           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -2027,6 +2029,33 @@ bool Datetime::initializeEom (const std::string& token)
       return initializeSonm ("sonm");
     else
       return initializeEopm ("eopm");
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Unaffected by Datetime::lookForwards.
+bool Datetime::initializeSopq (const std::string& token)
+{
+  if (token == "sopq")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_mon -= t->tm_mon % 3;
+    t->tm_mon -= 3;
+    if (t->tm_mon < 0)
+    {
+      t->tm_mon += 12;
+      t->tm_year--;
+    }
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
   }
 
   return false;
