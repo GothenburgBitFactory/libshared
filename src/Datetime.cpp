@@ -547,6 +547,8 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   <ordinal> 12th 2017-03-12T00:00:00  2017-02-12T00:00:00
 //   <day> monday   2017-03-06T00:00:00  2017-02-27T00:00:00
 //   <month> april  2017-04-01T00:00:00  2016-04-01T00:00:00
+//   later          2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
+//   someday        2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -584,10 +586,10 @@ bool Datetime::parse_named (Pig& pig)
         initializeOrdinal        (token) ||
         initializeDayName        (token) ||
         initializeMonthName      (token) ||
+        initializeLater          (token) ||
 
         initializeSod            (token) ||
         initializeEod            (token) ||
-        initializeLater          (token) ||
         initializeEoy            (token) ||
         initializeSocy           (token) ||
         initializeSoy            (token) ||
@@ -1464,6 +1466,27 @@ bool Datetime::initializeMonthName (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeLater (const std::string& token)
+{
+  if (token == "later" ||
+      token == "someday")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_year = 138;
+    t->tm_mon = 0;
+    t->tm_mday = 18;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
+
+  return false;
+}
+
 
 
 
@@ -1517,27 +1540,7 @@ bool Datetime::initializeEod (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeLater (const std::string& token)
-{
-  if (token == "later" ||
-      token == "someday")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_year = 138;
-    t->tm_mon = 0;
-    t->tm_mday = 18;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
+// TODO Datetime::lookForwards.
 bool Datetime::initializeEoy (const std::string& token)
 {
   if (token == "eoy" ||
