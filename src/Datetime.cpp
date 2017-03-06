@@ -576,6 +576,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sopm           2017-02-01T00:00:00  2017-02-01T00:00:00  Unaffected
 //   socm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
 //   sonm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
+//   som            2017-04-01T00:00:00  2017-03-01T00:00:00
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -635,11 +636,13 @@ bool Datetime::parse_named (Pig& pig)
         initializeSonww          (token) ||  // Must appear after sonw
         initializeSoww           (token) ||  // Must appear after sow
         initializeEopww          (token) ||  // Must appear after eopw
+                                             // eocww missing
         initializeEonww          (token) ||  // Must appear after eonw
         initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
         initializeSocm           (token) ||
         initializeSonm           (token) ||
+        initializeSom            (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -647,7 +650,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeEoq            (token) ||
         initializeSocq           (token) ||
         initializeSoq            (token) ||
-        initializeSom            (token) ||
         initializeEom            (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
@@ -1951,6 +1953,20 @@ bool Datetime::initializeSonm (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSom (const std::string& token)
+{
+  if (token == "som")
+  {
+    if (Datetime::lookForwards)
+      return initializeSonw ("sonm");
+    else
+      return initializeSonw ("socm");
+  }
+
+  return false;
+}
+
 
 
 
@@ -2096,35 +2112,6 @@ bool Datetime::initializeSoq (const std::string& token)
     }
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
-  }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSom (const std::string& token)
-{
-  if (token == "som")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-
-    if (Datetime::lookForwards)
-    {
-      t->tm_mon++;
-      if (t->tm_mon == 12)
-      {
-        t->tm_year++;
-        t->tm_mon = 0;
-      }
-    }
-
     t->tm_mday = 1;
     t->tm_isdst = -1;
     _date = mktime (t);
