@@ -161,6 +161,7 @@ private:
   bool initializeEonw           (const std::string&);
   bool initializeEow            (const std::string&);
   bool initializeSopww          (const std::string&);
+  bool initializeSonww          (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSocy           (const std::string&);
