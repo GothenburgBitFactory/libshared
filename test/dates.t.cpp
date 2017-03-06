@@ -52,7 +52,7 @@ void testInit (UnitTest& t, const std::string& value, Datetime& var)
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (104);
+  UnitTest t (106);
 
   Datetime sunday;    testInit (t, "sunday",    sunday);
   Datetime monday;    testInit (t, "monday",    monday);
@@ -128,6 +128,7 @@ int main (int, char**)
   Datetime later;          testInit (t, "later", later);
   Datetime someday;        testInit (t, "someday", someday);
   Datetime sopd;           testInit (t, "sopd", sopd);
+  Datetime socd;           testInit (t, "socd", socd);
 
   Datetime sod;            testInit (t, "sod", sod);
   Datetime eod;            testInit (t, "eod", eod);
@@ -161,6 +162,7 @@ int main (int, char**)
   t.ok (now >= today,               "now >= today");
   t.ok (later == someday,           "later == someday");
   t.ok (sopd == yesterday,          "sopd == yesterday");
+  t.ok (socd == today,              "socd == today");
   t.ok (sod == tomorrow,            "sod == tomorrow");
   t.ok (yesterday < today,          "yesterday < today");
   t.ok (today < tomorrow,           "today < tomorrow");
