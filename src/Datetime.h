@@ -181,11 +181,11 @@ private:
   bool initializeEopq           (const std::string&);
   bool initializeEocq           (const std::string&);
   bool initializeEonq           (const std::string&);
+  bool initializeEoq            (const std::string&);
 
   bool initializeEoy            (const std::string&);
   bool initializeSocy           (const std::string&);
   bool initializeSoy            (const std::string&);
-  bool initializeEoq            (const std::string&);
   bool initializeEaster         (const std::string&);
   bool initializeMidsommar      (const std::string&);
   bool initializeMidsommarafton (const std::string&);
