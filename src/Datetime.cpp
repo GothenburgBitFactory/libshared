@@ -561,6 +561,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   socw           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 //   sonw           2017-03-12T00:00:00  2017-03-12T00:00:00  Unaffected
 //   sow            2017-03-12T00:00:00  2017-03-05T00:00:00
+//   eopw           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
 
 //
 bool Datetime::parse_named (Pig& pig)
@@ -611,6 +612,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSocw           (token) ||
         initializeSonw           (token) ||
         initializeSow            (token) ||
+        initializeEopw           (token) ||
 
         initializeEoy            (token) ||
         initializeSocy           (token) ||
@@ -1684,7 +1686,15 @@ bool Datetime::initializeSow (const std::string& token)
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Unaffected by Datetime::lookForwards.
+bool Datetime::initializeEopw (const std::string& token)
+{
+  if (token == "eopw")
+    return initializeSocw ("socw");
 
+  return false;
+}
 
 
 
