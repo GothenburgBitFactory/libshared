@@ -597,6 +597,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eocy           2018-01-01T00:00:00  2018-01-01T00:00:00  Unaffected
 
 //   eony           2019-01-01T00:00:00  2019-01-01T00:00:00  Unaffected unimplemented
+//   eoy            2018-01-01T00:00:00  2017-01-01T00:00:00
 //
 bool Datetime::parse_named (Pig& pig)
 {
@@ -2290,37 +2291,15 @@ bool Datetime::initializeEocy (const std::string& token)
   return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
-// TODO Datetime::lookForwards.
 bool Datetime::initializeEoy (const std::string& token)
 {
-  if (token == "eoy" ||
-      token == "eocy")
+  if (token == "eoy")
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mon = 0;
-    t->tm_mday = 1;
-    t->tm_year++;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+    if (Datetime::lookForwards)
+      return initializeEocy ("eocy");
+    else
+      return initializeEopy ("eopy");
   }
 
   return false;
