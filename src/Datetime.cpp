@@ -62,7 +62,6 @@ static std::vector <std::string> monthNames {
 int Datetime::weekstart = 1; // Monday, per ISO-8601.
 int Datetime::minimumMatchLength = 3;
 bool Datetime::isoEnabled = true;
-bool Datetime::lookForwards = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
@@ -1331,7 +1330,6 @@ bool Datetime::parse_off_minute (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeNow (const std::string& token)
 {
   if (token == "now")
@@ -1344,7 +1342,6 @@ bool Datetime::initializeNow (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeYesterday (const std::string& token)
 {
   if (closeEnough ("yesterday", token, Datetime::minimumMatchLength))
@@ -1363,7 +1360,6 @@ bool Datetime::initializeYesterday (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeToday (const std::string& token)
 {
   if (token == "today")
@@ -1382,7 +1378,6 @@ bool Datetime::initializeToday (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeTomorrow (const std::string& token)
 {
   if (closeEnough ("tomorrow", token, Datetime::minimumMatchLength))
@@ -1461,9 +1456,8 @@ bool Datetime::initializeOrdinal (const std::string& token)
         int d = t->tm_mday;
 
         // If it is this month.
-        if (! Datetime::lookForwards ||
-            (d < number &&
-             number <= daysInMonth (y, m)))
+        if (d < number &&
+            number <= daysInMonth (y, m))
         {
           t->tm_hour = t->tm_min = t->tm_sec = 0;
           t->tm_mon  = m - 1;
@@ -1505,20 +1499,10 @@ bool Datetime::initializeDayName (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    if (Datetime::lookForwards)
-    {
-      if (t->tm_wday >= day)
-        t->tm_mday += day - t->tm_wday + 7;
-      else
-        t->tm_mday += day - t->tm_wday;
-    }
+    if (t->tm_wday >= day)
+      t->tm_mday += day - t->tm_wday + 7;
     else
-    {
-      if (t->tm_wday >= day)
-        t->tm_mday += day - t->tm_wday;
-      else
-        t->tm_mday += day - t->tm_wday - 7;
-    }
+      t->tm_mday += day - t->tm_wday;
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
@@ -1538,11 +1522,8 @@ bool Datetime::initializeMonthName (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    if (Datetime::lookForwards)
-    {
-      if (t->tm_mon >= month - 1)
-        t->tm_year++;
-    }
+    if (t->tm_mon >= month - 1)
+      t->tm_year++;
 
     t->tm_mon = month - 1;
     t->tm_mday = 1;
@@ -1556,7 +1537,6 @@ bool Datetime::initializeMonthName (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeLater (const std::string& token)
 {
   if (token == "later" ||
@@ -1578,7 +1558,6 @@ bool Datetime::initializeLater (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSopd (const std::string& token)
 {
   if (token == "sopd")
@@ -1588,7 +1567,6 @@ bool Datetime::initializeSopd (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSocd (const std::string& token)
 {
   if (token == "socd")
@@ -1598,7 +1576,6 @@ bool Datetime::initializeSocd (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSond (const std::string& token)
 {
   if (token == "sond")
@@ -1611,18 +1588,12 @@ bool Datetime::initializeSond (const std::string& token)
 bool Datetime::initializeSod (const std::string& token)
 {
   if (token == "sod")
-  {
-    if (Datetime::lookForwards)
-      return initializeTomorrow ("tomorrow");
-    else
-      return initializeToday ("today");
-  }
+    return initializeTomorrow ("tomorrow");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeEopd (const std::string& token)
 {
   if (token == "eopd")
@@ -1632,7 +1603,6 @@ bool Datetime::initializeEopd (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeEocd (const std::string& token)
 {
   if (token == "eocd")
@@ -1642,7 +1612,6 @@ bool Datetime::initializeEocd (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeEond (const std::string& token)
 {
   if (token == "eond")
@@ -1664,12 +1633,7 @@ bool Datetime::initializeEond (const std::string& token)
 bool Datetime::initializeEod (const std::string& token)
 {
   if (token == "eod")
-  {
-    if (Datetime::lookForwards)
-      return initializeTomorrow ("tomorrow");
-    else
-      return initializeToday ("today");
-  }
+    return initializeTomorrow ("tomorrow");
 
   return false;
 }
@@ -1696,7 +1660,6 @@ bool Datetime::initializeSopw (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSocw (const std::string& token)
 {
   if (token == "socw")
@@ -1717,7 +1680,6 @@ bool Datetime::initializeSocw (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSonw (const std::string& token)
 {
   if (token == "sonw")
@@ -1742,18 +1704,12 @@ bool Datetime::initializeSonw (const std::string& token)
 bool Datetime::initializeSow (const std::string& token)
 {
   if (token == "sow")
-  {
-    if (Datetime::lookForwards)
-      return initializeSonw ("sonw");
-    else
-      return initializeSocw ("socw");
-  }
+    return initializeSonw ("sonw");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeEopw (const std::string& token)
 {
   if (token == "eopw")
@@ -1793,12 +1749,7 @@ bool Datetime::initializeEonw (const std::string& token)
 bool Datetime::initializeEow (const std::string& token)
 {
   if (token == "eow")
-  {
-    if (Datetime::lookForwards)
-      return initializeEocw ("eocw");
-    else
-      return initializeSocw ("socw");
-  }
+    return initializeEocw ("eocw");
 
   return false;
 }
@@ -1843,21 +1794,7 @@ bool Datetime::initializeSonww (const std::string& token)
 bool Datetime::initializeSoww (const std::string& token)
 {
   if (token == "soww")
-  {
-    if (Datetime::lookForwards)
-      return initializeSonww ("sonww");
-    else
-    {
-      time_t now = time (nullptr);
-      struct tm* t = localtime (&now);
-
-      t->tm_mday -= (6 + t->tm_wday) % 7;
-      t->tm_hour = t->tm_min = t->tm_sec = 0;
-      t->tm_isdst = -1;
-      _date = mktime (t);
-      return true;
-    }
-  }
+    return initializeSonww ("sonww");
 
   return false;
 }
@@ -1903,19 +1840,14 @@ bool Datetime::initializeEoww (const std::string& token)
 {
   if (token == "eoww")
   {
-    if (Datetime::lookForwards)
-    {
-      time_t now = time (nullptr);
-      struct tm* t = localtime (&now);
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
 
-      t->tm_mday += 6 - t->tm_wday;
-      t->tm_hour = t->tm_min = t->tm_sec = 0;
-      t->tm_isdst = -1;
-      _date = mktime (t);
-      return true;
-    }
-    else
-      return initializeEopww ("eopww");
+    t->tm_mday += 6 - t->tm_wday;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
   }
 
   return false;
@@ -1949,7 +1881,6 @@ bool Datetime::initializeSopm (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSocm (const std::string& token)
 {
   if (token == "socm")
@@ -1968,7 +1899,6 @@ bool Datetime::initializeSocm (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSonm (const std::string& token)
 {
   if (token == "sonm")
@@ -1998,12 +1928,7 @@ bool Datetime::initializeSonm (const std::string& token)
 bool Datetime::initializeSom (const std::string& token)
 {
   if (token == "som")
-  {
-    if (Datetime::lookForwards)
-      return initializeSonm ("sonm");
-    else
-      return initializeSocm ("socm");
-  }
+    return initializeSonm ("sonm");
 
   return false;
 }
@@ -2055,18 +1980,12 @@ bool Datetime::initializeEonm (const std::string& token)
 bool Datetime::initializeEom (const std::string& token)
 {
   if (token == "eom")
-  {
-    if (Datetime::lookForwards)
-      return initializeSonm ("sonm");
-    else
-      return initializeEopm ("eopm");
-  }
+    return initializeSonm ("sonm");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSopq (const std::string& token)
 {
   if (token == "sopq")
@@ -2093,7 +2012,6 @@ bool Datetime::initializeSopq (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unaffected by Datetime::lookForwards.
 bool Datetime::initializeSocq (const std::string& token)
 {
   if (token == "socq")
@@ -2141,12 +2059,7 @@ bool Datetime::initializeSonq (const std::string& token)
 bool Datetime::initializeSoq (const std::string& token)
 {
   if (token == "soq")
-  {
-    if (Datetime::lookForwards)
-      return initializeSonq ("sonq");
-    else
-      return initializeSocq ("socq");
-  }
+    return initializeSonq ("sonq");
 
   return false;
 }
@@ -2198,12 +2111,7 @@ bool Datetime::initializeEonq (const std::string& token)
 bool Datetime::initializeEoq (const std::string& token)
 {
   if (token == "eoq")
-  {
-    if (Datetime::lookForwards)
-      return initializeSonq ("sonq");
-    else
-      return initializeEopq ("eopq");
-  }
+    return initializeSonq ("sonq");
 
   return false;
 }
@@ -2271,12 +2179,7 @@ bool Datetime::initializeSony (const std::string& token)
 bool Datetime::initializeSoy (const std::string& token)
 {
   if (token == "soy")
-  {
-    if (Datetime::lookForwards)
-      return initializeSony ("sony");
-    else
-      return initializeSocy ("socy");
-  }
+    return initializeSony ("sony");
 
   return false;
 }
@@ -2323,12 +2226,7 @@ bool Datetime::initializeEony (const std::string& token)
 bool Datetime::initializeEoy (const std::string& token)
 {
   if (token == "eoy")
-  {
-    if (Datetime::lookForwards)
-      return initializeEocy ("eocy");
-    else
-      return initializeEopy ("eopy");
-  }
+    return initializeEocy ("eocy");
 
   return false;
 }
@@ -2349,7 +2247,7 @@ bool Datetime::initializeEaster (const std::string& token)
     _date = mktime (t);
 
     // If the result is earlier this year, then recalc for next year.
-    if (Datetime::lookForwards && _date < now)
+    if (_date < now)
     {
       t = localtime (&now);
       t->tm_year++;
@@ -2383,8 +2281,7 @@ bool Datetime::initializeMidsommar (const std::string& token)
     _date = mktime (t);
 
     // If the result is earlier this year, then recalc for next year.
-    if (Datetime::lookForwards &&
-        _date < now)
+    if (_date < now)
     {
       t = localtime (&now);
       t->tm_year++;
@@ -2410,8 +2307,7 @@ bool Datetime::initializeMidsommarafton (const std::string& token)
     _date = mktime (t);
 
     // If the result is earlier this year, then recalc for next year.
-    if (Datetime::lookForwards &&
-        _date < now)
+    if (_date < now)
     {
       t = localtime (&now);
       t->tm_year++;
@@ -2502,16 +2398,8 @@ bool Datetime::initializeInformalTime (const std::string& token)
       int now_seconds  = (t->tm_hour * 3600) + (t->tm_min * 60) + t->tm_sec;
       int calc_seconds = (hours      * 3600) + (minutes   * 60) + seconds;
 
-      if (Datetime::lookForwards)
-      {
-        if (calc_seconds < now_seconds)
-          ++t->tm_mday;
-      }
-      else
-      {
-        if (calc_seconds > now_seconds)
-          --t->tm_mday;
-      }
+      if (calc_seconds < now_seconds)
+        ++t->tm_mday;
 
       // Basic validation.
       if (hours   >= 0 && hours   < 24 &&
@@ -2769,8 +2657,7 @@ void Datetime::resolve ()
   // Project forward one day if the specified seconds are earlier in the day
   // than the current seconds.
   // TODO This does not cover the inverse case of subtracting 86400.
-  if (Datetime::lookForwards &&
-      year    == 0           &&
+  if (year    == 0           &&
       month   == 0           &&
       day     == 0           &&
       week    == 0           &&

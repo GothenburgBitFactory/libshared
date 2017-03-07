@@ -80,7 +80,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2062);
+  UnitTest t (2060);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -813,17 +813,6 @@ int main (int, char**)
     t.is (r37.day (),      19,        "'19th' --> 19");
     t.ok (r37 >= now,                 "'19th' > 'now'");
 
-    // Test Datetime::lookForwards = false
-    Datetime::lookForwards = false;
-    Datetime r38 ("1st");
-    Datetime r39 ("28th");
-    t.ok (r38.sameMonth (r39),        "'1st' and '28th' always in the same month when Datetime::lookForwards = false");
-
-    Datetime::lookForwards = false;
-    Datetime r40 ("sow");
-    Datetime r41 ("socw");
-    t.ok (r40 == r41,                 "'sow' is equal to 'socw' when Datetime::lookForwards = false");
-
 /*
     // Phrases.
     Datetime r42 ("4th thursday in november");
@@ -971,8 +960,7 @@ int main (int, char**)
 
     // This is jus ta diagnostic dump of all named dates, and us used to verify
     // correctness manually.
-    Datetime::lookForwards = true;
-    t.diag ("Datetime::lookForwards == true");
+    t.diag ("--------------------------------------------");
     t.diag ("  now            " + Datetime ("now").toISOLocalExtended ());
     t.diag ("  yesterday      " + Datetime ("yesterday").toISOLocalExtended ());
     t.diag ("  today          " + Datetime ("today").toISOLocalExtended ());
@@ -1040,76 +1028,7 @@ int main (int, char**)
     t.diag ("  12am           " + Datetime ("12am").toISOLocalExtended ());
     t.diag ("  12pm           " + Datetime ("12pm").toISOLocalExtended ());
     t.diag ("  1234567890     " + Datetime ("1234567890").toISOLocalExtended ());
-
-    Datetime::lookForwards = false;
-    t.diag ("Datetime::lookForwards == false");
-    t.diag ("  now            " + Datetime ("now").toISOLocalExtended ());
-    t.diag ("  yesterday      " + Datetime ("yesterday").toISOLocalExtended ());
-    t.diag ("  today          " + Datetime ("today").toISOLocalExtended ());
-    t.diag ("  tomorrow       " + Datetime ("tomorrow").toISOLocalExtended ());
-    t.diag ("  1st            " + Datetime ("1st").toISOLocalExtended ());
-    t.diag ("  monday         " + Datetime ("monday").toISOLocalExtended ());
-    t.diag ("  january        " + Datetime ("january").toISOLocalExtended ());
-    t.diag ("  later          " + Datetime ("later").toISOLocalExtended ());
-    t.diag ("  someday        " + Datetime ("someday").toISOLocalExtended ());
-    t.diag ("  sopd           " + Datetime ("sopd").toISOLocalExtended ());
-    t.diag ("  socd           " + Datetime ("socd").toISOLocalExtended ());
-    t.diag ("  sond           " + Datetime ("sond").toISOLocalExtended ());
-    t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
-    t.diag ("  eopd           " + Datetime ("eopd").toISOLocalExtended ());
-    t.diag ("  eocd           " + Datetime ("eocd").toISOLocalExtended ());
-    t.diag ("  eond           " + Datetime ("eond").toISOLocalExtended ());
-    t.diag ("  eod            " + Datetime ("eod").toISOLocalExtended ());
-    t.diag ("  sopw           " + Datetime ("sopw").toISOLocalExtended ());
-    t.diag ("  socw           " + Datetime ("socw").toISOLocalExtended ());
-    t.diag ("  sonw           " + Datetime ("sonw").toISOLocalExtended ());
-    t.diag ("  sow            " + Datetime ("sow").toISOLocalExtended ());
-    t.diag ("  eopw           " + Datetime ("eopw").toISOLocalExtended ());
-    t.diag ("  eocw           " + Datetime ("eocw").toISOLocalExtended ());
-    t.diag ("  eonw           " + Datetime ("eonw").toISOLocalExtended ());
-    t.diag ("  eow            " + Datetime ("eow").toISOLocalExtended ());
-    t.diag ("  sopww          " + Datetime ("sopww").toISOLocalExtended ());
-    t.diag ("  sonww          " + Datetime ("sonww").toISOLocalExtended ());
-    t.diag ("  soww           " + Datetime ("soww").toISOLocalExtended ());
-    t.diag ("  eopww          " + Datetime ("eopww").toISOLocalExtended ());
-    t.diag ("  eonww          " + Datetime ("eonww").toISOLocalExtended ());
-    t.diag ("  eoww           " + Datetime ("eoww").toISOLocalExtended ());
-    t.diag ("  sopm           " + Datetime ("sopm").toISOLocalExtended ());
-    t.diag ("  socm           " + Datetime ("socm").toISOLocalExtended ());
-    t.diag ("  sonm           " + Datetime ("sonm").toISOLocalExtended ());
-    t.diag ("  som            " + Datetime ("som").toISOLocalExtended ());
-    t.diag ("  eopm           " + Datetime ("eopm").toISOLocalExtended ());
-    t.diag ("  eocm           " + Datetime ("eocm").toISOLocalExtended ());
-    t.diag ("  eonm           " + Datetime ("eonm").toISOLocalExtended ());
-    t.diag ("  eom            " + Datetime ("eom").toISOLocalExtended ());
-    t.diag ("  sopq           " + Datetime ("sopq").toISOLocalExtended ());
-    t.diag ("  socq           " + Datetime ("socq").toISOLocalExtended ());
-    t.diag ("  sonq           " + Datetime ("sonq").toISOLocalExtended ());
-    t.diag ("  soq            " + Datetime ("soq").toISOLocalExtended ());
-    t.diag ("  eopq           " + Datetime ("eopq").toISOLocalExtended ());
-    t.diag ("  eocq           " + Datetime ("eocq").toISOLocalExtended ());
-    t.diag ("  eonq           " + Datetime ("eonq").toISOLocalExtended ());
-    t.diag ("  eoq            " + Datetime ("eoq").toISOLocalExtended ());
-    t.diag ("  sopy           " + Datetime ("sopy").toISOLocalExtended ());
-    t.diag ("  socy           " + Datetime ("socy").toISOLocalExtended ());
-    t.diag ("  sony           " + Datetime ("sony").toISOLocalExtended ());
-    t.diag ("  soy            " + Datetime ("soy").toISOLocalExtended ());
-    t.diag ("  eopy           " + Datetime ("eopy").toISOLocalExtended ());
-    t.diag ("  eocy           " + Datetime ("eocy").toISOLocalExtended ());
-    t.diag ("  eony           " + Datetime ("eony").toISOLocalExtended ());
-    t.diag ("  eoy            " + Datetime ("eoy").toISOLocalExtended ());
-    t.diag ("  easter         " + Datetime ("easter").toISOLocalExtended ());
-    t.diag ("  eastermonday   " + Datetime ("eastermonday").toISOLocalExtended ());
-    t.diag ("  ascension      " + Datetime ("ascension").toISOLocalExtended ());
-    t.diag ("  pentecost      " + Datetime ("pentecost").toISOLocalExtended ());
-    t.diag ("  goodfriday     " + Datetime ("goodfriday").toISOLocalExtended ());
-    t.diag ("  midsommar      " + Datetime ("midsommar").toISOLocalExtended ());
-    t.diag ("  midsommarafton " + Datetime ("midsommarafton").toISOLocalExtended ());
-    t.diag ("  juhannus       " + Datetime ("juhannus").toISOLocalExtended ());
-    t.diag ("  3am            " + Datetime ("3am").toISOLocalExtended ());
-    t.diag ("  12am           " + Datetime ("12am").toISOLocalExtended ());
-    t.diag ("  12pm           " + Datetime ("12pm").toISOLocalExtended ());
-    t.diag ("  1234567890     " + Datetime ("1234567890").toISOLocalExtended ());
+    t.diag ("--------------------------------------------");
   }
 
   catch (const std::string& e)
