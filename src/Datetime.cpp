@@ -537,73 +537,61 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //
 // Examples and descriptions, assuming now == 2017-03-05T12:34:56.
 //
-//                  Forwards             Backwards            Notes
-//                  -------------------  -------------------  ------------------
-//   now            2017-03-05T12:34:56  2017-03-05T12:34:56  Unaffected
-//   yesterday      2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected
-//   today          2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
-//   tomorrow       2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
-//   <ordinal> 12th 2017-03-12T00:00:00  2017-02-12T00:00:00
-//   <day> monday   2017-03-06T00:00:00  2017-02-27T00:00:00
-//   <month> april  2017-04-01T00:00:00  2016-04-01T00:00:00
-//   later          2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
-//   someday        2038-01-18T00:00:00  2038-01-18T00:00:00  Unaffected
-//   sopd           2017-03-04T00:00:00  2017-03-04T00:00:00  Unaffected
-//   socd           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
-//   sond           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
-//   sod            2017-03-06T00:00:00  2017-03-05T00:00:00
-//   eopd           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
-//   eocd           2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
-//   eond           2017-03-07T00:00:00  2017-03-07T00:00:00  Unaffected
-//   eod            2017-03-06T00:00:00  2017-03-05T00:00:00
-//   sopw           2017-02-26T00:00:00  2017-02-26T00:00:00  Unaffected
-//   socw           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
-//   sonw           2017-03-12T00:00:00  2017-03-12T00:00:00  Unaffected
-//   sow            2017-03-12T00:00:00  2017-03-05T00:00:00
-//   eopw           2017-03-05T00:00:00  2017-03-05T00:00:00  Unaffected
-//   eocw           2017-03-12T00:00:00  2017-03-12T00:00:00  Unaffected
-//   eonw           2017-03-19T00:00:00  2017-03-19T00:00:00  Unaffected
-//   eow            2017-03-12T00:00:00  2017-03-05T00:00:00
-//   sopww          2017-02-27T00:00:00  2017-02-27T00:00:00  Unaffected
-//   socww          ?                    ?                    Unaffected unimplemented   errors on weekend?
-//   sonww          2017-03-06T00:00:00  2017-03-06T00:00:00  Unaffected
-//   soww           2017-03-06T00:00:00  2017-02-27T00:00:00
-//   eopww          2017-03-03T00:00:00  2017-03-03T00:00:00  Unaffected
-//   eocww          ?                    ?                    Unaffected unimplemented   errors on weekend?
-//   eonww          2017-03-17T00:00:00  2017-03-17T00:00:00  Unaffected
-//   eoww           2017-03-10T00:00:00  2017-03-04T00:00:00
-//   sopm           2017-02-01T00:00:00  2017-02-01T00:00:00  Unaffected
-//   socm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
-//   sonm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
-//   som            2017-04-01T00:00:00  2017-03-01T00:00:00
-//   eopm           2017-03-01T00:00:00  2017-03-01T00:00:00  Unaffected
-//   eocm           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
-//   eonm           2017-05-01T00:00:00  2017-05-01T00:00:00  Unaffected
-//   eom            2017-04-01T00:00:00  2017-03-01T00:00:00
-//   sopq           2017-10-01T00:00:00  2017-10-01T00:00:00  Unaffected
-//   socq           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
-//   sonq           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
-//   soq            2017-04-01T00:00:00  2017-01-01T00:00:00
-//   eopq           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
-//   eocq           2017-04-01T00:00:00  2017-04-01T00:00:00  Unaffected
-//   eonq           2017-07-01T00:00:00  2017-07-01T00:00:00  Unaffected
-//   eoq            2017-04-01T00:00:00  2017-01-01T00:00:00
-//   sopy           2016-01-01T00:00:00  2016-01-01T00:00:00  Unaffected
-//   socy           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
-//   sony           2018-01-01T00:00:00  2018-01-01T00:00:00  Unaffected
-//   soy            2018-01-01T00:00:00  2017-01-01T00:00:00
-//   eopy           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
-//   eocy           2018-01-01T00:00:00  2018-01-01T00:00:00  Unaffected
-//   eony           2019-01-01T00:00:00  2019-01-01T00:00:00  Unaffected
-//   eoy            2018-01-01T00:00:00  2017-01-01T00:00:00
-//   easter         2017-04-16T00:00:00  2016
-//   eastermonday   2017-04-16T00:00:00  2016
-//   ascension      2017-05-25T00:00:00  2016
-//   pentecost      2017-06-04T00:00:00  2016
-//   goodfriday     2017-04-14T00:00:00  2016
-//   midsommar      2017-06-24T00:00:00  2016                 midnight, 1st Saturday after 20th June
-//   midsommarafton 2017-06-23T00:00:00  2016                 midnight, 1st Friday after 19th June
-//   juhannus       2017-06-23T00:00:00  2016                 midnight, 1st Friday after 19th June
+//                  Example              Notes
+//                  -------------------  ------------------
+//   now            2017-03-05T12:34:56  Unaffected
+//   yesterday      2017-03-04T00:00:00  Unaffected
+//   today          2017-03-05T00:00:00  Unaffected
+//   tomorrow       2017-03-06T00:00:00  Unaffected
+//   <ordinal> 12th 2017-03-12T00:00:00
+//   <day> monday   2017-03-06T00:00:00
+//   <month> april  2017-04-01T00:00:00
+//   later          2038-01-18T00:00:00  Unaffected
+//   someday        2038-01-18T00:00:00  Unaffected
+//   sopd           2017-03-04T00:00:00  Unaffected
+//   sod            2017-03-05T00:00:00  Unaffected
+//   sond           2017-03-06T00:00:00  Unaffected
+//   eopd           2017-03-05T00:00:00  Unaffected
+//   eod            2017-03-06T00:00:00  Unaffected
+//   eond           2017-03-07T00:00:00  Unaffected
+//   sopw           2017-02-26T00:00:00  Unaffected
+//   sow            2017-03-05T00:00:00  Unaffected
+//   sonw           2017-03-12T00:00:00  Unaffected
+//   eopw           2017-03-05T00:00:00  Unaffected
+//   eow            2017-03-12T00:00:00  Unaffected
+//   eonw           2017-03-19T00:00:00  Unaffected
+//   sopww          2017-02-27T00:00:00  Unaffected
+//   soww           2017-03-06T00:00:00
+//   sonww          2017-03-06T00:00:00  Unaffected
+//   eopww          2017-03-03T00:00:00  Unaffected
+//   eoww           2017-03-10T00:00:00
+//   eonww          2017-03-17T00:00:00  Unaffected
+//   sopm           2017-02-01T00:00:00  Unaffected
+//   som            2017-03-01T00:00:00  Unaffected
+//   sonm           2017-04-01T00:00:00  Unaffected
+//   eopm           2017-03-01T00:00:00  Unaffected
+//   eom            2017-04-01T00:00:00  Unaffected
+//   eonm           2017-05-01T00:00:00  Unaffected
+//   sopq           2017-10-01T00:00:00  Unaffected
+//   soq            2017-01-01T00:00:00  Unaffected
+//   sonq           2017-04-01T00:00:00  Unaffected
+//   eopq           2017-01-01T00:00:00  Unaffected
+//   eoq            2017-04-01T00:00:00  Unaffected
+//   eonq           2017-07-01T00:00:00  Unaffected
+//   sopy           2016-01-01T00:00:00  Unaffected
+//   soy            2017-01-01T00:00:00  Unaffected
+//   sony           2018-01-01T00:00:00  Unaffected
+//   eopy           2017-01-01T00:00:00  Unaffected
+//   eoy            2018-01-01T00:00:00  Unaffected
+//   eony           2019-01-01T00:00:00  Unaffected
+//   easter         2017-04-16T00:00:00
+//   eastermonday   2017-04-16T00:00:00
+//   ascension      2017-05-25T00:00:00
+//   pentecost      2017-06-04T00:00:00
+//   goodfriday     2017-04-14T00:00:00
+//   midsommar      2017-06-24T00:00:00  midnight, 1st Saturday after 20th June
+//   midsommarafton 2017-06-23T00:00:00  midnight, 1st Friday after 19th June
+//   juhannus       2017-06-23T00:00:00  midnight, 1st Friday after 19th June
 //
 bool Datetime::parse_named (Pig& pig)
 {
@@ -642,53 +630,41 @@ bool Datetime::parse_named (Pig& pig)
         initializeMonthName      (token) ||
         initializeLater          (token) ||
         initializeSopd           (token) ||
-        initializeSocd           (token) ||
-        initializeSond           (token) ||
         initializeSod            (token) ||
+        initializeSond           (token) ||
         initializeEopd           (token) ||
-        initializeEocd           (token) ||
-        initializeEond           (token) ||
         initializeEod            (token) ||
+        initializeEond           (token) ||
         initializeSopw           (token) ||
-        initializeSocw           (token) ||
-        initializeSonw           (token) ||
         initializeSow            (token) ||
+        initializeSonw           (token) ||
         initializeEopw           (token) ||
-        initializeEocw           (token) ||
-        initializeEonw           (token) ||
         initializeEow            (token) ||
+        initializeEonw           (token) ||
         initializeSopww          (token) ||  // Must appear after sopw
-                                             // socww missing
         initializeSonww          (token) ||  // Must appear after sonw
         initializeSoww           (token) ||  // Must appear after sow
         initializeEopww          (token) ||  // Must appear after eopw
-                                             // eocww missing
         initializeEonww          (token) ||  // Must appear after eonw
         initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
-        initializeSocm           (token) ||
-        initializeSonm           (token) ||
         initializeSom            (token) ||
+        initializeSonm           (token) ||
         initializeEopm           (token) ||
-        initializeEocm           (token) ||
-        initializeEonm           (token) ||
         initializeEom            (token) ||
+        initializeEonm           (token) ||
         initializeSopq           (token) ||
-        initializeSocq           (token) ||
-        initializeSonq           (token) ||
         initializeSoq            (token) ||
+        initializeSonq           (token) ||
         initializeEopq           (token) ||
-        initializeEocq           (token) ||
-        initializeEonq           (token) ||
         initializeEoq            (token) ||
+        initializeEonq           (token) ||
         initializeSopy           (token) ||
-        initializeSocy           (token) ||
-        initializeSony           (token) ||
         initializeSoy            (token) ||
+        initializeSony           (token) ||
         initializeEopy           (token) ||
-        initializeEocy           (token) ||
-        initializeEony           (token) ||
         initializeEoy            (token) ||
+        initializeEony           (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
@@ -1567,9 +1543,9 @@ bool Datetime::initializeSopd (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocd (const std::string& token)
+bool Datetime::initializeSod (const std::string& token)
 {
-  if (token == "socd")
+  if (token == "sod")
     return initializeToday ("today");
 
   return false;
@@ -1585,15 +1561,6 @@ bool Datetime::initializeSond (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSod (const std::string& token)
-{
-  if (token == "sod")
-    return initializeTomorrow ("tomorrow");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEopd (const std::string& token)
 {
   if (token == "eopd")
@@ -1603,9 +1570,9 @@ bool Datetime::initializeEopd (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEocd (const std::string& token)
+bool Datetime::initializeEod (const std::string& token)
 {
-  if (token == "eocd")
+  if (token == "eod")
     return initializeTomorrow ("tomorrow");
 
   return false;
@@ -1625,15 +1592,6 @@ bool Datetime::initializeEond (const std::string& token)
     _date = mktime (t);
     return true;
   }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEod (const std::string& token)
-{
-  if (token == "eod")
-    return initializeTomorrow ("tomorrow");
 
   return false;
 }
@@ -1660,9 +1618,9 @@ bool Datetime::initializeSopw (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocw (const std::string& token)
+bool Datetime::initializeSow (const std::string& token)
 {
-  if (token == "socw")
+  if (token == "sow")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1701,27 +1659,18 @@ bool Datetime::initializeSonw (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSow (const std::string& token)
-{
-  if (token == "sow")
-    return initializeSonw ("sonw");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEopw (const std::string& token)
 {
   if (token == "eopw")
-    return initializeSocw ("socw");
+    return initializeSow ("sow");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEocw (const std::string& token)
+bool Datetime::initializeEow (const std::string& token)
 {
-  if (token == "eocw")
+  if (token == "eow")
     return initializeSonw ("sonw");
 
   return false;
@@ -1746,15 +1695,6 @@ bool Datetime::initializeEonw (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEow (const std::string& token)
-{
-  if (token == "eow")
-    return initializeEocw ("eocw");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSopww (const std::string& token)
 {
   if (token == "sopww")
@@ -1768,6 +1708,15 @@ bool Datetime::initializeSopww (const std::string& token)
     _date = mktime (t);
     return true;
   }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeSoww (const std::string& token)
+{
+  if (token == "soww")
+    return initializeSonww ("sonww");
 
   return false;
 }
@@ -1791,15 +1740,6 @@ bool Datetime::initializeSonww (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoww (const std::string& token)
-{
-  if (token == "soww")
-    return initializeSonww ("sonww");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEopww (const std::string& token)
 {
   if (token == "eopww")
@@ -1818,14 +1758,14 @@ bool Datetime::initializeEopww (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEonww (const std::string& token)
+bool Datetime::initializeEoww (const std::string& token)
 {
-  if (token == "eonww")
+  if (token == "eoww")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_mday += 13 - t->tm_wday;
+    t->tm_mday += 6 - t->tm_wday;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
@@ -1836,14 +1776,14 @@ bool Datetime::initializeEonww (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEoww (const std::string& token)
+bool Datetime::initializeEonww (const std::string& token)
 {
-  if (token == "eoww")
+  if (token == "eonww")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_mday += 6 - t->tm_wday;
+    t->tm_mday += 13 - t->tm_wday;
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
     _date = mktime (t);
@@ -1881,9 +1821,9 @@ bool Datetime::initializeSopm (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocm (const std::string& token)
+bool Datetime::initializeSom (const std::string& token)
 {
-  if (token == "socm")
+  if (token == "som")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1925,27 +1865,18 @@ bool Datetime::initializeSonm (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSom (const std::string& token)
-{
-  if (token == "som")
-    return initializeSonm ("sonm");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEopm (const std::string& token)
 {
   if (token == "eopm")
-    return initializeSocm ("socm");
+    return initializeSom ("som");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEocm (const std::string& token)
+bool Datetime::initializeEom (const std::string& token)
 {
-  if (token == "eocm")
+  if (token == "eom")
     return initializeSonm ("sonm");
 
   return false;
@@ -1977,15 +1908,6 @@ bool Datetime::initializeEonm (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEom (const std::string& token)
-{
-  if (token == "eom")
-    return initializeSonm ("sonm");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSopq (const std::string& token)
 {
   if (token == "sopq")
@@ -2012,9 +1934,9 @@ bool Datetime::initializeSopq (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocq (const std::string& token)
+bool Datetime::initializeSoq (const std::string& token)
 {
-  if (token == "socq")
+  if (token == "soq")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -2056,27 +1978,18 @@ bool Datetime::initializeSonq (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoq (const std::string& token)
-{
-  if (token == "soq")
-    return initializeSonq ("sonq");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEopq (const std::string& token)
 {
   if (token == "eopq")
-    return initializeSocq ("socq");
+    return initializeSoq ("soq");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEocq (const std::string& token)
+bool Datetime::initializeEoq (const std::string& token)
 {
-  if (token == "eocq")
+  if (token == "eoq")
     return initializeSonq ("sonq");
 
   return false;
@@ -2108,15 +2021,6 @@ bool Datetime::initializeEonq (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEoq (const std::string& token)
-{
-  if (token == "eoq")
-    return initializeSonq ("sonq");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeSopy (const std::string& token)
 {
   if (token == "sopy")
@@ -2137,9 +2041,9 @@ bool Datetime::initializeSopy (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSocy (const std::string& token)
+bool Datetime::initializeSoy (const std::string& token)
 {
-  if (token == "socy")
+  if (token == "soy")
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -2176,27 +2080,18 @@ bool Datetime::initializeSony (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoy (const std::string& token)
-{
-  if (token == "soy")
-    return initializeSony ("sony");
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeEopy (const std::string& token)
 {
   if (token == "eopy")
-    return initializeSocy ("socy");
+    return initializeSoy ("soy");
 
   return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEocy (const std::string& token)
+bool Datetime::initializeEoy (const std::string& token)
 {
-  if (token == "eocy")
+  if (token == "eoy")
     return initializeSony ("sony");
 
   return false;
@@ -2218,15 +2113,6 @@ bool Datetime::initializeEony (const std::string& token)
     _date = mktime (t);
     return true;
   }
-
-  return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEoy (const std::string& token)
-{
-  if (token == "eoy")
-    return initializeEocy ("eocy");
 
   return false;
 }
