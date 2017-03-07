@@ -190,7 +190,6 @@ private:
   bool initializeEocy           (const std::string&);
   bool initializeEoy            (const std::string&);
   bool initializeEaster         (const std::string&);
-
   bool initializeMidsommar      (const std::string&);
   bool initializeMidsommarafton (const std::string&);
   bool initializeInformalTime   (const std::string&);

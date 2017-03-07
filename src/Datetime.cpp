@@ -598,7 +598,6 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   eony           2019-01-01T00:00:00  2019-01-01T00:00:00  Unaffected
 //   eoy            2018-01-01T00:00:00  2017-01-01T00:00:00
 //   easter         2017-04-16T00:00:00  2016
-
 //   eastermonday   2017-04-16T00:00:00  2016
 //   ascension      2017-05-25T00:00:00  2016
 //   pentecost      2017-06-04T00:00:00  2016
@@ -691,7 +690,6 @@ bool Datetime::parse_named (Pig& pig)
         initializeEocy           (token) ||
         initializeEoy            (token) ||
         initializeEaster         (token) ||
-
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
         initializeInformalTime   (token))
