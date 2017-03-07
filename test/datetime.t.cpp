@@ -641,38 +641,38 @@ int main (int, char**)
     Datetime r11 ("eow");
     t.ok (r11 < now + (8 * 86400), "eow < 7 days away");
 
-    Datetime r12 ("eocw");
-    t.ok (r12 > now - (8 * 86400), "eocw < 7 days in the past");
+    Datetime r12 ("eow");
+    t.ok (r12 > now - (8 * 86400), "eow < 7 days in the past");
 
-    Datetime r16 ("sow");
-    t.ok (r16 < now + (8 * 86400), "sow < 7 days away");
+    Datetime r16 ("sonw");
+    t.ok (r16 < now + (8 * 86400), "sonw < 7 days away");
 
-    Datetime r23 ("socw");
+    Datetime r23 ("sow");
     t.ok (r23 > now - (8 * 86400), "sow < 7 days in the past");
 
-    Datetime r17 ("som");
-    t.notok (r17.sameMonth (now), "som not in same month as now");
+    Datetime r17 ("sonm");
+    t.notok (r17.sameMonth (now), "sonm not in same month as now");
 
-    Datetime r18 ("socm");
-    t.ok (r18.sameMonth (now), "socm in same month as now");
-    t.ok (r18.sameQuarter (now), "socm in same quarter as now");
+    Datetime r18 ("som");
+    t.ok (r18.sameMonth (now), "som in same month as now");
+    t.ok (r18.sameQuarter (now), "som in same quarter as now");
 
-    Datetime r19 ("soy");
-    t.notok (r19.sameYear (now), "soy not in same year as now");
+    Datetime r19 ("sony");
+    t.notok (r19.sameYear (now), "sony not in same year as now");
 
-    Datetime r19a ("socy");
-    t.ok (r19a.sameYear (now), "socy in same year as now");
-    t.ok (r19a < now,          "socy < now");
+    Datetime r19a ("soy");
+    t.ok (r19a.sameYear (now), "soy in same year as now");
+    t.ok (r19a < now,          "soy < now");
 
-    Datetime r19b ("eocy");
-    t.ok (r19b > now,          "eocy > now");
+    Datetime r19b ("eoy");
+    t.ok (r19b > now,          "eoy > now");
 
-    Datetime r19c ("socq");
-    t.ok (r19c.sameYear (now), "socq in same year as now");
-    t.ok (r19c < now,          "socq < now");
+    Datetime r19c ("soq");
+    t.ok (r19c.sameYear (now), "soq in same year as now");
+    t.ok (r19c < now,          "soq < now");
 
-    Datetime r19d ("eocq");
-    t.ok (r19d > now,          "eocq > now");
+    Datetime r19d ("eoq");
+    t.ok (r19d > now,          "eoq > now");
 
     Datetime first ("1st");
     t.notok (first.sameMonth (now), "1st not in same month as now");
@@ -971,21 +971,17 @@ int main (int, char**)
     t.diag ("  later          " + Datetime ("later").toISOLocalExtended ());
     t.diag ("  someday        " + Datetime ("someday").toISOLocalExtended ());
     t.diag ("  sopd           " + Datetime ("sopd").toISOLocalExtended ());
-    t.diag ("  socd           " + Datetime ("socd").toISOLocalExtended ());
-    t.diag ("  sond           " + Datetime ("sond").toISOLocalExtended ());
     t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
+    t.diag ("  sond           " + Datetime ("sond").toISOLocalExtended ());
     t.diag ("  eopd           " + Datetime ("eopd").toISOLocalExtended ());
-    t.diag ("  eocd           " + Datetime ("eocd").toISOLocalExtended ());
-    t.diag ("  eond           " + Datetime ("eond").toISOLocalExtended ());
     t.diag ("  eod            " + Datetime ("eod").toISOLocalExtended ());
+    t.diag ("  eond           " + Datetime ("eond").toISOLocalExtended ());
     t.diag ("  sopw           " + Datetime ("sopw").toISOLocalExtended ());
-    t.diag ("  socw           " + Datetime ("socw").toISOLocalExtended ());
-    t.diag ("  sonw           " + Datetime ("sonw").toISOLocalExtended ());
     t.diag ("  sow            " + Datetime ("sow").toISOLocalExtended ());
+    t.diag ("  sonw           " + Datetime ("sonw").toISOLocalExtended ());
     t.diag ("  eopw           " + Datetime ("eopw").toISOLocalExtended ());
-    t.diag ("  eocw           " + Datetime ("eocw").toISOLocalExtended ());
-    t.diag ("  eonw           " + Datetime ("eonw").toISOLocalExtended ());
     t.diag ("  eow            " + Datetime ("eow").toISOLocalExtended ());
+    t.diag ("  eonw           " + Datetime ("eonw").toISOLocalExtended ());
     t.diag ("  sopww          " + Datetime ("sopww").toISOLocalExtended ());
     t.diag ("  sonww          " + Datetime ("sonww").toISOLocalExtended ());
     t.diag ("  soww           " + Datetime ("soww").toISOLocalExtended ());
@@ -993,29 +989,23 @@ int main (int, char**)
     t.diag ("  eonww          " + Datetime ("eonww").toISOLocalExtended ());
     t.diag ("  eoww           " + Datetime ("eoww").toISOLocalExtended ());
     t.diag ("  sopm           " + Datetime ("sopm").toISOLocalExtended ());
-    t.diag ("  socm           " + Datetime ("socm").toISOLocalExtended ());
-    t.diag ("  sonm           " + Datetime ("sonm").toISOLocalExtended ());
     t.diag ("  som            " + Datetime ("som").toISOLocalExtended ());
+    t.diag ("  sonm           " + Datetime ("sonm").toISOLocalExtended ());
     t.diag ("  eopm           " + Datetime ("eopm").toISOLocalExtended ());
-    t.diag ("  eocm           " + Datetime ("eocm").toISOLocalExtended ());
-    t.diag ("  eonm           " + Datetime ("eonm").toISOLocalExtended ());
     t.diag ("  eom            " + Datetime ("eom").toISOLocalExtended ());
+    t.diag ("  eonm           " + Datetime ("eonm").toISOLocalExtended ());
     t.diag ("  sopq           " + Datetime ("sopq").toISOLocalExtended ());
-    t.diag ("  socq           " + Datetime ("socq").toISOLocalExtended ());
-    t.diag ("  sonq           " + Datetime ("sonq").toISOLocalExtended ());
     t.diag ("  soq            " + Datetime ("soq").toISOLocalExtended ());
+    t.diag ("  sonq           " + Datetime ("sonq").toISOLocalExtended ());
     t.diag ("  eopq           " + Datetime ("eopq").toISOLocalExtended ());
-    t.diag ("  eocq           " + Datetime ("eocq").toISOLocalExtended ());
-    t.diag ("  eonq           " + Datetime ("eonq").toISOLocalExtended ());
     t.diag ("  eoq            " + Datetime ("eoq").toISOLocalExtended ());
+    t.diag ("  eonq           " + Datetime ("eonq").toISOLocalExtended ());
     t.diag ("  sopy           " + Datetime ("sopy").toISOLocalExtended ());
-    t.diag ("  socy           " + Datetime ("socy").toISOLocalExtended ());
-    t.diag ("  sony           " + Datetime ("sony").toISOLocalExtended ());
     t.diag ("  soy            " + Datetime ("soy").toISOLocalExtended ());
+    t.diag ("  sony           " + Datetime ("sony").toISOLocalExtended ());
     t.diag ("  eopy           " + Datetime ("eopy").toISOLocalExtended ());
-    t.diag ("  eocy           " + Datetime ("eocy").toISOLocalExtended ());
-    t.diag ("  eony           " + Datetime ("eony").toISOLocalExtended ());
     t.diag ("  eoy            " + Datetime ("eoy").toISOLocalExtended ());
+    t.diag ("  eony           " + Datetime ("eony").toISOLocalExtended ());
     t.diag ("  easter         " + Datetime ("easter").toISOLocalExtended ());
     t.diag ("  eastermonday   " + Datetime ("eastermonday").toISOLocalExtended ());
     t.diag ("  ascension      " + Datetime ("ascension").toISOLocalExtended ());
