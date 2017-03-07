@@ -595,9 +595,17 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   soy            2018-01-01T00:00:00  2017-01-01T00:00:00
 //   eopy           2017-01-01T00:00:00  2017-01-01T00:00:00  Unaffected
 //   eocy           2018-01-01T00:00:00  2018-01-01T00:00:00  Unaffected
-
-//   eony           2019-01-01T00:00:00  2019-01-01T00:00:00  Unaffected unimplemented
+//   eony           2019-01-01T00:00:00  2019-01-01T00:00:00  Unaffected
 //   eoy            2018-01-01T00:00:00  2017-01-01T00:00:00
+//   easter         2017-04-16T00:00:00  2016
+
+//   eastermonday   2017-04-16T00:00:00  2016
+//   ascension      2017-05-25T00:00:00  2016
+//   pentecost      2017-06-04T00:00:00  2016
+//   goodfriday     2017-04-14T00:00:00  2016
+//   midsommar      2017-06-24T00:00:00  2016                 midnight, 1st Saturday after 20th June
+//   midsommarafton 2017-06-23T00:00:00  2016                 midnight, 1st Friday after 19th June
+//   juhannus       2017-06-23T00:00:00  2016                 midnight, 1st Friday after 19th June
 //
 bool Datetime::parse_named (Pig& pig)
 {
@@ -681,9 +689,9 @@ bool Datetime::parse_named (Pig& pig)
         initializeSoy            (token) ||
         initializeEopy           (token) ||
         initializeEocy           (token) ||
-
         initializeEoy            (token) ||
         initializeEaster         (token) ||
+
         initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
         initializeInformalTime   (token))
@@ -2328,11 +2336,10 @@ bool Datetime::initializeEaster (const std::string& token)
       easter (t);
     }
 
-         if (closeEnough ("goodfriday",   token, Datetime::minimumMatchLength)) t->tm_mday -= 2;
-
     // DO NOT REMOVE THIS USELESS-LOOKING LINE.
     // It is here to capture an exact match for 'easter', to prevent 'easter'
     // being a partial match for 'eastermonday'.
+         if (closeEnough ("goodfriday",   token, Datetime::minimumMatchLength)) t->tm_mday -= 2;
     else if (closeEnough ("easter",       token, Datetime::minimumMatchLength)) ;
     else if (closeEnough ("eastermonday", token, Datetime::minimumMatchLength)) t->tm_mday += 1;
     else if (closeEnough ("ascension",    token, Datetime::minimumMatchLength)) t->tm_mday += 39;
