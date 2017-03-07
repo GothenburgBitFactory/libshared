@@ -2034,9 +2034,8 @@ bool Datetime::initializeEonm (const std::string& token)
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
 
-    t->tm_hour = 24;
-    t->tm_min = t->tm_sec = 0;
-    t->tm_mday = daysInMonth (t->tm_year + 1900, t->tm_mon + 1);
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
     t->tm_mon += 2;
     if (t->tm_mon > 11)
     {
