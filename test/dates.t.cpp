@@ -172,12 +172,12 @@ int main (int, char**)
   Datetime eopy;           testInit (t, "eopy", eopy);
   Datetime eocy;           testInit (t, "eocy", eocy);
   Datetime eoy;            testInit (t, "eoy", eoy);
-
   Datetime easter;         testInit (t, "easter", easter);
   Datetime eastermonday;   testInit (t, "eastermonday", eastermonday);
   Datetime ascension;      testInit (t, "ascension", ascension);
   Datetime pentecost;      testInit (t, "pentecost", pentecost);
   Datetime goodfriday;     testInit (t, "goodfriday", goodfriday);
+
   Datetime midsommar;      testInit (t, "midsommar", midsommar);
   Datetime midsommarafton; testInit (t, "midsommarafton", midsommarafton);
   Datetime juhannus;       testInit (t, "juhannus", juhannus);
@@ -192,7 +192,11 @@ int main (int, char**)
   Datetime yesterday7;      testInit (t, "yest",      yesterday7);
   Datetime yesterday8;      testInit (t, "yes",       yesterday8);
 
+  t.ok (now < later,                "now < later");
+  t.ok (now < someday,              "now < someday");
   t.ok (now >= today,               "now >= today");
+  t.ok (yesterday < today,          "yesterday < today");
+  t.ok (today < tomorrow,           "today < tomorrow");
   t.ok (later == someday,           "later == someday");
   t.ok (sopd == yesterday,          "sopd == yesterday");
   t.ok (socd == today,              "socd == today");
@@ -235,11 +239,6 @@ int main (int, char**)
   t.ok (eopy == socy,               "eopy == socy");
   t.ok (eocy == sony,               "eocy == sony");
   t.ok (eoy == eocy,                "eoy == eocy");
-
-  t.ok (yesterday < today,          "yesterday < today");
-  t.ok (today < tomorrow,           "today < tomorrow");
-  t.ok (now < later,                "now < later");
-  t.ok (now < someday,              "now < someday");
   t.ok (goodfriday < easter,        "goodfriday < easter");
   t.ok (easter < eastermonday,      "easter < eastermonday");
   t.ok (midsommarafton < midsommar, "midsommarafton < midsommar");
