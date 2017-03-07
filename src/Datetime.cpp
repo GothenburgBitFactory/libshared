@@ -688,6 +688,7 @@ bool Datetime::parse_named (Pig& pig)
         initializeSoy            (token) ||
         initializeEopy           (token) ||
         initializeEocy           (token) ||
+        initializeEony           (token) ||
         initializeEoy            (token) ||
         initializeEaster         (token) ||
         initializeMidsommar      (token) ||
@@ -2293,6 +2294,26 @@ bool Datetime::initializeEocy (const std::string& token)
 {
   if (token == "eocy")
     return initializeSony ("sony");
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Datetime::initializeEony (const std::string& token)
+{
+  if (token == "eony")
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mon = 0;
+    t->tm_mday = 1;
+    t->tm_year += 2;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }

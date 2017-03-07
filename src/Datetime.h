@@ -188,6 +188,7 @@ private:
   bool initializeSoy            (const std::string&);
   bool initializeEopy           (const std::string&);
   bool initializeEocy           (const std::string&);
+  bool initializeEony           (const std::string&);
   bool initializeEoy            (const std::string&);
   bool initializeEaster         (const std::string&);
   bool initializeMidsommar      (const std::string&);
