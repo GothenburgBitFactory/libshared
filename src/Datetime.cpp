@@ -1308,7 +1308,7 @@ bool Datetime::parse_off_minute (Pig& pig, int& value)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeNow (const std::string& token)
 {
-  if (token == "now")
+  if (closeEnough ("now", token, Datetime::minimumMatchLength))
   {
     _date = time (nullptr);
     return true;
@@ -1338,7 +1338,7 @@ bool Datetime::initializeYesterday (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeToday (const std::string& token)
 {
-  if (token == "today")
+  if (closeEnough ("today", token, Datetime::minimumMatchLength))
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
@@ -1515,8 +1515,8 @@ bool Datetime::initializeMonthName (const std::string& token)
 ////////////////////////////////////////////////////////////////////////////////
 bool Datetime::initializeLater (const std::string& token)
 {
-  if (token == "later" ||
-      token == "someday")
+  if (closeEnough ("later", token, Datetime::minimumMatchLength) ||
+      closeEnough ("someday", token, std::max (Datetime::minimumMatchLength, 4)))
   {
     time_t now = time (nullptr);
     struct tm* t = localtime (&now);
