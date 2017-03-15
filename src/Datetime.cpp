@@ -650,7 +650,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSopm           (pig) ||
       initializeSom            (pig) ||
       initializeSonm           (pig) ||
-      initializeEopm           (pig))
+      initializeEopm           (pig) ||
+      initializeEom            (pig))
   {
     return true;
   }
@@ -658,8 +659,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeEom            (token) ||
-        initializeEonm           (token) ||
+    if (initializeEonm           (token) ||
         initializeSopq           (token) ||
         initializeSoq            (token) ||
         initializeSonq           (token) ||
@@ -2220,28 +2220,37 @@ bool Datetime::initializeEopm (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEom (const std::string& token)
+// eom [ !<alpha> && !<digit> ]
+bool Datetime::initializeEom (Pig& pig)
 {
-  if (token == "eom")
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("eom"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-
-    t->tm_mon++;
-    if (t->tm_mon > 11)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t->tm_year++;
-      t->tm_mon = 0;
-    }
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+      t->tm_mon++;
+      if (t->tm_mon > 11)
+      {
+        t->tm_year++;
+        t->tm_mon = 0;
+      }
+
+      t->tm_mday = 1;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
