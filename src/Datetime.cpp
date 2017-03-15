@@ -619,7 +619,8 @@ bool Datetime::parse_named (Pig& pig)
 
   // The above contains "1st monday ..." which must be processed before
   // initializeOrdinal below.
-  if (initializeNow            (pig))
+  if (initializeNow            (pig) ||
+      initializeYesterday      (pig))
   {
     return true;
   }
@@ -627,7 +628,7 @@ bool Datetime::parse_named (Pig& pig)
   if (pig.getUntilWS (token))
   {
     if (//initializeNow            (pig) ||
-        initializeYesterday      (token) ||
+        //initializeYesterday      (token) ||
         initializeToday          (token) ||
         initializeTomorrow       (token) ||
         initializeOrdinal        (token) ||
@@ -1331,20 +1332,30 @@ bool Datetime::initializeNow (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeYesterday (const std::string& token)
+bool Datetime::initializeYesterday (Pig& pig)
 {
-  if (closeEnough ("yesterday", token, Datetime::minimumMatchLength))
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    t->tm_mday -= 1;
-    _date = mktime (t);
-    return true;
+  std::string token;
+  if (pig.skipPartial ("yesterday", token) &&
+      token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      t->tm_mday -= 1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -1550,7 +1561,16 @@ bool Datetime::initializeLater (const std::string& token)
 bool Datetime::initializeSopd (const std::string& token)
 {
   if (token == "sopd")
-    return initializeYesterday ("yesterday");
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    t->tm_mday -= 1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }

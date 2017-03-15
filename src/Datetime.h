@@ -136,7 +136,7 @@ private:
   bool parse_off_minute    (Pig&, int&);
 
   bool initializeNow            (Pig&);
-  bool initializeYesterday      (const std::string&);
+  bool initializeYesterday      (Pig&);
   bool initializeToday          (const std::string&);
   bool initializeTomorrow       (const std::string&);
   bool initializeOrdinal        (const std::string&);
