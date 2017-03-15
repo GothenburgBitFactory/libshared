@@ -172,7 +172,7 @@ private:
   bool initializeSonq           (Pig&);
   bool initializeEopq           (Pig&);
   bool initializeEoq            (Pig&);
-  bool initializeEonq           (const std::string&);
+  bool initializeEonq           (Pig&);
   bool initializeSopy           (const std::string&);
   bool initializeSoy            (const std::string&);
   bool initializeSony           (const std::string&);
