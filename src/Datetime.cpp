@@ -624,7 +624,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeYesterday      (pig) ||
       initializeToday          (pig) ||
       initializeTomorrow       (pig) ||
-      initializeOrdinal        (pig))
+      initializeOrdinal        (pig) ||
+      initializeDayName        (pig))
   {
     return true;
   }
@@ -632,8 +633,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeDayName        (token) ||
-        initializeMonthName      (token) ||
+    if (initializeMonthName      (token) ||
         initializeLater          (token) ||
         initializeSopd           (token) ||
         initializeSod            (token) ||
@@ -1492,23 +1492,34 @@ bool Datetime::initializeOrdinal (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeDayName (const std::string& token)
+// sunday/abbrev [ !<alpha> && !<digit> ]
+bool Datetime::initializeDayName (Pig& pig)
 {
-  auto day = dayOfWeek (token);
-  if (day != -1)
+  auto checkpoint = pig.cursor ();
+
+  std::string token;
+  for (int day = 0; day <= 7; ++day)   // Deliberate <= so that 'sunday' is either 0 or 7.
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+    if (pig.skipPartial (dayNames[day % 7], token) &&
+        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength) &&
+        ! unicodeLatinAlpha (pig.peek ()) &&
+        ! unicodeLatinDigit (pig.peek ()))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    if (t->tm_wday >= day)
-      t->tm_mday += day - t->tm_wday + 7;
-    else
-      t->tm_mday += day - t->tm_wday;
+      if (t->tm_wday >= day)
+        t->tm_mday += day - t->tm_wday + 7;
+      else
+        t->tm_mday += day - t->tm_wday;
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
+
+    pig.restoreTo (checkpoint);
   }
 
   return false;
