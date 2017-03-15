@@ -144,7 +144,7 @@ private:
   bool initializeMonthName      (Pig&);
   bool initializeLater          (Pig&);
   bool initializeSopd           (Pig&);
-  bool initializeSod            (const std::string&);
+  bool initializeSod            (Pig&);
   bool initializeSond           (const std::string&);
   bool initializeEopd           (const std::string&);
   bool initializeEod            (const std::string&);
