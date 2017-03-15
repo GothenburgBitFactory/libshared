@@ -654,7 +654,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEom            (pig) ||
       initializeEonm           (pig) ||
       initializeSopq           (pig) ||
-      initializeSoq            (pig))
+      initializeSoq            (pig) ||
+      initializeSonq           (pig))
   {
     return true;
   }
@@ -662,8 +663,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeSonq           (token) ||
-        initializeEopq           (token) ||
+    if (initializeEopq           (token) ||
         initializeEoq            (token) ||
         initializeEonq           (token) ||
         initializeSopy           (token) ||
@@ -2352,27 +2352,36 @@ bool Datetime::initializeSoq (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSonq (const std::string& token)
+// sonq [ !<alpha> && !<digit> ]
+bool Datetime::initializeSonq (Pig& pig)
 {
-  if (token == "sonq")
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("sonq"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_mon += 3 - (t->tm_mon % 3);
-    if (t->tm_mon > 11)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t->tm_mon -= 12;
-      ++t->tm_year;
-    }
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+      t->tm_mon += 3 - (t->tm_mon % 3);
+      if (t->tm_mon > 11)
+      {
+        t->tm_mon -= 12;
+        ++t->tm_year;
+      }
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_mday = 1;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -2399,7 +2408,23 @@ bool Datetime::initializeEopq (const std::string& token)
 bool Datetime::initializeEoq (const std::string& token)
 {
   if (token == "eoq")
-    return initializeSonq ("sonq");
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_mon += 3 - (t->tm_mon % 3);
+    if (t->tm_mon > 11)
+    {
+      t->tm_mon -= 12;
+      ++t->tm_year;
+    }
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }
