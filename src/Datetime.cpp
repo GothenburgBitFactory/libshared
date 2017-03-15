@@ -642,7 +642,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEow            (pig) ||
       initializeEonw           (pig) ||
       initializeSopww          (pig) ||  // Must appear after sopw
-      initializeSonww          (pig))    // Must appear after sonw
+      initializeSonww          (pig) ||  // Must appear after sonw
+      initializeSoww           (pig))    // Must appear after sow
   {
     return true;
   }
@@ -650,8 +651,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeSoww           (token) ||  // Must appear after sow
-        initializeEopww          (token) ||  // Must appear after eopw
+    if (initializeEopww          (token) ||  // Must appear after eopw
         initializeEonww          (token) ||  // Must appear after eonw
         initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
@@ -1960,20 +1960,29 @@ bool Datetime::initializeSopww (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSoww (const std::string& token)
+// soww [ !<alpha> && !<digit> ]
+bool Datetime::initializeSoww (Pig& pig)
 {
-  if (token == "soww")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_mday += 8 - t->tm_wday;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  if (pig.skipLiteral ("soww"))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday += 8 - t->tm_wday;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
