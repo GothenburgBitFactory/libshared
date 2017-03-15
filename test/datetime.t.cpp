@@ -92,7 +92,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2075);
+  UnitTest t (2078);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -857,7 +857,10 @@ int main (int, char**)
     testParseError (t, "2014-0-12");
     testParseError (t, "abcd-ab-ab");
     testParseError (t, "2014-000");
+    testParse      (t, "2014-001");
+    testParse      (t, "2014-365");
     testParseError (t, "2014-366");
+    testParseError (t, "2014-367");
     testParseError (t, "2014-999");
     testParseError (t, "2014-999999999");
     testParseError (t, "2014-W00");
