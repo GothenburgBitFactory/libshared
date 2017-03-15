@@ -665,7 +665,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEopy           (pig) ||
       initializeEoy            (pig) ||
       initializeEony           (pig) ||
-      initializeMidsommar      (pig))
+      initializeMidsommar      (pig) ||
+      initializeMidsommarafton (pig))
   {
     return true;
   }
@@ -674,7 +675,6 @@ bool Datetime::parse_named (Pig& pig)
   if (pig.getUntilWS (token))
   {
     if (initializeEaster         (token) ||
-        initializeMidsommarafton (token) ||
         initializeInformalTime   (token))
     {
       return true;
@@ -2727,28 +2727,38 @@ bool Datetime::initializeMidsommar (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeMidsommarafton (const std::string& token)
+// midsommarafton [ !<alpha> && !<digit> ]
+// juhannus [ !<alpha> && !<digit> ]
+bool Datetime::initializeMidsommarafton (Pig& pig)
 {
-  if (closeEnough ("midsommarafton", token, Datetime::minimumMatchLength) ||
-      closeEnough ("juhannus",       token, Datetime::minimumMatchLength))
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("midsommarafton") ||
+      pig.skipLiteral ("juhannus"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-    midsommarafton (t);
-    _date = mktime (t);
-
-    // If the result is earlier this year, then recalc for next year.
-    if (_date < now)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t = localtime (&now);
-      t->tm_year++;
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
       midsommarafton (t);
-    }
+      _date = mktime (t);
 
-    _date = mktime (t);
-    return true;
+      // If the result is earlier this year, then recalc for next year.
+      if (_date < now)
+      {
+        t = localtime (&now);
+        t->tm_year++;
+        midsommarafton (t);
+      }
+
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
