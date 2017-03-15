@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (175);
+  UnitTest t (180);
 
   // Pig::skip
   // Pig::skipN
@@ -60,9 +60,19 @@ int main (int, char**)
   t.ok (p2.skipLiteral ("one"),    "skipLiteral=one 'onetwo' --> true");
   t.ok (p2.dump ().find (" 3/6") != std::string::npos, "dump: " + p2.dump ());
 
+  // Pig::skipPartial
+  Pig p2a ("wonderfully");
+  std::string value;
+  t.notok (p2a.skipPartial ("foo",    value), "skipPartial=wonderfully 'foo' --> false");
+  t.ok    (p2a.skipPartial ("wonder", value), "skipPartial=wonderfully 'wonder' --> true");
+  t.is    (value, "wonder",                   "skipPartial=wonderfully 'wonder' --> 'wonder'");
+
+  value = "";
+  t.ok    (p2a.skipPartial ("fun", value), "skipPartial=fully 'fun' --> true");
+  t.is    (value, "fu",                    "skipPartial=fully 'fun' --> 'fu'");
+
   // Pig::getUntilWS
   Pig p3 ("one two three  ");
-  std::string value;
   t.ok (p3.getUntilWS (value), "getUntilWS 'one two three  ' --> true");
   t.is (value, "one",          "getUntilWS 'one two three  ' --> 'one'");
   t.ok (p3.dump ().find (" 3/15") != std::string::npos, "dump: " + p3.dump ());
