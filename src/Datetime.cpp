@@ -633,7 +633,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSod            (pig) ||
       initializeSond           (pig) ||
       initializeEopd           (pig) ||
-      initializeEod            (pig))
+      initializeEod            (pig) ||
+      initializeEond           (pig))
   {
     return true;
   }
@@ -641,8 +642,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeEond           (token) ||
-        initializeSopw           (token) ||
+    if (initializeSopw           (token) ||
         initializeSow            (token) ||
         initializeSonw           (token) ||
         initializeEopw           (token) ||
@@ -1731,20 +1731,29 @@ bool Datetime::initializeEod (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEond (const std::string& token)
+// eond [ !<alpha> && !<digit> ]
+bool Datetime::initializeEond (Pig& pig)
 {
-  if (token == "eond")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_mday += 2;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  if (pig.skipLiteral ("eond"))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday += 2;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
