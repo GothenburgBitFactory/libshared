@@ -310,8 +310,9 @@ bool Duration::parse_units (Pig& pig)
   std::string unit;
   if (pig.getOneOf (units, unit))
   {
-    if (pig.eos () ||
-        unicodeWhitespace (pig.peek ()))
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
       for (unsigned int i = 0; i < NUM_DURATIONS; i++)
       {
@@ -353,8 +354,9 @@ bool Duration::parse_units (Pig& pig)
         return false;
       }
 
-      if (pig.eos () ||
-          unicodeWhitespace (pig.peek ()))
+      auto following = pig.peek ();
+      if (! unicodeLatinAlpha (following) &&
+          ! unicodeLatinDigit (following))
       {
         // Linear lookup - should instead be logarithmic.
         double seconds = 1;
