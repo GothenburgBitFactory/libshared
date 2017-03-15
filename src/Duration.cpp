@@ -285,9 +285,10 @@ bool Duration::parse_weeks (Pig& pig)
     else
       pig.restore ();
 
-    if (pig.eos () || unicodeWhitespace (pig.peek ()))
-      if (pig.cursor () - checkpoint >= 3)
-        return true;
+    if (pig.cursor () - checkpoint >= 3   &&
+        ! unicodeLatinAlpha (pig.peek ()) &&
+        ! unicodeLatinDigit (pig.peek ()))
+      return true;
   }
 
   pig.restoreTo (checkpoint);
