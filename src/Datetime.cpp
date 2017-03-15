@@ -1527,7 +1527,7 @@ bool Datetime::initializeMonthName (Pig& pig)
   std::string token;
   for (int month = 0; month < 12; ++month)
   {
-    if (pig.skipPartial (monthNames[month % 7], token) &&
+    if (pig.skipPartial (monthNames[month], token) &&
         token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength) &&
         ! unicodeLatinAlpha (pig.peek ()) &&
         ! unicodeLatinDigit (pig.peek ()))
