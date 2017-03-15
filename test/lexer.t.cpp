@@ -69,11 +69,11 @@ int main (int, char**)
   t.is (tokens[1].first,         "12",                        "tokens[1] == '12'");
   t.is ((int) tokens[1].second,  (int) Lexer::Type::number,   "tokens[1] == Type::number");
   t.is (tokens[2].first,         "123",                       "tokens[2] == '123'");
-  t.is ((int) tokens[2].second,  (int) Lexer::Type::number,   "tokens[2] == Type::number"); // 70
+  t.is ((int) tokens[2].second,  (int) Lexer::Type::duration, "tokens[2] == Type::duration"); // 70
   t.is (tokens[3].first,         "1234",                      "tokens[3] == '1234'");
   t.is ((int) tokens[3].second,  (int) Lexer::Type::date,     "tokens[3] == Type::date");
   t.is (tokens[4].first,         "12345",                     "tokens[4] == '12345'");
-  t.is ((int) tokens[4].second,  (int) Lexer::Type::number,   "tokens[4] == Type::number");
+  t.is ((int) tokens[4].second,  (int) Lexer::Type::duration, "tokens[4] == Type::duration");
   t.is (tokens[5].first,         "123456",                    "tokens[5] == '123456'");
   t.is ((int) tokens[5].second,  (int) Lexer::Type::date,     "tokens[5] == Type::date");
   t.is (tokens[6].first,         "1234567",                   "tokens[6] == '1234567'");
