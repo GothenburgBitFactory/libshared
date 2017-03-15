@@ -359,29 +359,31 @@ int main (int, char**)
   t.diag ("  P1M        " + Duration ("P1M").formatISO ());
   t.diag ("  P1Y        " + Duration ("P1Y").formatISO ());
 
+  // Standalone units, no numbers.
   t.diag ("  sec        " + Duration ("sec").formatISO ());
   t.diag ("  min        " + Duration ("min").formatISO ());
   t.diag ("  hr         " + Duration ("hr").formatISO ());
   t.diag ("  day        " + Duration ("day").formatISO ());
   t.diag ("  wk         " + Duration ("wk").formatISO ());
+  t.diag ("  biweekly   " + Duration ("biweekly").formatISO ());
+  t.diag ("  fortnight  " + Duration ("fortnight").formatISO ());
   t.diag ("  mo         " + Duration ("mo").formatISO ());
+  t.diag ("  bimonthly  " + Duration ("bimonthly").formatISO ());
   t.diag ("  qtr        " + Duration ("qtr").formatISO ());
   t.diag ("  yr         " + Duration ("yr").formatISO ());
+  t.diag ("  annual     " + Duration ("annual").formatISO ());
+  t.diag ("  biannual   " + Duration ("biannual").formatISO ());
+  t.diag ("  biyearly   " + Duration ("biyearly").formatISO ());
 
+  // Units.
   t.diag ("  1s         " + Duration ("1s").formatISO ());
   t.diag ("  1min       " + Duration ("1min").formatISO ());
   t.diag ("  1h         " + Duration ("1h").formatISO ());
   t.diag ("  1d         " + Duration ("1d").formatISO ());
   t.diag ("  1w         " + Duration ("1w").formatISO ());
-  t.diag ("  biweekly   " + Duration ("biweekly").formatISO ());
-  t.diag ("  fortnight  " + Duration ("fortnight").formatISO ());
   t.diag ("  1m         " + Duration ("1m").formatISO ());
-  t.diag ("  bimonthly  " + Duration ("bimonthly").formatISO ());
   t.diag ("  1q         " + Duration ("1q").formatISO ());
   t.diag ("  1y         " + Duration ("1y").formatISO ());
-  t.diag ("  annual     " + Duration ("annual").formatISO ());
-  t.diag ("  biannual   " + Duration ("biannual").formatISO ());
-  t.diag ("  biyearly   " + Duration ("biyearly").formatISO ());
 
   t.diag ("--------------------------------------------");
 
