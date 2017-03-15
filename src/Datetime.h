@@ -179,7 +179,7 @@ private:
   bool initializeEopy           (Pig&);
   bool initializeEoy            (Pig&);
   bool initializeEony           (Pig&);
-  bool initializeEaster         (const std::string&);
+  bool initializeEaster         (Pig&);
   bool initializeMidsommar      (Pig&);
   bool initializeMidsommarafton (Pig&);
   bool initializeInformalTime   (Pig&);

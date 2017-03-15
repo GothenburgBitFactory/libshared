@@ -665,20 +665,12 @@ bool Datetime::parse_named (Pig& pig)
       initializeEopy           (pig) ||
       initializeEoy            (pig) ||
       initializeEony           (pig) ||
+      initializeEaster         (pig) ||
       initializeMidsommar      (pig) ||
       initializeMidsommarafton (pig) ||
       initializeInformalTime   (pig))
   {
     return true;
-  }
-
-  // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
-  if (pig.getUntilWS (token))
-  {
-    if (initializeEaster         (token))
-    {
-      return true;
-    }
   }
 
   pig.restoreTo (checkpoint);
@@ -2654,41 +2646,49 @@ bool Datetime::initializeEony (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEaster (const std::string& token)
+// easter       [ !<alpha> && !<digit> ]
+// eastermonday [ !<alpha> && !<digit> ]
+// ascension    [ !<alpha> && !<digit> ]
+// pentecost    [ !<alpha> && !<digit> ]
+// goodfriday   [ !<alpha> && !<digit> ]
+bool Datetime::initializeEaster (Pig& pig)
 {
-  if (closeEnough ("easter",       token, Datetime::minimumMatchLength) ||
-      closeEnough ("eastermonday", token, Datetime::minimumMatchLength) ||
-      closeEnough ("ascension",    token, Datetime::minimumMatchLength) ||
-      closeEnough ("pentecost",    token, Datetime::minimumMatchLength) ||
-      closeEnough ("goodfriday",   token, Datetime::minimumMatchLength))
+  auto checkpoint = pig.cursor ();
+
+  std::vector <std::string> holidays = {"eastermonday", "easter", "ascension", "pentecost", "goodfriday"};
+  std::vector <int>         offsets  = {             1,        0,          39,          49,           -2};
+
+  std::string token;
+  for (int holiday = 0; holiday < 5; ++holiday)
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    easter (t);
-    _date = mktime (t);
-
-    // If the result is earlier this year, then recalc for next year.
-    if (_date < now)
+    if (pig.skipPartial (holidays[holiday], token) &&
+        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength) &&
+        ! unicodeLatinAlpha (pig.peek ()) &&
+        ! unicodeLatinDigit (pig.peek ()))
     {
-      t = localtime (&now);
-      t->tm_year++;
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
       easter (t);
+      _date = mktime (t);
+
+      // If the result is earlier this year, then recalc for next year.
+      if (_date < now)
+      {
+        t = localtime (&now);
+        t->tm_year++;
+        easter (t);
+      }
+
+      // Adjust according to holiday-specific offsets.
+      t->tm_mday += offsets[holiday];
+
+      _date = mktime (t);
+      return true;
     }
-
-    // DO NOT REMOVE THIS USELESS-LOOKING LINE.
-    // It is here to capture an exact match for 'easter', to prevent 'easter'
-    // being a partial match for 'eastermonday'.
-         if (closeEnough ("goodfriday",   token, Datetime::minimumMatchLength)) t->tm_mday -= 2;
-    else if (closeEnough ("easter",       token, Datetime::minimumMatchLength)) ;
-    else if (closeEnough ("eastermonday", token, Datetime::minimumMatchLength)) t->tm_mday += 1;
-    else if (closeEnough ("ascension",    token, Datetime::minimumMatchLength)) t->tm_mday += 39;
-    else if (closeEnough ("pentecost",    token, Datetime::minimumMatchLength)) t->tm_mday += 49;
-
-    _date = mktime (t);
-    return true;
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
