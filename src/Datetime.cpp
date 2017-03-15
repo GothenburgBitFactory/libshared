@@ -622,7 +622,8 @@ bool Datetime::parse_named (Pig& pig)
   // initializeOrdinal below.
   if (initializeNow            (pig) ||
       initializeYesterday      (pig) ||
-      initializeToday          (pig))
+      initializeToday          (pig) ||
+      initializeTomorrow       (pig))
   {
     return true;
   }
@@ -630,8 +631,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeTomorrow       (token) ||
-        initializeOrdinal        (token) ||
+    if (initializeOrdinal        (token) ||
         initializeDayName        (token) ||
         initializeMonthName      (token) ||
         initializeLater          (token) ||
@@ -1391,20 +1391,31 @@ bool Datetime::initializeToday (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeTomorrow (const std::string& token)
+// tomcorrow/abbrev  [ !<alpha> && !<digit> ]
+bool Datetime::initializeTomorrow (Pig& pig)
 {
-  if (closeEnough ("tomorrow", token, Datetime::minimumMatchLength))
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_mday++;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  std::string token;
+  if (pig.skipPartial ("tomorrow", token) &&
+      token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday++;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -1610,7 +1621,16 @@ bool Datetime::initializeSod (const std::string& token)
 bool Datetime::initializeSond (const std::string& token)
 {
   if (token == "sond")
-    return initializeTomorrow ("tomorrow");
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_mday++;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }
@@ -1637,7 +1657,16 @@ bool Datetime::initializeEopd (const std::string& token)
 bool Datetime::initializeEod (const std::string& token)
 {
   if (token == "eod")
-    return initializeTomorrow ("tomorrow");
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_mday++;
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }

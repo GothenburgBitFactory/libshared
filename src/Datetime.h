@@ -138,7 +138,7 @@ private:
   bool initializeNow            (Pig&);
   bool initializeYesterday      (Pig&);
   bool initializeToday          (Pig&);
-  bool initializeTomorrow       (const std::string&);
+  bool initializeTomorrow       (Pig&);
   bool initializeOrdinal        (const std::string&);
   bool initializeDayName        (const std::string&);
   bool initializeMonthName      (const std::string&);
