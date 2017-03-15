@@ -103,6 +103,26 @@ bool Pig::skipLiteral (const std::string& literal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Pig::skipPartial (const std::string& reference, std::string& result)
+{
+  // Walk the common substring.
+  auto pos = 0;
+  while (reference[pos] &&
+         (*_text)[_cursor + pos] &&
+         reference[pos] == (*_text)[_cursor + pos])
+    ++pos;
+
+  if (pos > 0)
+  {
+    result = _text->substr (_cursor, pos);
+    _cursor += pos;
+    return true;
+  }
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool Pig::getUntil (int end, std::string& result)
 {
   auto save = _cursor;
