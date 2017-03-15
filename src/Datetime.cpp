@@ -685,8 +685,8 @@ bool Datetime::parse_epoch (Pig& pig)
   auto checkpoint = pig.cursor ();
 
   int epoch {};
-  if (pig.getDigits (epoch) &&
-      pig.eos ()            &&
+  if (pig.getDigits (epoch)             &&
+      ! unicodeLatinAlpha (pig.peek ()) &&
       epoch >= 315532800)
   {
     _date = static_cast <time_t> (epoch);
