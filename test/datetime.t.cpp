@@ -92,7 +92,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2066);
+  UnitTest t (2072);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -837,6 +837,13 @@ int main (int, char**)
     testParse      (t, "now)");
     testParseError (t, "now7");
     testParseError (t, "tomorrov");
+
+    testParseError (t, "yesteryear");
+    testParse      (t, "yest+1d");
+    testParse      (t, "yest-1d");
+    testParse      (t, "yest)");
+    testParseError (t, "yest7");
+    testParse      (t, "yesterday");
 
     // Negative tests, all expected to fail.
     testParseError (t, "");
