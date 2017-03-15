@@ -666,7 +666,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEoy            (pig) ||
       initializeEony           (pig) ||
       initializeMidsommar      (pig) ||
-      initializeMidsommarafton (pig))
+      initializeMidsommarafton (pig) ||
+      initializeInformalTime   (pig))
   {
     return true;
   }
@@ -674,8 +675,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeEaster         (token) ||
-        initializeInformalTime   (token))
+    if (initializeEaster         (token))
     {
       return true;
     }
@@ -2769,11 +2769,11 @@ bool Datetime::initializeMidsommarafton (Pig& pig)
 // 8:30a
 // 8:30
 //
-// \d+ [ : \d{2} ] [ am | a | pm | p ]
+// \d+ [ : \d{2} ] [ am | a | pm | p ] [ !<alpha> && !<digit> && !: && !+ && !- ]
 //
-bool Datetime::initializeInformalTime (const std::string& token)
+bool Datetime::initializeInformalTime (Pig& pig)
 {
-  Pig pig (token);
+  auto checkpoint = pig.cursor ();
 
   int digit = 0;
   bool needDesignator = true;   // Require am/pm.
@@ -2789,11 +2789,19 @@ bool Datetime::initializeInformalTime (const std::string& token)
     if (pig.skip (':'))
     {
       if (! pig.getDigit2 (minutes))
+      {
+        pig.restoreTo (checkpoint);
         return false;
+      }
 
       if (pig.skip (':'))
+      {
         if (! pig.getDigits (seconds))
+        {
+          pig.restoreTo (checkpoint);
           return false;
+        }
+      }
 
       needDesignator = false;
     }
@@ -2820,13 +2828,15 @@ bool Datetime::initializeInformalTime (const std::string& token)
       haveDesignator = true;
     }
 
-    // Informal time need to terminate.
+    // Informal time needs to be terminated.
     auto following = pig.peek ();
-    if (unicodeLatinDigit (following) ||
+    if (unicodeLatinAlpha (following) ||
+        unicodeLatinDigit (following) ||
         following == ':'              ||
         following == '-'              ||
         following == '+')
     {
+      pig.restoreTo (checkpoint);
       return false;
     }
 
@@ -2858,6 +2868,7 @@ bool Datetime::initializeInformalTime (const std::string& token)
     }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 

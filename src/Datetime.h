@@ -182,7 +182,7 @@ private:
   bool initializeEaster         (const std::string&);
   bool initializeMidsommar      (Pig&);
   bool initializeMidsommarafton (Pig&);
-  bool initializeInformalTime   (const std::string&);
+  bool initializeInformalTime   (Pig&);
   void easter (struct tm*) const;
   void midsommar (struct tm*) const;
   void midsommarafton (struct tm*) const;
