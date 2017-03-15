@@ -94,27 +94,15 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1908);
+  UnitTest t (1902);
 
-  Duration dur;
-  std::string::size_type start = 0;
-  t.notok (dur.parse ("foo", start), "foo --> false");
-  t.is ((int)start, 0,               "foo[0]");
-
-  t.notok (dur.parse ("P", start),   "P --> false");
-  t.is ((int)start, 0,               "P[0]");
-
-  t.notok (dur.parse ("PT", start),  "PT --> false");
-  t.is ((int)start, 0,               "PT[0]");
-
-  t.notok (dur.parse ("P1", start),  "P1 --> false");
-  t.is ((int)start, 0,               "P1[0]");
-
-  t.notok (dur.parse ("P1T", start), "P1T --> false");
-  t.is ((int)start, 0,               "P1T[0]");
-
-  t.notok (dur.parse ("PT1", start), "PT1 --> false");
-  t.is ((int)start, 0,               "PT1[0]");
+  // Simple negative tests.
+  testParseError (t, "foo");
+  testParseError (t, "P");
+  testParseError (t, "PT");
+  testParseError (t, "P1");
+  testParseError (t, "P1T");
+  testParseError (t, "PT1");
 
   int year  = 365 * 86400;
   int month =  30 * 86400;
