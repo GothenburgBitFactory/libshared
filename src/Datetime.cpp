@@ -2661,10 +2661,9 @@ bool Datetime::initializeEaster (Pig& pig)
   std::string token;
   for (int holiday = 0; holiday < 5; ++holiday)
   {
-    if (pig.skipPartial (holidays[holiday], token) &&
-        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength) &&
-        ! unicodeLatinAlpha (pig.peek ()) &&
-        ! unicodeLatinDigit (pig.peek ()))
+   if (pig.skipLiteral (holidays[holiday]) &&
+       ! unicodeLatinAlpha (pig.peek ()) &&
+       ! unicodeLatinDigit (pig.peek ()))
     {
       time_t now = time (nullptr);
       struct tm* t = localtime (&now);
