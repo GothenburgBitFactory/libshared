@@ -658,7 +658,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSonq           (pig) ||
       initializeEopq           (pig) ||
       initializeEoq            (pig) ||
-      initializeEonq           (pig))
+      initializeEonq           (pig) ||
+      initializeSopy           (pig))
   {
     return true;
   }
@@ -666,8 +667,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeSopy           (token) ||
-        initializeSoy            (token) ||
+    if (initializeSoy            (token) ||
         initializeSony           (token) ||
         initializeEopy           (token) ||
         initializeEoy            (token) ||
@@ -2482,22 +2482,31 @@ bool Datetime::initializeEonq (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSopy (const std::string& token)
+// sopy [ !<alpha> && !<digit> ]
+bool Datetime::initializeSopy (Pig& pig)
 {
-  if (token == "sopy")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mon = 0;
-    t->tm_mday = 1;
-    t->tm_year--;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  if (pig.skipLiteral ("sopy"))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_mon = 0;
+      t->tm_mday = 1;
+      t->tm_year--;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
