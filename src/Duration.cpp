@@ -259,7 +259,9 @@ bool Duration::parse_designated (Pig& pig)
         pig.restore ();
     }
 
-    if (pig.cursor () - checkpoint >= 3)
+    if (pig.cursor () - checkpoint >= 3   &&
+        ! unicodeLatinAlpha (pig.peek ()) &&
+        ! unicodeLatinDigit (pig.peek ()))
       return true;
   }
 
