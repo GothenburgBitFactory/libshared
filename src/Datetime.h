@@ -177,7 +177,7 @@ private:
   bool initializeSoy            (Pig&);
   bool initializeSony           (Pig&);
   bool initializeEopy           (Pig&);
-  bool initializeEoy            (const std::string&);
+  bool initializeEoy            (Pig&);
   bool initializeEony           (const std::string&);
   bool initializeEaster         (const std::string&);
   bool initializeMidsommar      (const std::string&);
