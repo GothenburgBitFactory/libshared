@@ -146,7 +146,7 @@ private:
   bool initializeSopd           (Pig&);
   bool initializeSod            (Pig&);
   bool initializeSond           (Pig&);
-  bool initializeEopd           (const std::string&);
+  bool initializeEopd           (Pig&);
   bool initializeEod            (const std::string&);
   bool initializeEond           (const std::string&);
   bool initializeSopw           (const std::string&);
