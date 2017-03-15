@@ -94,7 +94,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1913);
+  UnitTest t (1914);
 
   // Simple negative tests.
   testParseError (t, "foo");
@@ -335,6 +335,7 @@ int main (int, char**)
   t.is (Duration ("3610").formatVague (true),  "1h  ", "formatVague (true): 3610 -> '1h  '");
 
   // Seconds must be > 60 for a raw number.
+  testParse      (t, "0");
   testParseError (t, "59");
   testParseError (t, "60");
   testParse      (t, "61");
