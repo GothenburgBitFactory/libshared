@@ -59,3 +59,7 @@ add_library (shared STATIC ${shared_SRCS})
 set (CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 install (TARGETS shared DESTINATION lib)
 install (FILES ${shared_HEADERS} DESTINATION include)
+
+add_executable (lex_executable lex.cpp)
+target_link_libraries (lex_executable shared)
+set_property (TARGET lex_executable PROPERTY OUTPUT_NAME "lex")
