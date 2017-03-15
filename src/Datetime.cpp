@@ -647,7 +647,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEopww          (pig) ||  // Must appear after eopw
       initializeEonww          (pig) ||  // Must appear after eonw
       initializeEoww           (pig) ||  // Must appear after eow
-      initializeSopm           (pig))
+      initializeSopm           (pig) ||
+      initializeSom            (pig))
   {
     return true;
   }
@@ -655,8 +656,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeSom            (token) ||
-        initializeSonm           (token) ||
+    if (initializeSonm           (token) ||
         initializeEopm           (token) ||
         initializeEom            (token) ||
         initializeEonm           (token) ||
@@ -2131,20 +2131,29 @@ bool Datetime::initializeSopm (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSom (const std::string& token)
+// som [ !<alpha> && !<digit> ]
+bool Datetime::initializeSom (Pig& pig)
 {
-  if (token == "som")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  if (pig.skipLiteral ("som"))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_mday = 1;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -2178,7 +2187,16 @@ bool Datetime::initializeSonm (const std::string& token)
 bool Datetime::initializeEopm (const std::string& token)
 {
   if (token == "eopm")
-    return initializeSom ("som");
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }
