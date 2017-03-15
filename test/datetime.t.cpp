@@ -66,6 +66,18 @@ void testParse (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void testParse (
+  UnitTest& t,
+  const std::string& input)
+{
+  std::string label = std::string ("Datetime::parse positive '") + input + "' --> success";
+
+  Datetime positive;
+  std::string::size_type pos {0};
+  t.ok (positive.parse (input, pos) && pos, label);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void testParseError (
   UnitTest& t,
   const std::string& input)
@@ -80,7 +92,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2060);
+  UnitTest t (2066);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -817,6 +829,14 @@ int main (int, char**)
     // Phrases.
     Datetime r42 ("4th thursday in november");
 */
+
+    // Embedded parsing.
+    testParseError (t, "nowadays");
+    testParse      (t, "now+1d");
+    testParse      (t, "now-1d");
+    testParse      (t, "now)");
+    testParseError (t, "now7");
+    testParseError (t, "tomorrov");
 
     // Negative tests, all expected to fail.
     testParseError (t, "");
