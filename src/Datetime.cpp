@@ -643,7 +643,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEonw           (pig) ||
       initializeSopww          (pig) ||  // Must appear after sopw
       initializeSonww          (pig) ||  // Must appear after sonw
-      initializeSoww           (pig))    // Must appear after sow
+      initializeSoww           (pig) ||  // Must appear after sow
+      initializeEopww          (pig))    // Must appear after eopw
   {
     return true;
   }
@@ -651,8 +652,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeEopww          (token) ||  // Must appear after eopw
-        initializeEonww          (token) ||  // Must appear after eonw
+    if (initializeEonww          (token) ||  // Must appear after eonw
         initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
         initializeSom            (token) ||
@@ -2014,20 +2014,29 @@ bool Datetime::initializeSonww (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEopww (const std::string& token)
+// eopww [ !<alpha> && !<digit> ]
+bool Datetime::initializeEopww (Pig& pig)
 {
-  if (token == "eopww")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_mday -= (t->tm_wday + 1) % 7;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  if (pig.skipLiteral ("eopww"))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday -= (t->tm_wday + 1) % 7;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
