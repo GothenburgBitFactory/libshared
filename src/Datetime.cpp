@@ -644,7 +644,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSopww          (pig) ||  // Must appear after sopw
       initializeSonww          (pig) ||  // Must appear after sonw
       initializeSoww           (pig) ||  // Must appear after sow
-      initializeEopww          (pig))    // Must appear after eopw
+      initializeEopww          (pig) ||  // Must appear after eopw
+      initializeEonww          (pig))    // Must appear after eonw
   {
     return true;
   }
@@ -652,8 +653,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeEonww          (token) ||  // Must appear after eonw
-        initializeEoww           (token) ||  // Must appear after eow
+    if (initializeEoww           (token) ||  // Must appear after eow
         initializeSopm           (token) ||
         initializeSom            (token) ||
         initializeSonm           (token) ||
@@ -2059,20 +2059,29 @@ bool Datetime::initializeEoww (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEonww (const std::string& token)
+// eonww [ !<alpha> && !<digit> ]
+bool Datetime::initializeEonww (Pig& pig)
 {
-  if (token == "eonww")
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_mday += 13 - t->tm_wday;
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  if (pig.skipLiteral ("eonww"))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_mday += 13 - t->tm_wday;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
