@@ -29,6 +29,8 @@ master/HEAD
 - Added isIPv4Address and isIPv6Address.
 - Added PEG parser.
 - Added Packrat parser.
+- Datetime/Duration can now parse dates from an embedded string, with negative
+  lookahead.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
