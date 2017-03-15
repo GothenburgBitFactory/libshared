@@ -619,9 +619,14 @@ bool Datetime::parse_named (Pig& pig)
 
   // The above contains "1st monday ..." which must be processed before
   // initializeOrdinal below.
+  if (initializeNow            (pig))
+  {
+    return true;
+  }
+
   if (pig.getUntilWS (token))
   {
-    if (initializeNow            (token) ||
+    if (//initializeNow            (pig) ||
         initializeYesterday      (token) ||
         initializeToday          (token) ||
         initializeTomorrow       (token) ||
@@ -1306,14 +1311,22 @@ bool Datetime::parse_off_minute (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeNow (const std::string& token)
+bool Datetime::initializeNow (Pig& pig)
 {
-  if (closeEnough ("now", token, Datetime::minimumMatchLength))
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("now"))
   {
-    _date = time (nullptr);
-    return true;
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      _date = time (nullptr);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
