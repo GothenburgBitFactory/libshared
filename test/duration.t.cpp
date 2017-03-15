@@ -94,7 +94,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1902);
+  UnitTest t (1905);
 
   // Simple negative tests.
   testParseError (t, "foo");
@@ -333,6 +333,11 @@ int main (int, char**)
   t.is (Duration ("123").formatVague (true),   "2min", "formatVague (true): 123 -> '2min'");
   t.is (Duration ("3610").formatVague (false), "1h",   "formatVague: 3610 -> '1h'");
   t.is (Duration ("3610").formatVague (true),  "1h  ", "formatVague (true): 3610 -> '1h  '");
+
+  // Seconds must be > 60 for a raw number.
+  testParseError (t, "59");
+  testParseError (t, "60");
+  testParse      (t, "61");
 
   // This is jus ta diagnostic dump of all named dates, and us used to verify
   // correctness manually.
