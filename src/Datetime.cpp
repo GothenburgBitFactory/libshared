@@ -656,7 +656,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSopq           (pig) ||
       initializeSoq            (pig) ||
       initializeSonq           (pig) ||
-      initializeEopq           (pig))
+      initializeEopq           (pig) ||
+      initializeEoq            (pig))
   {
     return true;
   }
@@ -664,8 +665,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeEoq            (token) ||
-        initializeEonq           (token) ||
+    if (initializeEonq           (token) ||
         initializeSopy           (token) ||
         initializeSoy            (token) ||
         initializeSony           (token) ||
@@ -2391,7 +2391,7 @@ bool Datetime::initializeEopq (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  if (pig.skipLiteral ("sonq"))
+  if (pig.skipLiteral ("eopq"))
   {
     auto following = pig.peek ();
     if (! unicodeLatinAlpha (following) &&
@@ -2414,27 +2414,36 @@ bool Datetime::initializeEopq (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeEoq (const std::string& token)
+// eoq [ !<alpha> && !<digit> ]
+bool Datetime::initializeEoq (Pig& pig)
 {
-  if (token == "eoq")
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("eoq"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_mon += 3 - (t->tm_mon % 3);
-    if (t->tm_mon > 11)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t->tm_mon -= 12;
-      ++t->tm_year;
-    }
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+      t->tm_mon += 3 - (t->tm_mon % 3);
+      if (t->tm_mon > 11)
+      {
+        t->tm_mon -= 12;
+        ++t->tm_year;
+      }
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_mday = 1;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
