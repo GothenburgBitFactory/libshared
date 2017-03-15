@@ -94,7 +94,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1905);
+  UnitTest t (1908);
 
   // Simple negative tests.
   testParseError (t, "foo");
@@ -338,6 +338,9 @@ int main (int, char**)
   testParseError (t, "59");
   testParseError (t, "60");
   testParse      (t, "61");
+  testParse      (t, "61+0");
+  testParse      (t, "61-0");
+  testParse      (t, "61)");
 
   // This is jus ta diagnostic dump of all named dates, and us used to verify
   // correctness manually.
