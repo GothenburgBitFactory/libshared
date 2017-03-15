@@ -133,6 +133,10 @@ void Configuration::load (const std::string& file, int nest /* = 1 */)
 
   // Read the file, then parse the contents.
   File config (file);
+
+  if (nest == 1)
+    _original_file = config;
+
   if (config.exists () &&
       config.readable ())
   {
