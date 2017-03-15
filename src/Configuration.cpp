@@ -131,23 +131,15 @@ void Configuration::load (const std::string& file, int nest /* = 1 */)
   if (nest > 10)
     throw std::string ("Configuration files may only be nested to 10 levels.");
 
-  // First time in, load the default values.
-  if (nest == 1)
-  {
-    // This is where defaults would be set.
-    _original_file = File (file);
-
-    if (! _original_file.exists ())
-      throw std::string ("ERROR: Configuration file not found.");
-
-    if (! _original_file.readable ())
-      throw std::string ("ERROR: Configuration file cannot be read (insufficient privileges).");
-  }
-
   // Read the file, then parse the contents.
-  std::string contents;
-  if (File::read (file, contents) && contents.length ())
-    parse (contents, nest);
+  File config (file);
+  if (config.exists () &&
+      config.readable ())
+  {
+    std::string contents;
+    if (File::read (file, contents) && contents.length ())
+      parse (contents, nest);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
