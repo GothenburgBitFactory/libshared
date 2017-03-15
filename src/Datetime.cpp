@@ -664,7 +664,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSony           (pig) ||
       initializeEopy           (pig) ||
       initializeEoy            (pig) ||
-      initializeEony           (pig))
+      initializeEony           (pig) ||
+      initializeMidsommar      (pig))
   {
     return true;
   }
@@ -673,7 +674,6 @@ bool Datetime::parse_named (Pig& pig)
   if (pig.getUntilWS (token))
   {
     if (initializeEaster         (token) ||
-        initializeMidsommar      (token) ||
         initializeMidsommarafton (token) ||
         initializeInformalTime   (token))
     {
@@ -2693,27 +2693,36 @@ bool Datetime::initializeEaster (const std::string& token)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeMidsommar (const std::string& token)
+// midsommar [ !<alpha> && !<digit> ]
+bool Datetime::initializeMidsommar (Pig& pig)
 {
-  if (closeEnough ("midsommar", token, Datetime::minimumMatchLength))
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("midsommar"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-    midsommar (t);
-    _date = mktime (t);
-
-    // If the result is earlier this year, then recalc for next year.
-    if (_date < now)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t = localtime (&now);
-      t->tm_year++;
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
       midsommar (t);
-    }
+      _date = mktime (t);
 
-    _date = mktime (t);
-    return true;
+      // If the result is earlier this year, then recalc for next year.
+      if (_date < now)
+      {
+        t = localtime (&now);
+        t->tm_year++;
+        midsommar (t);
+      }
+
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 

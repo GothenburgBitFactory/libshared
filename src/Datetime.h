@@ -180,7 +180,7 @@ private:
   bool initializeEoy            (Pig&);
   bool initializeEony           (Pig&);
   bool initializeEaster         (const std::string&);
-  bool initializeMidsommar      (const std::string&);
+  bool initializeMidsommar      (Pig&);
   bool initializeMidsommarafton (const std::string&);
   bool initializeInformalTime   (const std::string&);
   void easter (struct tm*) const;
