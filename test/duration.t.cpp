@@ -68,6 +68,30 @@ void testParse (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void testParse (
+  UnitTest& t,
+  const std::string& input)
+{
+  std::string label = std::string ("Duration::parse positive '") + input + "' --> success";
+
+  Duration positive;
+  std::string::size_type pos {0};
+  t.ok (positive.parse (input, pos) && pos, label);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void testParseError (
+  UnitTest& t,
+  const std::string& input)
+{
+  std::string label = std::string ("Duration::parse negative '") + input + "' --> fail";
+
+  Duration neg;
+  std::string::size_type pos {0};
+  t.notok (neg.parse (input, pos), label);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
   UnitTest t (1908);
