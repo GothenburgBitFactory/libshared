@@ -646,7 +646,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeSoww           (pig) ||  // Must appear after sow
       initializeEopww          (pig) ||  // Must appear after eopw
       initializeEonww          (pig) ||  // Must appear after eonw
-      initializeEoww           (pig))    // Must appear after eow
+      initializeEoww           (pig) ||  // Must appear after eow
+      initializeSopm           (pig))
   {
     return true;
   }
@@ -654,8 +655,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeSopm           (token) ||
-        initializeSom            (token) ||
+    if (initializeSom            (token) ||
         initializeSonm           (token) ||
         initializeEopm           (token) ||
         initializeEom            (token) ||
@@ -2095,29 +2095,38 @@ bool Datetime::initializeEonww (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSopm (const std::string& token)
+// sopm [ !<alpha> && !<digit> ]
+bool Datetime::initializeSopm (Pig& pig)
 {
-  if (token == "sopm")
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("sopm"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-
-    if (t->tm_mon == 0)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t->tm_year--;
-      t->tm_mon = 11;
-    }
-    else
-      t->tm_mon--;
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+      if (t->tm_mon == 0)
+      {
+        t->tm_year--;
+        t->tm_mon = 11;
+      }
+      else
+        t->tm_mon--;
+
+      t->tm_mday = 1;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 

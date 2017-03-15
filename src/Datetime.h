@@ -161,7 +161,7 @@ private:
   bool initializeEopww          (Pig&);
   bool initializeEonww          (Pig&);
   bool initializeEoww           (Pig&);
-  bool initializeSopm           (const std::string&);
+  bool initializeSopm           (Pig&);
   bool initializeSom            (const std::string&);
   bool initializeSonm           (const std::string&);
   bool initializeEopm           (const std::string&);
