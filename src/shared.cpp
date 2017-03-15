@@ -482,6 +482,20 @@ bool closeEnough (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int matchLength (
+  const std::string& left,
+  const std::string& right)
+{
+  int pos = 0;
+  while (left[pos] &&
+         right[pos] &&
+         left[pos] == right[pos])
+    ++pos;
+
+  return pos;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string::size_type find (
   const std::string& text,
   const std::string& pattern,
