@@ -199,7 +199,8 @@ bool Duration::parse_seconds (Pig& pig)
   int epoch {};
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
-      epoch > 60)
+      (epoch == 0 ||
+       epoch > 60))
   {
     _period = static_cast <time_t> (epoch);
     return true;
