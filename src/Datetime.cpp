@@ -648,7 +648,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeEonww          (pig) ||  // Must appear after eonw
       initializeEoww           (pig) ||  // Must appear after eow
       initializeSopm           (pig) ||
-      initializeSom            (pig))
+      initializeSom            (pig) ||
+      initializeSonm           (pig))
   {
     return true;
   }
@@ -656,8 +657,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeSonm           (token) ||
-        initializeEopm           (token) ||
+    if (initializeEopm           (token) ||
         initializeEom            (token) ||
         initializeEonm           (token) ||
         initializeSopq           (token) ||
@@ -2158,28 +2158,37 @@ bool Datetime::initializeSom (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeSonm (const std::string& token)
+// sonm [ !<alpha> && !<digit> ]
+bool Datetime::initializeSonm (Pig& pig)
 {
-  if (token == "sonm")
+  auto checkpoint = pig.cursor ();
+
+  if (pig.skipLiteral ("sonm"))
   {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
-
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-
-    t->tm_mon++;
-    if (t->tm_mon > 11)
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
     {
-      t->tm_year++;
-      t->tm_mon = 0;
-    }
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
 
-    t->tm_mday = 1;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+      t->tm_mon++;
+      if (t->tm_mon > 11)
+      {
+        t->tm_year++;
+        t->tm_mon = 0;
+      }
+
+      t->tm_mday = 1;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
@@ -2205,7 +2214,24 @@ bool Datetime::initializeEopm (const std::string& token)
 bool Datetime::initializeEom (const std::string& token)
 {
   if (token == "eom")
-    return initializeSonm ("sonm");
+  {
+    time_t now = time (nullptr);
+    struct tm* t = localtime (&now);
+
+    t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+    t->tm_mon++;
+    if (t->tm_mon > 11)
+    {
+      t->tm_year++;
+      t->tm_mon = 0;
+    }
+
+    t->tm_mday = 1;
+    t->tm_isdst = -1;
+    _date = mktime (t);
+    return true;
+  }
 
   return false;
 }
