@@ -609,6 +609,8 @@ bool Datetime::parse_named (Pig& pig)
   }
 
 /*
+  // This grpoup contains "1st monday ..." which must be processed before
+  // initializeOrdinal below.
   if (initializeNthDayInMonth (tokens))
   {
     return true;
@@ -618,12 +620,11 @@ bool Datetime::parse_named (Pig& pig)
   // Restoration necessary because of the tokenization.
   pig.restoreTo (checkpoint);
 
-  // The above contains "1st monday ..." which must be processed before
-  // initializeOrdinal below.
   if (initializeNow            (pig) ||
       initializeYesterday      (pig) ||
       initializeToday          (pig) ||
-      initializeTomorrow       (pig))
+      initializeTomorrow       (pig) ||
+      initializeOrdinal        (pig))
   {
     return true;
   }
@@ -631,8 +632,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeOrdinal        (token) ||
-        initializeDayName        (token) ||
+    if (initializeDayName        (token) ||
         initializeMonthName      (token) ||
         initializeLater          (token) ||
         initializeSopd           (token) ||
@@ -1420,57 +1420,33 @@ bool Datetime::initializeTomorrow (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeOrdinal (const std::string& token)
+// <digit>+ [ "st" | "nd" | "rd" | "th" ] [ !<alpha> && !<digit> ]
+bool Datetime::initializeOrdinal (Pig& pig)
 {
-  if (
-      (
-       token.length () == 3                  &&
-       unicodeLatinDigit (token[0])          &&
-       ((token[1] == 's' && token[2] == 't') ||
-        (token[1] == 'n' && token[2] == 'd') ||
-        (token[1] == 'r' && token[2] == 'd') ||
-        (token[1] == 't' && token[2] == 'h'))
-      )
-      ||
-      (
-       token.length () == 4                  &&
-       unicodeLatinDigit (token[0])          &&
-       unicodeLatinDigit (token[1])          &&
-       ((token[2] == 's' && token[3] == 't') ||
-        (token[2] == 'n' && token[3] == 'd') ||
-        (token[2] == 'r' && token[3] == 'd') ||
-        (token[2] == 't' && token[3] == 'h'))
-      )
-     )
+  auto checkpoint = pig.cursor ();
+
+  int number = 0;
+  if (pig.getDigits (number) &&
+      number > 0             &&
+      number <= 31)
   {
-    int number;
-    std::string ordinal;
-
-    if (unicodeLatinDigit (token[1]))
+    int character1;
+    int character2;
+    if (pig.getCharacter (character1)     &&
+        pig.getCharacter (character2)     &&
+        ! unicodeLatinAlpha (pig.peek ()) &&
+        ! unicodeLatinDigit (pig.peek ()))
     {
-      number = strtol (token.substr (0, 2).c_str (), nullptr, 10);
-      ordinal = lowerCase (token.substr (2));
-    }
-    else
-    {
-      number = strtol (token.substr (0, 1).c_str (), nullptr, 10);
-      ordinal = lowerCase (token.substr (1));
-    }
-
-    // Sanity check.
-    if (number <= 31)
-    {
-      // Make sure the digits and suffix agree.
       int remainder1 = number % 10;
       int remainder2 = number % 100;
-      if ((remainder2 != 11 && remainder1 == 1 && ordinal == "st") ||
-          (remainder2 != 12 && remainder1 == 2 && ordinal == "nd") ||
-          (remainder2 != 13 && remainder1 == 3 && ordinal == "rd") ||
+      if ((remainder2 != 11 && remainder1 == 1 && character1 == 's' && character2 == 't') ||
+          (remainder2 != 12 && remainder1 == 2 && character1 == 'n' && character2 == 'd') ||
+          (remainder2 != 13 && remainder1 == 3 && character1 == 'r' && character2 == 'd') ||
           ((remainder2 == 11 ||
             remainder2 == 12 ||
             remainder2 == 13 ||
             remainder1 == 0 ||
-            remainder1 > 3) && ordinal == "th"))
+            remainder1 > 3) && character1 == 't' && character2 == 'h'))
       {
         time_t now = time (nullptr);
         struct tm* t = localtime (&now);
@@ -1511,6 +1487,7 @@ bool Datetime::initializeOrdinal (const std::string& token)
     }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
