@@ -154,9 +154,9 @@ private:
   bool initializeSonw           (Pig&);
   bool initializeEopw           (Pig&);
   bool initializeEow            (Pig&);
-  bool initializeEonw           (const std::string&);
-  bool initializeSopww          (const std::string&);
-  bool initializeSonww          (const std::string&);
+  bool initializeEonw           (Pig&);
+  bool initializeSopww          (Pig&);
+  bool initializeSonww          (Pig&);
   bool initializeSoww           (const std::string&);
   bool initializeEopww          (const std::string&);
   bool initializeEonww          (const std::string&);
