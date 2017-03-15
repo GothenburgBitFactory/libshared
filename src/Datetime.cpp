@@ -1312,6 +1312,7 @@ bool Datetime::parse_off_minute (Pig& pig, int& value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// now [ !<alpha> && !<digit> ]
 bool Datetime::initializeNow (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
@@ -1332,6 +1333,7 @@ bool Datetime::initializeNow (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// yesterday/abbrev  [ !<alpha> && !<digit> ]
 bool Datetime::initializeYesterday (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
