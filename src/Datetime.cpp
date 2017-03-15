@@ -26,6 +26,7 @@
 
 #include <cmake.h>
 #include <Datetime.h>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -626,7 +627,8 @@ bool Datetime::parse_named (Pig& pig)
       initializeTomorrow       (pig) ||
       initializeOrdinal        (pig) ||
       initializeDayName        (pig) ||
-      initializeMonthName      (pig))
+      initializeMonthName      (pig) ||
+      initializeLater          (pig))
   {
     return true;
   }
@@ -634,8 +636,7 @@ bool Datetime::parse_named (Pig& pig)
   // This 'getUntilWS' destroys embedded parsing, i.e. 'now+1d'.
   if (pig.getUntilWS (token))
   {
-    if (initializeLater          (token) ||
-        initializeSopd           (token) ||
+    if (initializeSopd           (token) ||
         initializeSod            (token) ||
         initializeSond           (token) ||
         initializeEopd           (token) ||
@@ -1560,23 +1561,39 @@ bool Datetime::initializeMonthName (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::initializeLater (const std::string& token)
+// later/abbrev  [ !<alpha> && !<digit> ]
+// someday/abbrev  [ !<alpha> && !<digit> ]
+bool Datetime::initializeLater (Pig& pig)
 {
-  if (closeEnough ("later", token, Datetime::minimumMatchLength) ||
-      closeEnough ("someday", token, std::max (Datetime::minimumMatchLength, 4)))
-  {
-    time_t now = time (nullptr);
-    struct tm* t = localtime (&now);
+  auto checkpoint = pig.cursor ();
 
-    t->tm_hour = t->tm_min = t->tm_sec = 0;
-    t->tm_year = 138;
-    t->tm_mon = 0;
-    t->tm_mday = 18;
-    t->tm_isdst = -1;
-    _date = mktime (t);
-    return true;
+  std::string token;
+  if ((pig.skipPartial ("later", token) &&
+      token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
+
+      ||
+
+     (pig.skipPartial ("someday", token) &&
+      token.length () >= static_cast <std::string::size_type> (std::max (Datetime::minimumMatchLength, 4))))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_year = 138;
+      t->tm_mon = 0;
+      t->tm_mday = 18;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
   }
 
+  pig.restoreTo (checkpoint);
   return false;
 }
 
