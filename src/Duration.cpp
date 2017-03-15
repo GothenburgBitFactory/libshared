@@ -259,9 +259,10 @@ bool Duration::parse_designated (Pig& pig)
         pig.restore ();
     }
 
+    auto following = pig.peek ();
     if (pig.cursor () - checkpoint >= 3   &&
-        ! unicodeLatinAlpha (pig.peek ()) &&
-        ! unicodeLatinDigit (pig.peek ()))
+        ! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
       return true;
   }
 
@@ -285,9 +286,10 @@ bool Duration::parse_weeks (Pig& pig)
     else
       pig.restore ();
 
+    auto following = pig.peek ();
     if (pig.cursor () - checkpoint >= 3   &&
-        ! unicodeLatinAlpha (pig.peek ()) &&
-        ! unicodeLatinDigit (pig.peek ()))
+        ! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
       return true;
   }
 
