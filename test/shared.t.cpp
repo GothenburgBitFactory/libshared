@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (189);
+  UnitTest t (204);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -284,6 +284,24 @@ int main (int, char**)
   t.ok (closeEnough ("foobar", "foobar", 5),   "closeEnough foobar == foobar,5");
   t.ok (closeEnough ("foobar", "foobar", 6),   "closeEnough foobar == foobar,6");
   t.ok (closeEnough ("foobar", "foo",    3),   "closeEnough foobar == foo,3");
+
+  // int matchLength (const std::string&, const std::string&, unsigned int minLength = 0);
+  t.is (matchLength ("",       "foobar"), 0, "matchLength '' == foobar --> 0");
+  t.is (matchLength ("f",      "foobar"), 1, "matchLength f == foobar --> 1");
+  t.is (matchLength ("fo",     "foobar"), 2, "matchLength fo == foobar --> 2");
+  t.is (matchLength ("foo",    "foobar"), 3, "matchLength foo == foobar --> 3");
+  t.is (matchLength ("foob",   "foobar"), 4, "matchLength foob == foobar --> 4");
+  t.is (matchLength ("fooba",  "foobar"), 5, "matchLength fooba == foobar --> 5");
+  t.is (matchLength ("foobar", "foobar"), 6, "matchLength foobar == foobar --> 6");
+  t.is (matchLength ("foobar", "fooba"),  5, "matchLength foobar == fooba --> 5");
+  t.is (matchLength ("foobar", "foob"),   4, "matchLength foobar == foob --> 4");
+  t.is (matchLength ("foobar", "foo"),    3, "matchLength foobar == foo --> 3");
+  t.is (matchLength ("foobar", "fo"),     2, "matchLength foobar == fo --> 2");
+  t.is (matchLength ("foobar", "f"),      1, "matchLength foobar == f --> 1");
+  t.is (matchLength ("foobar", ""),       0, "matchLength foobar == '' --> 0");
+
+  t.is (matchLength ("foobar", "foodmixer"), 3, "matchLength foobar == foodmixer --> 3");
+  t.is (matchLength ("foodmixer", "foobar"), 3, "matchLength foodmixer == foobar --> 3");
 
   // std::string lowerCase (const std::string&);
   t.is (lowerCase (""),   "",   "lowerCase '' --> ''");
