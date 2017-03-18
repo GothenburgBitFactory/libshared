@@ -201,7 +201,7 @@ int main (int, char**)
   t.ok (eoq == sonq,                "eoq == sonq");
   t.ok (eow == eow,                 "eow == eow");
   t.ok (eow == sonw,                "eow == sonw");
-  t.ok (eoww > eopww,               "eoww > eopww");
+  t.ok (eoww >= eopww,              "eoww >= eopww");
   t.ok (eoy == eoy,                 "eoy == eoy");
   t.ok (eoy == sony,                "eoy == sony");
   t.ok (later == someday,           "later == someday");
