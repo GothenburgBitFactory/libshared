@@ -34,6 +34,8 @@
 class Duration
 {
 public:
+  static bool standaloneSecondsEnabled;
+
   Duration ();
   Duration (const std::string&);
   Duration (time_t);

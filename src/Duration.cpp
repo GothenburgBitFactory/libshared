@@ -31,6 +31,8 @@
 #include <iomanip>
 #include <vector>
 
+bool Duration::standaloneSecondsEnabled = true;
+
 #define DAY    86400
 #define HOUR    3600
 #define MINUTE    60
@@ -172,7 +174,7 @@ bool Duration::parse (const std::string& input, std::string::size_type& start)
   if (i)
     pig.skipN (static_cast <int> (i));
 
-  if (parse_seconds (pig))
+  if (Duration::standaloneSecondsEnabled && parse_seconds (pig))
   {
     // ::resolve is not needed in this case.
     start = pig.cursor ();
