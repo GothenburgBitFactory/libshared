@@ -37,6 +37,8 @@ public:
   static int weekstart;
   static int minimumMatchLength;
   static bool isoEnabled;
+  static bool standaloneDateEnabled;
+  static bool standaloneTimeEnabled;
 
   Datetime ();
   Datetime (const std::string&, const std::string& format = "");

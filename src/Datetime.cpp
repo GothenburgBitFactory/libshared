@@ -62,7 +62,9 @@ static std::vector <std::string> monthNames {
 
 int Datetime::weekstart = 1; // Monday, per ISO-8601.
 int Datetime::minimumMatchLength = 3;
-bool Datetime::isoEnabled = true;
+bool Datetime::isoEnabled            = true;
+bool Datetime::standaloneDateEnabled = true;
+bool Datetime::standaloneTimeEnabled = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
@@ -172,14 +174,17 @@ bool Datetime::parse (
   if (parse_date_time_ext   (pig) || // Strictest first.
       parse_date_time       (pig) ||
       (Datetime::isoEnabled &&
-       (parse_date_ext      (pig) ||
-        parse_date          (pig) ||
-        parse_time_utc_ext  (pig) ||
-        parse_time_utc      (pig) ||
-        parse_time_off_ext  (pig) ||
-        parse_time_off      (pig) ||
-        parse_time_ext      (pig) ||
-        parse_time          (pig)))) // Time last, as it is the most permissive.
+       (                                    parse_date_ext      (pig)  ||
+        (Datetime::standaloneDateEnabled && parse_date          (pig)) ||
+                                            parse_time_utc_ext  (pig)  ||
+                                            parse_time_utc      (pig)  ||
+                                            parse_time_off_ext  (pig)  ||
+                                            parse_time_off      (pig)  ||
+                                            parse_time_ext      (pig)  ||
+        (Datetime::standaloneTimeEnabled && parse_time          (pig)) // Time last, as it is the most permissive.
+       )
+      )
+     )
   {
     // Check the values and determine time_t.
     if (validate ())
