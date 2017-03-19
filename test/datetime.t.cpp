@@ -92,7 +92,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2082);
+  UnitTest t (2086);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -1004,6 +1004,12 @@ int main (int, char**)
     Datetime::standaloneTimeEnabled = false;
     testParseError (t, "235959");
     Datetime::standaloneTimeEnabled = true;
+
+    // Weekdays and month names can no longer be followed by ':' or '='.
+    testParse      (t, "jan");
+    testParseError (t, "jan:");
+    testParse      (t, "mon");
+    testParseError (t, "mon:");
 
     // This is jus ta diagnostic dump of all named dates, and us used to verify
     // correctness manually.
