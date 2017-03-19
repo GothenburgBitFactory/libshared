@@ -94,7 +94,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1914);
+  UnitTest t (1921);
 
   // Simple negative tests.
   testParseError (t, "foo");
@@ -329,6 +329,7 @@ int main (int, char**)
   t.ok (d.seconds () == 1234567890, "Duration 1234567890 -> seconds = 123456789030");
 
   // formatVague (true)
+  Duration::standaloneSecondsEnabled = true;
   t.is (Duration ("123").formatVague (false),  "2min", "formatVague: 123 -> '2min'");
   t.is (Duration ("123").formatVague (true),   "2min", "formatVague (true): 123 -> '2min'");
   t.is (Duration ("3610").formatVague (false), "1h",   "formatVague: 3610 -> '1h'");
@@ -342,6 +343,17 @@ int main (int, char**)
   testParse      (t, "61+0");
   testParse      (t, "61-0");
   testParse      (t, "61)");
+
+  // Repeat with seconds disabled.
+  Duration::standaloneSecondsEnabled = false;
+  testParseError (t, "0");
+  testParseError (t, "59");
+  testParseError (t, "60");
+  testParseError (t, "61");
+  testParseError (t, "61+0");
+  testParseError (t, "61-0");
+  testParseError (t, "61)");
+  Duration::standaloneSecondsEnabled = true;
 
   // Embedded parsing.
   testParseError (t, "1weekend");
