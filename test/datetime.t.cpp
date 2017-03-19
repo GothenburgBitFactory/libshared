@@ -92,7 +92,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2078);
+  UnitTest t (2082);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -991,6 +991,19 @@ int main (int, char**)
     testParseError (t, "12:12+3:20");
     testParseError (t, "12:12+03:2");
     testParseError (t, "12:12+3:2");
+
+    // Test with standlalone date enable/disabled.
+    Datetime::standaloneDateEnabled = true;
+    testParse      (t, "20170319");
+    Datetime::standaloneDateEnabled = false;
+    testParseError (t, "20170319");
+    Datetime::standaloneDateEnabled = true;
+
+    Datetime::standaloneTimeEnabled = true;
+    testParse      (t, "235959");
+    Datetime::standaloneTimeEnabled = false;
+    testParseError (t, "235959");
+    Datetime::standaloneTimeEnabled = true;
 
     // This is jus ta diagnostic dump of all named dates, and us used to verify
     // correctness manually.
