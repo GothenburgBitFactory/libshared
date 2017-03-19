@@ -1490,7 +1490,7 @@ bool Datetime::initializeOrdinal (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// sunday/abbrev [ !<alpha> && !<digit> ]
+// sunday/abbrev [ !<alpha> && !<digit> && !: && != ]
 bool Datetime::initializeDayName (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
@@ -1499,22 +1499,27 @@ bool Datetime::initializeDayName (Pig& pig)
   for (int day = 0; day <= 7; ++day)   // Deliberate <= so that 'sunday' is either 0 or 7.
   {
     if (pig.skipPartial (dayNames[day % 7], token) &&
-        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength) &&
-        ! unicodeLatinAlpha (pig.peek ()) &&
-        ! unicodeLatinDigit (pig.peek ()))
+        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
     {
-      time_t now = time (nullptr);
-      struct tm* t = localtime (&now);
+      auto following = pig.peek ();
+      if (! unicodeLatinAlpha (following) &&
+          ! unicodeLatinDigit (following) &&
+          following != ':' &&
+          following != '=')
+      {
+        time_t now = time (nullptr);
+        struct tm* t = localtime (&now);
 
-      if (t->tm_wday >= day)
-        t->tm_mday += day - t->tm_wday + 7;
-      else
-        t->tm_mday += day - t->tm_wday;
+        if (t->tm_wday >= day)
+          t->tm_mday += day - t->tm_wday + 7;
+        else
+          t->tm_mday += day - t->tm_wday;
 
-      t->tm_hour = t->tm_min = t->tm_sec = 0;
-      t->tm_isdst = -1;
-      _date = mktime (t);
-      return true;
+        t->tm_hour = t->tm_min = t->tm_sec = 0;
+        t->tm_isdst = -1;
+        _date = mktime (t);
+        return true;
+      }
     }
 
     pig.restoreTo (checkpoint);
@@ -1524,7 +1529,7 @@ bool Datetime::initializeDayName (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// january/abbrev [ !<alpha> && !<digit> ]
+// january/abbrev [ !<alpha> && !<digit> && !: && != ]
 bool Datetime::initializeMonthName (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
@@ -1533,22 +1538,27 @@ bool Datetime::initializeMonthName (Pig& pig)
   for (int month = 0; month < 12; ++month)
   {
     if (pig.skipPartial (monthNames[month], token) &&
-        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength) &&
-        ! unicodeLatinAlpha (pig.peek ()) &&
-        ! unicodeLatinDigit (pig.peek ()))
+        token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
     {
-      time_t now = time (nullptr);
-      struct tm* t = localtime (&now);
+      auto following = pig.peek ();
+      if (! unicodeLatinAlpha (following) &&
+          ! unicodeLatinDigit (following) &&
+          following != ':' &&
+          following != '=')
+      {
+        time_t now = time (nullptr);
+        struct tm* t = localtime (&now);
 
-      if (t->tm_mon >= month)
-        t->tm_year++;
+        if (t->tm_mon >= month)
+          t->tm_year++;
 
-      t->tm_mon = month;
-      t->tm_mday = 1;
-      t->tm_hour = t->tm_min = t->tm_sec = 0;
-      t->tm_isdst = -1;
-      _date = mktime (t);
-      return true;
+        t->tm_mon = month;
+        t->tm_mday = 1;
+        t->tm_hour = t->tm_min = t->tm_sec = 0;
+        t->tm_isdst = -1;
+        _date = mktime (t);
+        return true;
+      }
     }
 
     pig.restoreTo (checkpoint);
