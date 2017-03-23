@@ -112,7 +112,7 @@ std::string Table::render ()
   for (unsigned int col = 0; col < _columns.size (); ++col)
   {
     // Headers factor in to width calculations.
-    unsigned int global_min = utf8_width (_columns[col]);
+    unsigned int global_min = utf8_text_width (_columns[col]);
     unsigned int global_ideal = global_min;
 
     for (unsigned int row = 0; row < _data.size (); ++row)
