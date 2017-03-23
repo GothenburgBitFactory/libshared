@@ -254,7 +254,7 @@ unsigned int utf8_text_width (const std::string& str)
     {
       if (c == 'm')
         in_color = false;
-    }  
+    }
     else if (c == 033)
     {
       in_color = true;
