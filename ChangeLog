@@ -31,6 +31,8 @@ master/HEAD
 - Added Packrat parser.
 - Datetime/Duration can now parse dates from an embedded string, with negative
   lookahead.
+- Table supports unwrapped columns.
+- Table supports colored columns.
 
 tasksh-1.1.0 (2016-09-05)
 anomaly-1.1.0 (2016-09-04)
