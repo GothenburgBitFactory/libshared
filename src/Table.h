@@ -35,25 +35,25 @@ class Table
 {
 public:
   // View specifications.
-  void add (const std::string& col, bool alignLeft = true) { _columns.push_back (col); _align.push_back (alignLeft); }
-  void width (int width)                                   { _width = width;                                         }
-  void leftMargin (int margin)                             { _left_margin = margin;                                  }
-  void colorHeader (const Color& c)                        { _header = c;                                            }
-  void colorOdd (const Color& c)                           { _odd = c;                                               }
-  void colorEven (const Color& c)                          { _even = c;                                              }
-  void intraPadding (int padding)                          { _intra_padding = padding;                               }
-  void intraColorOdd (const Color& c)                      { _intra_odd = c;                                         }
-  void intraColorEven (const Color& c)                     { _intra_even = c;                                        }
-  void extraPadding (int padding)                          { _extra_padding = padding;                               }
-  void extraColorOdd (const Color& c)                      { _extra_odd = c;                                         }
-  void extraColorEven (const Color& c)                     { _extra_even = c;                                        }
-  void truncateLines (int n)                               { _truncate_lines = n;                                    }
-  void truncateRows (int n)                                { _truncate_rows = n;                                     }
-  void forceColor ()                                       { _forceColor = true;                                     }
-  void obfuscate ()                                        { _obfuscate = true;                                      }
-  void underlineHeaders ()                                 { _underline_headers = true;                              }
-  int lines ()                                             { return _lines;                                          }
-  int rows ()                                              { return (int) _data.size ();                             }
+  void add (const std::string& col, bool alignLeft = true, bool wrap = true);
+  void width (int width)               { _width = width;             }
+  void leftMargin (int margin)         { _left_margin = margin;      }
+  void colorHeader (const Color& c)    { _header = c;                }
+  void colorOdd (const Color& c)       { _odd = c;                   }
+  void colorEven (const Color& c)      { _even = c;                  }
+  void intraPadding (int padding)      { _intra_padding = padding;   }
+  void intraColorOdd (const Color& c)  { _intra_odd = c;             }
+  void intraColorEven (const Color& c) { _intra_even = c;            }
+  void extraPadding (int padding)      { _extra_padding = padding;   }
+  void extraColorOdd (const Color& c)  { _extra_odd = c;             }
+  void extraColorEven (const Color& c) { _extra_even = c;            }
+  void truncateLines (int n)           { _truncate_lines = n;        }
+  void truncateRows (int n)            { _truncate_rows = n;         }
+  void forceColor ()                   { _forceColor = true;         }
+  void obfuscate ()                    { _obfuscate = true;          }
+  void underlineHeaders ()             { _underline_headers = true;  }
+  int lines ()                         { return _lines;              }
+  int rows ()                          { return (int) _data.size (); }
 
   // Data provision.
   int addRow ();
@@ -68,13 +68,14 @@ public:
 
 private:
   void measureCell (const std::string&, unsigned int&, unsigned int&) const;
-  void renderCell (std::vector <std::string>&, const std::string&, int, bool, const Color&) const;
+  void renderCell (std::vector <std::string>&, const std::string&, int, bool, bool, const Color&) const;
 
 private:
   std::vector <std::vector <std::string>> _data;
   std::vector <std::vector <Color>>       _color;
   std::vector <std::string>               _columns;
   std::vector <bool>                      _align;
+  std::vector <bool>                      _wrap;
   std::vector <bool>                      _oddness;
   int                                     _width             {0};
   int                                     _left_margin       {0};

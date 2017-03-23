@@ -32,6 +32,14 @@
 #include <unistd.h>
 
 ////////////////////////////////////////////////////////////////////////////////
+void Table::add (const std::string& col, bool alignLeft, bool wrap)
+{
+  _columns.push_back (col);
+  _align.push_back (alignLeft);
+  _wrap.push_back (wrap);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int Table::addRow ()
 {
   _data.push_back (std::vector <std::string> (_columns.size (), ""));
@@ -176,7 +184,7 @@ std::string Table::render ()
   for (unsigned int c = 0; c < _columns.size (); ++c)
   {
     headers.push_back ({});
-    renderCell (headers[c], _columns[c], widths[c], _align[c], _header);
+    renderCell (headers[c], _columns[c], widths[c], _align[c], _wrap[c], _header);
 
     if (headers[c].size () > max_lines)
       max_lines = headers[c].size ();
@@ -259,7 +267,7 @@ std::string Table::render ()
       cell_color.blend (_color[row][col]);
 
       cells.push_back (std::vector <std::string> ());
-      renderCell (cells[col], _data[row][col], widths[col], _align[col], cell_color);
+      renderCell (cells[col], _data[row][col], widths[col], _align[col], _wrap[col], cell_color);
 
       if (cells[col].size () > max_lines)
         max_lines = cells[col].size ();
@@ -331,20 +339,35 @@ void Table::renderCell (
   const std::string& value,
   int width,
   bool alignLeft,
+  bool wrap,
   const Color& color) const
 {
-  std::vector <std::string> raw;
-  wrapText (raw, value, width, false);
+  if (wrap)
+  {
+    std::vector <std::string> raw;
+    wrapText (raw, value, width, false);
 
-  for (const auto& line : raw)
+    for (const auto& line : raw)
+      if (alignLeft)
+        lines.push_back (
+          color.colorize (
+            leftJustify (line, width)));
+      else
+        lines.push_back (
+          color.colorize (
+            rightJustify (line, width)));
+  }
+  else
+  {
     if (alignLeft)
       lines.push_back (
         color.colorize (
-          leftJustify (line, width)));
+          leftJustify (value, width)));
     else
       lines.push_back (
         color.colorize (
-          rightJustify (line, width)));
+          rightJustify (value, width)));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
