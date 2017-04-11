@@ -15,3 +15,4 @@ added to the corresponding commit.
 
 A project may choose to release with any libshared commit.
 
+---
