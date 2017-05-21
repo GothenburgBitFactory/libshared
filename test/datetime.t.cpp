@@ -92,7 +92,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2086);
+  UnitTest t (2088);
 
   Datetime iso;
   std::string::size_type start = 0;
@@ -1011,7 +1011,17 @@ int main (int, char**)
     testParse      (t, "mon");
     testParseError (t, "mon:");
 
-    // This is jus ta diagnostic dump of all named dates, and us used to verify
+    // Verify Datetime::timeRelative is working as expected.
+    Datetime::timeRelative = true;
+    Datetime today;
+    Datetime r38 ("0:00:01");
+    t.notok (today.sameDay (r38), "Datetime::timeRelative=true 0:00:01 --> tomorrow");
+    Datetime::timeRelative = false;
+    Datetime r39 ("0:00:01");
+    t.ok (today.sameDay (r39), "Datetime::timeRelative=false 0:00:01 --> today");
+    Datetime::timeRelative = true;
+
+    // This is just a diagnostic dump of all named dates, and is used to verify
     // correctness manually.
     t.diag ("--------------------------------------------");
     t.diag ("  now            " + Datetime ("now").toISOLocalExtended ());
