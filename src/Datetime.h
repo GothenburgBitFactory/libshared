@@ -196,7 +196,6 @@ private:
 
   bool validate ();
   void resolve ();
-  std::string dump () const;
 
 public:
   int _year    {0};
