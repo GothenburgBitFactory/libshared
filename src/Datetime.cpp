@@ -66,6 +66,10 @@ bool Datetime::isoEnabled            = true;
 bool Datetime::standaloneDateEnabled = true;
 bool Datetime::standaloneTimeEnabled = true;
 
+// When true, HH:MM:SS is assumed to be today if the time > now, otherwise it is
+// asumed to be tomorrow.  When false, it is always today.
+bool Datetime::timeRelative          = true;
+
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
 {
@@ -2782,6 +2786,7 @@ bool Datetime::initializeMidsommarafton (Pig& pig)
 // 8:30am
 // 8:30a
 // 8:30
+// 8:30:00
 //
 // \d+ [ : \d{2} ] [ am | a | pm | p ] [ !<alpha> && !<digit> && !: && !+ && !- ]
 //
@@ -2863,7 +2868,8 @@ bool Datetime::initializeInformalTime (Pig& pig)
       int now_seconds  = (t->tm_hour * 3600) + (t->tm_min * 60) + t->tm_sec;
       int calc_seconds = (hours      * 3600) + (minutes   * 60) + seconds;
 
-      if (calc_seconds < now_seconds)
+      if (Datetime::timeRelative &&
+          calc_seconds < now_seconds)
         ++t->tm_mday;
 
       // Basic validation.
@@ -3121,9 +3127,9 @@ void Datetime::resolve ()
                      t_now->tm_sec;
 
   // Project forward one day if the specified seconds are earlier in the day
-  // than the current seconds.
-  // TODO This does not cover the inverse case of subtracting 86400.
-  if (year    == 0           &&
+  // than the current seconds. Overridden by the ::timeRelative setting.
+  if (Datetime::timeRelative &&
+      year    == 0           &&
       month   == 0           &&
       day     == 0           &&
       week    == 0           &&

@@ -39,6 +39,7 @@ public:
   static bool isoEnabled;
   static bool standaloneDateEnabled;
   static bool standaloneTimeEnabled;
+  static bool timeRelative;
 
   Datetime ();
   Datetime (const std::string&, const std::string& format = "");
