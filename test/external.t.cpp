@@ -47,12 +47,19 @@ bool externalParser (Pig& pig, std::shared_ptr <Tree> branch)
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (2);
+  UnitTest t (7);
 
   // External parsing.
   PEG peg1;
   peg1.loadFromString ("thing: <external:foo> <digit>");
   t.is (peg1.firstRule (), "thing", "external: firstRule found");
+
+  auto rules = peg1.syntax ();
+  t.is (rules["thing"][0][0]._token,  "<external:foo>",                  "external: thing: <external:foo>");
+  t.ok (rules["thing"][0][0]._quantifier == PEG::Token::Quantifier::one, "external: thing: <external:foo> quantifier one");
+  t.ok (rules["thing"][0][0]._lookahead == PEG::Token::Lookahead::none,  "external: thing: <external:foo> lookahead none");
+  t.ok (rules["thing"][0][0].hasTag ("external"),                        "external: thing: <external:foo> tag 'external'");
+  t.ok (rules["thing"][0][0].hasTag ("intrinsic"),                       "external: thing: <external:foo> tag 'intrinsic'");
 
   try
   {
