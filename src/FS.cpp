@@ -41,7 +41,7 @@
 #include <shared.h>
 #include <format.h>
 
-#if defined SOLARIS || defined NETBSD || defined FREEBSD || !defined(__GLIBC__)
+#if defined SOLARIS || defined NETBSD || defined FREEBSD || defined DRAGONFLY || !defined(__GLIBC__)
 #include <limits.h>
 #endif
 
