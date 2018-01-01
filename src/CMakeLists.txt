@@ -46,6 +46,7 @@ set (shared_SRCS Args.cpp
                  Table.cpp
                  Timer.cpp
                  Tree.cpp
+                 ct.cpp
                  format.cpp
                  ip.cpp
                  shared.cpp
