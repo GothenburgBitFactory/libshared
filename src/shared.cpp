@@ -814,6 +814,8 @@ std::string osName ()
   return "FreeBSD";
 #elif defined (NETBSD)
   return "NetBSD";
+#elif defined (DRAGONFLY)
+  return "Dragonfly";
 #elif defined (LINUX)
   return "Linux";
 #elif defined (KFREEBSD)
