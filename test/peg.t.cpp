@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (39);
+  UnitTest t (47);
 
   // Grammar with no input.
   try
@@ -130,6 +130,16 @@ int main (int, char**)
   t.ok (rules["a"][0][0]._quantifier == PEG::Token::Quantifier::one,               "PEG: a: 'a' quantifier one");
   t.ok (rules["a"][0][0]._lookahead == PEG::Token::Lookahead::none,                "PEG: a: 'a' lookahead none");
   t.ok (rules["a"][0][0]._tags == std::set <std::string> {"character", "literal"}, "PEG: a: 'a' tags {}");
+
+  // PEG::removeComment (const std::string&) const;
+  t.is (PEG::removeComment (""),                  "",          "PEG::removeComment '' --> ''");
+  t.is (PEG::removeComment (" \t"),               " \t",       "PEG::removeComment ' \\t' --> ' \\t'");
+  t.is (PEG::removeComment ("foo"),               "foo",       "PEG::removeComment 'foo' --> 'foo'");
+  t.is (PEG::removeComment ("foo#bar"),           "foo",       "PEG::removeComment 'foo#bar' --> 'foo'");
+  t.is (PEG::removeComment ("#foo"),              "",          "PEG::removeComment '#foo' --> ''");
+  t.is (PEG::removeComment (" #foo#bar"),         " ",         "PEG::removeComment ' #foo#bar' --> ' '");
+  t.is (PEG::removeComment ("foo\\#bar#comment"), "foo\\#bar", "PEG::removeComment 'foo\\#bar#comment' --> 'foo\\#bar'");
+  t.is (PEG::removeComment ("foo'#'bar#comment"), "foo'#'bar", "PEG::removeComment \"foo'#'bar#comment\" --> \"foo'#'bar\"");
 
   return 0;
 }
