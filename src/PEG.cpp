@@ -86,22 +86,7 @@ void PEG::loadFromString (const std::string& input)
   std::string rule_name = "";
   for (auto& line : loadImports (split (input, '\n')))
   {
-    line = trim (line);
-
-    // Eliminate inline comments.
-    auto hash = line.find ('#');
-    if (hash != std::string::npos)
-    {
-      line.resize (hash);
-      line = trim (line);
-
-      if (line == "")
-        continue;
-    }
-    else
-    {
-      line = trim (line);
-    }
+    line = trim (removeComment (line));
 
     // Skip blank lines with no semantics.
     if (line == "" and rule_name == "")
@@ -302,14 +287,7 @@ std::vector <std::string> PEG::loadImports (const std::vector <std::string>& lin
 
   for (auto& line : lines)
   {
-    auto copy = trim (line);
-
-    auto hash = copy.find ('#');
-    if (hash != std::string::npos)
-    {
-      copy.resize (hash);
-      copy = trim (copy);
-    }
+    auto copy = trim (removeComment (line));
 
     if (copy.find ("import ") == 0)
     {
