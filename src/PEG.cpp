@@ -27,6 +27,7 @@
 #include <cmake.h>
 #include <PEG.h>
 #include <Lexer.h>
+#include <utf8.h>
 #include <shared.h>
 #include <format.h>
 #include <iostream>
@@ -339,6 +340,42 @@ std::vector <std::string> PEG::loadImports (const std::vector <std::string>& lin
   }
 
   return resolved;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Remove a comment from the line, which is means truncate after the first '#'
+// character that is not quoted.
+std::string PEG::removeComment (const std::string& line)
+{
+  // Scan line, keeping track of whether quotes are active.  Truncate at first
+  // unquoted #.
+  bool insideQuote = false;
+  int quote = 0;
+
+  std::string::size_type i = 0;
+  int previous = 0;
+  int character = 0;
+
+  while ((character = utf8_next_char (line, i)))
+  {
+    if (character == '\'' && previous != '\\')
+    {
+      quote = '\'';
+      insideQuote = ! insideQuote;
+    }
+    else if (character == '"' && previous != '\\')
+    {
+      quote = '"';
+      insideQuote = ! insideQuote;
+    }
+
+    if (character == '#' && previous != '\\'  && ! insideQuote)
+      return line.substr (0, i - 1);
+
+    previous = character;
+  }
+
+  return line;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

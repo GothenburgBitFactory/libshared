@@ -64,6 +64,9 @@ public:
   };
 
 public:
+  static std::string removeComment (const std::string&);
+
+public:
   void loadFromFile (File&);
   void loadFromString (const std::string&);
   std::map <std::string, PEG::Rule> syntax () const;
