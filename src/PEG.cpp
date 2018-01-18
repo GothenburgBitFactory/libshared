@@ -336,15 +336,23 @@ std::string PEG::removeComment (const std::string& line)
 
   while ((character = utf8_next_char (line, i)))
   {
-    if (character == '\'' && previous != '\\')
+    if (insideQuote)
+    {
+       if (character == quote)
+       {
+         quote = 0;
+         insideQuote = false;
+       }
+    }
+    else if (character == '\'' && previous != '\\')
     {
       quote = '\'';
-      insideQuote = ! insideQuote;
+      insideQuote = true;
     }
     else if (character == '"' && previous != '\\')
     {
       quote = '"';
-      insideQuote = ! insideQuote;
+      insideQuote = true;
     }
 
     if (character == '#' && previous != '\\'  && ! insideQuote)
