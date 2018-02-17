@@ -151,8 +151,8 @@ int main (int, char**)
     { "1.foo.bar",                                    { { "1.foo.bar",                                    Lexer::Type::word         }, NO, NO, NO, NO }, },
 
     // URL
-    { "http://tasktools.org",                         { { "http://tasktools.org",                         Lexer::Type::url          }, NO, NO, NO, NO }, },
-    { "https://bug.tasktools.org",                    { { "https://bug.tasktools.org",                    Lexer::Type::url          }, NO, NO, NO, NO }, },
+    { "http://example.com",                         { { "http://example.com",                         Lexer::Type::url          }, NO, NO, NO, NO }, },
+    { "https://foo.example.com",                    { { "https://foo.example.com",                    Lexer::Type::url          }, NO, NO, NO, NO }, },
 
     // String
     { "'one two'",                                    { { "'one two'",                                    Lexer::Type::string       }, NO, NO, NO, NO }, },
