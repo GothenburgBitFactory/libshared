@@ -1512,7 +1512,7 @@ bool Datetime::initializeDayName (Pig& pig)
         time_t now = time (nullptr);
         struct tm* t = localtime (&now);
 
-        if (t->tm_wday >= day)
+        if (t->tm_wday >= day && timeRelative)
           t->tm_mday += day - t->tm_wday + 7;
         else
           t->tm_mday += day - t->tm_wday;
