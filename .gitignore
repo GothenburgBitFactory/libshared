@@ -6,3 +6,4 @@ install_manifest.txt
 libshared.a
 cmake.h
 lex
+patches

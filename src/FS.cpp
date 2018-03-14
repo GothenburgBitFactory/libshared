@@ -183,6 +183,9 @@ bool Path::is_absolute () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_link () const
 {
+  if (! exists ())
+    return false;
+
   struct stat s {};
   if (lstat (_data.c_str (), &s))
     throw format ("lstat error {1}: {2}", errno, strerror (errno));
@@ -195,6 +198,9 @@ bool Path::is_link () const
 // to determine.
 bool Path::readable () const
 {
+  if (! exists ())
+    return false;
+
   auto status = access (_data.c_str (), R_OK);
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
@@ -207,6 +213,9 @@ bool Path::readable () const
 // to determine.
 bool Path::writable () const
 {
+  if (! exists ())
+    return false;
+
   auto status = access (_data.c_str (), W_OK);
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
@@ -219,6 +228,9 @@ bool Path::writable () const
 // to determine.
 bool Path::executable () const
 {
+  if (! exists ())
+    return false;
+
   auto status = access (_data.c_str (), X_OK);
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));

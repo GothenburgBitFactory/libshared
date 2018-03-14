@@ -8,6 +8,7 @@ master/HEAD
           (thanks to Paul J. Fenwick)
 - Datetime::timeRelative now controls whether "0:00:01" means today or is
   projected to tomorrow if before the current time.
+- LI #5 Several Path:: methods fail on a broken symlink
 
 tasksh-1.2.0 (2017-05-10)
 
