@@ -15,6 +15,8 @@ int main (int argc, char** argv)
     while (l.token (token, type))
       std::cout << "  token '" << token << "' " << Lexer::typeToString (type) << "\n";
   }
+
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
