@@ -9,6 +9,8 @@ master/HEAD
 - Datetime::timeRelative now controls whether "0:00:01" means today or is
   projected to tomorrow if before the current time.
 - LI #5 Several Path:: methods fail on a broken symlink
+- LI #7 Path::expand() doesn't correctly expand some paths
+          (thanks to Laurence)
 
 tasksh-1.2.0 (2017-05-10)
 
