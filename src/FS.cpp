@@ -258,18 +258,21 @@ bool Path::rename (const std::string& new_name)
 // ~      --> /home/user
 // ~foo/x --> /home/foo/s
 // ~/x    --> /home/foo/x
+// .      --> $PWD
 // ./x    --> $PWD/x
 // x      --> $PWD/x
 std::string Path::expand (const std::string& in)
 {
   std::string copy = in;
 
-  auto tilde = copy.find ('~');
   std::string::size_type slash;
 
-  if (tilde != std::string::npos)
+  if (in.empty ())
+  { }
+
+  else if (in.front () == '~')
   {
-    const char *home = getenv("HOME");
+    const char* home = getenv ("HOME");
     if (home == nullptr)
     {
       struct passwd* pw = getpwuid (getuid ());
@@ -277,37 +280,37 @@ std::string Path::expand (const std::string& in)
     }
 
     // Convert: ~ --> /home/user
-    if (copy.length () == 1)
+    if (in.length () == 1)
       copy = home;
 
     // Convert: ~/x --> /home/user/x
-    else if (copy.length () > tilde + 1 &&
-             copy[tilde + 1] == '/')
-    {
-      copy.replace (tilde, 1, home);
-    }
+    else if (in.at (1) == '/')
+      copy = home + in.substr (1);
 
     // Convert: ~foo/x --> /home/foo/x
-    else if ((slash = copy.find ('/', tilde)) != std::string::npos)
+    else if ((slash = in.find ('/', 1)) != std::string::npos)
     {
-      std::string name = copy.substr (tilde + 1, slash - tilde - 1);
+      std::string name = in.substr (1, slash - 1);
       struct passwd* pw = getpwnam (name.c_str ());
       if (pw)
-        copy.replace (tilde, slash - tilde, pw->pw_dir);
+        copy = pw->pw_dir + in.substr (slash);
     }
   }
 
   // Relative paths
-  else if (in.length () > 2 &&
-           in.substr (0, 2) == "./")
+  else if (in.front () != '/')
   {
-    copy = Directory::cwd () + in.substr (1);
-  }
-  else if (in.length () > 1 &&
-           in[0] != '.' &&
-           in[0] != '/')
-  {
-    copy = Directory::cwd () + '/' + in;
+    // Convert: ., ./ --> $PWD
+    if (in == ".")
+      copy = Directory::cwd ();
+
+    // Convert: ./x --> $PWD/x
+    else if (in.substr (0, 2) == "./")
+      copy = Directory::cwd () + in.substr (1);
+
+    // Convert: x --> $PWD/x
+    else
+      copy = Directory::cwd () + '/' + in;
   }
 
   return copy;
