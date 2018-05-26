@@ -33,7 +33,7 @@
 
 int main (int, char**)
 {
-  UnitTest t (117);
+  UnitTest t (120);
 
   try
   {
@@ -99,6 +99,9 @@ int main (int, char**)
     // static std::string expand (const std::string&);
     t.ok (Path::expand ("~") != "~", "Path::expand ~ != ~");
     t.ok (Path::expand ("~/") != "~/", "Path::expand ~/ != ~/");
+    t.ok (Path::expand (".") != ".", "Path::expand . != .");
+    t.ok (Path::expand ("./") != "./", "Path::expand ./ != ./");
+    t.ok (Path::expand (".a") != ".a", "Path::expand .a != .a");
 
     // static std::vector <std::string> glob (const std::string&);
     std::vector <std::string> out = Path::glob ("/tmp");
