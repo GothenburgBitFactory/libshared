@@ -6,6 +6,8 @@ set (HAVE_CMAKE true)
 project (shared)
 include (CXXSniffer)
 
+include (CheckFunctionExists)
+
 set (PROJECT_VERSION "1.0.0")
 
 set (PACKAGE "${PROJECT_NAME}")
@@ -15,6 +17,8 @@ set (PACKAGE_NAME "${PACKAGE}")
 set (PACKAGE_TARNAME "${PACKAGE}")
 set (PACKAGE_VERSION "${VERSION}")
 set (PACKAGE_STRING "${PACKAGE} ${VERSION}")
+
+check_function_exists(strlcpy HAVE_STRLCPY)
 
 message ("-- Configuring cmake.h")
 configure_file (

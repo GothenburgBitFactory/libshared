@@ -30,6 +30,9 @@
 /* Found st.st_birthtime struct member */
 #cmakedefine HAVE_ST_BIRTHTIME
 
+/* Found strlcpy() */
+#cmakedefine HAVE_STRLCPY
+
 /* Functions */
 #cmakedefine HAVE_GET_CURRENT_DIR_NAME
 #cmakedefine HAVE_TIMEGM
