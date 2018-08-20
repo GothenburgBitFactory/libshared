@@ -266,7 +266,11 @@ std::string formatTime (time_t seconds)
   else if (seconds >= 3600)        snprintf (formatted, sizeof(formatted), "%d h",   (int) (seconds / 3600));
   else if (seconds >= 60)          snprintf (formatted, sizeof(formatted), "%d m",   (int) (seconds / 60));
   else if (seconds >= 1)           snprintf (formatted, sizeof(formatted), "%d s",   (int) seconds);
+#ifdef HAVE_STRLCPY
+  else                             strlcpy (formatted, "-", sizeof(formatted));
+#else
   else                             strcpy (formatted, "-");
+#endif /* HAVE_STRLCPY */
 
   return std::string (formatted);
 }
