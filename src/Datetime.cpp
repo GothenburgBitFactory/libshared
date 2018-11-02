@@ -625,7 +625,7 @@ bool Datetime::parse_named (Pig& pig)
   }
 
 /*
-  // This grpoup contains "1st monday ..." which must be processed before
+  // This group contains "1st monday ..." which must be processed before
   // initializeOrdinal below.
   if (initializeNthDayInMonth (tokens))
   {
