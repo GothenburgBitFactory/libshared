@@ -1464,7 +1464,6 @@ bool Datetime::initializeOrdinal (Pig& pig)
           t->tm_mday = number;
           t->tm_year = y - 1900;
           t->tm_isdst = -1;
-          _date = mktime (t);
         }
         else
         {
@@ -1479,8 +1478,9 @@ bool Datetime::initializeOrdinal (Pig& pig)
           t->tm_mday = number;
           t->tm_year = y - 1900;
           t->tm_isdst = -1;
-          _date = mktime (t);
         }
+
+        _date = mktime (t);
 
         return true;
       }
