@@ -604,51 +604,84 @@ int main (int, char**)
     t.is (Datetime ("5/1/2011",   "m/d/Y").dayOfYear (), 121, "dayOfYear (5/1/2011)   -> 121");
     t.is (Datetime ("12/31/2011", "m/d/Y").dayOfYear (), 365, "dayOfYear (12/31/2011) -> 365");
 
-    // Relative dates.
-    Datetime r1 ("today");
-    t.ok (r1.sameDay (now), "today = now");
+    // Relative dates - look ahead
+    {
+      Datetime::timeRelative = true;
 
-    Datetime r4 ("sunday");
-    if (now.dayOfWeek () >= 0)
-      t.ok (r4.sameDay (now + (0 - now.dayOfWeek () + 7) * 86400), "next sunday");
-    else
-      t.ok (r4.sameDay (now + (0 - now.dayOfWeek ()) * 86400), "next sunday");;
+      Datetime r1 ("today");
+      t.ok (r1.sameDay (now), "today = now");
 
-    Datetime r5 ("monday");
-    if (now.dayOfWeek () >= 1)
-      t.ok (r5.sameDay (now + (1 - now.dayOfWeek () + 7) * 86400), "next monday");
-    else
-      t.ok (r5.sameDay (now + (1 - now.dayOfWeek ()) * 86400), "next monday");;
+      Datetime r4 ("sunday");
+      if (now.dayOfWeek () >= 0)
+        t.ok (r4.sameDay (now + (0 - now.dayOfWeek () + 7) * 86400), "next sunday");
+      else
+        t.ok (r4.sameDay (now + (0 - now.dayOfWeek ()) * 86400), "next sunday");;
 
-    Datetime r6 ("tuesday");
-    if (now.dayOfWeek () >= 2)
-      t.ok (r6.sameDay (now + (2 - now.dayOfWeek () + 7) * 86400), "next tuesday");
-    else
-      t.ok (r6.sameDay (now + (2 - now.dayOfWeek ()) * 86400), "next tuesday");;
+      Datetime r5 ("monday");
+      if (now.dayOfWeek () >= 1)
+        t.ok (r5.sameDay (now + (1 - now.dayOfWeek () + 7) * 86400), "next monday");
+      else
+        t.ok (r5.sameDay (now + (1 - now.dayOfWeek ()) * 86400), "next monday");;
 
-    Datetime r7 ("wednesday");
-    if (now.dayOfWeek () >= 3)
-      t.ok (r7.sameDay (now + (3 - now.dayOfWeek () + 7) * 86400), "next wednesday");
-    else
-      t.ok (r7.sameDay (now + (3 - now.dayOfWeek ()) * 86400), "next wednesday");;
+      Datetime r6 ("tuesday");
+      if (now.dayOfWeek () >= 2)
+        t.ok (r6.sameDay (now + (2 - now.dayOfWeek () + 7) * 86400), "next tuesday");
+      else
+        t.ok (r6.sameDay (now + (2 - now.dayOfWeek ()) * 86400), "next tuesday");;
 
-    Datetime r8 ("thursday");
-    if (now.dayOfWeek () >= 4)
-      t.ok (r8.sameDay (now + (4 - now.dayOfWeek () + 7) * 86400), "next thursday");
-    else
-      t.ok (r8.sameDay (now + (4 - now.dayOfWeek ()) * 86400), "next thursday");;
+      Datetime r7 ("wednesday");
+      if (now.dayOfWeek () >= 3)
+        t.ok (r7.sameDay (now + (3 - now.dayOfWeek () + 7) * 86400), "next wednesday");
+      else
+        t.ok (r7.sameDay (now + (3 - now.dayOfWeek ()) * 86400), "next wednesday");;
 
-    Datetime r9 ("friday");
-    if (now.dayOfWeek () >= 5)
-      t.ok (r9.sameDay (now + (5 - now.dayOfWeek () + 7) * 86400), "next friday");
-    else
-      t.ok (r9.sameDay (now + (5 - now.dayOfWeek ()) * 86400), "next friday");;
+      Datetime r8 ("thursday");
+      if (now.dayOfWeek () >= 4)
+        t.ok (r8.sameDay (now + (4 - now.dayOfWeek () + 7) * 86400), "next thursday");
+      else
+        t.ok (r8.sameDay (now + (4 - now.dayOfWeek ()) * 86400), "next thursday");;
 
-    Datetime r10 ("saturday");
-    if (now.dayOfWeek () >= 6)
-      t.ok (r10.sameDay (now + (6 - now.dayOfWeek () + 7) * 86400), "next saturday");
-    else
-      t.ok (r10.sameDay (now + (6 - now.dayOfWeek ()) * 86400), "next saturday");;
+      Datetime r9 ("friday");
+      if (now.dayOfWeek () >= 5)
+        t.ok (r9.sameDay (now + (5 - now.dayOfWeek () + 7) * 86400), "next friday");
+      else
+        t.ok (r9.sameDay (now + (5 - now.dayOfWeek ()) * 86400), "next friday");;
+
+      Datetime r10 ("saturday");
+      if (now.dayOfWeek () >= 6)
+        t.ok (r10.sameDay (now + (6 - now.dayOfWeek () + 7) * 86400), "next saturday");
+      else
+        t.ok (r10.sameDay (now + (6 - now.dayOfWeek ()) * 86400), "next saturday");;
+    }
+
+    // Relative dates - look back
+    {
+      Datetime::timeRelative = false;
+
+      Datetime r1 ("today");
+      t.ok (r1.sameDay (now), "today = now");
+
+      Datetime r4 ("sunday");
+      t.ok (r4.sameDay (now + (0 - now.dayOfWeek ()) * 86400), "previous sunday");
+
+      Datetime r5 ("monday");
+      t.ok (r5.sameDay (now + (1 - now.dayOfWeek ()) * 86400), "previous monday");
+
+      Datetime r6 ("tuesday");
+      t.ok (r6.sameDay (now + (2 - now.dayOfWeek ()) * 86400), "previous tuesday");
+
+      Datetime r7 ("wednesday");
+      t.ok (r7.sameDay (now + (3 - now.dayOfWeek ()) * 86400), "previous wednesday");
+
+      Datetime r8 ("thursday");
+      t.ok (r8.sameDay (now + (4 - now.dayOfWeek ()) * 86400), "previous thursday");
+
+      Datetime r9 ("friday");
+      t.ok (r9.sameDay (now + (5 - now.dayOfWeek ()) * 86400), "previous friday");
+
+      Datetime r10 ("saturday");
+      t.ok (r10.sameDay (now + (6 - now.dayOfWeek ()) * 86400), "previous saturday");
+    }
 
     Datetime r11 ("eow");
     t.ok (r11 < now + (8 * 86400), "eow < 7 days away");
@@ -686,9 +719,77 @@ int main (int, char**)
     Datetime r19d ("eoq");
     t.ok (r19d > now,          "eoq > now");
 
-    Datetime first ("1st");
-    t.notok (first.sameMonth (now), "1st not in same month as now");
-    t.is (first.day (),   1, "1st day is 1");
+    {
+      Datetime::timeRelative = true;
+
+      Datetime first ("1st");
+      std::cout << "actual (first - relative:true): " << first.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 1)
+        t.notok (first.sameMonth (now), "1st not in same month as now");
+      else
+        t.ok (first.sameMonth (now), "1st in same month as now");
+      t.is (first.day(), 1, "1st day is 1");
+
+      Datetime second ("2nd");
+      std::cout << "actual (second - relative:true): " << second.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 2)
+        t.notok (second.sameMonth (now), "2nd not in same month as now");
+      else
+        t.ok (second.sameMonth (now), "2nd in same month as now");
+      t.is (second.day(), 2, "2nd day is 2");
+
+      Datetime third ("3rd");
+      std::cout << "actual (third - relative:true): " << third.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 3)
+        t.notok (third.sameMonth (now), "3rd not in same month as now");
+      else
+        t.ok (third.sameMonth (now), "3rd in same month as now");
+      t.is (third.day(), 3, "3rd day is 3");
+
+      Datetime fourth ("4th");
+      std::cout << "actual (fourth - relative:true): " << fourth.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 4)
+        t.notok (fourth.sameMonth (now), "4th not in same month as now");
+      else
+        t.ok (fourth.sameMonth (now), "4th not in same month as now");
+      t.is (fourth.day(), 4, "4th day is 4");
+    }
+
+    {
+      Datetime::timeRelative = false;
+
+      Datetime first ("1st");
+      std::cout << "actual (first - relative:false): " << first.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 1)
+        t.ok (first.month() == now.month(), "1st in same month as now");
+      else
+        t.ok ((first.month() - now.month() - 12) % 12 == -1, "1st in previous month");
+      t.is (first.day (), 1, "1st day is 1");
+
+      Datetime second ("2nd");
+      std::cout << "actual (second - relative:false): " << second.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 2)
+        t.ok (second.month() == now.month(), "2nd in same month as now");
+      else
+        t.ok ((second.month() - now.month() - 12) % 12 == -1, "2nd in previous month");
+      t.is (second.day(), 2, "2nd day is 2");
+
+      Datetime third ("3rd");
+      std::cout << "actual (third - relative:false): " << third.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 3)
+        t.ok (third.month() == now.month(), "3rd in same month as now");
+      else
+        t.ok ((third.month() - now.month() - 12) % 12 == -1, "3rd in previous month");
+      t.is (third.day(), 3, "3rd day is 3");
+
+      Datetime fourth ("4th");
+      std::cout << "actual (fourth - relative:false): " << fourth.toISO () << " now: " << now.toISO () << std::endl;
+      if (now.day () >= 4)
+        t.ok (fourth.month() == now.month(), "4th in same month as now");
+      else
+        t.ok ((fourth.month() - now.month() - 12) % 12 == -1, "4th in previous month");
+      t.is (fourth.day(), 4, "4th day is 4");
+    }
 
     Datetime later ("later");
     t.is (later.month (),   1, "later -> m = 1");
