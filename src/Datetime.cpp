@@ -1461,28 +1461,13 @@ bool Datetime::initializeOrdinal (Pig& pig)
         int m = t->tm_mon + 1;
         int d = t->tm_mday;
 
-        // If it is this month.
-        if (timeRelative && (d < number && number <= daysInMonth (y, m)))
-        {
-          t->tm_hour = t->tm_min = t->tm_sec = 0;
-          t->tm_mon  = m - 1;
-          t->tm_mday = number;
-          t->tm_year = y - 1900;
-          t->tm_isdst = -1;
-        }
-        else if (timeRelative && (1 <= number && number <= d))
+        if (timeRelative && (1 <= number && number <= d))
         {
           if (++m > 12)
           {
             m = 1;
             y++;
           }
-
-          t->tm_hour = t->tm_min = t->tm_sec = 0;
-          t->tm_mon  = m - 1;
-          t->tm_mday = number;
-          t->tm_year = y - 1900;
-          t->tm_isdst = -1;
         }
         else if (!timeRelative && (d < number && number <= daysInMonth (y, m)))
         {
@@ -1491,21 +1476,13 @@ bool Datetime::initializeOrdinal (Pig& pig)
             m = 12;
             y--;
           }
+        }
 
-          t->tm_hour = t->tm_min = t->tm_sec = 0;
-          t->tm_mon  = m - 1;
-          t->tm_mday = number;
-          t->tm_year = y - 1900;
-          t->tm_isdst = -1;
-        }
-        else if (!timeRelative && (1 <= number && number <= d))
-        {
-          t->tm_hour = t->tm_min = t->tm_sec = 0;
-          t->tm_mon  = m - 1;
-          t->tm_mday = number;
-          t->tm_year = y - 1900;
-          t->tm_isdst = -1;
-        }
+        t->tm_hour = t->tm_min = t->tm_sec = 0;
+        t->tm_mon  = m - 1;
+        t->tm_mday = number;
+        t->tm_year = y - 1900;
+        t->tm_isdst = -1;
 
         _date = mktime (t);
 
