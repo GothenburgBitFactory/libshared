@@ -66,9 +66,15 @@ bool Datetime::isoEnabled            = true;
 bool Datetime::standaloneDateEnabled = true;
 bool Datetime::standaloneTimeEnabled = true;
 
-// When true, HH:MM:SS is assumed to be today if the time > now, otherwise it is
-// asumed to be tomorrow.  When false, it is always today.
-bool Datetime::timeRelative          = true;
+// When true,
+// - HH:MM:SS is assumed to be today if the time > now, otherwise it is assumed to be tomorrow.
+// - day name is converted to date relative to now
+// - 1st, 2nd, 3rd, ... is converted to date relative to now
+// When false,
+// - HH:MM:SS is always today.
+// - day name is always converted to date before now
+// - 1st, 2nd, 3rd, ... is always converted to date before now
+bool Datetime::timeRelative = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime::Datetime ()
@@ -1456,8 +1462,7 @@ bool Datetime::initializeOrdinal (Pig& pig)
         int d = t->tm_mday;
 
         // If it is this month.
-        if (d < number &&
-            number <= daysInMonth (y, m))
+        if (timeRelative && (d < number && number <= daysInMonth (y, m)))
         {
           t->tm_hour = t->tm_min = t->tm_sec = 0;
           t->tm_mon  = m - 1;
@@ -1465,7 +1470,7 @@ bool Datetime::initializeOrdinal (Pig& pig)
           t->tm_year = y - 1900;
           t->tm_isdst = -1;
         }
-        else
+        else if (timeRelative && (1 <= number && number <= d))
         {
           if (++m > 12)
           {
@@ -1473,6 +1478,28 @@ bool Datetime::initializeOrdinal (Pig& pig)
             y++;
           }
 
+          t->tm_hour = t->tm_min = t->tm_sec = 0;
+          t->tm_mon  = m - 1;
+          t->tm_mday = number;
+          t->tm_year = y - 1900;
+          t->tm_isdst = -1;
+        }
+        else if (!timeRelative && (d < number && number <= daysInMonth (y, m)))
+        {
+          if (--m < 1)
+          {
+            m = 12;
+            y--;
+          }
+
+          t->tm_hour = t->tm_min = t->tm_sec = 0;
+          t->tm_mon  = m - 1;
+          t->tm_mday = number;
+          t->tm_year = y - 1900;
+          t->tm_isdst = -1;
+        }
+        else if (!timeRelative && (1 <= number && number <= d))
+        {
           t->tm_hour = t->tm_min = t->tm_sec = 0;
           t->tm_mon  = m - 1;
           t->tm_mday = number;
