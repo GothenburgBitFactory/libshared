@@ -33,7 +33,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Initially assume no text, but infinite virtual space.
 //
-// Ållow overlay placement of arbitrary text at any offset, real or virtual, and
+// Allow overlay placement of arbitrary text at any offset, real or virtual, and
 // using a specific color.
 //
 // For example:
