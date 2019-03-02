@@ -11,6 +11,8 @@ master/HEAD
 - LI #5 Several Path:: methods fail on a broken symlink
 - LI #7 Path::expand() doesn't correctly expand some paths
           (thanks to Laurence)
+- Corrected initialization order of struct flock for DARWIN. This may address
+  file locking prboelms on MacOS.
 
 tasksh-1.2.0 (2017-05-10)
 
