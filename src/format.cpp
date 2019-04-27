@@ -244,10 +244,10 @@ std::string formatBytes (size_t bytes)
 {
   char formatted[24];
 
-       if (bytes >=  995000000) sprintf (formatted, "%.1f GiB", bytes / 1000000000.0);
-  else if (bytes >=     995000) sprintf (formatted, "%.1f MiB", bytes /    1000000.0);
-  else if (bytes >=        995) sprintf (formatted, "%.1f KiB", bytes /       1000.0);
-  else                          sprintf (formatted, "%d B",     (int)bytes);
+       if (bytes >=  995000000) snprintf (formatted, sizeof(formatted), "%.1f GiB", bytes / 1000000000.0);
+  else if (bytes >=     995000) snprintf (formatted, sizeof(formatted), "%.1f MiB", bytes /    1000000.0);
+  else if (bytes >=        995) snprintf (formatted, sizeof(formatted), "%.1f KiB", bytes /       1000.0);
+  else                          snprintf (formatted, sizeof(formatted), "%d B",     (int)bytes);
 
   return commify (formatted);
 }
@@ -259,14 +259,18 @@ std::string formatTime (time_t seconds)
   char formatted[24];
   float days = (float) seconds / 86400.0;
 
-       if (seconds >= 86400 * 365) sprintf (formatted, "%.1f y", (days / 365.0));
-  else if (seconds >= 86400 * 84)  sprintf (formatted, "%1d mo", (int) (days / 30));
-  else if (seconds >= 86400 * 13)  sprintf (formatted, "%d wk",  (int) (float) (days / 7.0));
-  else if (seconds >= 86400)       sprintf (formatted, "%d d",   (int) days);
-  else if (seconds >= 3600)        sprintf (formatted, "%d h",   (int) (seconds / 3600));
-  else if (seconds >= 60)          sprintf (formatted, "%d m",   (int) (seconds / 60));
-  else if (seconds >= 1)           sprintf (formatted, "%d s",   (int) seconds);
+       if (seconds >= 86400 * 365) snprintf (formatted, sizeof(formatted), "%.1f y", (days / 365.0));
+  else if (seconds >= 86400 * 84)  snprintf (formatted, sizeof(formatted), "%1d mo", (int) (days / 30));
+  else if (seconds >= 86400 * 13)  snprintf (formatted, sizeof(formatted), "%d wk",  (int) (float) (days / 7.0));
+  else if (seconds >= 86400)       snprintf (formatted, sizeof(formatted), "%d d",   (int) days);
+  else if (seconds >= 3600)        snprintf (formatted, sizeof(formatted), "%d h",   (int) (seconds / 3600));
+  else if (seconds >= 60)          snprintf (formatted, sizeof(formatted), "%d m",   (int) (seconds / 60));
+  else if (seconds >= 1)           snprintf (formatted, sizeof(formatted), "%d s",   (int) seconds);
+#ifdef HAVE_STRLCPY
+  else                             strlcpy (formatted, "-", sizeof(formatted));
+#else
   else                             strcpy (formatted, "-");
+#endif /* HAVE_STRLCPY */
 
   return std::string (formatted);
 }
