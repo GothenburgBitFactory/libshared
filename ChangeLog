@@ -1,5 +1,6 @@
 master/HEAD
 
+- Removed CMake CMP0037.
 - TI-91 Timewarrior does not compile on DragonFly
           (thanks to Michael Neumann)
 - TI #112 Add timeRelative flag to initialization of day names
