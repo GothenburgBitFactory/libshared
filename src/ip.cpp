@@ -97,7 +97,6 @@ static bool isIPv4BlockSet (const std::string& input, unsigned int& c)
       isChar      (input, '.', c) &&
       isIPv4Block (input,      c))
   {
-
     return true;
   }
 
@@ -190,6 +189,7 @@ bool isIPv4Address (const std::string& input, std::string& address, int& port)
     if (isEOS (input, c))
     {
       address = input.substr (0, std::min (c, colon));
+      port = 0;
       if (! isEOS (input, colon))
         port = std::stoi (input.substr (colon + 1));
 
