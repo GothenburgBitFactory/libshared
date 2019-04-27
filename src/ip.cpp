@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2018, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -97,7 +97,6 @@ static bool isIPv4BlockSet (const std::string& input, unsigned int& c)
       isChar      (input, '.', c) &&
       isIPv4Block (input,      c))
   {
-
     return true;
   }
 
@@ -191,6 +190,7 @@ bool isIPv4Address (const std::string& input, std::string& address, int& port)
     {
       address = input.substr (0, std::min (c, colon));
       port = 0;
+      if (! isEOS (input, colon))
         port = std::stoi (input.substr (colon + 1));
 
       return true;

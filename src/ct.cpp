@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2010 - 2019, Göteborg Bit Factory.
+// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,46 +25,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
-#include <PEG.h>
-#include <Packrat.h>
-#include <test.h>
+#include <vector>
+#include <string>
+#include <FS.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-int main (int, char**)
+std::vector <std::tuple <std::string, int>> foo (File& file)
 {
-  UnitTest t (7);
+  std::vector <std::tuple <std::string, int>> lines;
+  //std::stack <int> levels;
 
-  // Grammar that is valid.
-  PEG peg;
-  peg.loadFromString ("thing: 'a'");
-  t.is (peg.firstRule (), "thing",                                          "charliteral: firstRule found");
-
-  auto rules = peg.syntax ();
-  t.is (rules["thing"][0][0]._token,  "'a'",                                "charliteral: thing: 'a'");
-  t.ok (rules["thing"][0][0]._quantifier == PEG::Token::Quantifier::one,    "charliteral: thing: 'a' quantifier one");
-  t.ok (rules["thing"][0][0]._lookahead == PEG::Token::Lookahead::none,     "charliteral: thing: 'a' lookahead none");
-  t.ok (rules["thing"][0][0]._tags == std::set <std::string> {"character", "literal"},
-                                                                            "charliteral: thing: 'a' tags {'character', 'literal'}");
-
-  // 'a' is valid.
-  try
-  {
-    Packrat rat;
-    rat.parse (peg, "a");
-    t.pass ("charliteral: 'a' valid");
-  }
-  catch (const std::string& e) { t.fail ("charliteral: 'a' " + e); }
-
-  // 'b' is not valid.
-  try
-  {
-    Packrat rat;
-    rat.parse (peg, "b");  // Expected to fail.
-    t.fail ("charliteral: 'b' not valid");
-  }
-  catch (const std::string& e) { t.pass ("charliteral: 'b' " + e); }
-
-  return 0;
+  return lines;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

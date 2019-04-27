@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2018, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -373,8 +373,14 @@ File::File (const std::string& in)
 ////////////////////////////////////////////////////////////////////////////////
 File::~File ()
 {
-  if (_fh)
-    close ();
+  try
+  {
+    if (_fh)
+      close ();
+  }
+  catch (...)
+  {
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -469,7 +475,10 @@ bool File::lock ()
   _locked = false;
   if (_fh && _h != -1)
   {
-#ifdef FREEBSD
+#ifdef DARWIN
+                    // l_start l_len l_pid l_type   l_whence
+    struct flock fl = {0,      0,    0,    F_WRLCK, SEEK_SET};
+#elif FREEBSD
                     // l_type   l_whence  l_start  l_len  l_pid  l_sysid
     struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0,     0 };
 #else
@@ -489,7 +498,10 @@ void File::unlock ()
 {
   if (_locked)
   {
-#ifdef FREEBSD
+#ifdef DARWIN
+                    // l_start l_len l_pid l_type   l_whence
+    struct flock fl = {0,      0,    0,    F_WRLCK, SEEK_SET};
+#elif FREEBSD
                     // l_type   l_whence  l_start  l_len  l_pid  l_sysid
     struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0,     0 };
 #else
@@ -770,7 +782,7 @@ bool File::write (const std::string& name, const std::string& contents)
   {
     out << contents;
     out.close ();
-    return true;
+    return out.good ();
   }
 
   return false;
@@ -795,7 +807,7 @@ bool File::write (
     }
 
     out.close ();
-    return true;
+    return out.good ();
   }
 
   return false;
