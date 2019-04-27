@@ -8,7 +8,6 @@ if(POLICY CMP0037 AND ${CMAKE_VERSION} VERSION_LESS "3.11.0")
   cmake_policy(SET CMP0037 OLD)
 endif()
 
->>>>>>> Do not set CMP0037 on CMake 3.11.0 and above
 include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/src
                      ${CMAKE_SOURCE_DIR}/test
