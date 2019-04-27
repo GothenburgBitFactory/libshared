@@ -373,8 +373,14 @@ File::File (const std::string& in)
 ////////////////////////////////////////////////////////////////////////////////
 File::~File ()
 {
-  if (_fh)
-    close ();
+  try
+  {
+    if (_fh)
+      close ();
+  }
+  catch (...)
+  {
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -776,7 +782,7 @@ bool File::write (const std::string& name, const std::string& contents)
   {
     out << contents;
     out.close ();
-    return true;
+    return out.good ();
   }
 
   return false;
@@ -801,7 +807,7 @@ bool File::write (
     }
 
     out.close ();
-    return true;
+    return out.good ();
   }
 
   return false;
