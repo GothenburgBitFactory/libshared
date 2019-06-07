@@ -192,7 +192,8 @@ bool isIPv4Address (const std::string& input, std::string& address, int& port)
       port = 0;
       if (! isEOS (input, colon))
         port = std::stoi (input.substr (colon + 1));
-
+      else
+        port = 0;
       return true;
     }
   }

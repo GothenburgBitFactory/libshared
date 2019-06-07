@@ -377,7 +377,7 @@ int main (int, char**)
 
   // Test IPv4/IPv6 address parsing.
   std::string address;
-  int port;
+  int port = 3;
   input = "127.0.0.1";
   t.ok    (isIPv4Address (input, address, port),           "isIPv4Address " + input + " --> yes");
   t.is    (address, "127.0.0.1",                           "isIPv4Address " + input + " --> address correct");
