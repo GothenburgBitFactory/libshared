@@ -1555,8 +1555,10 @@ bool Datetime::initializeMonthName (Pig& pig)
         time_t now = time (nullptr);
         struct tm* t = localtime (&now);
 
-        if (t->tm_mon >= month)
+        if (t->tm_mon >= month && timeRelative)
+        {
           t->tm_year++;
+        }
 
         t->tm_mon = month;
         t->tm_mday = 1;
