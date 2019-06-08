@@ -1111,15 +1111,46 @@ int main (int, char**)
     testParse      (t, "mon");
     testParseError (t, "mon:");
 
-    // Verify Datetime::timeRelative is working as expected.
-    Datetime::timeRelative = true;
-    Datetime today;
-    Datetime r38 ("0:00:01");
-    t.notok (today.sameDay (r38), "Datetime::timeRelative=true 0:00:01 --> tomorrow");
-    Datetime::timeRelative = false;
-    Datetime r39 ("0:00:01");
-    t.ok (today.sameDay (r39), "Datetime::timeRelative=false 0:00:01 --> today");
-    Datetime::timeRelative = true;
+    {
+      // Verify Datetime::timeRelative is working as expected.
+      Datetime::timeRelative = true;
+      Datetime today;
+      Datetime r38("0:00:01");
+      t.notok(today.sameDay(r38), "Datetime::timeRelative=true 0:00:01 --> tomorrow");
+      Datetime::timeRelative = false;
+      Datetime r39("0:00:01");
+      t.ok(today.sameDay(r39), "Datetime::timeRelative=false 0:00:01 --> today");
+      Datetime::timeRelative = true;
+    }
+
+    {
+      // Verify Datetime::timeRelative=true puts months before and including current month into next year
+      Datetime::timeRelative = true;
+
+      Datetime today;
+
+      for (auto& month: {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"})
+      {
+        auto test = Datetime(month);
+        bool is_after = (test.month() > today.month());
+        std::string message = "Datetime::timeRelative=true --> " + std::string(month) + " in " + (is_after ? "same" : "next") + " year";
+        t.ok(test.year() == today.year() + (is_after ? 0 : 1), message);
+      }
+    }
+
+    {
+      // Verify Datetime::timeRelative=false puts months into current year
+      Datetime::timeRelative = false;
+
+      Datetime today;
+
+      for (auto& month: {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"})
+      {
+        auto test = Datetime(month);
+        std::string message = "Datetime::timeRelative=false --> " + std::string(month) + " in same year";
+        t.ok(test.year() == today.year(), message);
+      }
+    }
 
     // This is just a diagnostic dump of all named dates, and is used to verify
     // correctness manually.
