@@ -1518,25 +1518,11 @@ bool Datetime::initializeDayName (Pig& pig)
 
         if (t->tm_wday >= day)
         {
-          if (timeRelative)
-          {
-            t->tm_mday += day - t->tm_wday + 7;
-          }
-          else
-          {
-            t->tm_mday += day - t->tm_wday;
-          }
+          t->tm_mday += day - t->tm_wday + (timeRelative ? 7 : 0);
         }
-        else if (t->tm_wday < day)
+        else
         {
-          if (timeRelative)
-          {
-            t->tm_mday += day - t->tm_wday;
-          }
-          else
-          {
-            t->tm_mday += day - t->tm_wday - 7;
-          }
+          t->tm_mday += day - t->tm_wday - (timeRelative ? 0 : 7);
         }
 
         t->tm_hour = t->tm_min = t->tm_sec = 0;
