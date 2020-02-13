@@ -822,14 +822,14 @@ bool File::remove (const std::string& name)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::copy (const std::string& from, const std::string& to)
 {
-  // 'from' must exist.
-  if (! access (from.c_str (), F_OK))
-  {
-    std::ifstream src (from, std::ios::binary);
-    std::ofstream dst (to,   std::ios::binary);
+  std::ifstream src (from, std::ios::binary);
 
+  if (! src.fail ())
+  {
+    std::ofstream dst (to,   std::ios::binary);
     dst << src.rdbuf ();
-    return true;
+    dst.close ();
+    return dst.good () && ! src.bad ();
   }
 
   return false;
