@@ -33,7 +33,7 @@
 
 int main (int, char**)
 {
-  UnitTest t (120);
+  UnitTest t (125);
 
   try
   {
@@ -176,6 +176,14 @@ int main (int, char**)
     t.notok (m & S_IXOTH,                  "File::mode tmp/file.t.perm.txt --------x good");
     f8.remove ();
     t.notok (f8.exists (),                 "File::remove perm file no longer exists");
+
+    File::write ("tmp/file.t.txt", "This is a test\n");
+    t.ok (File::copy ("tmp/file.t.txt", "tmp/file.t.copy.txt"), "File::copy returned true");
+    File f9 ("tmp/file.t.copy.txt");
+    t.ok (f9.exists (),     "File::copy created copy");
+    t.ok (f9.size () == 15, "File::copy tmp/file.t.copy.txt good after copy");
+    t.notok (File::copy ("tmp/does-not-exits.txt", "tmp/should-not-exists.txt"), "File::copy returns false if not exists");
+    t.notok (File ("tmp/should-not-exists.txt").exists (), "File::copy destination should not exist");
 
     tmp.remove ();
     t.notok (tmp.exists (),                "tmp dir removed.");
