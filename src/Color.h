@@ -45,7 +45,8 @@ public:
   enum color_id {nocolor = 0, black, red, green, yellow, blue, magenta, cyan, white};
 
   Color ();
-  Color (const Color&);
+  Color (const Color&) = default;
+  Color& operator= (const Color&) = default;
   Color (unsigned int);                         // 256 | INVERSE | UNDERLINE | BOLD | BRIGHT | (BG << 8) | FG
   Color (const std::string&);                   // "red on bright black"
   Color (color_id);                             // fg.
