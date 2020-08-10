@@ -889,7 +889,15 @@ bool Directory::create (int mode /* = 0755 */)
 {
   // No error handling because we want failure to be silent, somewhat emulating
   // "mkdir -p".
-  return mkdir (_data.c_str (), mode) == 0 ? true : false;
+  Directory parent_dir = parent ();
+  if (! parent_dir.exists ())
+  {
+      if (! parent_dir.create (mode))
+      {
+          return false;
+      }
+  }
+  return mkdir (_data.c_str (), mode) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
