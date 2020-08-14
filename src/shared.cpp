@@ -700,7 +700,9 @@ int execute (
       argv[i+1] = (char*) args[i].c_str ();
 
     argv[args.size () + 1] = NULL;
-    _exit (execvp (executable.c_str (), argv));
+    int rc = execvp (executable.c_str (), argv);
+    std::cerr << "Failed to execute '" << executable << "' Error: " << strerror (errno) << '\n';
+    _exit (rc);
   }
 
   // This is only reached in the parent
