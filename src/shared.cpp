@@ -267,7 +267,8 @@ bool extractLine (
   const std::string& text,
   int width,
   bool hyphenate,
-  unsigned int& offset)
+  unsigned int& offset,
+  char surrogate)
 {
   // Terminate processing.
   // Note: bytes vs bytes.
@@ -335,15 +336,45 @@ bool extractLine (
         // [case 4] on|e two --> last_last != 32, last != 32, ws == 0
         else
         {
-          if (hyphenate)
+          if (char_width > width && last_bytes == offset)
           {
-            line = text.substr (offset, last_bytes - offset - 1) + '-';
-            offset = last_last_bytes;
+            // the first character is already too wide,
+            // no other way to split the line but to replace the character
+            // with a surrogate
+            line = surrogate;
+            offset = bytes;
           }
           else
           {
-            line = text.substr (offset, last_bytes - offset);
-            offset = last_bytes;
+            if (hyphenate)
+            {
+              if (line_width + 1 <= width)
+              {
+                // if the last good part + hyphen is short enough,
+                // ie. the just read character is wider than one column
+                line = text.substr (offset, last_bytes - offset) + '-';
+                offset = last_bytes;
+              }
+              else if (last_last_bytes - offset > 0)
+              {
+                // sacrifice last character from the last good part,
+                // but only if there is at least one character left
+                line = text.substr (offset, last_last_bytes - offset) + '-';
+                offset = last_last_bytes;
+              }
+              else
+              {
+                // no other way to split the line but to omit the hyphen
+                line = text.substr (offset, last_bytes - offset);
+                offset = last_bytes;
+              }
+            }
+            else
+            {
+              // just use the last good part
+              line = text.substr (offset, last_bytes - offset);
+              offset = last_bytes;
+            }
           }
         }
 
