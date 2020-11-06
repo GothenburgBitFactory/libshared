@@ -3,7 +3,7 @@ libshared
 
 A git submodule used by multiple projects. Not to be released or packaged
 independently. All project tarballs will include libshared, so this is a
-development-only internal proejct.
+development-only internal project.
 
 Branching
 ---------
