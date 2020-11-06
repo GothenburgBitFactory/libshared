@@ -3058,11 +3058,11 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
   if (p.getDigits (number) &&
       p.getRemainder (suffix))
   {
-    if (((number >= 11 || number <= 13) && suffix == "th") ||
-        (number % 10 == 1               && suffix == "st") ||
-        (number % 10 == 2               && suffix == "nd") ||
-        (number % 10 == 3               && suffix == "rd") ||
-        (                                  suffix == "th"))
+    if ((number >= 11 && number <= 13 && suffix == "th") ||
+        (number % 10 == 1             && suffix == "st") ||
+        (number % 10 == 2             && suffix == "nd") ||
+        (number % 10 == 3             && suffix == "rd") ||
+        (                                suffix == "th"))
     {
       ordinal = number;
       return true;
