@@ -78,6 +78,22 @@ int main (int, char**)
   t.ok (friday    == fri, "friday == fri");
   t.ok (saturday  == sat, "saturday == sat");
 
+  Datetime sundayCapital;    testInit (t, "Sunday",    sundayCapital);
+  Datetime mondayCapital;    testInit (t, "Monday",    mondayCapital);
+  Datetime tuesdayCapital;   testInit (t, "Tuesday",   tuesdayCapital);
+  Datetime wednesdayCapital; testInit (t, "Wednesday", wednesdayCapital);
+  Datetime thursdayCapital;  testInit (t, "Thursday",  thursdayCapital);
+  Datetime fridayCapital;    testInit (t, "Friday",    fridayCapital);
+  Datetime saturdayCapital;  testInit (t, "Saturday",  saturdayCapital);
+
+  t.ok (sundayCapital    == sun, "Sunday == sun");
+  t.ok (mondayCapital    == mon, "Monday == mon");
+  t.ok (tuesdayCapital   == tue, "Tuesday == tue");
+  t.ok (wednesdayCapital == wed, "Wednesday == wed");
+  t.ok (thursdayCapital  == thu, "Thursday == thu");
+  t.ok (fridayCapital    == fri, "Friday == fri");
+  t.ok (saturdayCapital  == sat, "Saturday == sat");
+
   Datetime january;   testInit (t, "january",   january);
   Datetime february;  testInit (t, "february",  february);
   Datetime march;     testInit (t, "march",     march);
@@ -115,6 +131,32 @@ int main (int, char**)
   t.ok (october   == oct, "october == oct");
   t.ok (november  == nov, "november == nov");
   t.ok (december  == dec, "december == dec");
+
+  Datetime januaryCapital;   testInit (t, "January",   januaryCapital);
+  Datetime februaryCapital;  testInit (t, "February",  februaryCapital);
+  Datetime marchCapital;     testInit (t, "March",     marchCapital);
+  Datetime aprilCapital;     testInit (t, "April",     aprilCapital);
+  Datetime mayCapital;       testInit (t, "May",       mayCapital);
+  Datetime juneCapital;      testInit (t, "June",      juneCapital);
+  Datetime julyCapital;      testInit (t, "July",      julyCapital);
+  Datetime augustCapital;    testInit (t, "August",    augustCapital);
+  Datetime septemberCapital; testInit (t, "September", septemberCapital);
+  Datetime octoberCapital;   testInit (t, "October",   octoberCapital);
+  Datetime novemberCapital;  testInit (t, "November",  novemberCapital);
+  Datetime decemberCapital;  testInit (t, "December",  decemberCapital);
+
+  t.ok (januaryCapital   == jan, "January == jan");
+  t.ok (februaryCapital  == feb, "February == feb");
+  t.ok (marchCapital     == mar, "March == mar");
+  t.ok (aprilCapital     == apr, "April == apr");
+  // May has only three letters.
+  t.ok (juneCapital      == jun, "June == jun");
+  t.ok (julyCapital      == jul, "July == jul");
+  t.ok (augustCapital    == aug, "August == aug");
+  t.ok (septemberCapital == sep, "September == sep");
+  t.ok (octoberCapital   == oct, "October == oct");
+  t.ok (novemberCapital  == nov, "November == nov");
+  t.ok (decemberCapital  == dec, "December == dec");
 
   // Simply instantiate these for now.  Test later.
   Datetime now;            testInit (t, "now", now);

@@ -109,7 +109,7 @@ bool Pig::skipPartial (const std::string& reference, std::string& result)
   auto pos = 0;
   while (reference[pos] &&
          (*_text)[_cursor + pos] &&
-         reference[pos] == (*_text)[_cursor + pos])
+         reference[pos] == tolower((*_text)[_cursor + pos]))
     ++pos;
 
   if (pos > 0)
