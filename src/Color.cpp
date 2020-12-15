@@ -277,6 +277,12 @@ Color::Color (color_id fg, color_id bg, bool underline, bool bold, bool bright)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Color::operator== (const Color& other) const
+{
+  return int(_value) == int(other);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Color::operator std::string () const
 {
   std::string description;
@@ -315,7 +321,7 @@ Color::operator int () const
 // other take precedence.
 void Color::blend (const Color& other)
 {
-  if (!other.nontrivial ())
+  if (!other.nontrivial () || (*this) == other)
     return;
 
   Color c (other);

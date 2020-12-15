@@ -66,6 +66,7 @@ public:
   std::string end () const;
 
   bool nontrivial () const;
+  bool operator== (const Color&) const;
 
 private:
   int find (const std::string&);
