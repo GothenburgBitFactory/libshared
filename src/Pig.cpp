@@ -268,7 +268,7 @@ bool Pig::getDigit4 (int& result)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Pig::getDigits (int& result)
+bool Pig::getDigits (long long int& result)
 {
   auto save = _cursor;
 
