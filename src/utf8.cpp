@@ -305,6 +305,11 @@ int mk_wcwidth(wchar_t ucs)
     if (width == widechar_widened_in_9)
       return 2;
 
+    // Interpret ambiguous east-asian characters as 1 char
+    // This includes accented characters like á or é
+    if (width == widechar_ambiguous)
+      return 1;
+
     // All other negative values
     return 0;
 }
