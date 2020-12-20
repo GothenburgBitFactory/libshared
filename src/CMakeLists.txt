@@ -24,7 +24,8 @@ set (shared_HEADERS Args.h
                     shared.h
                     format.h
                     unicode.h
-                    utf8.h)
+                    utf8.h
+                    wcwidth.h)
 
 set (shared_SRCS Args.cpp
                  Color.cpp
@@ -51,7 +52,6 @@ set (shared_SRCS Args.cpp
                  shared.cpp
                  unicode.cpp
                  utf8.cpp
-                 wcwidth6.cpp
                  ${shared_HEADERS})
 
 add_library (shared STATIC ${shared_SRCS})
