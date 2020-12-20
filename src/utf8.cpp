@@ -26,6 +26,7 @@
 
 #include <cmake.h>
 #include <utf8.h>
+#include <wcwidth.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Converts '0'     -> 0
@@ -292,4 +293,19 @@ const std::string utf8_substr (
   return result;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+int mk_wcwidth(wchar_t ucs)
+{
+    int width = widechar_wcwidth (ucs);
+
+    if (width >= 0)
+      return width;
+
+    // Interpret widened characters as 2 chars
+    if (width == widechar_widened_in_9)
+      return 2;
+
+    // All other negative values
+    return 0;
+}
 ////////////////////////////////////////////////////////////////////////////////
