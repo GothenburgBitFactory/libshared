@@ -969,9 +969,9 @@ int main (int, char**)
     }
 
     Datetime later ("later");
-    t.is (later.month (),   1, "later -> m = 1");
-    t.is (later.day (),    18, "later -> d = 18");
-    t.is (later.year (), 2038, "later -> y = 2038");
+    t.is (later.month (),  12, "later -> m = 12");
+    t.is (later.day (),    30, "later -> d = 30");
+    t.is (later.year (), 9999, "later -> y = 9999");
 
     // Quarters
     Datetime soq ("soq");

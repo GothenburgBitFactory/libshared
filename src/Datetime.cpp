@@ -562,8 +562,8 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   <ordinal> 12th 2017-03-12T00:00:00
 //   <day> monday   2017-03-06T00:00:00
 //   <month> april  2017-04-01T00:00:00
-//   later          2038-01-18T00:00:00  Unaffected
-//   someday        2038-01-18T00:00:00  Unaffected
+//   later          9999-12-30T00:00:00  Unaffected
+//   someday        9999-12-30T00:00:00  Unaffected
 //   sopd           2017-03-04T00:00:00  Unaffected
 //   sod            2017-03-05T00:00:00  Unaffected
 //   sond           2017-03-06T00:00:00  Unaffected
@@ -1604,9 +1604,9 @@ bool Datetime::initializeLater (Pig& pig)
       struct tm* t = localtime (&now);
 
       t->tm_hour = t->tm_min = t->tm_sec = 0;
-      t->tm_year = 138;
-      t->tm_mon = 0;
-      t->tm_mday = 18;
+      t->tm_year = 8099;  // Year 9999
+      t->tm_mon = 11;
+      t->tm_mday = 30;
       t->tm_isdst = -1;
       _date = mktime (t);
       return true;
