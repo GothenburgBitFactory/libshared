@@ -49,6 +49,7 @@ public:
   bool getDigit2 (int&);
   bool getDigit3 (int&);
   bool getDigit4 (int&);
+  bool getDigits (int&);
   bool getDigits (long long&);
   bool getHexDigit (int&);
   bool getNumber (std::string&);
