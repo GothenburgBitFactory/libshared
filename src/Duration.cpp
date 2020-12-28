@@ -198,7 +198,7 @@ bool Duration::parse_seconds (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  long long int epoch {};
+  long long epoch {};
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
       (epoch == 0 ||
@@ -221,7 +221,7 @@ bool Duration::parse_designated (Pig& pig)
   if (pig.skip ('P') &&
       ! pig.eos ())
   {
-    long long int value;
+    long long value;
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('Y'))
       _year = value;
@@ -282,7 +282,7 @@ bool Duration::parse_weeks (Pig& pig)
   if (pig.skip ('P') &&
       ! pig.eos ())
   {
-    long long int value;
+    long long value;
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('W'))
       _weeks = value;

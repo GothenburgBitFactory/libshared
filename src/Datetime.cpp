@@ -699,7 +699,7 @@ bool Datetime::parse_epoch (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  long long int epoch {};
+  long long epoch {};
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
       epoch >= 315532800                &&
@@ -1432,7 +1432,7 @@ bool Datetime::initializeOrdinal (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  long long int number = 0;
+  long long number = 0;
   if (pig.getDigits (number) &&
       number > 0             &&
       number <= 31)
@@ -2813,7 +2813,7 @@ bool Datetime::initializeInformalTime (Pig& pig)
       hours = 10 * hours + digit;
 
     int minutes = 0;
-    long long int seconds = 0;
+    long long seconds = 0;
     if (pig.skip (':'))
     {
       if (! pig.getDigit2 (minutes))
@@ -3054,7 +3054,7 @@ bool Datetime::initializeNthDayInMonth (const std::vector <std::string>& tokens)
 bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 {
   Pig p (token);
-  long long int number;
+  long long number;
   std::string suffix;
   if (p.getDigits (number) &&
       p.getRemainder (suffix))
