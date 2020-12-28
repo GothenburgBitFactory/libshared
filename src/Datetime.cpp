@@ -3078,7 +3078,7 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 bool Datetime::validate ()
 {
   // _year;
-  if ((_year    && (_year    <   1900 || _year    >                                  2200)) ||
+  if ((_year    && (_year    <   1900 || _year    >                                  9999)) ||
       (_month   && (_month   <      1 || _month   >                                    12)) ||
       (_week    && (_week    <      1 || _week    >                                    53)) ||
       (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
