@@ -103,7 +103,7 @@ Datetime::Datetime (const time_t t)
 Datetime::Datetime (const int y, const int m, const int d)
 {
   // Protect against arguments being passed in the wrong order.
-  assert (y >= 1969 && y < 2100);
+  assert (y >= 1969 && y <= 9999);
   assert (m >= 1 && m <= 12);
   assert (d >= 1 && d <= 31);
 
@@ -124,7 +124,7 @@ Datetime::Datetime (const int y,  const int m,  const int d,
                     const int hr, const int mi, const int se)
 {
   // Protect against arguments being passed in the wrong order.
-  assert (y >= 1969 && y < 2100);
+  assert (y >= 1969 && y <= 9999);
   assert (m >= 1 && m <= 12);
   assert (d >= 1 && d <= 31);
   assert (hr >= 0 && hr <= 24);
@@ -703,7 +703,7 @@ bool Datetime::parse_epoch (Pig& pig)
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
       epoch >= 315532800                &&
-      epoch < 7258193595 ) // 2200-01-01
+      epoch < 253402293599 )  // 9999-12-31, 23:59:59 AoE
   {
     _date = static_cast <time_t> (epoch);
     return true;
@@ -3424,7 +3424,7 @@ bool Datetime::leapYear (int year)
 int Datetime::daysInMonth (int year, int month)
 {
   // Protect against arguments being passed in the wrong order.
-  assert (year >= 1969 && year < 2100);
+  assert (year >= 1969 && year <= 9999);
   assert (month >= 1 && month <= 31);
 
   static int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
