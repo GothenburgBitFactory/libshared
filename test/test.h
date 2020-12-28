@@ -41,8 +41,9 @@ public:
   void ok (bool, const std::string&);
   void notok (bool, const std::string&);
   void is (bool, bool, const std::string&);
-  void is (size_t, size_t, const std::string&);
   void is (int, int, const std::string&);
+  void is (size_t, size_t, const std::string&);
+  void is (time_t, time_t, const std::string&);
   void is (double, double, const std::string&);
   void is (double, double, double, const std::string&);
   void is (unsigned char, unsigned char, const std::string&);

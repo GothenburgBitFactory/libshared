@@ -223,6 +223,37 @@ void UnitTest::is (size_t actual, size_t expected, const std::string& name)
   }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+void UnitTest::is (time_t actual, time_t expected, const std::string& name)
+{
+  ++_counter;
+  if (actual == expected)
+  {
+    ++_passed;
+    std::cout << green ("ok")
+              << " "
+              << _counter
+              << " - "
+              << name
+              << '\n';
+  }
+  else
+  {
+    ++_failed;
+    std::cout << red ("not ok")
+              << " "
+              << _counter
+              << " - "
+              << name
+              << "\n# expected: "
+              << expected
+              << "\n#      got: "
+              << actual
+              << '\n';
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void UnitTest::is (int actual, int expected, const std::string& name)
 {
