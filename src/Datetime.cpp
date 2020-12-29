@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2020, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -599,7 +599,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sony           2018-01-01T00:00:00  Unaffected
 //   eopy           2017-01-01T00:00:00  Unaffected
 //   eoy            2018-01-01T00:00:00  Unaffected
-//   eony           2019-01-01T00:00:00  Unaffected
+//   eony           2020-01-01T00:00:00  Unaffected
 //   easter         2017-04-16T00:00:00
 //   eastermonday   2017-04-16T00:00:00
 //   ascension      2017-05-25T00:00:00
