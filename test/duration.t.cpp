@@ -39,7 +39,7 @@ void testParse (
   int in_day,
   int in_hours,
   int in_minutes,
-  int in_seconds,
+  time_t in_seconds,
   time_t in_period,
   const std::string& output,
   const std::string& hours,

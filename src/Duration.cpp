@@ -324,7 +324,7 @@ bool Duration::parse_units (Pig& pig)
         if (durations[i].unit == unit &&
             durations[i].standalone)
         {
-          _period = static_cast <int> (durations[i].seconds);
+          _period = static_cast <time_t> (durations[i].seconds);
           return true;
         }
       }
@@ -370,7 +370,7 @@ bool Duration::parse_units (Pig& pig)
           if (durations[i].unit == unit)
           {
             seconds = durations[i].seconds;
-            _period = static_cast <int> (number * static_cast <double> (seconds));
+            _period = static_cast <time_t> (number * static_cast <double> (seconds));
             return true;
           }
         }
@@ -526,7 +526,7 @@ int Duration::minutes () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Duration::seconds () const
+time_t Duration::seconds () const
 {
   return _period;
 }
