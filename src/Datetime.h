@@ -146,6 +146,7 @@ private:
   bool initializeDayName        (Pig&);
   bool initializeMonthName      (Pig&);
   bool initializeLater          (Pig&);
+  bool initializeEarlier        (Pig&);
   bool initializeSopd           (Pig&);
   bool initializeSod            (Pig&);
   bool initializeSond           (Pig&);

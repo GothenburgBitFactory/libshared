@@ -564,6 +564,8 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   <month> april  2017-04-01T00:00:00
 //   later          9999-12-30T00:00:00  Unaffected
 //   someday        9999-12-30T00:00:00  Unaffected
+//   earlier        1970-01-02T00:00:00  Unaffected
+//   before         1970-01-02T00:00:00  Unaffected
 //   sopd           2017-03-04T00:00:00  Unaffected
 //   sod            2017-03-05T00:00:00  Unaffected
 //   sond           2017-03-06T00:00:00  Unaffected
@@ -644,6 +646,7 @@ bool Datetime::parse_named (Pig& pig)
       initializeDayName        (pig) ||
       initializeMonthName      (pig) ||
       initializeLater          (pig) ||
+      initializeEarlier        (pig) ||
       initializeSopd           (pig) ||
       initializeSod            (pig) ||
       initializeSond           (pig) ||
@@ -1607,6 +1610,38 @@ bool Datetime::initializeLater (Pig& pig)
       t->tm_year = 8099;  // Year 9999
       t->tm_mon = 11;
       t->tm_mday = 30;
+      t->tm_isdst = -1;
+      _date = mktime (t);
+      return true;
+    }
+  }
+
+  pig.restoreTo (checkpoint);
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// earlier
+// before
+bool Datetime::initializeEarlier (Pig& pig)
+{
+  auto checkpoint = pig.cursor ();
+
+  std::string token;
+  if (pig.skipPartial ("earlier", token)      ||
+      pig.skipPartial ("before", token))
+  {
+    auto following = pig.peek ();
+    if (! unicodeLatinAlpha (following) &&
+        ! unicodeLatinDigit (following))
+    {
+      time_t now = time (nullptr);
+      struct tm* t = localtime (&now);
+
+      t->tm_hour = t->tm_min = t->tm_sec = 0;
+      t->tm_year = 70;  // Year 1970
+      t->tm_mon = 0;
+      t->tm_mday = 2;
       t->tm_isdst = -1;
       _date = mktime (t);
       return true;

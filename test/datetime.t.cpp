@@ -973,6 +973,11 @@ int main (int, char**)
     t.is (later.day (),    30, "later -> d = 30");
     t.is (later.year (), 9999, "later -> y = 9999");
 
+    Datetime earlier ("earlier");
+    t.is (earlier.month (),   1, "earlier -> m = 1");
+    t.is (earlier.day (),     1, "earlier -> d = 1");
+    t.is (earlier.year (), 1970, "earlier -> y = 1970");
+
     // Quarters
     Datetime soq ("soq");
     Datetime eoq ("eoq");
@@ -1365,6 +1370,8 @@ int main (int, char**)
     t.diag ("  january        " + Datetime ("january").toISOLocalExtended ());
     t.diag ("  later          " + Datetime ("later").toISOLocalExtended ());
     t.diag ("  someday        " + Datetime ("someday").toISOLocalExtended ());
+    t.diag ("  earlier        " + Datetime ("earlier").toISOLocalExtended ());
+    t.diag ("  before         " + Datetime ("before").toISOLocalExtended ());
     t.diag ("  sopd           " + Datetime ("sopd").toISOLocalExtended ());
     t.diag ("  sod            " + Datetime ("sod").toISOLocalExtended ());
     t.diag ("  sond           " + Datetime ("sond").toISOLocalExtended ());
