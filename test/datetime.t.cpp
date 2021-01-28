@@ -973,10 +973,16 @@ int main (int, char**)
     t.is (later.day (),    30, "later -> d = 30");
     t.is (later.year (), 9999, "later -> y = 9999");
 
+    Datetime someday ("someday");
+    t.ok (someday == later, "someday == later");
+
     Datetime earlier ("earlier");
     t.is (earlier.month (),   1, "earlier -> m = 1");
-    t.is (earlier.day (),     1, "earlier -> d = 1");
+    t.is (earlier.day (),     2, "earlier -> d = 2");
     t.is (earlier.year (), 1970, "earlier -> y = 1970");
+
+    Datetime before ("before");
+    t.ok (before == earlier, "before == earlier");
 
     // Quarters
     Datetime soq ("soq");
