@@ -1939,9 +1939,11 @@ bool Datetime::initializeEonw (Pig& pig)
     {
       time_t now = time (nullptr);
       struct tm* t = localtime (&now);
-
-      t->tm_mday += 15 - t->tm_wday;
       t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+      int extra = (t->tm_wday + 6) % 7;
+      t->tm_mday += 14 - extra;
+
       t->tm_isdst = -1;
       _date = mktime (t);
       return true;
