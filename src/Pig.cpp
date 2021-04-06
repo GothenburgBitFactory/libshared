@@ -103,13 +103,15 @@ bool Pig::skipLiteral (const std::string& literal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Pig::skipPartial (const std::string& reference, std::string& result)
+bool Pig::skipPartial (const std::string& reference, std::string& result,
+                       bool ignore_case)
 {
   // Walk the common substring.
   auto pos = 0;
   while (reference[pos] &&
          (*_text)[_cursor + pos] &&
-         reference[pos] == tolower((*_text)[_cursor + pos]))
+         ((reference[pos] == (*_text)[_cursor + pos] && !ignore_case) ||
+          (reference[pos] == tolower((*_text)[_cursor + pos]) && ignore_case)))
     ++pos;
 
   if (pos > 0)

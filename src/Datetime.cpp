@@ -1505,7 +1505,7 @@ bool Datetime::initializeDayName (Pig& pig)
   std::string token;
   for (int day = 0; day <= 7; ++day)   // Deliberate <= so that 'sunday' is either 0 or 7.
   {
-    if (pig.skipPartial (dayNames[day % 7], token) &&
+    if (pig.skipPartial (dayNames[day % 7], token, true) &&
         token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
     {
       auto following = pig.peek ();
@@ -1548,7 +1548,7 @@ bool Datetime::initializeMonthName (Pig& pig)
   std::string token;
   for (int month = 0; month < 12; ++month)
   {
-    if (pig.skipPartial (monthNames[month], token) &&
+    if (pig.skipPartial (monthNames[month], token, true) &&
         token.length () >= static_cast <std::string::size_type> (Datetime::minimumMatchLength))
     {
       auto following = pig.peek ();
