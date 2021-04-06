@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2021, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -103,7 +103,7 @@ Datetime::Datetime (const time_t t)
 Datetime::Datetime (const int y, const int m, const int d)
 {
   // Protect against arguments being passed in the wrong order.
-  assert (y >= 1969 && y < 2100);
+  assert (y >= 1969 && y <= 9999);
   assert (m >= 1 && m <= 12);
   assert (d >= 1 && d <= 31);
 
@@ -124,7 +124,7 @@ Datetime::Datetime (const int y,  const int m,  const int d,
                     const int hr, const int mi, const int se)
 {
   // Protect against arguments being passed in the wrong order.
-  assert (y >= 1969 && y < 2100);
+  assert (y >= 1969 && y <= 9999);
   assert (m >= 1 && m <= 12);
   assert (d >= 1 && d <= 31);
   assert (hr >= 0 && hr <= 24);
@@ -562,8 +562,8 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   <ordinal> 12th 2017-03-12T00:00:00
 //   <day> monday   2017-03-06T00:00:00
 //   <month> april  2017-04-01T00:00:00
-//   later          2038-01-18T00:00:00  Unaffected
-//   someday        2038-01-18T00:00:00  Unaffected
+//   later          9999-12-30T00:00:00  Unaffected
+//   someday        9999-12-30T00:00:00  Unaffected
 //   sopd           2017-03-04T00:00:00  Unaffected
 //   sod            2017-03-05T00:00:00  Unaffected
 //   sond           2017-03-06T00:00:00  Unaffected
@@ -599,7 +599,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sony           2018-01-01T00:00:00  Unaffected
 //   eopy           2017-01-01T00:00:00  Unaffected
 //   eoy            2018-01-01T00:00:00  Unaffected
-//   eony           2019-01-01T00:00:00  Unaffected
+//   eony           2020-01-01T00:00:00  Unaffected
 //   easter         2017-04-16T00:00:00
 //   eastermonday   2017-04-16T00:00:00
 //   ascension      2017-05-25T00:00:00
@@ -699,10 +699,11 @@ bool Datetime::parse_epoch (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  int epoch {};
+  long long epoch {};
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
-      epoch >= 315532800)
+      epoch >= 315532800                &&
+      epoch < 253402293599 )  // 9999-12-31, 23:59:59 AoE
   {
     _date = static_cast <time_t> (epoch);
     return true;
@@ -1431,7 +1432,7 @@ bool Datetime::initializeOrdinal (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  int number = 0;
+  long long number = 0;
   if (pig.getDigits (number) &&
       number > 0             &&
       number <= 31)
@@ -1603,9 +1604,9 @@ bool Datetime::initializeLater (Pig& pig)
       struct tm* t = localtime (&now);
 
       t->tm_hour = t->tm_min = t->tm_sec = 0;
-      t->tm_year = 138;
-      t->tm_mon = 0;
-      t->tm_mday = 18;
+      t->tm_year = 8099;  // Year 9999
+      t->tm_mon = 11;
+      t->tm_mday = 30;
       t->tm_isdst = -1;
       _date = mktime (t);
       return true;
@@ -1938,9 +1939,11 @@ bool Datetime::initializeEonw (Pig& pig)
     {
       time_t now = time (nullptr);
       struct tm* t = localtime (&now);
-
-      t->tm_mday += 15 - t->tm_wday;
       t->tm_hour = t->tm_min = t->tm_sec = 0;
+
+      int extra = (t->tm_wday + 6) % 7;
+      t->tm_mday += 14 - extra;
+
       t->tm_isdst = -1;
       _date = mktime (t);
       return true;
@@ -2812,7 +2815,7 @@ bool Datetime::initializeInformalTime (Pig& pig)
       hours = 10 * hours + digit;
 
     int minutes = 0;
-    int seconds = 0;
+    long long seconds = 0;
     if (pig.skip (':'))
     {
       if (! pig.getDigit2 (minutes))
@@ -3053,7 +3056,7 @@ bool Datetime::initializeNthDayInMonth (const std::vector <std::string>& tokens)
 bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 {
   Pig p (token);
-  int number;
+  long long number;
   std::string suffix;
   if (p.getDigits (number) &&
       p.getRemainder (suffix))
@@ -3077,7 +3080,7 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 bool Datetime::validate ()
 {
   // _year;
-  if ((_year    && (_year    <   1900 || _year    >                                  2200)) ||
+  if ((_year    && (_year    <   1900 || _year    >                                  9999)) ||
       (_month   && (_month   <      1 || _month   >                                    12)) ||
       (_week    && (_week    <      1 || _week    >                                    53)) ||
       (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
@@ -3423,7 +3426,7 @@ bool Datetime::leapYear (int year)
 int Datetime::daysInMonth (int year, int month)
 {
   // Protect against arguments being passed in the wrong order.
-  assert (year >= 1969 && year < 2100);
+  assert (year >= 1969 && year <= 9999);
   assert (month >= 1 && month <= 31);
 
   static int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};

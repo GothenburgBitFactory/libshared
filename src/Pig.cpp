@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2015 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2015 - 2021, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -269,6 +269,19 @@ bool Pig::getDigit4 (int& result)
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Pig::getDigits (int& result)
+{
+    long long temp = 0;
+    bool success = false;
+
+    success = getDigits (temp);
+    if (success)
+      result = temp;
+
+    return success;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Pig::getDigits (long long& result)
 {
   auto save = _cursor;
 

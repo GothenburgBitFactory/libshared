@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 - 2019, Göteborg Bit Factory.
+// Copyright 2013 - 2021, Göteborg Bit Factory.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ void testParse (
   int in_day,
   int in_hours,
   int in_minutes,
-  int in_seconds,
+  time_t in_seconds,
   time_t in_period,
   const std::string& output,
   const std::string& hours,

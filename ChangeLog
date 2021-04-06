@@ -15,6 +15,7 @@ master/HEAD
           (thanks to Laurence)
 - Corrected initialization order of struct flock for DARWIN. This may address
   file locking prboelms on MacOS.
+- Libshared now supports datetime values up to year 9999.
 
 tasksh-1.2.0 (2017-05-10)
 

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2013 - 2021, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@
 
 #include <cmake.h>
 #include <utf8.h>
+#include <wcwidth.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Converts '0'     -> 0
@@ -292,4 +293,24 @@ const std::string utf8_substr (
   return result;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+int mk_wcwidth(wchar_t ucs)
+{
+    int width = widechar_wcwidth (ucs);
+
+    if (width >= 0)
+      return width;
+
+    // Interpret widened characters as 2 chars
+    if (width == widechar_widened_in_9)
+      return 2;
+
+    // Interpret ambiguous east-asian characters as 1 char
+    // This includes accented characters like á or é
+    if (width == widechar_ambiguous)
+      return 1;
+
+    // All other negative values
+    return 0;
+}
 ////////////////////////////////////////////////////////////////////////////////

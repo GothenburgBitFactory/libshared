@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2021, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -198,7 +198,7 @@ bool Duration::parse_seconds (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
-  int epoch {};
+  long long epoch {};
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
       (epoch == 0 ||
@@ -221,7 +221,7 @@ bool Duration::parse_designated (Pig& pig)
   if (pig.skip ('P') &&
       ! pig.eos ())
   {
-    int value;
+    long long value;
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('Y'))
       _year = value;
@@ -282,7 +282,7 @@ bool Duration::parse_weeks (Pig& pig)
   if (pig.skip ('P') &&
       ! pig.eos ())
   {
-    int value;
+    long long value;
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('W'))
       _weeks = value;
@@ -324,7 +324,7 @@ bool Duration::parse_units (Pig& pig)
         if (durations[i].unit == unit &&
             durations[i].standalone)
         {
-          _period = static_cast <int> (durations[i].seconds);
+          _period = static_cast <time_t> (durations[i].seconds);
           return true;
         }
       }
@@ -370,7 +370,7 @@ bool Duration::parse_units (Pig& pig)
           if (durations[i].unit == unit)
           {
             seconds = durations[i].seconds;
-            _period = static_cast <int> (number * static_cast <double> (seconds));
+            _period = static_cast <time_t> (number * static_cast <double> (seconds));
             return true;
           }
         }
@@ -526,7 +526,7 @@ int Duration::minutes () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Duration::seconds () const
+time_t Duration::seconds () const
 {
   return _period;
 }

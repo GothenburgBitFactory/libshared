@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2021, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ public:
   int days () const;
   int hours () const;
   int minutes () const;
-  int seconds () const;
+  time_t seconds () const;
 
 private:
   void clear ();
@@ -66,14 +66,14 @@ private:
   std::string dump () const;
 
 public:
-  int _year      {0};
-  int _month     {0};
-  int _weeks     {0};
-  int _day       {0};
-  int _hours     {0};
-  int _minutes   {0};
-  int _seconds   {0};
-  time_t _period {0};
+  int _year       {0};
+  int _month      {0};
+  int _weeks      {0};
+  int _day        {0};
+  int _hours      {0};
+  int _minutes    {0};
+  time_t _seconds {0};
+  time_t _period  {0};
 };
 
 #endif

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2006 - 2019, Paul Beckingham, Federico Hernandez.
+// Copyright 2006 - 2021, Paul Beckingham, Federico Hernandez.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -128,13 +128,13 @@ std::string leftJustify (const int input, const int width)
   std::stringstream s;
   s << input;
   std::string output = s.str ();
-  return output + std::string (width - output.length (), ' ');
+  return output + std::string (std::max<int> (width - output.length (), 0), ' ');
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string leftJustify (const std::string& input, const int width)
 {
-  return input + std::string (width - utf8_text_width (input), ' ');
+  return input + std::string (std::max<int> (width - utf8_text_width (input), 0), ' ');
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,11 +156,7 @@ std::string rightJustify (const int input, const int width)
 ////////////////////////////////////////////////////////////////////////////////
 std::string rightJustify (const std::string& input, const int width)
 {
-  unsigned int len = utf8_text_width (input);
-  return (((unsigned int) width > len)
-           ? std::string (width - len, ' ')
-           : "")
-         + input;
+  return std::string (std::max<int> (width - utf8_text_width (input), 0), ' ') + input;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
