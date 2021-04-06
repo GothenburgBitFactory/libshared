@@ -40,7 +40,7 @@ public:
   bool skipN (const int quantity = 1);
   bool skipWS ();
   bool skipLiteral (const std::string&);
-  bool skipPartial (const std::string&, std::string&);
+  bool skipPartial (const std::string&, std::string&, bool ignore_case = false);
 
   bool getUntil (int, std::string&);
   bool getUntilWS (std::string&);
