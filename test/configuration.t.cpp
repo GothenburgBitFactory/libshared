@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (20);
+  UnitTest t (21);
 
   // bool has (const std::string&);
   Configuration c1;
@@ -65,9 +65,7 @@ int main (int, char**)
   t.ok (c1.getBoolean ("boolean4") == true,    "Configuration 'boolean4' --> true");
   t.ok (c1.getBoolean ("boolean5") == true,    "Configuration 'boolean5' --> true");
 
-  // TODO void load  (const std::string&, int nest = 1);
-
-  // void parse (const std::string&, int nest = 1);
+  // void parse (const std::string&, int nest = 1, const std::vector <std::string>& search_paths = {});
   Configuration c2;
   c2.parse ("\n"
             "# Comment\n"
@@ -97,6 +95,13 @@ int main (int, char**)
   t.is (c3.get ("foo"), "1",     "Configuration::setIfBlank doesn't change non-blank values.");
   t.is (c3.get ("bar"), "2plus", "Configuration::setIfBlank changes blank values.");
   t.is (c3.get ("baz"), "3plus", "Configuration::setIfBlank sets missing values.");
+
+  // void load (const std::string&, int nest = 1, const std::vector <std::string>& search_paths = {});
+  std::string config_dir (__FILE__);
+  config_dir = config_dir.substr (0, config_dir.rfind ('/')) + "/config";
+  Configuration c4;
+  c4.load (config_dir + "/1.conf", 1, { config_dir, config_dir + "/nest" });
+  t.is (c4.get ("hello"), "world", "Configuration::load with search paths");
 
   return 0;
 }
