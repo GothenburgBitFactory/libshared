@@ -41,9 +41,9 @@ std::vector <std::tuple <std::string, int>> foo (File&);
 class Configuration : public std::map <std::string, std::string>
 {
 public:
-  void load  (const std::string&, int nest = 1);
+  void load  (const std::string&, int nest = 1, const std::vector <std::string>& search_paths = {});
   void save ();
-  void parse (const std::string&, int nest = 1);
+  void parse (const std::string&, int nest = 1, const std::vector <std::string>& search_paths = {});
 
   bool        has        (const std::string&) const;
   std::string get        (const std::string&) const;

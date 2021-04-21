@@ -126,7 +126,10 @@ bool unsetVariableInFile (
 // Nested files are now supported, with the following construct:
 //   include /absolute/path/to/file
 //
-void Configuration::load (const std::string& file, int nest /* = 1 */)
+void Configuration::load (
+  const std::string& file,
+  int nest /* = 1 */,
+  const std::vector <std::string>& search_paths /* = {} */)
 {
   if (nest > 10)
     throw std::string ("Configuration files may only be nested to 10 levels.");
@@ -142,7 +145,7 @@ void Configuration::load (const std::string& file, int nest /* = 1 */)
   {
     std::string contents;
     if (File::read (file, contents) && contents.length ())
-      parse (contents, nest);
+      parse (contents, nest, search_paths);
   }
 }
 
@@ -159,7 +162,10 @@ void Configuration::save ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Configuration::parse (const std::string& input, int nest /* = 1 */)
+void Configuration::parse (
+  const std::string& input,
+  int nest /* = 1 */,
+  const std::vector <std::string>& search_paths /* = {} */)
 {
   // Shortcut case for default constructor.
   if (input.length () == 0)
@@ -190,16 +196,28 @@ void Configuration::parse (const std::string& input, int nest /* = 1 */)
         auto include = line.find ("include");
         if (include != std::string::npos)
         {
-          Path included (trim (line.substr (include + 7)));
-          if (included.is_absolute ())
+          std::string path (trim (line.substr (include + 7)));
+          Path included (path);
+          // Legacy method expands relative path to PWD-relative path. So we only try
+          // search paths for relative paths not existing in PWD, to keep compatibility.
+          if (!included.exists () && !path.empty () && path[0] != '/' && path[0] != '~')
           {
-            if (included.readable ())
-              load (included, nest + 1);
-            else
-              throw format ("Could not read include file '{1}'.", included._data);
+            for (auto &search: search_paths)
+            {
+              Path concated (search + "/" + path);
+              if (concated.exists ()) {
+                included = concated;
+                break;
+              }
+            }
+            if (!included.exists ())
+              throw format ("Could not find file in current directory or search paths '{1}'.", path);
           }
-          else
-            throw format ("Can only include files with absolute paths, not '{1}'", included._data);
+
+          if (!included.readable ())
+            throw format ("Could not read include file '{1}'.", path);
+
+          load (included, nest + 1, search_paths);
         }
         else
           throw format ("Malformed entry '{1}' in config file.", line);
