@@ -145,7 +145,7 @@ void Configuration::load (
   {
     std::string contents;
     if (File::read (file, contents) && contents.length ())
-      parse (contents, nest, search_paths);
+      parse (contents, nest, search_paths, file);
   }
 }
 
@@ -165,7 +165,8 @@ void Configuration::save ()
 void Configuration::parse (
   const std::string& input,
   int nest /* = 1 */,
-  const std::vector <std::string>& search_paths /* = {} */)
+  const std::vector <std::string>& search_paths /* = {} */,
+  const std::string& file_path /* = {} */)
 {
   // Shortcut case for default constructor.
   if (input.length () == 0)
@@ -196,26 +197,50 @@ void Configuration::parse (
         auto include = line.find ("include");
         if (include != std::string::npos)
         {
-          std::string path (trim (line.substr (include + 7)));
-          Path included (path);
-          // Legacy method expands relative path to PWD-relative path. So we only try
-          // search paths for relative paths not existing in PWD, to keep compatibility.
-          if (!included.exists () && !path.empty () && path[0] != '/' && path[0] != '~')
+          Path included (trim (line.substr (include + 7)));
+
+          do
           {
+            // 0. Absolute path is not searched.
+            if (included.is_absolute ())
+              break;
+
+            // 1. Try relative to CWD first, break if exists. This is the legacy behavior.
+            if (included.exists ())
+              break;
+
+            // 2. Try path relative to the config file itself.
+            if (!file_path.empty ())
+            {
+              std::string file_dir = Path(file_path).realpath();
+              auto slash = file_dir.rfind('/');
+              file_dir.resize (slash != std::string::npos ? slash + 1 : 0); // `/` is kept.
+              Path file_relative (file_dir + included._data);
+              if (file_relative.exists ())
+              {
+                included = file_relative;
+                break;
+              }
+            }
+
+            // 3. Try search paths.
             for (auto &search: search_paths)
             {
-              Path concated (search + "/" + path);
+              Path concated (search + "/" + included._data);
               if (concated.exists ()) {
                 included = concated;
                 break;
               }
             }
             if (!included.exists ())
-              throw format ("Could not find file in current directory or search paths '{1}'.", path);
+              throw format (
+                  "Could not find file in CWD, directory of config file or search paths '{1}'.",
+                  included._data);
           }
+          while (0);
 
           if (!included.readable ())
-            throw format ("Could not read include file '{1}'.", path);
+            throw format ("Could not read include file '{1}'.", included._data);
 
           load (included, nest + 1, search_paths);
         }

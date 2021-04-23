@@ -33,7 +33,7 @@
 
 int main (int, char**)
 {
-  UnitTest t (125);
+  UnitTest t (128);
 
   try
   {
@@ -42,8 +42,8 @@ int main (int, char**)
     t.is (p0._data, "", "Path::Path");
 
     // Path (const Path&);
-    Path p1 = Path ("foo");
-    t.is (p1._data, Directory::cwd () + "/foo", "Path::operator=");
+    Path p1 = Path ("/foo");
+    t.is (p1._data, "/foo", "Path::operator=");
 
     // Path (const std::string&);
     Path p2 ("~");
@@ -97,11 +97,16 @@ int main (int, char**)
     t.ok (p3.executable (), "/tmp executable");
 
     // static std::string expand (const std::string&);
-    t.ok (Path::expand ("~") != "~", "Path::expand ~ != ~");
-    t.ok (Path::expand ("~/") != "~/", "Path::expand ~/ != ~/");
-    t.ok (Path::expand (".") != ".", "Path::expand . != .");
-    t.ok (Path::expand ("./") != "./", "Path::expand ./ != ./");
-    t.ok (Path::expand (".a") != ".a", "Path::expand .a != .a");
+    setenv ("HOME", "/home/user", 1);
+    setenv ("FOO", "hello/world", 1);
+    t.is (Path::expand ("~"), "/home/user", "Path::expand ~");
+    t.is (Path::expand ("~/foo"), "/home/user/foo", "Path::expand ~/foo");
+    // Relative paths are kept.
+    t.is (Path::expand ("."), ".", "Path::expand . == .");
+    t.is (Path::expand ("./"), "./", "Path::expand ./ == ./");
+    t.is (Path::expand (".a"), ".a", "Path::expand .a == .a");
+    t.is (Path::expand ("./$FOO/bar"), "./hello/world/bar", "environment expanded expansion");
+    t.is (Path::expand ("~/$FOO/bar"), "/home/user/hello/world/bar", "tilde and environment expanded expansion");
 
     // static std::vector <std::string> glob (const std::string&);
     std::vector <std::string> out = Path::glob ("/tmp");
@@ -118,7 +123,8 @@ int main (int, char**)
 
     // bool is_absolute () const;
     t.notok (p0.is_absolute (), "'' !is_absolute");
-    t.ok    (p1.is_absolute (), "foo is_absolute");
+    t.ok    (p1.is_absolute (), "/foo is_absolute");
+    t.notok (Path("foo").is_absolute (), "foo !is_absolute");
     t.ok    (p2.is_absolute (), "~ is_absolute (after expansion)");
     t.ok    (p3.is_absolute (), "/tmp is_absolute");
     t.ok    (p4.is_absolute (), "/a/b/c/file.ext is_absolute");
@@ -137,7 +143,7 @@ int main (int, char**)
     t.ok (File::remove ("tmp/file.t.txt"), "File::remove tmp/file.t.txt good");
 
     // operator (std::string) const;
-    t.is ((std::string) f6, Directory::cwd () + "/tmp/file.t.txt", "File::operator (std::string) const");
+    t.is ((std::string) f6, "tmp/file.t.txt", "File::operator (std::string) const");
 
     t.ok (File::create ("tmp/file.t.create"), "File::create tmp/file.t.create good");
     t.ok (File::remove ("tmp/file.t.create"), "File::remove tmp/file.t.create good");
@@ -146,7 +152,7 @@ int main (int, char**)
     t.is (f6.name (), "file.t.txt", "File::basename tmp/file.t.txt --> file.t.txt");
 
     // dirname (std::string) const;
-    t.is (f6.parent (), Directory::cwd () + "/tmp", "File::dirname tmp/file.t.txt --> tmp");
+    t.is (f6.parent (), "tmp", "File::dirname tmp/file.t.txt --> tmp");
 
     // bool rename (const std::string&);
     File f7 ("tmp/file.t.2.txt");
@@ -154,7 +160,7 @@ int main (int, char**)
     f7.close ();
 
     t.ok (f7.rename ("tmp/file.t.3.txt"),  "File::rename did not fail");
-    t.is (f7._data, Directory::cwd () + "/tmp/file.t.3.txt",    "File::rename stored new name");
+    t.is (f7._data, "tmp/file.t.3.txt",    "File::rename stored new name");
     t.ok (f7.exists (),                    "File::rename new file exists");
     t.ok (f7.remove (),                    "File::remove tmp/file.t.3.txt good");
     t.notok (f7.exists (),                 "File::remove new file no longer exists");
@@ -201,17 +207,17 @@ int main (int, char**)
 
     // Directory (const Directory&);
     Directory d3 (d2);
-    t.is (d3._data, Directory::cwd () + "/tmp", "Directory (Directory&)");
+    t.is (d3._data, "tmp", "Directory (Directory&)");
 
     // Directory (const std::string&);
     Directory d4 ("tmp/test_directory");
 
     // Directory& operator= (const Directory&);
     Directory d5 = d4;
-    t.is (d5._data, Directory::cwd () + "/tmp/test_directory", "Directory::operator=");
+    t.is (d5._data, "tmp/test_directory", "Directory::operator=");
 
     // operator (std::string) const;
-    t.is ((std::string) d3, Directory::cwd () + "/tmp", "Directory::operator (std::string) const");
+    t.is ((std::string) d3, "tmp", "Directory::operator (std::string) const");
 
     // virtual bool create ();
     t.ok (d5.create (), "Directory::create tmp/test_directory");
@@ -227,15 +233,15 @@ int main (int, char**)
     std::vector <std::string> files = d5.list ();
     std::sort (files.begin (), files.end ());
     t.is ((int)files.size (), 2, "Directory::list 1 file");
-    t.is (files[0], Directory::cwd () + "/tmp/test_directory/dir", "file[0] is tmp/test_directory/dir");
-    t.is (files[1], Directory::cwd () + "/tmp/test_directory/f0", "file[1] is tmp/test_directory/f0");
+    t.is (files[0], "tmp/test_directory/dir", "file[0] is tmp/test_directory/dir");
+    t.is (files[1], "tmp/test_directory/f0", "file[1] is tmp/test_directory/f0");
 
     // std::vector <std::string> listRecursive ();
     files = d5.listRecursive ();
     std::sort (files.begin (), files.end ());
     t.is ((int)files.size (), 2, "Directory::list 1 file");
-    t.is (files[0], Directory::cwd () + "/tmp/test_directory/dir/f1", "file is tmp/test_directory/dir/f1");
-    t.is (files[1], Directory::cwd () + "/tmp/test_directory/f0", "file is tmp/test_directory/f0");
+    t.is (files[0], "tmp/test_directory/dir/f1", "file is tmp/test_directory/dir/f1");
+    t.is (files[1], "tmp/test_directory/f0", "file is tmp/test_directory/f0");
 
     // virtual bool remove ();
     t.ok (File::remove (d5._data + "/f0"), "File::remove tmp/test_directory/f0");

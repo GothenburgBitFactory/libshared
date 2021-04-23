@@ -132,6 +132,7 @@ std::string Path::parent () const
     auto slash = _data.rfind ('/');
     if (slash != std::string::npos)
       return _data.substr (0, slash);
+    return ".";
   }
 
   return "";
@@ -148,6 +149,21 @@ std::string Path::extension () const
   }
 
   return "";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Path::realpath () const
+{
+  if (_data.empty ())
+    return "";
+
+  char *result_c = ::realpath (_data.c_str(), NULL);
+  if (result_c == nullptr)
+    return "";
+
+  std::string result (result_c);
+  free(result_c);
+  return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -255,65 +271,81 @@ bool Path::rename (const std::string& new_name)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// ~      --> /home/user
-// ~foo/x --> /home/foo/s
-// ~/x    --> /home/foo/x
-// .      --> $PWD
-// ./x    --> $PWD/x
-// x      --> $PWD/x
+// Supported expansion:
+// - tilde       `~`    -> home directory of current user
+// - tilde       `~foo` -> home directory of user `foo`
+// - environment `$FOO` -> value of environment variable `FOO`
+//
+// Relative path is kept relative here.
+//
+// ~        --> /home/user
+// ~foo/x   --> /home/foo/s
+// ~/x      --> /home/foo/x
+// $HOME/x  --> /home/foo/x
+// ./$FOO/x --> ./<value of FOO>/x
+// ./x      --> ./x
 std::string Path::expand (const std::string& in)
 {
-  std::string copy = in;
-
-  std::string::size_type slash;
-
-  if (in.empty ())
-  { }
-
-  else if (in.front () == '~')
+  std::string result;
+  for (size_t i = 0; i < in.length (); ++i)
   {
-    const char* home = getenv ("HOME");
-    if (home == nullptr)
+    // Expand `~` only at start.
+    if (i == 0 && in.at (0) == '~')
     {
-      struct passwd* pw = getpwuid (getuid ());
-      home = pw->pw_dir;
+      auto slash = in.find ('/', 1);
+      if (slash == std::string::npos)
+        slash = in.length ();
+
+      // Convert: ~ --> /home/user
+      if (slash == 1)
+      {
+        const char* home = getenv ("HOME");
+        if (home == nullptr)
+        {
+          struct passwd* pw = getpwuid (getuid ());
+          home = pw->pw_dir;
+        }
+        result += home;
+      }
+      // Convert: ~name --> /home/name
+      else
+      {
+        std::string name = in.substr (1, slash - 1);
+        struct passwd* pw = getpwnam (name.c_str ());
+        if (pw)
+          result += pw->pw_dir;
+        else
+          result += "/home/" + name;
+      }
+
+      // Process `/` in the next loop.
+      i = slash - 1;
     }
 
-    // Convert: ~ --> /home/user
-    if (in.length () == 1)
-      copy = home;
-
-    // Convert: ~/x --> /home/user/x
-    else if (in.at (1) == '/')
-      copy = home + in.substr (1);
-
-    // Convert: ~foo/x --> /home/foo/x
-    else if ((slash = in.find ('/', 1)) != std::string::npos)
+    // Expand environment variable.
+    else if (in.at (i) == '$')
     {
-      std::string name = in.substr (1, slash - 1);
-      struct passwd* pw = getpwnam (name.c_str ());
-      if (pw)
-        copy = pw->pw_dir + in.substr (slash);
+      size_t end = i + 1;
+      while (end < in.length () && (isalnum(in.at (end)) || in.at (end) == '_'))
+        ++end;
+      if (i + 1 == end)
+        result += "$";
+      else
+      {
+        std::string name = in.substr (i + 1, end - (i + 1));
+        const char *value = getenv (name.c_str ());
+        if (value != nullptr)
+          result += value;
+      }
+      i = end - 1;
     }
-  }
 
-  // Relative paths
-  else if (in.front () != '/')
-  {
-    // Convert: ., ./ --> $PWD
-    if (in == ".")
-      copy = Directory::cwd ();
-
-    // Convert: ./x --> $PWD/x
-    else if (in.substr (0, 2) == "./")
-      copy = Directory::cwd () + in.substr (1);
-
-    // Convert: x --> $PWD/x
+    // Otherwise, keep the char.
     else
-      copy = Directory::cwd () + '/' + in;
+      result += in.at (i);
   }
 
-  return copy;
+  return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
