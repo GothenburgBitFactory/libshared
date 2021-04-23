@@ -51,6 +51,7 @@ public:
   std::string name () const;
   std::string parent () const;
   std::string extension () const;
+  std::string realpath () const;
   bool exists () const;
   bool is_directory () const;
   bool is_absolute () const;

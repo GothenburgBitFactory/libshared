@@ -97,10 +97,9 @@ int main (int, char**)
   t.is (c3.get ("baz"), "3plus", "Configuration::setIfBlank sets missing values.");
 
   // void load (const std::string&, int nest = 1, const std::vector <std::string>& search_paths = {});
-  std::string config_dir (__FILE__);
-  config_dir = config_dir.substr (0, config_dir.rfind ('/')) + "/config";
+  setenv("FOO", "2.conf", 1);
   Configuration c4;
-  c4.load (config_dir + "/1.conf", 1, { config_dir, config_dir + "/nest" });
+  c4.load ("config/1.conf", 1, { "config/nest" });
   t.is (c4.get ("hello"), "world", "Configuration::load with search paths");
 
   return 0;
