@@ -68,7 +68,7 @@ std::vector <std::string> split (const std::string& input, const char delimiter)
     start = i + 1;
   }
 
-  if (input.length ())
+  if (!input.empty ())
     results.push_back (input.substr (start));
 
   return results;

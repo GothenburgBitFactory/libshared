@@ -144,7 +144,7 @@ void Configuration::load (
       config.readable ())
   {
     std::string contents;
-    if (File::read (file, contents) && contents.length ())
+    if (File::read (file, contents) && !contents.empty ())
       parse (contents, nest, search_paths, file);
   }
 }
@@ -169,7 +169,7 @@ void Configuration::parse (
   const std::string& file_path /* = {} */)
 {
   // Shortcut case for default constructor.
-  if (input.length () == 0)
+  if (input.empty ())
     return;
 
   // Parse each line.
@@ -182,7 +182,7 @@ void Configuration::parse (
 
     // Skip empty lines.
     line = trim (line);
-    if (line.length () > 0)
+    if (!line.empty ())
     {
       auto equal = line.find ('=');
       if (equal != std::string::npos)
