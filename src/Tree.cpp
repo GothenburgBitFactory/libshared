@@ -237,20 +237,20 @@ std::string Tree::dumpNode (
     atts += a.first + "='\033[33m" + a.second + "\033[0m'";
   }
 
-  if (atts.length ())
+  if (!atts.empty ())
     out << ' ' << atts;
 
   // Dump tags.
   std::string tags;
   for (auto& tag : t->_tags)
   {
-    if (tags.length ())
+    if (!tags.empty ())
       tags += ' ';
 
     tags += "\033[32m" + tag + "\033[0m";
   }
 
-  if (tags.length ())
+  if (!tags.empty ())
     out << ' ' << tags;
   out << '\n';
 
