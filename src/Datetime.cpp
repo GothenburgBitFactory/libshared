@@ -3298,9 +3298,8 @@ void Datetime::toYMD (int& y, int& m, int& d) const
 std::string Datetime::toString (const std::string& format) const
 {
   std::stringstream formatted;
-  for (unsigned int i = 0; i < format.length (); ++i)
+  for (int c : format)
   {
-    int c = format[i];
     switch (c)
     {
     case 'm': formatted                                        << month ();               break;

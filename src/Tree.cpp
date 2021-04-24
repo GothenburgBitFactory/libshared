@@ -69,11 +69,11 @@ void Tree::removeAllBranches ()
 ////////////////////////////////////////////////////////////////////////////////
 void Tree::replaceBranch (const std::shared_ptr <Tree>& from, const std::shared_ptr <Tree>& to)
 {
-  for (unsigned int i = 0; i < _branches.size (); ++i)
+  for (auto & _branche : _branches)
   {
-    if (_branches[i] == from)
+    if (_branche == from)
     {
-      _branches[i] = to;
+      _branche = to;
       return;
     }
   }
@@ -194,11 +194,11 @@ std::shared_ptr <Tree> Tree::find (const std::string& path)
     bool found = false;
 
     // If the cursor has a branch that matches *it, proceed.
-    for (auto i = cursor->_branches.begin (); i != cursor->_branches.end (); ++i)
+    for (auto & _branche : cursor->_branches)
     {
-      if ((*i)->_name == *it)
+      if (_branche->_name == *it)
       {
-        cursor = *i;
+        cursor = _branche;
         found = true;
         break;
       }

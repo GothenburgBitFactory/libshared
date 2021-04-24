@@ -308,8 +308,8 @@ bool Duration::parse_units (Pig& pig)
   // Static and so preserved between calls.
   static std::vector <std::string> units;
   if (units.empty())
-    for (unsigned int i = 0; i < NUM_DURATIONS; i++)
-      units.push_back (durations[i].unit);
+    for (auto & duration : durations)
+      units.push_back (duration.unit);
 
   double number;
   std::string unit;
@@ -319,12 +319,12 @@ bool Duration::parse_units (Pig& pig)
     if (! unicodeLatinAlpha (following) &&
         ! unicodeLatinDigit (following))
     {
-      for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+      for (auto & duration : durations)
       {
-        if (durations[i].unit == unit &&
-            durations[i].standalone)
+        if (duration.unit == unit &&
+            duration.standalone)
         {
-          _period = static_cast <time_t> (durations[i].seconds);
+          _period = static_cast <time_t> (duration.seconds);
           return true;
         }
       }
@@ -365,11 +365,11 @@ bool Duration::parse_units (Pig& pig)
       {
         // Linear lookup - should instead be logarithmic.
         double seconds = 1;
-        for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+        for (auto & duration : durations)
         {
-          if (durations[i].unit == unit)
+          if (duration.unit == unit)
           {
-            seconds = durations[i].seconds;
+            seconds = duration.seconds;
             _period = static_cast <time_t> (number * static_cast <double> (seconds));
             return true;
           }

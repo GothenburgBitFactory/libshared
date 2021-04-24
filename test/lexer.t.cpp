@@ -239,33 +239,33 @@ int main (int, char**)
   };
   #define NUM_TESTS (sizeof (lexerTests) / sizeof (lexerTests[0]))
 
-  for (unsigned int i = 0; i < NUM_TESTS; i++)
+  for (auto & lexerTest : lexerTests)
   {
     // The isolated test puts the input string directly into the Lexer.
-    Lexer isolated (lexerTests[i].input);
+    Lexer isolated (lexerTest.input);
 
     for (int j = 0; j < 5; j++)
     {
-      if (lexerTests[i].results[j].token[0])
+      if (lexerTest.results[j].token[0])
       {
         // Isolated: "<token>"
         t.ok (isolated.token (token, type),                  "Isolated Lexer::token(...) --> true");
-        t.is (token, lexerTests[i].results[j].token,         "  token --> " + token);
-        t.is ((int)type, (int)lexerTests[i].results[j].type, "  type --> Lexer::Type::" + Lexer::typeToString (type));
+        t.is (token, lexerTest.results[j].token,         "  token --> " + token);
+        t.is ((int)type, (int)lexerTest.results[j].type, "  type --> Lexer::Type::" + Lexer::typeToString (type));
       }
     }
 
     // The embedded test surrounds the input string with a space.
-    Lexer embedded (std::string (" ") + lexerTests[i].input + " ");
+    Lexer embedded (std::string (" ") + lexerTest.input + " ");
 
     for (int j = 0; j < 5; j++)
     {
-      if (lexerTests[i].results[j].token[0])
+      if (lexerTest.results[j].token[0])
       {
         // Embedded: "<token>"
         t.ok (embedded.token (token, type),                  "Embedded Lexer::token(...) --> true");
-        t.is (token, lexerTests[i].results[j].token,         "  token --> " + token);
-        t.is ((int)type, (int)lexerTests[i].results[j].type, "  type --> Lexer::Type::" + Lexer::typeToString (type));
+        t.is (token, lexerTest.results[j].token,         "  token --> " + token);
+        t.is ((int)type, (int)lexerTest.results[j].type, "  type --> Lexer::Type::" + Lexer::typeToString (type));
       }
     }
   }
