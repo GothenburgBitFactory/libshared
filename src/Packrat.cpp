@@ -750,14 +750,14 @@ std::string Packrat::dump () const
   out << "Packrat Parse "
       << _tree->dump ();
 
-  if (_entities.size ())
+  if (!_entities.empty())
   {
     out << "  Entities\n";
     for (const auto& entity : _entities)
       out << "    " << entity.first << ':' << entity.second << '\n';
   }
 
-  if (_externals.size ())
+  if (!_externals.empty())
   {
     out << "  Externals\n";
     for (const auto& external : _externals)
