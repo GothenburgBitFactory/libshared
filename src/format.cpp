@@ -41,20 +41,20 @@
 #include <cmath>
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string format (std::string& value)
+std::string format (std::string& value)
 {
   return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string format (const char* value)
+std::string format (const char* value)
 {
   std::string s (value);
   return s;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string formatHex (int value)
+std::string formatHex (int value)
 {
   std::stringstream s;
   s.setf (std::ios::hex, std::ios::basefield);
@@ -63,7 +63,7 @@ const std::string formatHex (int value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string format (float value, int width, int precision)
+std::string format (float value, int width, int precision)
 {
   std::stringstream s;
   s.width (width);
@@ -82,7 +82,7 @@ const std::string format (float value, int width, int precision)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string format (double value, int width, int precision)
+std::string format (double value, int width, int precision)
 {
   std::stringstream s;
   s.width (width);
@@ -101,7 +101,7 @@ const std::string format (double value, int width, int precision)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string format (double value)
+std::string format (double value)
 {
   std::stringstream s;
   s << std::fixed << value;

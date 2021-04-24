@@ -268,7 +268,7 @@ unsigned int utf8_text_width (const std::string& str)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string utf8_substr (
+std::string utf8_substr (
   const std::string& input,
   unsigned int start,
   unsigned int length /* = 0 */)
