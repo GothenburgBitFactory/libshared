@@ -93,7 +93,7 @@ Path& Path::operator= (const Path& other)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Path::operator== (const Path& other)
+bool Path::operator== (const Path& other) const
 {
   return _data == other._data;
 }

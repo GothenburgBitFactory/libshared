@@ -49,8 +49,8 @@ private:
   bool matchTokenLookahead (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
   bool matchToken          (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
   bool matchIntrinsic      (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
-  bool matchCharLiteral    (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
-  bool matchStringLiteral  (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchCharLiteral    (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int) const;
+  bool matchStringLiteral  (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int) const;
 
   bool canonicalize (std::string&, const std::string&, const std::string&) const;
 

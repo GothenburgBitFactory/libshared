@@ -98,11 +98,11 @@ public:
   bool sameMonth   (const Datetime&) const;
   bool sameQuarter (const Datetime&) const;
   bool sameYear    (const Datetime&) const;
-  Datetime operator+  (const int);
-  Datetime operator-  (const int);
+  Datetime operator+  (const int) const;
+  Datetime operator-  (const int) const;
   Datetime& operator+= (const int);
   Datetime& operator-= (const int);
-  time_t operator- (const Datetime&);
+  time_t operator- (const Datetime&) const;
   void operator--  ();    // Prefix
   void operator--  (int); // Postfix
   void operator++  ();    // Prefix
@@ -194,7 +194,7 @@ private:
 
   bool isOrdinal (const std::string&, int&);
 
-  bool validate ();
+  bool validate () const;
   void resolve ();
 
 public:

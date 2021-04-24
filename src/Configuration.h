@@ -59,7 +59,7 @@ public:
 
   std::string file () const;
 
-  bool dirty ();
+  bool dirty () const;
 
 private:
   File _original_file {};
