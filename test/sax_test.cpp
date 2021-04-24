@@ -33,17 +33,17 @@
 class EventSink : public json::SAX::Sink
 {
 public:
-  void eventObjectStart ()                         { std::cout << "# object start\n";                                 }
-  void eventObjectEnd (int count)                  { std::cout << "# object end (" << count << " items)\n";           }
-  void eventArrayStart ()                          { std::cout << "# array start\n";                                  }
-  void eventArrayEnd (int count)                   { std::cout << "# array end (" << count << " items)\n";            }
-  void eventName (const std::string& value)        { std::cout << "# name '" << value << "'\n";                       }
-  void eventValueNull ()                           { std::cout << "# value 'null'\n";                                 }
-  void eventValueBool (bool value)                 { std::cout << "# value '" << (value ? "true" : "false") << "'\n"; }
-  void eventValueInt (int64_t value)               { std::cout << "# value '" << value << "'\n";                      }
-  void eventValueUint (uint64_t value)             { std::cout << "# value '" << value << "'\n";                      }
-  void eventValueDouble (double value)             { std::cout << "# value '" << value << "'\n";                      }
-  void eventValueString (const std::string& value) { std::cout << "# value '" << value << "'\n";                      }
+  void eventObjectStart () override                         { std::cout << "# object start\n";                                 }
+  void eventObjectEnd (int count) override                  { std::cout << "# object end (" << count << " items)\n";           }
+  void eventArrayStart () override                          { std::cout << "# array start\n";                                  }
+  void eventArrayEnd (int count) override                   { std::cout << "# array end (" << count << " items)\n";            }
+  void eventName (const std::string& value) override        { std::cout << "# name '" << value << "'\n";                       }
+  void eventValueNull () override                           { std::cout << "# value 'null'\n";                                 }
+  void eventValueBool (bool value) override                 { std::cout << "# value '" << (value ? "true" : "false") << "'\n"; }
+  void eventValueInt (int64_t value) override               { std::cout << "# value '" << value << "'\n";                      }
+  void eventValueUint (uint64_t value) override             { std::cout << "# value '" << value << "'\n";                      }
+  void eventValueDouble (double value) override             { std::cout << "# value '" << value << "'\n";                      }
+  void eventValueString (const std::string& value) override { std::cout << "# value '" << value << "'\n";                      }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
