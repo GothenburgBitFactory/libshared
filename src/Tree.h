@@ -37,10 +37,10 @@ class Tree;
 class Tree
 {
 public:
-  void addBranch (std::shared_ptr <Tree>);
-  void removeBranch (std::shared_ptr <Tree>);
+  void addBranch (const std::shared_ptr <Tree>&);
+  void removeBranch (const std::shared_ptr <Tree>&);
   void removeAllBranches ();
-  void replaceBranch (std::shared_ptr <Tree>, std::shared_ptr <Tree>);
+  void replaceBranch (const std::shared_ptr <Tree>&, const std::shared_ptr <Tree>&);
 
   void attribute (const std::string&, const std::string&);
   void attribute (const std::string&, const int);
@@ -62,7 +62,7 @@ public:
   std::string dump () const;
 
 private:
-  std::string dumpNode (const std::shared_ptr <Tree>, int) const;
+  std::string dumpNode (const std::shared_ptr <Tree>&, int) const;
 
 public:
   std::string                          _name       {"Unknown"};  // Name.
