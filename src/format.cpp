@@ -277,19 +277,19 @@ std::string printable (const std::string& input)
   // Sanitize 'message'.
   std::string sanitized = input;
   std::string::size_type bad;
-  while ((bad = sanitized.find ("\r")) != std::string::npos)
+  while ((bad = sanitized.find ('\r')) != std::string::npos)
     sanitized.replace (bad, 1, "\\r");
 
-  while ((bad = sanitized.find ("\n")) != std::string::npos)
+  while ((bad = sanitized.find ('\n')) != std::string::npos)
     sanitized.replace (bad, 1, "\\n");
 
-  while ((bad = sanitized.find ("\f")) != std::string::npos)
+  while ((bad = sanitized.find ('\f')) != std::string::npos)
     sanitized.replace (bad, 1, "\\f");
 
-  while ((bad = sanitized.find ("\t")) != std::string::npos)
+  while ((bad = sanitized.find ('\t')) != std::string::npos)
     sanitized.replace (bad, 1, "\\t");
 
-  while ((bad = sanitized.find ("\v")) != std::string::npos)
+  while ((bad = sanitized.find ('\v')) != std::string::npos)
     sanitized.replace (bad, 1, "\\v");
 
   return sanitized;

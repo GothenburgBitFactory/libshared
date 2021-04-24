@@ -222,7 +222,7 @@ std::string Table::render ()
     out += extra;
 
     // Trim right.
-    out.erase (out.find_last_not_of (" ") + 1);
+    out.erase (out.find_last_not_of (' ') + 1);
     out += '\n';
 
     // Stop if the line limit is exceeded.
@@ -304,7 +304,7 @@ std::string Table::render ()
       out += (oddness ? extra_odd : extra_even);
 
       // Trim right.
-      out.erase (out.find_last_not_of (" ") + 1);
+      out.erase (out.find_last_not_of (' ') + 1);
       out += '\n';
 
       // Stop if the line limit is exceeded.
