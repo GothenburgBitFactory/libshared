@@ -647,9 +647,9 @@ std::string Color::fg () const
   }
   else
   {
-    for (unsigned int i = 0; i < NUM_COLORS; ++i)
-      if (allColors[i].index == index)
-        return allColors[i].english_name;
+    for (auto & allColor : allColors)
+      if (allColor.index == index)
+        return allColor.english_name;
   }
 
   return "";
@@ -671,9 +671,9 @@ std::string Color::bg () const
   }
   else
   {
-    for (unsigned int i = 0; i < NUM_COLORS; ++i)
-      if (allColors[i].index == index)
-        return allColors[i].english_name;
+    for (auto & allColor : allColors)
+      if (allColor.index == index)
+        return allColor.english_name;
   }
 
   return "";
