@@ -105,19 +105,19 @@ std::stringstream combined;
 class EventSink : public json::SAX::Sink
 {
 public:
-  void eventDocStart ()                            { combined << "<doc>";                            }
-  void eventDocEnd ()                              { combined << "</doc>";                           }
-  void eventObjectStart ()                         { combined << "<object>";                         }
-  void eventObjectEnd (int)                        { combined << "</object>";                        }
-  void eventArrayStart ()                          { combined << "<array>";                          }
-  void eventArrayEnd (int)                         { combined << "</array>";                         }
-  void eventName (const std::string& value)        { combined << "<name>"   << value << "</name>";   }
-  void eventValueNull ()                           { combined << "<null />";                         }
-  void eventValueBool (bool value)                 { combined << "<bool>"   << value << "</bool>";   }
-  void eventValueInt (int64_t value)               { combined << "<int>"    << value << "</int>";    }
-  void eventValueUint (uint64_t value)             { combined << "<uint>"   << value << "</uint>";   }
-  void eventValueDouble (double value)             { combined << "<double>" << value << "</double>"; }
-  void eventValueString (const std::string& value) { combined << "<string>" << value << "</string>"; }
+  void eventDocStart () override                            { combined << "<doc>";                            }
+  void eventDocEnd () override                              { combined << "</doc>";                           }
+  void eventObjectStart () override                         { combined << "<object>";                         }
+  void eventObjectEnd (int) override                        { combined << "</object>";                        }
+  void eventArrayStart () override                          { combined << "<array>";                          }
+  void eventArrayEnd (int) override                         { combined << "</array>";                         }
+  void eventName (const std::string& value) override        { combined << "<name>"   << value << "</name>";   }
+  void eventValueNull () override                           { combined << "<null />";                         }
+  void eventValueBool (bool value) override                 { combined << "<bool>"   << value << "</bool>";   }
+  void eventValueInt (int64_t value) override               { combined << "<int>"    << value << "</int>";    }
+  void eventValueUint (uint64_t value) override             { combined << "<uint>"   << value << "</uint>";   }
+  void eventValueDouble (double value) override             { combined << "<double>" << value << "</double>"; }
+  void eventValueString (const std::string& value) override { combined << "<string>" << value << "</string>"; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
