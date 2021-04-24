@@ -103,7 +103,7 @@ json::string* json::string::parse (Pig& pig)
   std::string value;
   if (pig.getQuoted ('"', value))
   {
-    json::string* s = new json::string ();
+    auto s = new json::string ();
     s->_data = value;
     return s;
   }
@@ -129,7 +129,7 @@ json::number* json::number::parse (Pig& pig)
   double d;
   if (pig.getNumber (d))
   {
-    json::number* s = new json::number ();
+    auto s = new json::number ();
     s->_dvalue = d;
     return s;
   }
@@ -160,19 +160,19 @@ json::literal* json::literal::parse (Pig& pig)
 {
   if (pig.skipLiteral ("null"))
   {
-    json::literal* s = new json::literal ();
+    auto s = new json::literal ();
     s->_lvalue = nullvalue;
     return s;
   }
   else if (pig.skipLiteral ("false"))
   {
-    json::literal* s = new json::literal ();
+    auto s = new json::literal ();
     s->_lvalue = falsevalue;
     return s;
   }
   else if (pig.skipLiteral ("true"))
   {
-    json::literal* s = new json::literal ();
+    auto s = new json::literal ();
     s->_lvalue = truevalue;
     return s;
   }
@@ -211,7 +211,7 @@ json::array* json::array::parse (Pig& pig)
   {
     pig.skipWS ();
 
-    json::array* arr = new json::array ();
+    auto arr = new json::array ();
 
     json::value* value;
     if ((value = json::value::parse (pig)))
@@ -289,7 +289,7 @@ json::object* json::object::parse (Pig& pig)
   {
     pig.skipWS ();
 
-    json::object* obj = new json::object ();
+    auto obj = new json::object ();
 
     std::string name;
     json::value* value;
