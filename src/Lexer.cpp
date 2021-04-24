@@ -88,7 +88,7 @@ std::vector <std::tuple <std::string, Lexer::Type>> Lexer::tokenize (const std::
 
 ////////////////////////////////////////////////////////////////////////////////
 // No L10N - these are for internal purposes.
-const std::string Lexer::typeName (const Lexer::Type& type)
+std::string Lexer::typeName (const Lexer::Type& type)
 {
   switch (type)
   {

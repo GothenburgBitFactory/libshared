@@ -396,7 +396,7 @@ void Duration::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Duration::format () const
+std::string Duration::format () const
 {
   if (_period)
   {
@@ -425,7 +425,7 @@ const std::string Duration::format () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Duration::formatHours () const
+std::string Duration::formatHours () const
 {
   if (_period)
   {
@@ -450,7 +450,7 @@ const std::string Duration::formatHours () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Duration::formatISO () const
+std::string Duration::formatISO () const
 {
   if (_period)
   {
@@ -491,7 +491,7 @@ const std::string Duration::formatISO () const
 // >= 1min    {n}min
 //            {n}s
 //
-const std::string Duration::formatVague (bool padding) const
+std::string Duration::formatVague (bool padding) const
 {
   float days = (float) _period / 86400.0;
 

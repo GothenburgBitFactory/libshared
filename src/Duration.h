@@ -50,10 +50,10 @@ public:
   bool parse_designated (Pig&);
   bool parse_weeks (Pig&);
   bool parse_units (Pig&);
-  const std::string format () const;
-  const std::string formatHours () const;
-  const std::string formatISO () const;
-  const std::string formatVague (bool padding = false) const;
+  std::string format () const;
+  std::string formatHours () const;
+  std::string formatISO () const;
+  std::string formatVague (bool padding = false) const;
 
   int days () const;
   int hours () const;
