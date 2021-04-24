@@ -541,7 +541,7 @@ bool Pig::getQuoted (int quote, std::string& result)
       while (j >= start && (*_text)[j] == '\\')
       {
         // Toggle flag for each further backslash encountered.
-        is_escaped_quote = is_escaped_quote ? false : true;
+        is_escaped_quote = !is_escaped_quote;
         --j;
       }
 
@@ -593,11 +593,7 @@ bool Pig::getHMS (int& hours, int& minutes, int& seconds)
       getDigit2 (minutes))
   {
     seconds = 0;
-    if (skip (':') &&
-        ! getDigit2 (seconds))
-      return false;
-
-    return true;
+    return !(skip (':') && !getDigit2 (seconds));
   }
 
   _cursor = save;

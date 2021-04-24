@@ -101,7 +101,7 @@ bool RX::match (const std::string& in)
   if (! _compiled)
     compile ();
 
-  return regexec (&_regex, in.c_str (), 0, nullptr, 0) == 0 ? true : false;
+  return regexec (&_regex, in.c_str (), 0, nullptr, 0) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ bool RX::match (
       ++offset;
   }
 
-  return !matches.empty() ? true : false;
+  return !matches.empty();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ bool RX::match (
       ++offset;
   }
 
-  return !start.empty() ? true : false;
+  return !start.empty();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

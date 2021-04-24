@@ -59,20 +59,17 @@ bool Lexer::token (std::string& token, Lexer::Type& type)
   if (isEOS ())
     return false;
 
-  if (isString    (token, type, "'\"") ||
-      isUUID      (token, type, true)  ||
-      isDate      (token, type)        ||
-      isDuration  (token, type)        ||
-      isURL       (token, type)        ||
-      isHexNumber (token, type)        ||
-      isNumber    (token, type)        ||
-      isPath      (token, type)        ||
-      isPattern   (token, type)        ||
-      isOperator  (token, type)        ||
-      isWord      (token, type))
-    return true;
-
-  return false;
+  return isString    (token, type, "'\"") ||
+         isUUID      (token, type, true)  ||
+         isDate      (token, type)        ||
+         isDuration  (token, type)        ||
+         isURL       (token, type)        ||
+         isHexNumber (token, type)        ||
+         isNumber    (token, type)        ||
+         isPath      (token, type)        ||
+         isPattern   (token, type)        ||
+         isOperator  (token, type)        ||
+         isWord      (token, type);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -314,10 +311,7 @@ std::string Lexer::dequote (const std::string& input, const std::string& quotes)
 // escapes, to get them past the shell.
 bool Lexer::wasQuoted (const std::string& input)
 {
-  if (input.find_first_of (" \t()<>&~") != std::string::npos)
-    return true;
-
-  return false;
+  return input.find_first_of (" \t()<>&~") != std::string::npos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -937,7 +931,7 @@ bool Lexer::readWord (
     prev = c;
   }
 
-  return word.length () > 0 ? true : false;
+  return word.length () > 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
