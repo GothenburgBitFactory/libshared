@@ -32,12 +32,12 @@
 #include <string>
 #include <vector>
 
-const std::string format (std::string&);
-const std::string format (const char*);
-const std::string formatHex (int);
-const std::string format (float, int, int);
-const std::string format (double, int, int);
-const std::string format (double);
+std::string format (std::string&);
+std::string format (const char*);
+std::string formatHex (int);
+std::string format (float, int, int);
+std::string format (double, int, int);
+std::string format (double);
 
 void replace_positional (std::string&, const std::string&, const std::string&);
 

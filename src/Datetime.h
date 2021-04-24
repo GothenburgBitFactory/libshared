@@ -53,7 +53,7 @@ public:
   std::string toISOLocalExtended () const;
   double toJulian () const;
   void toYMD (int&, int&, int&) const;
-  const std::string toString (const std::string& format = "Y-M-D") const;
+  std::string toString (const std::string& format = "Y-M-D") const;
 
   Datetime startOfDay () const;
   Datetime startOfWeek () const;
