@@ -730,7 +730,7 @@ int execute (
     for (unsigned int i = 0; i < args.size (); ++i)
       argv[i+1] = (char*) args[i].c_str ();
 
-    argv[args.size () + 1] = NULL;
+    argv[args.size () + 1] = nullptr;
     int rc = execvp (executable.c_str (), argv);
     std::cerr << "Failed to execute '" << executable << "' Error: " << strerror (errno) << '\n';
     _exit (rc);
@@ -766,7 +766,7 @@ int execute (
     tv.tv_sec = 5;
     tv.tv_usec = 0;
 
-    select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, NULL, &tv);
+    select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, nullptr, &tv);
 
     if (select_retval == -1)
       throw std::string (std::strerror (errno));

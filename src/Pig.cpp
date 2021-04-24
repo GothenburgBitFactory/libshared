@@ -241,7 +241,7 @@ bool Pig::getDigit2 (int& result)
   {
     if (unicodeLatinDigit ((*_text)[_cursor + 1]))
     {
-      result = strtoimax (_text->substr (_cursor, 2).c_str (), NULL, 10);
+      result = strtoimax (_text->substr (_cursor, 2).c_str (), nullptr, 10);
       _cursor += 2;
       return true;
     }
@@ -259,7 +259,7 @@ bool Pig::getDigit3 (int& result)
     {
       if (unicodeLatinDigit ((*_text)[_cursor + 2]))
       {
-        result = strtoimax (_text->substr (_cursor, 3).c_str (), NULL, 10);
+        result = strtoimax (_text->substr (_cursor, 3).c_str (), nullptr, 10);
         _cursor += 3;
         return true;
       }
@@ -280,7 +280,7 @@ bool Pig::getDigit4 (int& result)
       {
         if (unicodeLatinDigit ((*_text)[_cursor + 3]))
         {
-          result = strtoimax (_text->substr (_cursor, 4).c_str (), NULL, 10);
+          result = strtoimax (_text->substr (_cursor, 4).c_str (), nullptr, 10);
           _cursor += 4;
           return true;
         }
@@ -324,7 +324,7 @@ bool Pig::getDigits (long long& result)
 
   if (_cursor > save)
   {
-    result = strtoimax (_text->substr (save, _cursor - save).c_str (), NULL, 10);
+    result = strtoimax (_text->substr (save, _cursor - save).c_str (), nullptr, 10);
     return true;
   }
 
@@ -446,7 +446,7 @@ bool Pig::getNumber (double& result)
   std::string s;
   if (getNumber (s))
   {
-    result = std::strtod (s.c_str (), NULL);
+    result = std::strtod (s.c_str (), nullptr);
     return true;
   }
 
@@ -496,7 +496,7 @@ bool Pig::getDecimal (double& result)
   std::string s;
   if (getDecimal (s))
   {
-    result = std::strtod (s.c_str (), NULL);
+    result = std::strtod (s.c_str (), nullptr);
     return true;
   }
 
