@@ -79,7 +79,7 @@ void Packrat::entity (const std::string& category, const std::string& name)
 ////////////////////////////////////////////////////////////////////////////////
 void Packrat::external (
   const std::string& rule,
-  bool (*fn)(Pig&, std::shared_ptr <Tree>))
+  bool (*fn)(Pig&, const std::shared_ptr <Tree>&))
 {
   if (_externals.find (rule) != _externals.end ())
     throw format ("There is already an external parser defined for rule '{1}'.", rule);

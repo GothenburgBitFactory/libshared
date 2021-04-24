@@ -33,7 +33,7 @@
 #include <Tree.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-bool externalParser (Pig& pig, std::shared_ptr <Tree> branch)
+bool externalParser (Pig& pig, const std::shared_ptr <Tree>& branch)
 {
   if (pig.skipLiteral ("foo"))
   {
