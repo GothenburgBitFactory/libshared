@@ -150,7 +150,7 @@ int main (int, char**)
 */
 
   // std::vector <std::string> split (const std::string& input, const char delimiter)
-  std::string unsplit = "";
+  std::string unsplit;
   std::vector <std::string> items = split (unsplit, '-');
   t.is (items.size (), (size_t) 0, "split '' '-' -> 0 items");
 
