@@ -3098,17 +3098,14 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 bool Datetime::validate ()
 {
   // _year;
-  if ((_year    && (_year    <   1900 || _year    >                                  9999)) ||
-      (_month   && (_month   <      1 || _month   >                                    12)) ||
-      (_week    && (_week    <      1 || _week    >                                    53)) ||
-      (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
-      (_julian  && (_julian  <      1 || _julian  >          Datetime::daysInYear (_year))) ||
-      (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_year, _month))) ||
-      (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
-      (_offset  && (_offset  < -86400 || _offset  >                                 86400)))
-    return false;
-
-  return true;
+  return !((_year    && (_year    <   1900 || _year    >                                  9999)) ||
+           (_month   && (_month   <      1 || _month   >                                    12)) ||
+           (_week    && (_week    <      1 || _week    >                                    53)) ||
+           (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
+           (_julian  && (_julian  <      1 || _julian  >          Datetime::daysInYear (_year))) ||
+           (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_year, _month))) ||
+           (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
+           (_offset  && (_offset  < -86400 || _offset  >                                 86400)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

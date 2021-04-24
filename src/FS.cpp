@@ -169,7 +169,7 @@ std::string Path::realpath () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::exists () const
 {
-  return access (_data.c_str (), F_OK) ? false : true;
+  return access (_data.c_str (), F_OK) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,10 +190,7 @@ bool Path::is_directory () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_absolute () const
 {
-  if (!_data.empty () && _data[0] == '/')
-    return true;
-
-  return false;
+  return !_data.empty () && _data[0] == '/';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +218,7 @@ bool Path::readable () const
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
-  return status ? false : true;
+  return status == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +233,7 @@ bool Path::writable () const
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
-  return status ? false : true;
+  return status == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +248,7 @@ bool Path::executable () const
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
-  return status ? false : true;
+  return status == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -441,7 +438,7 @@ bool File::create (int mode /* = 0640 */)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove () const
 {
-  return unlink (_data.c_str ()) == 0 ? true : false;
+  return unlink (_data.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -863,7 +860,7 @@ bool File::write (
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove (const std::string& name)
 {
-  return unlink (expand (name).c_str ()) == 0 ? true : false;
+  return unlink (expand (name).c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -995,7 +992,7 @@ bool Directory::remove_directory (const std::string& dir) const
     closedir (dp);
   }
 
-  return rmdir (dir.c_str ()) ? false : true;
+  return rmdir (dir.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1055,7 +1052,7 @@ bool Directory::up ()
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::cd () const
 {
-  return chdir (_data.c_str ()) == 0 ? true : false;
+  return chdir (_data.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

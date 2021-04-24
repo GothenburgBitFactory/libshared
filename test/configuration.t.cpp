@@ -59,11 +59,11 @@ int main (int, char**)
   c1.set ("boolean3", "y");
   c1.set ("boolean4", "yes");
   c1.set ("boolean5", "on");
-  t.ok (c1.getBoolean ("boolean1") == true,    "Configuration 'boolean1' --> true");
-  t.ok (c1.getBoolean ("boolean2") == true,    "Configuration 'boolean2' --> true");
-  t.ok (c1.getBoolean ("boolean3") == true,    "Configuration 'boolean3' --> true");
-  t.ok (c1.getBoolean ("boolean4") == true,    "Configuration 'boolean4' --> true");
-  t.ok (c1.getBoolean ("boolean5") == true,    "Configuration 'boolean5' --> true");
+  t.ok (c1.getBoolean ("boolean1"),    "Configuration 'boolean1' --> true");
+  t.ok (c1.getBoolean ("boolean2"),    "Configuration 'boolean2' --> true");
+  t.ok (c1.getBoolean ("boolean3"),    "Configuration 'boolean3' --> true");
+  t.ok (c1.getBoolean ("boolean4"),    "Configuration 'boolean4' --> true");
+  t.ok (c1.getBoolean ("boolean5"),    "Configuration 'boolean5' --> true");
 
   // void parse (const std::string&, int nest = 1, const std::vector <std::string>& search_paths = {});
   Configuration c2;
@@ -76,7 +76,7 @@ int main (int, char**)
             "\n"
             " \t foo\t=     bar   # Comment\n");
   t.ok (c2.getInteger ("integer") == 1,       "Configuration 'integer' --> 1");
-  t.ok (c2.getBoolean ("boolean") == true,    "Configuration 'boolean' --> true");
+  t.ok (c2.getBoolean ("boolean"),            "Configuration 'boolean' --> true");
   t.ok (c2.getReal    ("real")    == 3.14,    "Configuration 'real' --> 3.14");
   t.ok (c2.get        ("string")  == "hello", "Configuration 'string' --> 'hello'");
   t.is (c2.get        ("foo"),       "bar",   "Configuration 'foo' --> 'bar'");
