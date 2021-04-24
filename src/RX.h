@@ -35,7 +35,7 @@ class RX
 {
 public:
   RX ();
-  RX (const std::string&, bool caseSensitive = true);
+  RX (const std::string&, bool case_sensitive = true);
   RX (const RX&);
   ~RX ();
   RX& operator= (const RX&);
