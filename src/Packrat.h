@@ -37,7 +37,7 @@ class Packrat
 public:
   void parse (const PEG&, const std::string&);
   void entity (const std::string&, const std::string&);
-  void external (const std::string&, bool (*)(Pig&, std::shared_ptr <Tree>));
+  void external (const std::string&, bool (*)(Pig&, const std::shared_ptr <Tree>&));
 
   void debug ();
   std::string dump () const;
@@ -62,7 +62,7 @@ private:
   std::map <std::string, PEG::Rule>                              _syntax   {};
   std::shared_ptr <Tree>                                         _tree     {std::make_shared <Tree> ()};
   std::multimap <std::string, std::string>                       _entities {};
-  std::map <std::string, bool (*)(Pig&, std::shared_ptr <Tree>)> _externals {};
+  std::map <std::string, bool (*)(Pig&, const std::shared_ptr <Tree>&)> _externals {};
 };
 
 #endif
