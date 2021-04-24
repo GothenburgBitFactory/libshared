@@ -39,7 +39,7 @@
 //  - The destructor will delete all branches recursively.
 //  - Tree::enumerate is a snapshot, and is invalidated by modification.
 //  - Branch sequence is preserved.
-void Tree::addBranch (std::shared_ptr <Tree> branch)
+void Tree::addBranch (const std::shared_ptr <Tree>& branch)
 {
   if (! branch)
     throw "Failed to allocate memory for parse tree.";
@@ -48,7 +48,7 @@ void Tree::addBranch (std::shared_ptr <Tree> branch)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Tree::removeBranch (std::shared_ptr <Tree> branch)
+void Tree::removeBranch (const std::shared_ptr <Tree>& branch)
 {
   for (auto i = _branches.begin (); i != _branches.end (); ++i)
   {
@@ -67,7 +67,7 @@ void Tree::removeAllBranches ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Tree::replaceBranch (std::shared_ptr <Tree> from, std::shared_ptr <Tree> to)
+void Tree::replaceBranch (const std::shared_ptr <Tree>& from, const std::shared_ptr <Tree>& to)
 {
   for (unsigned int i = 0; i < _branches.size (); ++i)
   {
@@ -213,7 +213,7 @@ std::shared_ptr <Tree> Tree::find (const std::string& path)
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Tree::dumpNode (
-  const std::shared_ptr <Tree> t,
+  const std::shared_ptr <Tree>& t,
   int depth) const
 {
   std::stringstream out;
