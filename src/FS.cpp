@@ -114,7 +114,7 @@ Path::operator std::string () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Path::name () const
 {
-  if (_data.length ())
+  if (!_data.empty ())
   {
     auto slash = _data.rfind ('/');
     if (slash != std::string::npos)
@@ -127,7 +127,7 @@ std::string Path::name () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Path::parent () const
 {
-  if (_data.length ())
+  if (!_data.empty ())
   {
     auto slash = _data.rfind ('/');
     if (slash != std::string::npos)
@@ -141,7 +141,7 @@ std::string Path::parent () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Path::extension () const
 {
-  if (_data.length ())
+  if (!_data.empty ())
   {
     auto dot = _data.rfind ('.');
     if (dot != std::string::npos)
@@ -190,7 +190,7 @@ bool Path::is_directory () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_absolute () const
 {
-  if (_data.length () && _data[0] == '/')
+  if (!_data.empty () && _data[0] == '/')
     return true;
 
   return false;
