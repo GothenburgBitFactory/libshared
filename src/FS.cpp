@@ -460,7 +460,7 @@ std::string File::removeBOM (const std::string& input)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::open ()
 {
-  if (_data != "")
+  if (!_data.empty())
   {
     if (! _fh)
     {
