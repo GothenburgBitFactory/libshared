@@ -92,7 +92,7 @@ void Packrat::external (
 bool Packrat::matchRule (
   const std::string& rule,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -111,7 +111,7 @@ bool Packrat::matchRule (
 bool Packrat::matchProduction (
   const PEG::Production& production,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -134,7 +134,7 @@ bool Packrat::matchProduction (
 
   // On success transfer all sub-branches.
   for (auto& b : collector->_branches)
-    for (auto sub : b->_branches)
+    for (const auto& sub : b->_branches)
       parseTree->addBranch (sub);
 
   return true;
@@ -145,7 +145,7 @@ bool Packrat::matchProduction (
 bool Packrat::matchTokenQuant (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -216,7 +216,7 @@ bool Packrat::matchTokenQuant (
 bool Packrat::matchTokenLookahead (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -255,7 +255,7 @@ bool Packrat::matchTokenLookahead (
 bool Packrat::matchToken (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -314,7 +314,7 @@ bool Packrat::matchToken (
 bool Packrat::matchIntrinsic (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -638,7 +638,7 @@ bool Packrat::matchIntrinsic (
 bool Packrat::matchCharLiteral (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -677,7 +677,7 @@ bool Packrat::matchCharLiteral (
 bool Packrat::matchStringLiteral (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
