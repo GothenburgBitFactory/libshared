@@ -38,8 +38,7 @@ RX::RX ()
 RX::RX (
   const std::string& pattern,
   bool case_sensitive /* = true */)
-: _compiled (false)
-, _pattern (pattern)
+: _pattern (pattern)
 , _case_sensitive (case_sensitive)
 {
   compile ();
