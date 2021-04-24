@@ -43,6 +43,7 @@ public:
   bool skipPartial (const std::string&, std::string&, bool ignore_case = false);
 
   bool getUntil (int, std::string&);
+  bool getUntilAscii (char, std::string&);
   bool getUntilWS (std::string&);
   bool getCharacter (int&);
   bool getDigit (int&);
