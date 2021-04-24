@@ -126,7 +126,7 @@ bool RX::match (
       ++offset;
   }
 
-  return matches.size () ? true : false;
+  return !matches.empty() ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ bool RX::match (
       ++offset;
   }
 
-  return start.size () ? true : false;
+  return !start.empty() ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -43,17 +43,17 @@ int main (int, char**)
   t.is (rules["thing"][0][0]._token,  "a",                                  "negative: thing: a");
   t.ok (rules["thing"][0][0]._quantifier == PEG::Token::Quantifier::one,    "negative: thing: a quantifier one");
   t.ok (rules["thing"][0][0]._lookahead == PEG::Token::Lookahead::none,     "negative: thing: a lookahead none");
-  t.ok (rules["thing"][0][0]._tags == std::set <std::string> {},            "negative: thing: a tags {}");
+  t.ok (rules["thing"][0][0]._tags.empty(),                                 "negative: thing: a tags {}");
 
   t.is (rules["thing"][0][1]._token,  "b",                                  "negative: thing: b");
   t.ok (rules["thing"][0][1]._quantifier == PEG::Token::Quantifier::one,    "negative: thing: b quantifier one");
   t.ok (rules["thing"][0][1]._lookahead == PEG::Token::Lookahead::negative, "negative: thing: b lookahead negative");
-  t.ok (rules["thing"][0][1]._tags == std::set <std::string> {},            "negative: thing: b tags {}");
+  t.ok (rules["thing"][0][1]._tags.empty(),                                 "negative: thing: b tags {}");
 
   t.is (rules["thing"][0][2]._token,  "c",                                  "negative: thing: c");
   t.ok (rules["thing"][0][2]._quantifier == PEG::Token::Quantifier::one,    "negative: thing: c quantifier one");
   t.ok (rules["thing"][0][2]._lookahead == PEG::Token::Lookahead::none,     "negative: thing: c lookahead none");
-  t.ok (rules["thing"][0][2]._tags == std::set <std::string> {},            "negative: thing: c tags {}");
+  t.ok (rules["thing"][0][2]._tags.empty(),                                 "negative: thing: c tags {}");
 
   t.is (rules["a"][0][0]._token,  "'a'",                                    "negative: a: char literal");
   t.ok (rules["a"][0][0]._quantifier == PEG::Token::Quantifier::one,        "negative: a: char literal quantifier one");

@@ -89,10 +89,10 @@ void PEG::loadFromString (const std::string& input)
     line = trim (removeComment (line));
 
     // Skip blank lines with no semantics.
-    if (line == "" and rule_name == "")
+    if (line.empty() and rule_name.empty())
       continue;
 
-    if (line != "")
+    if (!line.empty())
     {
       int token_count = 0;
 
@@ -120,7 +120,7 @@ void PEG::loadFromString (const std::string& input)
           rule_name = token.substr (0, token.size () - 1);
 
           // If this is the first Rule, capture it as a starting point.
-          if (_start == "")
+          if (_start.empty())
             _start = rule_name;
 
           _rules[rule_name] = PEG::Rule ();
@@ -238,7 +238,7 @@ std::string PEG::dump () const
   out << "PEG\n";
 
   // Show the import files, if any.
-  if (_imports.size ())
+  if (!_imports.empty())
   {
     for (const auto& import : _imports)
       out << "  import " << import << '\n';
@@ -367,7 +367,7 @@ std::string PEG::removeComment (const std::string& line)
 ////////////////////////////////////////////////////////////////////////////////
 void PEG::validate () const
 {
-  if (_start == "")
+  if (_start.empty())
     throw std::string ("There are no rules defined.");
 
   std::vector <std::string> allRules;

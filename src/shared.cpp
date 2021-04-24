@@ -740,7 +740,7 @@ int execute (
   close (pin[0]);   // Close the read end of the input pipe.
   close (pout[1]);  // Close the write end of the output pipe.
 
-  if (input.size () == 0)
+  if (input.empty())
   {
     // Nothing to send to the child, close the pipe early.
     close (pin[1]);
