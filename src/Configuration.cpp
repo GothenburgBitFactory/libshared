@@ -358,7 +358,7 @@ std::string Configuration::file () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Configuration::dirty ()
+bool Configuration::dirty () const
 {
   return _dirty;
 }

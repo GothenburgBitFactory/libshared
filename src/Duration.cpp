@@ -129,25 +129,25 @@ Duration::Duration (time_t input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator< (const Duration& other)
+bool Duration::operator< (const Duration& other) const
 {
   return _period < other._period;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator> (const Duration& other)
+bool Duration::operator> (const Duration& other) const
 {
   return _period > other._period;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator<= (const Duration& other)
+bool Duration::operator<= (const Duration& other) const
 {
   return _period <= other._period;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator>= (const Duration& other)
+bool Duration::operator>= (const Duration& other) const
 {
   return _period >= other._period;
 }

@@ -639,7 +639,7 @@ bool Packrat::matchCharLiteral (
   const PEG::Token& token,
   Pig& pig,
   const std::shared_ptr <Tree>& parseTree,
-  int indent)
+  int indent) const
 {
   if (_debug > 1)
     std::cout << "trace " << std::string (indent, ' ') << "matchCharLiteral " << token.dump () << "\n";
@@ -678,7 +678,7 @@ bool Packrat::matchStringLiteral (
   const PEG::Token& token,
   Pig& pig,
   const std::shared_ptr <Tree>& parseTree,
-  int indent)
+  int indent) const
 {
   if (_debug > 1)
     std::cout << "trace " << std::string (indent, ' ') << "matchStringLiteral " << token.dump () << "\n";

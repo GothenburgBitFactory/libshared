@@ -3095,7 +3095,7 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Validation via simple range checking.
-bool Datetime::validate ()
+bool Datetime::validate () const
 {
   // _year;
   return !((_year    && (_year    <   1900 || _year    >                                  9999)) ||
@@ -3729,13 +3729,13 @@ bool Datetime::sameYear (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime Datetime::operator+ (const int delta)
+Datetime Datetime::operator+ (const int delta) const
 {
   return Datetime (_date + delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime Datetime::operator- (const int delta)
+Datetime Datetime::operator- (const int delta) const
 {
   return Datetime (_date - delta);
 }
@@ -3755,7 +3755,7 @@ Datetime& Datetime::operator-= (const int delta)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-time_t Datetime::operator- (const Datetime& rhs)
+time_t Datetime::operator- (const Datetime& rhs) const
 {
   return _date - rhs._date;
 }
