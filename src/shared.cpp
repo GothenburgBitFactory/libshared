@@ -667,7 +667,7 @@ bool confirm (const std::string& question)
     std::cout << question
               << " (yes/no) ";
 
-    std::string answer {""};
+    std::string answer;
     std::getline (std::cin, answer);
     answer = std::cin.eof () ? "no" : lowerCase (trim (answer));
 
