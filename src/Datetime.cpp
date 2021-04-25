@@ -3337,7 +3337,7 @@ const std::string Datetime::toString (const std::string& format) const
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
-  return Datetime (year (), month (), day ());
+  return { year (), month (), day () };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3345,19 +3345,19 @@ Datetime Datetime::startOfWeek () const
 {
   Datetime sow (_date);
   sow -= (dayOfWeek () * 86400);
-  return Datetime (sow.year (), sow.month (), sow.day ());
+  return { sow.year (), sow.month (), sow.day () };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfMonth () const
 {
-  return Datetime (year (), month (), 1);
+  return { year (), month (), 1 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfYear () const
 {
-  return Datetime (year (), 1, 1);
+  return { year (), 1, 1 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3734,13 +3734,13 @@ bool Datetime::sameYear (const Datetime& rhs) const
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::operator+ (const int delta)
 {
-  return Datetime (_date + delta);
+  return { _date + delta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::operator- (const int delta)
 {
-  return Datetime (_date - delta);
+  return { _date - delta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
