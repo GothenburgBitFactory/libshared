@@ -59,9 +59,7 @@
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-Path::Path ()
-{
-}
+Path::Path () = default;
 
 ////////////////////////////////////////////////////////////////////////////////
 Path::Path (const Path& other)
@@ -93,7 +91,7 @@ Path& Path::operator= (const Path& other)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Path::operator== (const Path& other)
+bool Path::operator== (const Path& other) const
 {
   return _data == other._data;
 }
@@ -114,7 +112,7 @@ Path::operator std::string () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Path::name () const
 {
-  if (_data.length ())
+  if (!_data.empty ())
   {
     auto slash = _data.rfind ('/');
     if (slash != std::string::npos)
@@ -127,7 +125,7 @@ std::string Path::name () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Path::parent () const
 {
-  if (_data.length ())
+  if (!_data.empty ())
   {
     auto slash = _data.rfind ('/');
     if (slash != std::string::npos)
@@ -140,7 +138,7 @@ std::string Path::parent () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Path::extension () const
 {
-  if (_data.length ())
+  if (!_data.empty ())
   {
     auto dot = _data.rfind ('.');
     if (dot != std::string::npos)
@@ -153,7 +151,7 @@ std::string Path::extension () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::exists () const
 {
-  return access (_data.c_str (), F_OK) ? false : true;
+  return access (_data.c_str (), F_OK) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,10 +172,7 @@ bool Path::is_directory () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_absolute () const
 {
-  if (_data.length () && _data[0] == '/')
-    return true;
-
-  return false;
+  return !_data.empty () && _data[0] == '/';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +200,7 @@ bool Path::readable () const
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
-  return status ? false : true;
+  return status == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +215,7 @@ bool Path::writable () const
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
-  return status ? false : true;
+  return status == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -235,7 +230,7 @@ bool Path::executable () const
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
-  return status ? false : true;
+  return status == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -409,7 +404,7 @@ bool File::create (int mode /* = 0640 */)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove () const
 {
-  return unlink (_data.c_str ()) == 0 ? true : false;
+  return unlink (_data.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,7 +421,7 @@ std::string File::removeBOM (const std::string& input)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::open ()
 {
-  if (_data != "")
+  if (!_data.empty())
   {
     if (! _fh)
     {
@@ -816,7 +811,7 @@ bool File::write (
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove (const std::string& name)
 {
-  return unlink (expand (name).c_str ()) == 0 ? true : false;
+  return unlink (expand (name).c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -847,15 +842,10 @@ bool File::move (const std::string& from, const std::string& to)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Directory::Directory ()
-{
-}
+Directory::Directory () = default;
 
 ////////////////////////////////////////////////////////////////////////////////
-Directory::Directory (const Directory& other)
-: File::File (other)
-{
-}
+Directory::Directory (const Directory& other) = default;
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const File& other)
@@ -948,7 +938,7 @@ bool Directory::remove_directory (const std::string& dir) const
     closedir (dp);
   }
 
-  return rmdir (dir.c_str ()) ? false : true;
+  return rmdir (dir.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1008,7 +998,7 @@ bool Directory::up ()
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::cd () const
 {
-  return chdir (_data.c_str ()) == 0 ? true : false;
+  return chdir (_data.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

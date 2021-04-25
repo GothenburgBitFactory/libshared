@@ -68,7 +68,7 @@ std::vector <std::string> split (const std::string& input, const char delimiter)
     start = i + 1;
   }
 
-  if (input.length ())
+  if (!input.empty ())
     results.push_back (input.substr (start));
 
   return results;
@@ -488,7 +488,7 @@ bool compare (
 {
   // Use strcasecmp if required.
   if (! sensitive)
-    return strcasecmp (left.c_str (), right.c_str ()) == 0 ? true : false;
+    return strcasecmp (left.c_str (), right.c_str ()) == 0;
 
   // Otherwise, just use std::string::operator==.
   return left == right;
@@ -667,7 +667,7 @@ bool confirm (const std::string& question)
     std::cout << question
               << " (yes/no) ";
 
-    std::string answer {""};
+    std::string answer;
     std::getline (std::cin, answer);
     answer = std::cin.eof () ? "no" : lowerCase (trim (answer));
 
@@ -676,7 +676,7 @@ bool confirm (const std::string& question)
   while (! std::cin.eof () && matches.size () != 1);
 
   signal (SIGINT, SIG_DFL);
-  return matches.size () == 1 && matches[0] == "yes" ? true : false;
+  return matches.size () == 1 && matches[0] == "yes";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -730,7 +730,7 @@ int execute (
     for (unsigned int i = 0; i < args.size (); ++i)
       argv[i+1] = (char*) args[i].c_str ();
 
-    argv[args.size () + 1] = NULL;
+    argv[args.size () + 1] = nullptr;
     int rc = execvp (executable.c_str (), argv);
     std::cerr << "Failed to execute '" << executable << "' Error: " << strerror (errno) << '\n';
     _exit (rc);
@@ -740,7 +740,7 @@ int execute (
   close (pin[0]);   // Close the read end of the input pipe.
   close (pout[1]);  // Close the write end of the output pipe.
 
-  if (input.size () == 0)
+  if (input.empty())
   {
     // Nothing to send to the child, close the pipe early.
     close (pin[1]);
@@ -766,7 +766,7 @@ int execute (
     tv.tv_sec = 5;
     tv.tv_usec = 0;
 
-    select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, NULL, &tv);
+    select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, nullptr, &tv);
 
     if (select_retval == -1)
       throw std::string (std::strerror (errno));

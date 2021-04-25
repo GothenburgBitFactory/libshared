@@ -39,7 +39,7 @@
 //  - The destructor will delete all branches recursively.
 //  - Tree::enumerate is a snapshot, and is invalidated by modification.
 //  - Branch sequence is preserved.
-void Tree::addBranch (std::shared_ptr <Tree> branch)
+void Tree::addBranch (const std::shared_ptr <Tree>& branch)
 {
   if (! branch)
     throw "Failed to allocate memory for parse tree.";
@@ -48,7 +48,7 @@ void Tree::addBranch (std::shared_ptr <Tree> branch)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Tree::removeBranch (std::shared_ptr <Tree> branch)
+void Tree::removeBranch (const std::shared_ptr <Tree>& branch)
 {
   for (auto i = _branches.begin (); i != _branches.end (); ++i)
   {
@@ -67,13 +67,13 @@ void Tree::removeAllBranches ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Tree::replaceBranch (std::shared_ptr <Tree> from, std::shared_ptr <Tree> to)
+void Tree::replaceBranch (const std::shared_ptr <Tree>& from, const std::shared_ptr <Tree>& to)
 {
-  for (unsigned int i = 0; i < _branches.size (); ++i)
+  for (auto & _branche : _branches)
   {
-    if (_branches[i] == from)
+    if (_branche == from)
     {
-      _branches[i] = to;
+      _branche = to;
       return;
     }
   }
@@ -194,11 +194,11 @@ std::shared_ptr <Tree> Tree::find (const std::string& path)
     bool found = false;
 
     // If the cursor has a branch that matches *it, proceed.
-    for (auto i = cursor->_branches.begin (); i != cursor->_branches.end (); ++i)
+    for (auto & _branche : cursor->_branches)
     {
-      if ((*i)->_name == *it)
+      if (_branche->_name == *it)
       {
-        cursor = *i;
+        cursor = _branche;
         found = true;
         break;
       }
@@ -213,7 +213,7 @@ std::shared_ptr <Tree> Tree::find (const std::string& path)
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Tree::dumpNode (
-  const std::shared_ptr <Tree> t,
+  const std::shared_ptr <Tree>& t,
   int depth) const
 {
   std::stringstream out;
@@ -231,26 +231,26 @@ std::string Tree::dumpNode (
   std::string atts;
   for (auto& a : t->_attributes)
   {
-    if (atts != "")
+    if (!atts.empty())
       atts += ' ';
 
     atts += a.first + "='\033[33m" + a.second + "\033[0m'";
   }
 
-  if (atts.length ())
+  if (!atts.empty ())
     out << ' ' << atts;
 
   // Dump tags.
   std::string tags;
   for (auto& tag : t->_tags)
   {
-    if (tags.length ())
+    if (!tags.empty ())
       tags += ' ';
 
     tags += "\033[32m" + tag + "\033[0m";
   }
 
-  if (tags.length ())
+  if (!tags.empty ())
     out << ' ' << tags;
   out << '\n';
 

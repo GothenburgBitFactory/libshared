@@ -37,20 +37,20 @@ class Packrat
 public:
   void parse (const PEG&, const std::string&);
   void entity (const std::string&, const std::string&);
-  void external (const std::string&, bool (*)(Pig&, std::shared_ptr <Tree>));
+  void external (const std::string&, bool (*)(Pig&, const std::shared_ptr <Tree>&));
 
   void debug ();
   std::string dump () const;
 
 private:
-  bool matchRule           (const std::string&,     Pig&, std::shared_ptr <Tree>, int);
-  bool matchProduction     (const PEG::Production&, Pig&, std::shared_ptr <Tree>, int);
-  bool matchTokenQuant     (const PEG::Token&,      Pig&, std::shared_ptr <Tree>, int);
-  bool matchTokenLookahead (const PEG::Token&,      Pig&, std::shared_ptr <Tree>, int);
-  bool matchToken          (const PEG::Token&,      Pig&, std::shared_ptr <Tree>, int);
-  bool matchIntrinsic      (const PEG::Token&,      Pig&, std::shared_ptr <Tree>, int);
-  bool matchCharLiteral    (const PEG::Token&,      Pig&, std::shared_ptr <Tree>, int);
-  bool matchStringLiteral  (const PEG::Token&,      Pig&, std::shared_ptr <Tree>, int);
+  bool matchRule           (const std::string&,     Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchProduction     (const PEG::Production&, Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchTokenQuant     (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchTokenLookahead (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchToken          (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchIntrinsic      (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int);
+  bool matchCharLiteral    (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int) const;
+  bool matchStringLiteral  (const PEG::Token&,      Pig&, const std::shared_ptr <Tree>&, int) const;
 
   bool canonicalize (std::string&, const std::string&, const std::string&) const;
 
@@ -62,7 +62,7 @@ private:
   std::map <std::string, PEG::Rule>                              _syntax   {};
   std::shared_ptr <Tree>                                         _tree     {std::make_shared <Tree> ()};
   std::multimap <std::string, std::string>                       _entities {};
-  std::map <std::string, bool (*)(Pig&, std::shared_ptr <Tree>)> _externals {};
+  std::map <std::string, bool (*)(Pig&, const std::shared_ptr <Tree>&)> _externals {};
 };
 
 #endif

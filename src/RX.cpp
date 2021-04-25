@@ -30,16 +30,13 @@
 #include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////
-RX::RX ()
-{
-}
+RX::RX () = default;
 
 ////////////////////////////////////////////////////////////////////////////////
 RX::RX (
   const std::string& pattern,
   bool case_sensitive /* = true */)
-: _compiled (false)
-, _pattern (pattern)
+: _pattern (pattern)
 , _case_sensitive (case_sensitive)
 {
   compile ();
@@ -101,7 +98,7 @@ bool RX::match (const std::string& in)
   if (! _compiled)
     compile ();
 
-  return regexec (&_regex, in.c_str (), 0, nullptr, 0) == 0 ? true : false;
+  return regexec (&_regex, in.c_str (), 0, nullptr, 0) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +123,7 @@ bool RX::match (
       ++offset;
   }
 
-  return matches.size () ? true : false;
+  return !matches.empty();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +150,7 @@ bool RX::match (
       ++offset;
   }
 
-  return start.size () ? true : false;
+  return !start.empty();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -236,7 +236,7 @@ void Datetime::clear ()
 bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 {
   // Short-circuit on missing format.
-  if (format == "")
+  if (format.empty())
     return false;
 
   auto checkpoint = pig.cursor ();
@@ -3077,20 +3077,17 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Validation via simple range checking.
-bool Datetime::validate ()
+bool Datetime::validate () const
 {
   // _year;
-  if ((_year    && (_year    <   1900 || _year    >                                  9999)) ||
-      (_month   && (_month   <      1 || _month   >                                    12)) ||
-      (_week    && (_week    <      1 || _week    >                                    53)) ||
-      (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
-      (_julian  && (_julian  <      1 || _julian  >          Datetime::daysInYear (_year))) ||
-      (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_year, _month))) ||
-      (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
-      (_offset  && (_offset  < -86400 || _offset  >                                 86400)))
-    return false;
-
-  return true;
+  return !((_year    && (_year    <   1900 || _year    >                                  9999)) ||
+           (_month   && (_month   <      1 || _month   >                                    12)) ||
+           (_week    && (_week    <      1 || _week    >                                    53)) ||
+           (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
+           (_julian  && (_julian  <      1 || _julian  >          Datetime::daysInYear (_year))) ||
+           (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_year, _month))) ||
+           (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
+           (_offset  && (_offset  < -86400 || _offset  >                                 86400)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3280,12 +3277,11 @@ void Datetime::toYMD (int& y, int& m, int& d) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Datetime::toString (const std::string& format) const
+std::string Datetime::toString (const std::string& format) const
 {
   std::stringstream formatted;
-  for (unsigned int i = 0; i < format.length (); ++i)
+  for (int c : format)
   {
-    int c = format[i];
     switch (c)
     {
     case 'm': formatted                                        << month ();               break;
@@ -3319,7 +3315,7 @@ const std::string Datetime::toString (const std::string& format) const
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfDay () const
 {
-  return Datetime (year (), month (), day ());
+  return { year (), month (), day () };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3327,19 +3323,19 @@ Datetime Datetime::startOfWeek () const
 {
   Datetime sow (_date);
   sow -= (dayOfWeek () * 86400);
-  return Datetime (sow.year (), sow.month (), sow.day ());
+  return { sow.year (), sow.month (), sow.day () };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfMonth () const
 {
-  return Datetime (year (), month (), 1);
+  return { year (), month (), 1 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Datetime Datetime::startOfYear () const
 {
-  return Datetime (year (), 1, 1);
+  return { year (), 1, 1 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3714,15 +3710,15 @@ bool Datetime::sameYear (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime Datetime::operator+ (const int delta)
+Datetime Datetime::operator+ (const int delta) const
 {
-  return Datetime (_date + delta);
+  return { _date + delta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime Datetime::operator- (const int delta)
+Datetime Datetime::operator- (const int delta) const
 {
-  return Datetime (_date - delta);
+  return { _date - delta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3740,7 +3736,7 @@ Datetime& Datetime::operator-= (const int delta)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-time_t Datetime::operator- (const Datetime& rhs)
+time_t Datetime::operator- (const Datetime& rhs) const
 {
   return _date - rhs._date;
 }

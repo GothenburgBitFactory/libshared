@@ -85,7 +85,7 @@ std::string Composite::str () const
   std::vector <int> colors;
   for (unsigned int layer = 0; layer < _layers.size (); ++layer)
   {
-    auto text   = std::get <0> (_layers[layer]);
+    const auto& text   = std::get <0> (_layers[layer]);
     auto offset = std::get <1> (_layers[layer]);
     auto len    = utf8_text_length (text);
 

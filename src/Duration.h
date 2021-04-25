@@ -39,10 +39,10 @@ public:
   Duration ();
   Duration (const std::string&);
   Duration (time_t);
-  bool operator< (const Duration&);
-  bool operator> (const Duration&);
-  bool operator<= (const Duration&);
-  bool operator>= (const Duration&);
+  bool operator< (const Duration&) const;
+  bool operator> (const Duration&) const;
+  bool operator<= (const Duration&) const;
+  bool operator>= (const Duration&) const;
   std::string toString () const;
   time_t toTime_t () const;
   bool parse (const std::string&, std::string::size_type&);
@@ -50,10 +50,10 @@ public:
   bool parse_designated (Pig&);
   bool parse_weeks (Pig&);
   bool parse_units (Pig&);
-  const std::string format () const;
-  const std::string formatHours () const;
-  const std::string formatISO () const;
-  const std::string formatVague (bool padding = false) const;
+  std::string format () const;
+  std::string formatHours () const;
+  std::string formatISO () const;
+  std::string formatVague (bool padding = false) const;
 
   int days () const;
   int hours () const;

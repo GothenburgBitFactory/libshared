@@ -129,25 +129,25 @@ Duration::Duration (time_t input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator< (const Duration& other)
+bool Duration::operator< (const Duration& other) const
 {
   return _period < other._period;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator> (const Duration& other)
+bool Duration::operator> (const Duration& other) const
 {
   return _period > other._period;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator<= (const Duration& other)
+bool Duration::operator<= (const Duration& other) const
 {
   return _period <= other._period;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Duration::operator>= (const Duration& other)
+bool Duration::operator>= (const Duration& other) const
 {
   return _period >= other._period;
 }
@@ -307,9 +307,9 @@ bool Duration::parse_units (Pig& pig)
 
   // Static and so preserved between calls.
   static std::vector <std::string> units;
-  if (units.size () == 0)
-    for (unsigned int i = 0; i < NUM_DURATIONS; i++)
-      units.push_back (durations[i].unit);
+  if (units.empty())
+    for (auto & duration : durations)
+      units.push_back (duration.unit);
 
   double number;
   std::string unit;
@@ -319,12 +319,12 @@ bool Duration::parse_units (Pig& pig)
     if (! unicodeLatinAlpha (following) &&
         ! unicodeLatinDigit (following))
     {
-      for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+      for (auto & duration : durations)
       {
-        if (durations[i].unit == unit &&
-            durations[i].standalone)
+        if (duration.unit == unit &&
+            duration.standalone)
         {
-          _period = static_cast <time_t> (durations[i].seconds);
+          _period = static_cast <time_t> (duration.seconds);
           return true;
         }
       }
@@ -365,11 +365,11 @@ bool Duration::parse_units (Pig& pig)
       {
         // Linear lookup - should instead be logarithmic.
         double seconds = 1;
-        for (unsigned int i = 0; i < NUM_DURATIONS; i++)
+        for (auto & duration : durations)
         {
-          if (durations[i].unit == unit)
+          if (duration.unit == unit)
           {
-            seconds = durations[i].seconds;
+            seconds = duration.seconds;
             _period = static_cast <time_t> (number * static_cast <double> (seconds));
             return true;
           }
@@ -396,7 +396,7 @@ void Duration::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Duration::format () const
+std::string Duration::format () const
 {
   if (_period)
   {
@@ -425,7 +425,7 @@ const std::string Duration::format () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Duration::formatHours () const
+std::string Duration::formatHours () const
 {
   if (_period)
   {
@@ -450,7 +450,7 @@ const std::string Duration::formatHours () const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Duration::formatISO () const
+std::string Duration::formatISO () const
 {
   if (_period)
   {
@@ -491,7 +491,7 @@ const std::string Duration::formatISO () const
 // >= 1min    {n}min
 //            {n}s
 //
-const std::string Duration::formatVague (bool padding) const
+std::string Duration::formatVague (bool padding) const
 {
   float days = (float) _period / 86400.0;
 

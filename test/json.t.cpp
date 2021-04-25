@@ -105,19 +105,19 @@ std::stringstream combined;
 class EventSink : public json::SAX::Sink
 {
 public:
-  void eventDocStart ()                            { combined << "<doc>";                            }
-  void eventDocEnd ()                              { combined << "</doc>";                           }
-  void eventObjectStart ()                         { combined << "<object>";                         }
-  void eventObjectEnd (int)                        { combined << "</object>";                        }
-  void eventArrayStart ()                          { combined << "<array>";                          }
-  void eventArrayEnd (int)                         { combined << "</array>";                         }
-  void eventName (const std::string& value)        { combined << "<name>"   << value << "</name>";   }
-  void eventValueNull ()                           { combined << "<null />";                         }
-  void eventValueBool (bool value)                 { combined << "<bool>"   << value << "</bool>";   }
-  void eventValueInt (int64_t value)               { combined << "<int>"    << value << "</int>";    }
-  void eventValueUint (uint64_t value)             { combined << "<uint>"   << value << "</uint>";   }
-  void eventValueDouble (double value)             { combined << "<double>" << value << "</double>"; }
-  void eventValueString (const std::string& value) { combined << "<string>" << value << "</string>"; }
+  void eventDocStart () override                            { combined << "<doc>";                            }
+  void eventDocEnd () override                              { combined << "</doc>";                           }
+  void eventObjectStart () override                         { combined << "<object>";                         }
+  void eventObjectEnd (int) override                        { combined << "</object>";                        }
+  void eventArrayStart () override                          { combined << "<array>";                          }
+  void eventArrayEnd (int) override                         { combined << "</array>";                         }
+  void eventName (const std::string& value) override        { combined << "<name>"   << value << "</name>";   }
+  void eventValueNull () override                           { combined << "<null />";                         }
+  void eventValueBool (bool value) override                 { combined << "<bool>"   << value << "</bool>";   }
+  void eventValueInt (int64_t value) override               { combined << "<int>"    << value << "</int>";    }
+  void eventValueUint (uint64_t value) override             { combined << "<uint>"   << value << "</uint>";   }
+  void eventValueDouble (double value) override             { combined << "<double>" << value << "</double>"; }
+  void eventValueString (const std::string& value) override { combined << "<string>" << value << "</string>"; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,13 +145,13 @@ int main (int, char**)
   unsetenv ("TASKRC");
 
   // Positive tests.
-  for (unsigned int i = 0; i < NUM_POSITIVE_TESTS; ++i)
+  for (auto & positive_test : positive_tests)
   {
     // JSON
     try
     {
-      json::value* root = json::parse (positive_tests[i]);
-      t.ok (root, std::string ("positive: ") + positive_tests[i]);
+      json::value* root = json::parse (positive_test);
+      t.ok (root, std::string ("positive: ") + positive_test);
       if (root)
       {
         t.diag (root->dump ());
@@ -164,14 +164,14 @@ int main (int, char**)
   }
 
   // Negative tests.
-  for (unsigned int i = 0; i < NUM_NEGATIVE_TESTS; ++i)
+  for (auto & negative_test : negative_tests)
   {
     // JSON
     try
     {
-      json::value* root = json::parse (negative_tests[i]);
-      t.is ((const char*) root, (const char*) NULL,
-            std::string ("negative: ") + negative_tests[i]);
+      json::value* root = json::parse (negative_test);
+      t.is ((const char*) root, (const char*) nullptr,
+            std::string ("negative: ") + negative_test);
     }
 
     catch (const std::string& e) { t.pass (e); }

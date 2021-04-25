@@ -79,7 +79,7 @@ void Packrat::entity (const std::string& category, const std::string& name)
 ////////////////////////////////////////////////////////////////////////////////
 void Packrat::external (
   const std::string& rule,
-  bool (*fn)(Pig&, std::shared_ptr <Tree>))
+  bool (*fn)(Pig&, const std::shared_ptr <Tree>&))
 {
   if (_externals.find (rule) != _externals.end ())
     throw format ("There is already an external parser defined for rule '{1}'.", rule);
@@ -92,7 +92,7 @@ void Packrat::external (
 bool Packrat::matchRule (
   const std::string& rule,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -111,7 +111,7 @@ bool Packrat::matchRule (
 bool Packrat::matchProduction (
   const PEG::Production& production,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -134,7 +134,7 @@ bool Packrat::matchProduction (
 
   // On success transfer all sub-branches.
   for (auto& b : collector->_branches)
-    for (auto sub : b->_branches)
+    for (const auto& sub : b->_branches)
       parseTree->addBranch (sub);
 
   return true;
@@ -145,7 +145,7 @@ bool Packrat::matchProduction (
 bool Packrat::matchTokenQuant (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -216,7 +216,7 @@ bool Packrat::matchTokenQuant (
 bool Packrat::matchTokenLookahead (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -255,7 +255,7 @@ bool Packrat::matchTokenLookahead (
 bool Packrat::matchToken (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -314,7 +314,7 @@ bool Packrat::matchToken (
 bool Packrat::matchIntrinsic (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
+  const std::shared_ptr <Tree>& parseTree,
   int indent)
 {
   if (_debug > 1)
@@ -638,8 +638,8 @@ bool Packrat::matchIntrinsic (
 bool Packrat::matchCharLiteral (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
-  int indent)
+  const std::shared_ptr <Tree>& parseTree,
+  int indent) const
 {
   if (_debug > 1)
     std::cout << "trace " << std::string (indent, ' ') << "matchCharLiteral " << token.dump () << "\n";
@@ -677,8 +677,8 @@ bool Packrat::matchCharLiteral (
 bool Packrat::matchStringLiteral (
   const PEG::Token& token,
   Pig& pig,
-  std::shared_ptr <Tree> parseTree,
-  int indent)
+  const std::shared_ptr <Tree>& parseTree,
+  int indent) const
 {
   if (_debug > 1)
     std::cout << "trace " << std::string (indent, ' ') << "matchStringLiteral " << token.dump () << "\n";
@@ -750,14 +750,14 @@ std::string Packrat::dump () const
   out << "Packrat Parse "
       << _tree->dump ();
 
-  if (_entities.size ())
+  if (!_entities.empty())
   {
     out << "  Entities\n";
     for (const auto& entity : _entities)
       out << "    " << entity.first << ':' << entity.second << '\n';
   }
 
-  if (_externals.size ())
+  if (!_externals.empty())
   {
     out << "  Externals\n";
     for (const auto& external : _externals)

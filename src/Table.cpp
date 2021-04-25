@@ -44,7 +44,7 @@ int Table::addRow ()
 {
   _data.push_back (std::vector <std::string> (_columns.size (), ""));
   _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
-  _oddness.push_back (_data.size () % 2 ? true : false);
+  _oddness.push_back ((_data.size () % 2) != 0);
   return _data.size () - 1;
 }
 
@@ -123,12 +123,12 @@ std::string Table::render ()
     unsigned int global_min = utf8_text_width (_columns[col]);
     unsigned int global_ideal = global_min;
 
-    for (unsigned int row = 0; row < _data.size (); ++row)
+    for (auto & row : _data)
     {
       // Determine minimum and ideal width for this column.
       unsigned int min = 0;
       unsigned int ideal = 0;
-      measureCell (_data[row][col], min, ideal);
+      measureCell (row[col], min, ideal);
 
       if (min   > global_min)   global_min = min;
       if (ideal > global_ideal) global_ideal = ideal;
@@ -222,7 +222,7 @@ std::string Table::render ()
     out += extra;
 
     // Trim right.
-    out.erase (out.find_last_not_of (" ") + 1);
+    out.erase (out.find_last_not_of (' ') + 1);
     out += '\n';
 
     // Stop if the line limit is exceeded.
@@ -304,7 +304,7 @@ std::string Table::render ()
       out += (oddness ? extra_odd : extra_even);
 
       // Trim right.
-      out.erase (out.find_last_not_of (" ") + 1);
+      out.erase (out.find_last_not_of (' ') + 1);
       out += '\n';
 
       // Stop if the line limit is exceeded.
