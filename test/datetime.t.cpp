@@ -976,10 +976,10 @@ int main (int, char**)
     // Quarters
     Datetime soq ("soq");
     Datetime eoq ("eoq");
-    t.is (soq.day (),  1,      "soq is the first day of a month");
-    t.is (eoq.day () , 1,      "eoq is the 1st of a month");
+    t.is (soq.day (),  1,      "soq day is the first day of a quarter");
+    t.is (eoq.day () / 10 , 3, "eoq day is the last day of a quarter");
     t.is (soq.month () % 3, 1, "soq month is 1, 4, 7 or 10");
-    t.is (eoq.month () % 3, 1, "eoq month is 1, 4, 7 or 10");
+    t.is (eoq.month () % 3, 0, "eoq month is 3, 6, 9 or 12");
 
     // Note: these fail during the night of daylight savings end.
     t.ok (soq.sameYear (now) ||
