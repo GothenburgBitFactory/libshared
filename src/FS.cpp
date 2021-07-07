@@ -492,6 +492,15 @@ void File::close ()
     if (_locked)
       unlock ();
 
+    // fdatasync() is faster we can't trust it anywhere but Linux.
+    // https://news.ycombinator.com/item?id=25171572
+    if constexpr (__linux) {
+      if (fdatasync (fileno (_fh)))
+        throw format ("fdatasync error {1}: {2}", errno, strerror (errno));
+    } else {
+      if (fsync (fileno (_fh)))
+        throw format ("fsync error {1}: {2}", errno, strerror (errno));
+    }
     if (fclose (_fh))
       throw format ("fclose error {1}: {2}", errno, strerror (errno));
 

@@ -17,6 +17,7 @@ master/HEAD
   file locking prboelms on MacOS.
 - Libshared now supports datetime values up to year 9999.
 - Bump minimal required standard to C++17 and minimal cmake version to 3.1.
+- Started calling fsync/fdatasync on File::close for better durability.
 
 tasksh-1.2.0 (2017-05-10)
 
