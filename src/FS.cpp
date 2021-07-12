@@ -494,13 +494,19 @@ void File::close ()
 
     // fdatasync() is faster we can't trust it anywhere but Linux.
     // https://news.ycombinator.com/item?id=25171572
-    if constexpr (__linux) {
+    #if defined (LINUX)
       if (fdatasync (fileno (_fh)))
         throw format ("fdatasync error {1}: {2}", errno, strerror (errno));
-    } else {
+    #elif defined (DARWIN)
+      // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fsync.2.html
+      // fsync() on macOS flush data to the drvice but does not force drive
+      // flush.
+      if (fcntl (fileno (_fh), F_FULLFSYNC, 0))
+        throw format ("fcntl F_FULLFSYNC error {1}: {2}", errno, strerror (errno));
+    #else
       if (fsync (fileno (_fh)))
         throw format ("fsync error {1}: {2}", errno, strerror (errno));
-    }
+    # endif
     if (fclose (_fh))
       throw format ("fclose error {1}: {2}", errno, strerror (errno));
 
