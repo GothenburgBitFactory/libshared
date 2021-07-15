@@ -1,26 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 import os
 import sys
 import glob
 import argparse
 import logging
 import time
+import codecs
 from multiprocessing import cpu_count
 from threading import Thread
 from subprocess import call, Popen, PIPE
-
-if sys.version_info > (3,):
-    import codecs
-
-try:
-    # python 2
-    from Queue import Queue, Empty
-except ImportError:
-    # python 3
-    from queue import Queue, Empty
+from queue import Queue, Empty
 
 TIMEOUT = .2
 
@@ -44,8 +35,7 @@ def run_test(testqueue, outqueue, threadname):
             # Premature end
             break
 
-        if sys.version_info > (3,):
-            out, err = out.decode('utf-8'), err.decode('utf-8')
+        out, err = out.decode('utf-8'), err.decode('utf-8')
 
         output = ("# {0}\n".format(os.path.basename(test)), out, err)
         log.debug("Collected output %s", output)
@@ -60,11 +50,7 @@ def run_test(testqueue, outqueue, threadname):
 class TestRunner(object):
     def __init__(self):
         self.threads = []
-        if sys.version_info > (3,):
-            self.tap = open(cmd_args.tapfile, 'w', errors='ignore')
-        else:
-            self.tap = open(cmd_args.tapfile, 'w')
-
+        self.tap = open(cmd_args.tapfile, 'w', errors='ignore')
         self._parallelq = Queue()
         self._serialq = Queue()
         self._outputq = Queue()
@@ -200,8 +186,7 @@ def parse_args():
 
 
 def main():
-    if sys.version_info > (3,):
-        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
     runner = TestRunner()
     runner.start()
