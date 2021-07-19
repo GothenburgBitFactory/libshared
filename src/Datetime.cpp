@@ -567,39 +567,39 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 //   sopd           2017-03-04T00:00:00  Unaffected
 //   sod            2017-03-05T00:00:00  Unaffected
 //   sond           2017-03-06T00:00:00  Unaffected
-//   eopd           2017-03-05T00:00:00  Unaffected
-//   eod            2017-03-06T00:00:00  Unaffected
-//   eond           2017-03-07T00:00:00  Unaffected
+//   eopd           2017-03-04T23:59:59  Unaffected
+//   eod            2017-03-05T23:59:59  Unaffected
+//   eond           2017-03-06T23:59:59  Unaffected
 //   sopw           2017-02-26T00:00:00  Unaffected
 //   sow            2017-03-05T00:00:00  Unaffected
 //   sonw           2017-03-12T00:00:00  Unaffected
-//   eopw           2017-03-05T00:00:00  Unaffected
-//   eow            2017-03-12T00:00:00  Unaffected
-//   eonw           2017-03-19T00:00:00  Unaffected
+//   eopw           2017-02-26T23:59:59  Unaffected
+//   eow            2017-03-05T23:59:59  Unaffected
+//   eonw           2017-03-12T23:59:59  Unaffected
 //   sopww          2017-02-27T00:00:00  Unaffected
 //   soww           2017-03-06T00:00:00
 //   sonww          2017-03-06T00:00:00  Unaffected
-//   eopww          2017-03-03T00:00:00  Unaffected
-//   eoww           2017-03-10T00:00:00
-//   eonww          2017-03-17T00:00:00  Unaffected
+//   eopww          2017-03-03T23:59:59  Unaffected
+//   eoww           2017-03-10T23:59:59
+//   eonww          2017-03-17T23:59:59  Unaffected
 //   sopm           2017-02-01T00:00:00  Unaffected
 //   som            2017-03-01T00:00:00  Unaffected
 //   sonm           2017-04-01T00:00:00  Unaffected
-//   eopm           2017-03-01T00:00:00  Unaffected
-//   eom            2017-04-01T00:00:00  Unaffected
-//   eonm           2017-05-01T00:00:00  Unaffected
+//   eopm           2017-02-28T23:59:59  Unaffected
+//   eom            2017-03-31T23:59:59  Unaffected
+//   eonm           2017-04-30T23:59:59  Unaffected
 //   sopq           2017-10-01T00:00:00  Unaffected
 //   soq            2017-01-01T00:00:00  Unaffected
 //   sonq           2017-04-01T00:00:00  Unaffected
-//   eopq           2017-01-01T00:00:00  Unaffected
-//   eoq            2017-04-01T00:00:00  Unaffected
-//   eonq           2017-07-01T00:00:00  Unaffected
+//   eopq           2016-12-31T23:59:59  Unaffected
+//   eoq            2017-03-31T23:59:59  Unaffected
+//   eonq           2017-06-30T23:59:59  Unaffected
 //   sopy           2016-01-01T00:00:00  Unaffected
 //   soy            2017-01-01T00:00:00  Unaffected
 //   sony           2018-01-01T00:00:00  Unaffected
-//   eopy           2017-01-01T00:00:00  Unaffected
-//   eoy            2018-01-01T00:00:00  Unaffected
-//   eony           2020-01-01T00:00:00  Unaffected
+//   eopy           2016-12-31T23:59:59  Unaffected
+//   eoy            2017-12-31T23:59:59  Unaffected
+//   eony           2018-12-31T23:59:59  Unaffected
 //   easter         2017-04-16T00:00:00
 //   eastermonday   2017-04-16T00:00:00
 //   ascension      2017-05-25T00:00:00
