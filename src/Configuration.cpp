@@ -256,14 +256,30 @@ void Configuration::parse (
 ////////////////////////////////////////////////////////////////////////////////
 bool Configuration::has (const std::string& key) const
 {
-  return (*this).find (key) != (*this).end ();
+  auto ckey = key;
+  auto itContext = find ("context");
+  if(itContext != end() && key.rfind("context.", 0) != 0) {
+    ckey = "context." + itContext->second + ".rc." + key;
+  }
+  if (find (ckey) != end ()) 
+    return true;
+  return find (key) != end ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Return the configuration value given the specified key.
-std::string Configuration::get (const std::string& key) const
+std::string Configuration::get (const std::string& key, bool getFromContext) const
 {
-  auto found = find (key);
+  auto ckey = key;
+  auto itContext = find ("context");
+  if(itContext != end() && getFromContext && key.rfind("context.", 0) != 0) {
+    ckey = "context." + itContext->second + ".rc." + key;
+  }
+  auto found = find (ckey);
+  if (found != end ())
+    return found->second;
+  // Fallback - use global config value
+  found = find (key);
   if (found != end ())
     return found->second;
 
@@ -271,32 +287,32 @@ std::string Configuration::get (const std::string& key) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Configuration::getInteger (const std::string& key) const
+int Configuration::getInteger (const std::string& key, bool getFromContext) const
 {
-  auto found = find (key);
-  if (found != end ())
-    return strtoimax (found->second.c_str (), nullptr, 10);
+  auto val = get(key, getFromContext);
+  if (val.length() > 0)
+    return strtoimax (val.c_str (), nullptr, 10);
 
   return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Configuration::getReal (const std::string& key) const
+double Configuration::getReal (const std::string& key, bool getFromContext) const
 {
-  auto found = find (key);
-  if (found != end ())
-    return strtod (found->second.c_str (), nullptr);
+  auto val = get(key, getFromContext);
+  if (val.length() > 0)
+    return strtod (val.c_str (), nullptr);
 
   return 0.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Configuration::getBoolean (const std::string& key) const
+bool Configuration::getBoolean (const std::string& key, bool getFromContext) const
 {
-  auto found = find (key);
-  if (found != end ())
+  auto val = get(key, getFromContext);
+  if (val.length() > 0)
   {
-    auto value = lowerCase (found->second);
+    auto value = lowerCase (val);
     if (value == "true"   ||
         value == "1"      ||
         value == "y"      ||

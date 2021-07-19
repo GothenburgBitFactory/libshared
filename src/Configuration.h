@@ -52,11 +52,11 @@ public:
     const std::vector <std::string>& search_paths = {},
     const std::string& file_path = {});
 
-  bool        has        (const std::string&) const;
-  std::string get        (const std::string&) const;
-  int         getInteger (const std::string&) const;
-  double      getReal    (const std::string&) const;
-  bool        getBoolean (const std::string&) const;
+  bool        has            (const std::string&) const;
+  std::string get            (const std::string&, bool getFromContext = true) const;
+  int         getInteger     (const std::string&, bool getFromContext = true) const;
+  double      getReal        (const std::string&, bool getFromContext = true) const;
+  bool        getBoolean     (const std::string&, bool getFromContext = true) const;
 
   void set (const std::string&, const int);
   void set (const std::string&, const double);
