@@ -189,6 +189,7 @@ void Configuration::parse (
       {
         std::string key   = trim (line.substr (0, equal));
         std::string value = trim (line.substr (equal+1, line.length () - equal));
+        value = Path::expand(value);
 
         (*this)[key] = json::decode (value);
       }
