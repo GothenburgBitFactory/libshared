@@ -367,6 +367,31 @@ std::vector <std::string> Path::glob (const std::string& pattern)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  S_IFMT          0170000  type of file
+//         S_IFIFO  0010000  named pipe (fifo)
+//         S_IFCHR  0020000  character special
+//         S_IFDIR  0040000  directory
+//         S_IFBLK  0060000  block special
+//         S_IFREG  0100000  regular
+//         S_IFLNK  0120000  symbolic link
+//         S_IFSOCK 0140000  socket
+//         S_IFWHT  0160000  whiteout
+//  S_ISUID         0004000  set user id on execution
+//  S_ISGID         0002000  set group id on execution
+//  S_ISVTX         0001000  save swapped text even after use
+//  S_IRUSR         0000400  read permission, owner
+//  S_IWUSR         0000200  write permission, owner
+//  S_IXUSR         0000100  execute/search permission, owner
+mode_t Path::mode ()
+{
+  struct stat s;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
+
+  return s.st_mode;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 File::File ()
 : Path::Path ()
 , _fh (nullptr)
@@ -675,31 +700,6 @@ void File::truncate ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  S_IFMT          0170000  type of file
-//         S_IFIFO  0010000  named pipe (fifo)
-//         S_IFCHR  0020000  character special
-//         S_IFDIR  0040000  directory
-//         S_IFBLK  0060000  block special
-//         S_IFREG  0100000  regular
-//         S_IFLNK  0120000  symbolic link
-//         S_IFSOCK 0140000  socket
-//         S_IFWHT  0160000  whiteout
-//  S_ISUID         0004000  set user id on execution
-//  S_ISGID         0002000  set group id on execution
-//  S_ISVTX         0001000  save swapped text even after use
-//  S_IRUSR         0000400  read permission, owner
-//  S_IWUSR         0000200  write permission, owner
-//  S_IXUSR         0000100  execute/search permission, owner
-mode_t File::mode ()
-{
-  struct stat s;
-  if (stat (_data.c_str (), &s))
-    throw format ("stat error {1}: {2}", errno, strerror (errno));
-
-  return s.st_mode;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 size_t File::size () const
 {
   struct stat s;
@@ -891,6 +891,85 @@ bool File::move (const std::string& from, const std::string& to)
       return true;
 
   return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AtomicFile::AtomicFile ()
+: Path::Path ()
+, _original_file (File ())
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AtomicFile::AtomicFile (const std::string& in)
+: Path::Path (in)
+, _original_file (File (in))
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AtomicFile& AtomicFile::operator= (const AtomicFile& other)
+{
+  if (this != &other) {
+    Path::operator= (other);
+    this->_original_file = File (other._data);
+  }
+
+  return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::truncate ()
+{
+  _original_file.truncate ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+size_t AtomicFile::size () const
+{
+  return _original_file.size ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::close ()
+{
+  _original_file.close ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::read (std::vector <std::string>& contents)
+{
+  _original_file.read (contents);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AtomicFile::lock ()
+{
+  return _original_file.lock ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AtomicFile::open ()
+{
+  return _original_file.open ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::append (const std::vector <std::string>& lines)
+{
+  _original_file.append (lines);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::append (const std::string& line)
+{
+  _original_file.append (line);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::write_raw (const std::string& line)
+{
+  _original_file.write_raw (line);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

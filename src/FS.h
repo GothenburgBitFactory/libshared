@@ -61,6 +61,8 @@ public:
   bool executable () const;
   bool rename (const std::string&);
 
+  mode_t mode ();
+
   // Statics
   static std::string expand (const std::string&);
   static std::vector<std::string> glob (const std::string&);
@@ -73,6 +75,19 @@ public:
 class AbstractFile : virtual public Path
 {
 public:
+  virtual void truncate () = 0;
+
+  virtual bool open () = 0;
+  virtual void close () = 0;
+
+  virtual bool lock () = 0;
+
+  virtual void read (std::vector <std::string>&) = 0;
+  virtual void append (const std::string&) = 0;
+  virtual void append (const std::vector <std::string>&) = 0;
+  virtual void write_raw (const std::string&) = 0;
+
+  virtual size_t size () const = 0;
 private:
 };
 
@@ -105,7 +120,6 @@ public:
 
   void truncate ();
 
-  virtual mode_t mode ();
   virtual size_t size () const;
   virtual time_t mtime () const;
   virtual time_t ctime () const;
@@ -127,7 +141,31 @@ private:
   bool  _locked;
 };
 
-class Directory : public AbstractFile
+class AtomicFile : public AbstractFile
+{
+public:
+  AtomicFile ();
+  AtomicFile (const std::string&);
+
+  AtomicFile& operator= (const AtomicFile&);
+
+  bool open ();
+  void close ();
+
+  bool lock ();
+
+  void read (std::vector <std::string>&);
+  void truncate ();
+  void append (const std::string&);
+  void append (const std::vector <std::string>&);
+  void write_raw (const std::string&);
+
+  size_t size () const;
+private:
+  File _original_file;
+};
+
+class Directory : public Path
 {
 public:
   Directory ();
