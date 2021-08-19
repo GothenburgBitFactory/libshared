@@ -900,25 +900,25 @@ Directory::Directory ()
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const Directory& other)
-: File::File (other)
+: Path::Path (other)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const File& other)
-: File::File (other)
+: Path::Path (other)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const Path& other)
-: File::File (other)
+: Path::Path (other)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const std::string& in)
-: File::File (in)
+: Path::Path (in)
 {
 }
 
@@ -926,7 +926,7 @@ Directory::Directory (const std::string& in)
 Directory& Directory::operator= (const Directory& other)
 {
   if (this != &other)
-    File::operator= (other);
+    Path::operator= (other);
 
   return *this;
 }

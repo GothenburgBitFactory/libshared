@@ -70,7 +70,13 @@ public:
   std::string _data;
 };
 
-class File : public Path
+class AbstractFile : virtual public Path
+{
+public:
+private:
+};
+
+class File : public AbstractFile
 {
 public:
   File ();
@@ -121,7 +127,7 @@ private:
   bool  _locked;
 };
 
-class Directory : public File
+class Directory : public AbstractFile
 {
 public:
   Directory ();
