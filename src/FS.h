@@ -172,6 +172,11 @@ public:
   size_t size () const;
 private:
   File _original_file;
+  File _new_file;
+
+  // Ensures .new file does not exists.
+  // throws exception if it does.
+  void assert_no_new_file ();
 };
 
 class Directory : public Path

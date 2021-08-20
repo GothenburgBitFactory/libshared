@@ -258,6 +258,18 @@ int main (int, char**)
     t.notok (File::copy ("tmp/does-not-exits.txt", "tmp/should-not-exists.txt"), "File::copy returns false if not exists");
     t.notok (File ("tmp/should-not-exists.txt").exists (), "File::copy destination should not exist");
 
+    File::write ("tmp/file.5.txt", "This is a test\n");
+    File::write ("tmp/file.5.txt.new", "This is a test\n");
+    bool exception_thrown = false;
+    try {
+      AtomicFile af5;
+      af5 = AtomicFile ("tmp/file.5.txt");
+    }
+    catch(...) {
+      exception_thrown = true;
+    }
+    t.ok (exception_thrown, "AtomicFile raises exception when .new file already exists");
+
 
     ////////////////////////////////////////////////////////////////////////////
     // Path and *File tests cleanup:

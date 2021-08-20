@@ -897,6 +897,7 @@ bool File::move (const std::string& from, const std::string& to)
 AtomicFile::AtomicFile ()
 : Path::Path ()
 , _original_file (File ())
+, _new_file (File ())
 {
 }
 
@@ -904,7 +905,9 @@ AtomicFile::AtomicFile ()
 AtomicFile::AtomicFile (const std::string& in)
 : Path::Path (in)
 , _original_file (File (in))
+, _new_file (File (in + ".new"))
 {
+  assert_no_new_file ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -913,6 +916,9 @@ AtomicFile& AtomicFile::operator= (const AtomicFile& other)
   if (this != &other) {
     Path::operator= (other);
     this->_original_file = File (other._data);
+    this->_new_file = File (other._data + ".new");
+
+    assert_no_new_file ();
   }
 
   return *this;
@@ -970,6 +976,18 @@ void AtomicFile::append (const std::string& line)
 void AtomicFile::write_raw (const std::string& line)
 {
   _original_file.write_raw (line);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::assert_no_new_file ()
+{
+  if (_new_file.exists ()) {
+    throw format (
+      "Temporary file {1} already exists. "
+      "This is likely caused by previous crash. Remove it to continue.",
+      _new_file.name ()
+    );
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
