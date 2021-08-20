@@ -898,6 +898,7 @@ AtomicFile::AtomicFile ()
 : Path::Path ()
 , _original_file (File ())
 , _new_file (File ())
+, _new_file_in_use (false)
 {
 }
 
@@ -906,6 +907,7 @@ AtomicFile::AtomicFile (const std::string& in)
 : Path::Path (in)
 , _original_file (File (in))
 , _new_file (File (in + ".new"))
+, _new_file_in_use (false)
 {
   assert_no_new_file ();
 }
@@ -927,7 +929,13 @@ AtomicFile& AtomicFile::operator= (const AtomicFile& other)
 ////////////////////////////////////////////////////////////////////////////////
 void AtomicFile::truncate ()
 {
-  _original_file.truncate ();
+  // Instead of truncating original file, we create new file. Subsequent writes
+  // will go to it. Once all writes are done, we will rename new file on top
+  // of original one.
+  if (! _new_file.create()) {
+    throw format ("Unable to create {1}", _new_file.name());
+  }
+  _new_file_in_use = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -939,12 +947,30 @@ size_t AtomicFile::size () const
 ////////////////////////////////////////////////////////////////////////////////
 void AtomicFile::close ()
 {
-  _original_file.close ();
+  if (_new_file_in_use)
+  {
+    _new_file.close ();
+    _original_file.close ();
+    if (! _new_file.rename (_original_file._data)) {
+      throw format(
+        "Unable to rename {1} to {2}",
+        _new_file.name (),
+        _original_file.name ());
+    }
+    _new_file_in_use = false;
+  }
+  else
+  {
+    _original_file.close ();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AtomicFile::read (std::vector <std::string>& contents)
 {
+  if (_new_file_in_use) {
+    throw "Can't read after overwrite";
+  }
   _original_file.read (contents);
 }
 
@@ -963,19 +989,40 @@ bool AtomicFile::open ()
 ////////////////////////////////////////////////////////////////////////////////
 void AtomicFile::append (const std::vector <std::string>& lines)
 {
-  _original_file.append (lines);
+  if (_new_file_in_use)
+  {
+    _new_file.append (lines);
+  }
+  else
+  {
+    _original_file.append (lines);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AtomicFile::append (const std::string& line)
 {
-  _original_file.append (line);
+  if (_new_file_in_use)
+  {
+    _new_file.append (line);
+  }
+  else
+  {
+    _original_file.append (line);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AtomicFile::write_raw (const std::string& line)
 {
-  _original_file.write_raw (line);
+  if (_new_file_in_use)
+  {
+    _new_file.write_raw (line);
+  }
+  else
+  {
+    _original_file.write_raw (line);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

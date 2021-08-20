@@ -142,11 +142,15 @@ private:
 };
 
 // AtomicFile class.
-// Currently just a very thin wrapper on top of File.
-// The intent is to implement atomic file replace: instead of truncate + write
-// as currently implemented by TDB2 + File, we will be creatin a new file and do
-// a rename(). It would not solve all problems but will still make data loss on
-// crash less likely.
+// Implements atomic file rewrite, or at least something close to it -
+// implementing fault-tolerant writes is mighty difficult. Main idea is that
+// instead of in-place truncate + write we create a completely new file,
+// write new version of the data into it, and rename it on top of the previous
+// version.
+//
+// The implementation is heavily based/influenced by AtomicFile.cpp from
+// timewarrior:
+// https://github.com/GothenburgBitFactory/timewarrior/blob/v1.4.3/src/AtomicFile.cpp
 //
 // See discussion in
 // https://github.com/GothenburgBitFactory/taskwarrior/issues/152
@@ -173,6 +177,7 @@ public:
 private:
   File _original_file;
   File _new_file;
+  bool _new_file_in_use;
 
   // Ensures .new file does not exists.
   // throws exception if it does.
