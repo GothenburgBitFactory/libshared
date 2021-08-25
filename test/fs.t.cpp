@@ -37,6 +37,9 @@ int main (int, char**)
 
   try
   {
+    ////////////////////////////////////////////////////////////////////////////
+    // Path tests
+
     // Path ();
     Path p0;
     t.is (p0._data, "", "Path::Path");
@@ -136,6 +139,8 @@ int main (int, char**)
     tmp.create ();
     t.ok (tmp.exists (), "tmp dir created.");
 
+    ////////////////////////////////////////////////////////////////////////////
+    // File tests
     File::write ("tmp/file.t.txt", "This is a test\n");
     File f6 ("tmp/file.t.txt");
     t.ok (f6.size () == 15, "File::size tmp/file.t.txt good");
@@ -191,10 +196,90 @@ int main (int, char**)
     t.notok (File::copy ("tmp/does-not-exits.txt", "tmp/should-not-exists.txt"), "File::copy returns false if not exists");
     t.notok (File ("tmp/should-not-exists.txt").exists (), "File::copy destination should not exist");
 
+    ////////////////////////////////////////////////////////////////////////////
+    // AtomicFile tests
+    File::write ("tmp/file.t.txt", "This is a test\n");
+    AtomicFile af1 ("tmp/file.t.txt");
+    t.ok (af1.size () == 15, "File::size tmp/file.t.txt good");
+    t.ok (af1.mode () & S_IRUSR, "File::mode tmp/file.t.txt good");
+    t.ok (File::remove ("tmp/file.t.txt"), "File::remove tmp/file.t.txt good");
+
+    // operator (std::string) const;
+    t.is ((std::string) af1, "tmp/file.t.txt", "File::operator (std::string) const");
+
+    t.ok (File::create ("tmp/file.t.create"), "File::create tmp/file.t.create good");
+    t.ok (File::remove ("tmp/file.t.create"), "File::remove tmp/file.t.create good");
+
+    // basename (std::string) const;
+    t.is (af1.name (), "file.t.txt", "File::basename tmp/file.t.txt --> file.t.txt");
+
+    // dirname (std::string) const;
+    t.is (af1.parent (), "tmp", "File::dirname tmp/file.t.txt --> tmp");
+
+    // bool rename (const std::string&);
+    AtomicFile af2 ("tmp/file.t.2.txt");
+    af2.append ("something\n");
+    af2.close ();
+
+    t.ok (af2.rename ("tmp/file.t.3.txt"),  "File::rename did not fail");
+    t.is (af2._data, "tmp/file.t.3.txt",    "File::rename stored new name");
+    t.ok (af2.exists (),                    "File::rename new file exists");
+    // remove () not implemented (yet?)
+    //t.ok (af2.remove (),                    "File::remove tmp/file.t.3.txt good");
+    //t.notok (af2.exists (),                 "File::remove new file no longer exists");
+    t.ok (File::remove ("tmp/file.t.3.txt"), "File::remove tmp/file.t.3.txt good");
+
+    // Test permissions.
+    AtomicFile af3 ("tmp/file.t.perm.txt");
+    // create() not implemented (yet?)
+    // af3.create (0744);
+    // t.ok (af3.exists (),                    "File::create perm file exists");
+    // mode_t m3 = af3.mode ();
+    // t.ok    (m3 & S_IFREG,                  "File::mode tmp/file.t.perm.txt S_IFREG good");
+    // t.ok    (m3 & S_IRUSR,                  "File::mode tmp/file.t.perm.txt r-------- good");
+    // t.ok    (m3 & S_IWUSR,                  "File::mode tmp/file.t.perm.txt -w------- good");
+    // t.ok    (m3 & S_IXUSR,                  "File::mode tmp/file.t.perm.txt --x------ good");
+    // t.ok    (m3 & S_IRGRP,                  "File::mode tmp/file.t.perm.txt ---r----- good");
+    // t.notok (m3 & S_IWGRP,                  "File::mode tmp/file.t.perm.txt ----w---- good");
+    // t.notok (m3 & S_IXGRP,                  "File::mode tmp/file.t.perm.txt -----x--- good");
+    // t.ok    (m3 & S_IROTH,                  "File::mode tmp/file.t.perm.txt ------r-- good");
+    // t.notok (m3 & S_IWOTH,                  "File::mode tmp/file.t.perm.txt -------w- good");
+    // t.notok (m3 & S_IXOTH,                  "File::mode tmp/file.t.perm.txt --------x good");
+    // remove () not implemented (yet?)
+    // af3.remove ();
+    // t.notok (af3.exists (),                 "File::remove perm file no longer exists");
+    // t.ok (File::remove ("tmp/file.t.txt"), "File::remove tmp/file.t.txt good");
+
+    File::write ("tmp/file.t.txt", "This is a test\n");
+    t.ok (File::copy ("tmp/file.t.txt", "tmp/file.t.copy.txt"), "File::copy returned true");
+    AtomicFile af4 ("tmp/file.t.copy.txt");
+    t.ok (af4.exists (),     "File::copy created copy");
+    t.ok (af4.size () == 15, "File::copy tmp/file.t.copy.txt good after copy");
+    t.notok (File::copy ("tmp/does-not-exits.txt", "tmp/should-not-exists.txt"), "File::copy returns false if not exists");
+    t.notok (File ("tmp/should-not-exists.txt").exists (), "File::copy destination should not exist");
+
+    File::write ("tmp/file.5.txt", "This is a test\n");
+    File::write ("tmp/file.5.txt.new", "This is a test\n");
+    bool exception_thrown = false;
+    try {
+      AtomicFile af5;
+      af5 = AtomicFile ("tmp/file.5.txt");
+    }
+    catch(...) {
+      exception_thrown = true;
+    }
+    t.ok (exception_thrown, "AtomicFile raises exception when .new file already exists");
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Path and *File tests cleanup:
     tmp.remove ();
     t.notok (tmp.exists (),                "tmp dir removed.");
     tmp.create ();
     t.ok (tmp.exists (), "tmp dir created.");
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Directory tests
 
     // Directory (const File&);
     // Directory (const Path&);

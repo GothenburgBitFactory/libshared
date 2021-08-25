@@ -367,6 +367,31 @@ std::vector <std::string> Path::glob (const std::string& pattern)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//  S_IFMT          0170000  type of file
+//         S_IFIFO  0010000  named pipe (fifo)
+//         S_IFCHR  0020000  character special
+//         S_IFDIR  0040000  directory
+//         S_IFBLK  0060000  block special
+//         S_IFREG  0100000  regular
+//         S_IFLNK  0120000  symbolic link
+//         S_IFSOCK 0140000  socket
+//         S_IFWHT  0160000  whiteout
+//  S_ISUID         0004000  set user id on execution
+//  S_ISGID         0002000  set group id on execution
+//  S_ISVTX         0001000  save swapped text even after use
+//  S_IRUSR         0000400  read permission, owner
+//  S_IWUSR         0000200  write permission, owner
+//  S_IXUSR         0000100  execute/search permission, owner
+mode_t Path::mode ()
+{
+  struct stat s;
+  if (stat (_data.c_str (), &s))
+    throw format ("stat error {1}: {2}", errno, strerror (errno));
+
+  return s.st_mode;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 File::File ()
 : Path::Path ()
 , _fh (nullptr)
@@ -675,31 +700,6 @@ void File::truncate ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  S_IFMT          0170000  type of file
-//         S_IFIFO  0010000  named pipe (fifo)
-//         S_IFCHR  0020000  character special
-//         S_IFDIR  0040000  directory
-//         S_IFBLK  0060000  block special
-//         S_IFREG  0100000  regular
-//         S_IFLNK  0120000  symbolic link
-//         S_IFSOCK 0140000  socket
-//         S_IFWHT  0160000  whiteout
-//  S_ISUID         0004000  set user id on execution
-//  S_ISGID         0002000  set group id on execution
-//  S_ISVTX         0001000  save swapped text even after use
-//  S_IRUSR         0000400  read permission, owner
-//  S_IWUSR         0000200  write permission, owner
-//  S_IXUSR         0000100  execute/search permission, owner
-mode_t File::mode ()
-{
-  struct stat s;
-  if (stat (_data.c_str (), &s))
-    throw format ("stat error {1}: {2}", errno, strerror (errno));
-
-  return s.st_mode;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 size_t File::size () const
 {
   struct stat s;
@@ -894,31 +894,175 @@ bool File::move (const std::string& from, const std::string& to)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+AtomicFile::AtomicFile ()
+: Path::Path ()
+, _original_file (File ())
+, _new_file (File ())
+, _new_file_in_use (false)
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AtomicFile::AtomicFile (const std::string& in)
+: Path::Path (in)
+, _original_file (File (in))
+, _new_file (File (in + ".new"))
+, _new_file_in_use (false)
+{
+  assert_no_new_file ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AtomicFile& AtomicFile::operator= (const AtomicFile& other)
+{
+  if (this != &other) {
+    Path::operator= (other);
+    this->_original_file = File (other._data);
+    this->_new_file = File (other._data + ".new");
+
+    assert_no_new_file ();
+  }
+
+  return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::truncate ()
+{
+  // Instead of truncating original file, we create new file. Subsequent writes
+  // will go to it. Once all writes are done, we will rename new file on top
+  // of original one.
+  if (! _new_file.create()) {
+    throw format ("Unable to create {1}", _new_file.name());
+  }
+  _new_file_in_use = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+size_t AtomicFile::size () const
+{
+  return _original_file.size ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::close ()
+{
+  if (_new_file_in_use)
+  {
+    _new_file.close ();
+    _original_file.close ();
+    if (! _new_file.rename (_original_file._data)) {
+      throw format(
+        "Unable to rename {1} to {2}",
+        _new_file.name (),
+        _original_file.name ());
+    }
+    _new_file_in_use = false;
+  }
+  else
+  {
+    _original_file.close ();
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::read (std::vector <std::string>& contents)
+{
+  if (_new_file_in_use) {
+    throw "Can't read after overwrite";
+  }
+  _original_file.read (contents);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AtomicFile::lock ()
+{
+  return _original_file.lock ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AtomicFile::open ()
+{
+  return _original_file.open ();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::append (const std::vector <std::string>& lines)
+{
+  if (_new_file_in_use)
+  {
+    _new_file.append (lines);
+  }
+  else
+  {
+    _original_file.append (lines);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::append (const std::string& line)
+{
+  if (_new_file_in_use)
+  {
+    _new_file.append (line);
+  }
+  else
+  {
+    _original_file.append (line);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::write_raw (const std::string& line)
+{
+  if (_new_file_in_use)
+  {
+    _new_file.write_raw (line);
+  }
+  else
+  {
+    _original_file.write_raw (line);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AtomicFile::assert_no_new_file ()
+{
+  if (_new_file.exists ()) {
+    throw format (
+      "Temporary file {1} already exists. "
+      "This is likely caused by previous crash. Remove it to continue.",
+      _new_file.name ()
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Directory::Directory ()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const Directory& other)
-: File::File (other)
+: Path::Path (other)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const File& other)
-: File::File (other)
+: Path::Path (other)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const Path& other)
-: File::File (other)
+: Path::Path (other)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Directory::Directory (const std::string& in)
-: File::File (in)
+: Path::Path (in)
 {
 }
 
@@ -926,7 +1070,7 @@ Directory::Directory (const std::string& in)
 Directory& Directory::operator= (const Directory& other)
 {
   if (this != &other)
-    File::operator= (other);
+    Path::operator= (other);
 
   return *this;
 }
