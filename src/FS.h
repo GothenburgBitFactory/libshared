@@ -72,26 +72,7 @@ public:
   std::string _data;
 };
 
-class AbstractFile : virtual public Path
-{
-public:
-  virtual void truncate () = 0;
-
-  virtual bool open () = 0;
-  virtual void close () = 0;
-
-  virtual bool lock () = 0;
-
-  virtual void read (std::vector <std::string>&) = 0;
-  virtual void append (const std::string&) = 0;
-  virtual void append (const std::vector <std::string>&) = 0;
-  virtual void write_raw (const std::string&) = 0;
-
-  virtual size_t size () const = 0;
-private:
-};
-
-class File : public AbstractFile
+class File : public Path
 {
 public:
   File ();
@@ -154,7 +135,7 @@ private:
 //
 // See discussion in
 // https://github.com/GothenburgBitFactory/taskwarrior/issues/152
-class AtomicFile : public AbstractFile
+class AtomicFile : public Path
 {
 public:
   AtomicFile ();
