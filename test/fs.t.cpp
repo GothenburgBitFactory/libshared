@@ -31,9 +31,8 @@
 #include <FS.h>
 #include <test.h>
 
-int main (int, char**)
+int test (UnitTest& t)
 {
-  UnitTest t (128);
 
   try
   {
@@ -399,3 +398,11 @@ int main (int, char**)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+int main (int, char**)
+{
+  UnitTest t (128);
+
+  test(t);
+
+}
