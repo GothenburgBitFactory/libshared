@@ -224,31 +224,10 @@ int main (int, char**)
     t.ok (af2.rename ("tmp/file.t.3.txt"),  "File::rename did not fail");
     t.is (af2._data, "tmp/file.t.3.txt",    "File::rename stored new name");
     t.ok (af2.exists (),                    "File::rename new file exists");
-    // remove () not implemented (yet?)
-    //t.ok (af2.remove (),                    "File::remove tmp/file.t.3.txt good");
-    //t.notok (af2.exists (),                 "File::remove new file no longer exists");
     t.ok (File::remove ("tmp/file.t.3.txt"), "File::remove tmp/file.t.3.txt good");
 
     // Test permissions.
     AtomicFile af3 ("tmp/file.t.perm.txt");
-    // create() not implemented (yet?)
-    // af3.create (0744);
-    // t.ok (af3.exists (),                    "File::create perm file exists");
-    // mode_t m3 = af3.mode ();
-    // t.ok    (m3 & S_IFREG,                  "File::mode tmp/file.t.perm.txt S_IFREG good");
-    // t.ok    (m3 & S_IRUSR,                  "File::mode tmp/file.t.perm.txt r-------- good");
-    // t.ok    (m3 & S_IWUSR,                  "File::mode tmp/file.t.perm.txt -w------- good");
-    // t.ok    (m3 & S_IXUSR,                  "File::mode tmp/file.t.perm.txt --x------ good");
-    // t.ok    (m3 & S_IRGRP,                  "File::mode tmp/file.t.perm.txt ---r----- good");
-    // t.notok (m3 & S_IWGRP,                  "File::mode tmp/file.t.perm.txt ----w---- good");
-    // t.notok (m3 & S_IXGRP,                  "File::mode tmp/file.t.perm.txt -----x--- good");
-    // t.ok    (m3 & S_IROTH,                  "File::mode tmp/file.t.perm.txt ------r-- good");
-    // t.notok (m3 & S_IWOTH,                  "File::mode tmp/file.t.perm.txt -------w- good");
-    // t.notok (m3 & S_IXOTH,                  "File::mode tmp/file.t.perm.txt --------x good");
-    // remove () not implemented (yet?)
-    // af3.remove ();
-    // t.notok (af3.exists (),                 "File::remove perm file no longer exists");
-    // t.ok (File::remove ("tmp/file.t.txt"), "File::remove tmp/file.t.txt good");
 
     File::write ("tmp/file.t.txt", "This is a test\n");
     t.ok (File::copy ("tmp/file.t.txt", "tmp/file.t.copy.txt"), "File::copy returned true");
