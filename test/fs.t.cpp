@@ -398,11 +398,20 @@ int test (UnitTest& t)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Fault injection tests - using https://github.com/albertito/libfiu
+
+
+int fiu_test (UnitTest& t)
+{
+  t.skip ("fiu test is not implemented yet");
+  return 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 int main (int, char**)
 {
   UnitTest t (128);
 
-  test(t);
-
+  return test (t) + fiu_test (t);
 }
