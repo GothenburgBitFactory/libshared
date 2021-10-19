@@ -189,9 +189,9 @@ bool Datetime::parse (
                                             parse_time_utc_ext  (pig)  ||
                                             parse_time_utc      (pig)  ||
                                             parse_time_off_ext  (pig)  ||
-                                            parse_time_off      (pig)  ||
                                             parse_time_ext      (pig)  ||
-        (Datetime::standaloneTimeEnabled && parse_time          (pig)) // Time last, as it is the most permissive.
+        (Datetime::standaloneTimeEnabled && parse_time          (pig)) || // Time last, as it is the most permissive.
+        (Datetime::standaloneTimeEnabled && parse_time_off      (pig))
        )
       )
      )
@@ -1041,7 +1041,7 @@ bool Datetime::parse_time_utc (Pig& pig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// <time> <off>
+// <time><off>
 bool Datetime::parse_time_off (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
