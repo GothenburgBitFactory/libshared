@@ -25,6 +25,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
+// Needed for Cygwin compatibility (see #2632)
+#if defined CYGWIN
+#define _GNU_SOURCE
+#endif
 #include <FS.h>
 #include <fstream>
 #include <glob.h>
