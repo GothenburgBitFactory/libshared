@@ -265,7 +265,7 @@ int main (int, char**)
   t.ok (sopww < soww,               "sopww < soww");
   t.ok (sopy < soy,                 "sopy < soy");
   t.ok (sow < sonw,                 "sow < sonw");
-  t.ok (soww == sonww,              "soww == sonww");
+  t.ok (soww < sonww,               "soww < sonww");
   t.ok (soy > sopy,                 "soy > sopy");
   t.ok (today < tomorrow,           "today < tomorrow");
   t.ok (yesterday < today,          "yesterday < today");
