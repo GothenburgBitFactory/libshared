@@ -47,9 +47,4 @@ class TimeoutWaitingFor(Exception):
         return "*** Timeout reached while waiting for {0} ***".format(
             self.name)
 
-
-class StreamsAreMerged(object):
-    def __repr__(self):
-        return "*** Streams are merged, STDERR is not available ***"
-
 # vim: ai sts=4 et sw=4
