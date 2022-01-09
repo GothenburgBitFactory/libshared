@@ -9,7 +9,6 @@ import tempfile
 import unittest
 from .exceptions import CommandError
 from .utils import run_cmd_wait, run_cmd_wait_nofail, which, shared_binary_location, DEFAULT_EXTENSION_PATH
-from .compat import STRING_TYPE
 
 
 class Shared(object):
@@ -73,7 +72,7 @@ class Shared(object):
         argument. The string is literally the same as if written in the shell.
         """
         # Enable nicer-looking calls by allowing plain strings
-        if isinstance(args, STRING_TYPE):
+        if isinstance(args, str):
             args = shlex.split(args)
 
         return args
