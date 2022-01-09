@@ -48,7 +48,7 @@ class Shared(object):
 
         extfile = os.path.join(self.extdir, filename)
         if os.path.isfile(extfile):
-            raise "{} already exists".format(extfile)
+            raise IOError("{} already exists".format(extfile))
 
         shutil.copy(os.path.join(DEFAULT_EXTENSION_PATH, filename), extfile)
 
