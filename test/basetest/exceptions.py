@@ -39,7 +39,7 @@ class HookError(Exception):
     pass
 
 
-class TimeoutWaitingFor(object):
+class TimeoutWaitingFor(Exception):
     def __init__(self, name):
         self.name = name
 
