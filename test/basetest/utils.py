@@ -129,8 +129,7 @@ def _queue_output(arguments, pidq, outputq):
     # Send input and wait for finish
     out, err = proc.communicate(input)
 
-    if sys.version_info > (3,):
-        out, err = out.decode('utf-8'), err.decode('utf-8')
+    out, err = out.decode('utf-8'), err.decode('utf-8')
 
     # Give the output back to the caller
     outputq.put((out, err, proc.returncode))
