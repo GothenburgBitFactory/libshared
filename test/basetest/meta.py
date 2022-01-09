@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, division
-
-
 class MetaTest(type):
     """Helper metaclass to simplify dynamic test creation
 
