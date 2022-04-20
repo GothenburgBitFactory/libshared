@@ -8,6 +8,12 @@ if(POLICY CMP0037 AND ${CMAKE_VERSION} VERSION_LESS "3.11.0")
   cmake_policy(SET CMP0037 OLD)
 endif()
 
+# If this is a debug build, require libfiu.
+if (CMAKE_BUILD_TYPE MATCHES "(DEBUG|Debug|debug)")
+  find_library(FIU_ENABLE fiu) 
+  set (test_LIBS fiu)
+endif (CMAKE_BUILD_TYPE MATCHES "(DEBUG|Debug|debug)")
+
 include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_SOURCE_DIR}/src
                      ${CMAKE_SOURCE_DIR}/test
@@ -21,9 +27,8 @@ add_custom_target (test ./run_all --verbose
 
 foreach (src_FILE ${test_SRCS})
   add_executable (${src_FILE} "${src_FILE}.cpp" test.cpp)
-  target_link_libraries (${src_FILE} shared ${SHARED_LIBRARIES})
+  target_link_libraries (${src_FILE} shared ${test_LIBS} ${SHARED_LIBRARIES})
 endforeach (src_FILE)
 
 configure_file(run_all run_all COPYONLY)
 configure_file(problems problems COPYONLY)
-

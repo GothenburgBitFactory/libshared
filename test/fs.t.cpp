@@ -27,9 +27,13 @@
 #include <cmake.h>
 #include <algorithm>
 #include <string>
+#include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <FS.h>
 #include <test.h>
+#include <fiu.h>
+#include <fiu-control.h>
 
 int test (UnitTest& t)
 {
@@ -401,9 +405,86 @@ int test (UnitTest& t)
 // Fault injection tests - using https://github.com/albertito/libfiu
 
 
+// This class is a helper to make sure we turn off libfiu after the test so that
+// we can properly write to stdout / stderr.
+class FIU
+{
+public:
+  FIU()
+  {
+    enable();
+  }
+
+  FIU(const FIU&) = delete;
+  FIU& operator= (const FIU&) = delete;
+
+  ~FIU()
+  {
+    disable ();
+    std::cout << cbuffer.str();
+    std::stringstream().swap(cbuffer);
+  }
+
+  void enable ()
+  {
+    for (auto test_point : test_points)
+    {
+      fiu_enable_external(test_point, 1, NULL, 0, fiu_cb);
+    }
+  }
+
+  void disable ()
+  {
+    for (auto test_point : test_points)
+    {
+      fiu_disable(test_point);
+    }
+  }
+
+private:
+  static const std::vector <const char *> test_points;
+  static std::stringstream cbuffer;
+
+  static int external_cb_was_called;
+
+  static int fiu_cb(const char *name, int *failnum,
+                    void **failinfo, unsigned int *flags)
+  {
+    (void)name;
+    (void)flags;
+    external_cb_was_called++;
+
+    // For debugging the tests themselves...
+    // cbuffer << "fiu_cb called for " << name << '\n';
+
+    *failinfo = (void *) EIO;
+
+    return *failnum;
+  }
+};
+
+const std::vector <const char *> FIU::test_points {
+  "posix/stdio/gp/fputs",
+  "posix/io/rw/write",
+};
+
+std::stringstream FIU::cbuffer;
+int FIU::external_cb_was_called = 0;
+
 int fiu_test (UnitTest& t)
 {
-  t.skip ("fiu test is not implemented yet");
+  Directory tmp ("tmp");
+  tmp.create ();
+  fiu_init (0);
+
+  try {
+    FIU fiu;
+    AtomicFile ("tmp/test.txt").write_raw ("This is  test");
+    t.fail ("AtomicFile::write_raw throws on error"); }
+  catch (...) {
+    t.pass ("AtomicFile::write_raw throws on error");
+  }
+
   return 1;
 }
 
