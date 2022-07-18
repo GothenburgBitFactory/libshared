@@ -504,7 +504,12 @@ void File::close ()
       // fsync() on macOS flush data to the drvice but does not force drive
       // flush.
       if (fcntl (fileno (_fh), F_FULLFSYNC, 0))
-        throw format ("fcntl F_FULLFSYNC error {1}: {2}", errno, strerror (errno));
+      {
+        // Some filesystems, like smbfs, do not support F_FULLFSYNC
+        // operation. In those cases, fallback to fsync.
+        if (fsync (fileno (_fh)))
+          throw format ("fsync error {1}: {2}", errno, strerror (errno));
+      }
     #else
       if (fsync (fileno (_fh)))
         throw format ("fsync error {1}: {2}", errno, strerror (errno));
