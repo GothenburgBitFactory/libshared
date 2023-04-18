@@ -27,6 +27,7 @@
 #ifndef INCLUDED_JSON
 #define INCLUDED_JSON
 
+#include <cstdint>
 #include <map>
 #include <vector>
 #include <string>
