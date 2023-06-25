@@ -26,10 +26,10 @@
 
 #include <JSON.h>
 #include <cmake.h>
-#include <errno.h>
-#include <inttypes.h>
+#include <cerrno>
+#include <cinttypes>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////

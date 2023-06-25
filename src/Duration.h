@@ -29,7 +29,7 @@
 
 #include <Pig.h>
 #include <string>
-#include <time.h>
+#include <ctime>
 
 class Duration
 {

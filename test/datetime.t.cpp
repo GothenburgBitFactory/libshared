@@ -28,7 +28,7 @@
 #include <cmake.h>
 #include <iostream>
 #include <test.h>
-#include <time.h>
+#include <ctime>
 
 ////////////////////////////////////////////////////////////////////////////////
 void testParse (

@@ -28,7 +28,7 @@
 #include <cmake.h>
 #include <shared.h>
 #include <sstream>
-#include <string.h>
+#include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////
 void Args::addOption (const std::string& name, bool defaultValue)

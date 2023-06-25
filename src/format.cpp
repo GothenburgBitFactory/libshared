@@ -33,10 +33,10 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <string.h>
+#include <cstring>
 #include <strings.h>
 #include <sys/select.h>
-#include <time.h>
+#include <ctime>
 #include <unistd.h>
 #include <utf8.h>
 

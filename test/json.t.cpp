@@ -28,7 +28,7 @@
 #include <cmake.h>
 #include <iostream>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <test.h>
 
 const char *positive_tests[] =

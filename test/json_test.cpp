@@ -29,7 +29,7 @@
 #include <cmake.h>
 #include <iostream>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
 
 ////////////////////////////////////////////////////////////////////////////////

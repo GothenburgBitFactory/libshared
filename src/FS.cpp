@@ -32,21 +32,21 @@
 #include <FS.h>
 #include <cstdio>
 #include <dirent.h>
-#include <errno.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <format.h>
 #include <fstream>
 #include <glob.h>
 #include <pwd.h>
 #include <shared.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD || defined DRAGONFLY || !defined(__GLIBC__)
-#include <limits.h>
+#include <climits>
 #endif
 
 #if defined __APPLE__

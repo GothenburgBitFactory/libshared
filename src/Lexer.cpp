@@ -29,7 +29,7 @@
 #include <Lexer.h>
 #include <algorithm>
 #include <cmake.h>
-#include <ctype.h>
+#include <cctype>
 #include <tuple>
 #include <unicode.h>
 #include <utf8.h>

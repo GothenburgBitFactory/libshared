@@ -27,7 +27,7 @@
 #include <Lexer.h>
 #include <cmake.h>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <test.h>
 #include <vector>
 

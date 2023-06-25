@@ -27,7 +27,7 @@
 #include <FS.h>
 #include <algorithm>
 #include <cmake.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 #include <test.h>
 

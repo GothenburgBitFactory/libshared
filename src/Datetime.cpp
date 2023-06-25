@@ -33,7 +33,7 @@
 #include <iostream>
 #include <shared.h>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <unicode.h>
 #include <utf8.h>
 

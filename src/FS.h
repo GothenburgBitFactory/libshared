@@ -27,7 +27,7 @@
 #ifndef INCLUDED_FS
 #define INCLUDED_FS
 
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <sys/stat.h>
 #include <vector>

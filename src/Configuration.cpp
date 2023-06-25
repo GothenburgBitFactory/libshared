@@ -29,9 +29,9 @@
 #include <JSON.h>
 #include <cmake.h>
 #include <format.h>
-#include <inttypes.h>
+#include <cinttypes>
 #include <shared.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool setVariableInFile (

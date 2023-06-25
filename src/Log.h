@@ -30,7 +30,7 @@
 #include <Datetime.h>
 #include <FS.h>
 #include <set>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <vector>
 
