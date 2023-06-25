@@ -43,7 +43,7 @@ int main (int, char**)
   t.is (rules["thing"][0][0]._token,  "item",                                    "question: thing: item");
   t.ok (rules["thing"][0][0]._quantifier == PEG::Token::Quantifier::one_or_more, "question: thing: item quantifier one_or_more");
   t.ok (rules["thing"][0][0]._lookahead == PEG::Token::Lookahead::none,          "question: thing: item lookahead none");
-  t.ok (rules["thing"][0][0]._tags.empty(),                                      "question: thing: item tags {}");
+  t.ok (rules["thing"][0][0]._tags.empty (),                                     "question: thing: item tags {}");
 
   t.is (rules["item"][0][0]._token,  "'a'",                                      "question: item: 'a'");
   t.ok (rules["item"][0][0]._quantifier == PEG::Token::Quantifier::one,          "question: item: 'a' quantifier one");

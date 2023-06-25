@@ -235,7 +235,7 @@ Color::Color (const std::string& spec)
         fg_value |= _COLOR_256;
       }
     }
-    else if (!word.empty())
+    else if (!word.empty ())
       throw format ("The color '{1}' is not recognized.", word);
   }
 

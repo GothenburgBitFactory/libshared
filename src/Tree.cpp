@@ -231,7 +231,7 @@ std::string Tree::dumpNode (
   std::string atts;
   for (auto& a : t->_attributes)
   {
-    if (!atts.empty())
+    if (!atts.empty ())
       atts += ' ';
 
     atts += a.first + "='\033[33m" + a.second + "\033[0m'";

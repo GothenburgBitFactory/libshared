@@ -236,7 +236,7 @@ void Datetime::clear ()
 bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 {
   // Short-circuit on missing format.
-  if (format.empty())
+  if (format.empty ())
     return false;
 
   auto checkpoint = pig.cursor ();

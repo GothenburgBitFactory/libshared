@@ -307,7 +307,7 @@ bool Duration::parse_units (Pig& pig)
 
   // Static and so preserved between calls.
   static std::vector <std::string> units;
-  if (units.empty())
+  if (units.empty ())
     for (unsigned int i = 0; i < NUM_DURATIONS; i++)
       units.push_back (durations[i].unit);
 

@@ -61,7 +61,7 @@ void Log::write (const std::string& category, const std::string& line)
   if (_ignore.find (category) != _ignore.end ())
     return;
 
-  if (!line.empty())
+  if (!line.empty ())
   {
     // If line contains newlines, split it into separate lines and log each one.
     if (line.find ('\n') != std::string::npos)
@@ -82,7 +82,7 @@ void Log::write (const std::string& category, const std::string& line)
       _prior = line;
 
       // Catch up by writing out the backlog.
-      if (!_name.empty() && !_backlog.empty())
+      if (!_name.empty () && !_backlog.empty ())
       {
         for (const auto& line : _backlog)
           _file.append (line); 
@@ -98,7 +98,7 @@ void Log::write (const std::string& category, const std::string& line)
                             + ' ' + format ("(Repeated {1} times)", _repetition)
                             + '\n';
 
-        if (!_name.empty())
+        if (!_name.empty ())
           _file.append (message);
         else
           _backlog.push_back (message);
@@ -112,7 +112,7 @@ void Log::write (const std::string& category, const std::string& line)
                           + ' ' + line
                           + '\n';
 
-      if (!_name.empty())
+      if (!_name.empty ())
         _file.append (message);
       else
         _backlog.push_back (message);

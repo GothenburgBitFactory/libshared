@@ -124,7 +124,7 @@ bool RX::match (
       ++offset;
   }
 
-  return !matches.empty() ? true : false;
+  return !matches.empty () ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +151,7 @@ bool RX::match (
       ++offset;
   }
 
-  return !start.empty() ? true : false;
+  return !start.empty () ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
