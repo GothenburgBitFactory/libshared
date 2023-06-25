@@ -28,10 +28,10 @@
 #define INCLUDED_PEG
 
 #include <FS.h>
-#include <string>
-#include <vector>
 #include <map>
 #include <set>
+#include <string>
+#include <vector>
 
 class PEG
 {

@@ -24,13 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <Lexer.h>
 #include <Datetime.h>
 #include <Duration.h>
+#include <Lexer.h>
 #include <algorithm>
-#include <tuple>
+#include <cmake.h>
 #include <ctype.h>
+#include <tuple>
 #include <unicode.h>
 #include <utf8.h>
 

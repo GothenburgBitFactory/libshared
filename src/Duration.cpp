@@ -24,11 +24,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Duration.h>
-#include <unicode.h>
-#include <sstream>
+#include <cmake.h>
 #include <iomanip>
+#include <sstream>
+#include <unicode.h>
 #include <vector>
 
 bool Duration::standaloneSecondsEnabled = true;

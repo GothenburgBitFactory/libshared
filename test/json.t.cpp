@@ -24,11 +24,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <sstream>
-#include <iostream>
-#include <stdlib.h>
 #include <JSON.h>
+#include <cmake.h>
+#include <iostream>
+#include <sstream>
+#include <stdlib.h>
 #include <test.h>
 
 const char *positive_tests[] =

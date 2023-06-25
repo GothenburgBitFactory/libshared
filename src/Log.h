@@ -27,12 +27,12 @@
 #ifndef INCLUDED_LOG
 #define INCLUDED_LOG
 
-#include <FS.h>
 #include <Datetime.h>
-#include <vector>
+#include <FS.h>
 #include <set>
-#include <string>
 #include <stdio.h>
+#include <string>
+#include <vector>
 
 class Log
 {

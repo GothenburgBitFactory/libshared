@@ -26,8 +26,8 @@
 
 #include <cmake.h>
 #include <shared.h>
-#include <test.h>
 #include <stdlib.h>
+#include <test.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)

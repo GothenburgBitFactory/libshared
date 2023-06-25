@@ -27,9 +27,9 @@
 #ifndef INCLUDED_TABLE
 #define INCLUDED_TABLE
 
+#include <Color.h>
 #include <string>
 #include <vector>
-#include <Color.h>
 
 class Table
 {

@@ -24,13 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Color.h>
+#include <cmake.h>
+#include <cstdlib>
+#include <format.h>
+#include <shared.h>
 #include <sstream>
 #include <vector>
-#include <cstdlib>
-#include <shared.h>
-#include <format.h>
 
 // uint to string lookup table for Color::_colorize()
 // _colorize() gets called _a lot_, having this lookup table is a cheap

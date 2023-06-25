@@ -27,9 +27,9 @@
 #ifndef INCLUDED_DATETIME
 #define INCLUDED_DATETIME
 
-#include <string>
-#include <ctime>
 #include <Pig.h>
+#include <ctime>
+#include <string>
 
 class Datetime
 {

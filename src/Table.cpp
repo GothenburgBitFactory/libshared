@@ -24,12 +24,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Table.h>
-#include <shared.h>
+#include <cmake.h>
 #include <format.h>
-#include <utf8.h>
+#include <shared.h>
 #include <unistd.h>
+#include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 void Table::add (const std::string& col, bool alignLeft, bool wrap)

@@ -24,9 +24,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <cctype>
 #include <cmake.h>
 #include <shared.h>
-#include <cctype>
 
 static bool isPort (const std::string&, unsigned int&);
 static bool isChar (const std::string&, char, unsigned int&);

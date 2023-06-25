@@ -27,10 +27,10 @@
 #ifndef INCLUDED_CONFIGURATION
 #define INCLUDED_CONFIGURATION
 
-#include <map>
-#include <vector>
-#include <string>
 #include <FS.h>
+#include <map>
+#include <string>
+#include <vector>
 
 bool setVariableInFile   (const std::string&, const std::string&, const std::string&);
 bool unsetVariableInFile (const std::string&, const std::string&);

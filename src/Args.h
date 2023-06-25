@@ -27,9 +27,9 @@
 #ifndef INCLUDED_ARGS
 #define INCLUDED_ARGS
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 class Args
 {

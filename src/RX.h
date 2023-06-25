@@ -27,9 +27,9 @@
 #ifndef INCLUDED_RX
 #define INCLUDED_RX
 
+#include <regex.h>
 #include <string>
 #include <vector>
-#include <regex.h>
 
 class RX
 {

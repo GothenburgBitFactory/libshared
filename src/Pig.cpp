@@ -24,15 +24,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Pig.h>
+#include <algorithm>
+#include <cinttypes>
+#include <cmake.h>
+#include <cstdlib>
 #include <shared.h>
+#include <sstream>
 #include <unicode.h>
 #include <utf8.h>
-#include <algorithm>
-#include <sstream>
-#include <cinttypes>
-#include <cstdlib>
 
 ////////////////////////////////////////////////////////////////////////////////
 Pig::Pig (const std::string& text)

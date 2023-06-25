@@ -24,11 +24,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <JSON.h>
+#include <cmake.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 class EventSink : public json::SAX::Sink
 {

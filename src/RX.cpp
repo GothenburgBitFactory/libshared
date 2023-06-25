@@ -24,8 +24,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <RX.h>
+#include <cmake.h>
 #include <cstdlib>
 #include <cstring>
 

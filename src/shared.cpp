@@ -24,23 +24,23 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <shared.h>
-#include <utf8.h>
 #include <algorithm>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
 #include <cctype>
-#include <strings.h>
-#include <unistd.h>
-#include <sys/select.h>
 #include <cerrno>
-#include <csignal>
+#include <cmake.h>
 #include <cmath>
+#include <csignal>
 #include <cstring>
-#include <sys/wait.h>
 #include <format.h>
+#include <iomanip>
+#include <iostream>
+#include <shared.h>
+#include <sstream>
+#include <strings.h>
+#include <sys/select.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <utf8.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 void wrapText (

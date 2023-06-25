@@ -28,8 +28,8 @@
 #define INCLUDED_PALETTE
 
 #include <Color.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 class Palette
 {

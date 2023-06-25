@@ -24,13 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Packrat.h>
-#include <shared.h>
+#include <cmake.h>
 #include <format.h>
+#include <iostream>
+#include <shared.h>
 #include <unicode.h>
 #include <utf8.h>
-#include <iostream>
 
 int Packrat::minimumMatchLength = 3;
 

@@ -24,21 +24,21 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <format.h>
-#include <utf8.h>
 #include <algorithm>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
 #include <cctype>
-#include <strings.h>
+#include <cmake.h>
+#include <cmath>
+#include <csignal>
+#include <format.h>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 #include <string.h>
-#include <unistd.h>
+#include <strings.h>
 #include <sys/select.h>
 #include <time.h>
-#include <csignal>
-#include <cmath>
+#include <unistd.h>
+#include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string format (std::string& value)

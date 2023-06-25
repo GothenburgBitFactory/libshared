@@ -28,8 +28,8 @@
 #define INCLUDED_PACKRAT
 
 #include <PEG.h>
-#include <Tree.h>
 #include <Pig.h>
+#include <Tree.h>
 #include <string>
 
 class Packrat

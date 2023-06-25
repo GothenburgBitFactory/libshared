@@ -24,11 +24,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <algorithm>
-#include <string>
-#include <stdlib.h>
 #include <FS.h>
+#include <algorithm>
+#include <cmake.h>
+#include <stdlib.h>
+#include <string>
 #include <test.h>
 
 int main (int, char**)

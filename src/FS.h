@@ -29,8 +29,8 @@
 
 #include <stdio.h>
 #include <string>
-#include <vector>
 #include <sys/stat.h>
+#include <vector>
 
 #ifndef PATH_MAX
 #define PATH_MAX 4096

@@ -24,13 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <JSON.h>
-#include <utf8.h>
+#include <cmake.h>
+#include <errno.h>
+#include <inttypes.h>
 #include <sstream>
 #include <stdlib.h>
-#include <inttypes.h>
-#include <errno.h>
+#include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool json::SAX::parse (const std::string& input, SAX::Sink& sink)

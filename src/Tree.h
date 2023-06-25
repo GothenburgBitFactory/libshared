@@ -28,9 +28,9 @@
 #define INCLUDED_TREE
 
 #include <map>
-#include <vector>
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 class Tree;
 

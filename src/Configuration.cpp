@@ -24,14 +24,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Configuration.h>
-#include <inttypes.h>
-#include <stdlib.h>
 #include <FS.h>
 #include <JSON.h>
-#include <shared.h>
+#include <cmake.h>
 #include <format.h>
+#include <inttypes.h>
+#include <shared.h>
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool setVariableInFile (

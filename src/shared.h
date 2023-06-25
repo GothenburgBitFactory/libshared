@@ -27,8 +27,8 @@
 #ifndef INCLUDED_SHARED
 #define INCLUDED_SHARED
 
-#include <sstream>
 #include <algorithm>
+#include <sstream>
 #include <string>
 #include <vector>
 

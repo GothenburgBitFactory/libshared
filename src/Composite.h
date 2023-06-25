@@ -28,9 +28,9 @@
 #define INCLUDED_COMPOSITE
 
 #include <Color.h>
-#include <vector>
 #include <string>
 #include <tuple>
+#include <vector>
 
 class Composite
 {

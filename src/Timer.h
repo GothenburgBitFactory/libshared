@@ -27,8 +27,8 @@
 #ifndef INCLUDED_TIMER
 #define INCLUDED_TIMER
 
-#include <string>
 #include <chrono>
+#include <string>
 
 class Timer
 {

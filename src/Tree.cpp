@@ -24,13 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Tree.h>
 #include <algorithm>
-#include <iostream>
-#include <sstream>
-#include <shared.h>
+#include <cmake.h>
 #include <format.h>
+#include <iostream>
+#include <shared.h>
+#include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////
 //  - Tree, Branch and Node are synonymous.

@@ -27,8 +27,8 @@
 #ifndef INCLUDED_FORMAT
 #define INCLUDED_FORMAT
 
-#include <sstream>
 #include <algorithm>
+#include <sstream>
 #include <string>
 #include <vector>
 

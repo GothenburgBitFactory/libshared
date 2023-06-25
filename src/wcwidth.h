@@ -12,9 +12,9 @@
 #define WIDECHAR_WIDTH_H
 
 #include <algorithm>
-#include <iterator>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 
 namespace {
 

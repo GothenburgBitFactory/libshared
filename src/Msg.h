@@ -28,8 +28,8 @@
 #define INCLUDED_MSG
 
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
 
 class Msg
 {

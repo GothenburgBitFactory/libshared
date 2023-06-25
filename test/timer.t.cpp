@@ -24,8 +24,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <Timer.h>
+#include <cmake.h>
 #include <format.h>
 #include <test.h>
 

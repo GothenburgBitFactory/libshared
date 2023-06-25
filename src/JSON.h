@@ -27,11 +27,11 @@
 #ifndef INCLUDED_JSON
 #define INCLUDED_JSON
 
+#include <Pig.h>
 #include <cstdint>
 #include <map>
-#include <vector>
 #include <string>
-#include <Pig.h>
+#include <vector>
 
 namespace json
 {

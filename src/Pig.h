@@ -27,9 +27,9 @@
 #ifndef INCLUDED_PIG
 #define INCLUDED_PIG
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 class Pig
 {

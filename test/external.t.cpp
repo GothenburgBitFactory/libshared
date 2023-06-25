@@ -24,13 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
-#include <iostream>
 #include <PEG.h>
 #include <Packrat.h>
-#include <test.h>
 #include <Pig.h>
 #include <Tree.h>
+#include <cmake.h>
+#include <iostream>
+#include <test.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool externalParser (Pig& pig, const std::shared_ptr <Tree>& branch)

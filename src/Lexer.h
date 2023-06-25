@@ -27,11 +27,11 @@
 #ifndef INCLUDED_LEXER
 #define INCLUDED_LEXER
 
-#include <string>
-#include <map>
-#include <vector>
-#include <tuple>
 #include <cstddef>
+#include <map>
+#include <string>
+#include <tuple>
+#include <vector>
 
 class Lexer
 {
