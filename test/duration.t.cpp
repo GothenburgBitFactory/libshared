@@ -325,7 +325,7 @@ int main (int, char**)
   // 14288d 23:31:30
   t.ok (d.days ()    == 14288,      "Duration 1234567890 -> days = 14288");
   t.ok (d.hours ()   == 342935,     "Duration 1234567890 -> hours = 342935");
-  t.ok (d.minutes () == 20576131,   "Duration 1234567890 -> miniutes = 20576131");
+  t.ok (d.minutes () == 20576131,   "Duration 1234567890 -> minutes = 20576131");
   t.ok (d.seconds () == 1234567890, "Duration 1234567890 -> seconds = 123456789030");
 
   // formatVague (true)

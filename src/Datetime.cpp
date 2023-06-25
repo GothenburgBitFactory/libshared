@@ -614,7 +614,7 @@ bool Datetime::parse_named (Pig& pig)
   auto checkpoint = pig.cursor ();
 
   // Experimental handling of date phrases, such as "first monday in march".
-  // Note that this requires that phrases are deliminted by EOS or WS.
+  // Note that this requires that phrases are delimited by EOS or WS.
   std::string token;
   std::vector <std::string> tokens;
   while (pig.getUntilWS (token))
@@ -3120,7 +3120,7 @@ bool Datetime::validate ()
 // int tm_year;      year - 1900
 // int tm_wday;      day of week (Sunday = 0)
 // int tm_yday;      day of year (0 - 365)
-// int tm_isdst;     is summer time in effect?
+// int tm_isdst;     is daylight saving time in effect?
 // char *tm_zone;    abbreviation of timezone name
 // long tm_gmtoff;   offset from UTC in seconds
 void Datetime::resolve ()
@@ -3410,7 +3410,7 @@ bool Datetime::valid (const int y, const int m, const int d)
     return false;
 
   // Finally check that the days fall within the acceptable range for this
-  // month, and whether or not this is a leap year.
+  // month, and whether this is a leap year.
   if (d < 1 || d > Datetime::daysInMonth (y, m))
     return false;
 

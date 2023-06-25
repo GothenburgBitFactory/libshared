@@ -166,7 +166,7 @@ bool Lexer::isNumber (std::string& token, Lexer::Type& type)
       }
     }
 
-    // Lookahread: !<unicodeWhitespace> | !<isSingleCharOperator>
+    // Lookahead: !<unicodeWhitespace> | !<isSingleCharOperator>
     // If there is an immediately consecutive character, that is not an operator, fail.
     if (_eos > marker &&
         ! unicodeWhitespace (_text[marker]) &&
@@ -210,7 +210,7 @@ bool Lexer::isSingleCharOperator (int c)
   return c == '+' ||  // Addition
          c == '-' ||  // Subtraction or unary minus = ambiguous
          c == '*' ||  // Multiplication
-         c == '/' ||  // Diviѕion
+         c == '/' ||  // Division
          c == '(' ||  // Precedence open parenthesis
          c == ')' ||  // Precedence close parenthesis
          c == '<' ||  // Less than
@@ -840,7 +840,7 @@ bool Lexer::readWord (
       case 'v':  word += (char) 0x0B; ++cursor; break;
 
       // This pass-through default case means that anything can be escaped
-      // harmlessly. In particular 'quote' is included, if it not one of the
+      // harmlessly. In particular 'quote' is included, if it is not one of the
       // above characters.
       default:   word += (char) c;    ++cursor; break;
       }
@@ -924,7 +924,7 @@ bool Lexer::readWord (
       case 'v':  word += (char) 0x0B; ++cursor; break;
 
       // This pass-through default case means that anything can be escaped
-      // harmlessly. In particular 'quote' is included, if it not one of the
+      // harmlessly. In particular 'quote' is included, if it is not one of the
       // above characters.
       default:   word += (char) c;    ++cursor; break;
       }

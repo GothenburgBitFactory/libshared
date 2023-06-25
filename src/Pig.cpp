@@ -521,7 +521,7 @@ bool Pig::getQuoted (int quote, std::string& result)
   {
     i = _text->find (quote, i);
     if (i == std::string::npos)
-      return false;  // Unclosed quote.  Short cut, not definitive.
+      return false;  // Unclosed quote. Shortcut, not definitive.
 
     if (i == start)
     {

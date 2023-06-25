@@ -85,7 +85,7 @@ class Shared(object):
         *not* fail if program finishes abnormally.
 
         If you wish to pass instructions to shared such as confirmations or other
-        input via stdin, you can do so by providing a input string.
+        input via stdin, you can do so by providing an input string.
         Such as input="y\ny\n".
 
         If merge_streams=True stdout and stderr will be merged into stdout.
@@ -119,7 +119,7 @@ class Shared(object):
         *fail* if program finishes abnormally.
 
         If you wish to pass instructions to shared such as confirmations or other
-        input via stdin, you can do so by providing a input string.
+        input via stdin, you can do so by providing an input string.
         Such as input="y\ny\n".
 
         If merge_streams=True stdout and stderr will be merged into stdout.

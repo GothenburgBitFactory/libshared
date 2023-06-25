@@ -244,7 +244,7 @@ def run_cmd_wait(cmd, input=None, stdout=PIPE, stderr=PIPE,
 
 
 def run_cmd_wait_nofail(*args, **kwargs):
-    "Same as run_cmd_wait but silence the exception if it happens"
+    """Same as run_cmd_wait but silence the exception if it happens"""
     try:
         return run_cmd_wait(*args, **kwargs)
     except CommandError as e:
@@ -252,7 +252,7 @@ def run_cmd_wait_nofail(*args, **kwargs):
 
 
 def memoize(obj):
-    """Keep an in-memory cache of function results given it's inputs
+    """Keep an in-memory cache of function results given its inputs
     """
     cache = obj.cache = {}
 

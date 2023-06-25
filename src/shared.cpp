@@ -351,7 +351,7 @@ bool extractLine (
               if (line_width + 1 <= width)
               {
                 // if the last good part + hyphen is short enough,
-                // ie. the just read character is wider than one column
+                // i.e. the just read character is wider than one column
                 line = text.substr (offset, last_bytes - offset) + '-';
                 offset = last_bytes;
               }

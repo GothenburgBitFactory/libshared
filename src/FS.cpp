@@ -501,7 +501,7 @@ void File::close ()
         throw format ("fdatasync error {1}: {2}", errno, strerror (errno));
     #elif defined (DARWIN)
       // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fsync.2.html
-      // fsync() on macOS flush data to the drvice but does not force drive
+      // fsync() on macOS flush data to the device but does not force drive
       // flush.
       if (fcntl (fileno (_fh), F_FULLFSYNC, 0))
       {
