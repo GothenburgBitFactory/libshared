@@ -771,43 +771,43 @@ int main (int, char**)
       if (now.dayOfWeek () >= 0)
         t.ok (r4.sameDay (now + (0 - now.dayOfWeek () + 7) * 86400), "sunday -> next sunday");
       else
-        t.ok (r4.sameDay (now + (0 - now.dayOfWeek ()) * 86400), "sunday -> next sunday");;
+        t.ok (r4.sameDay (now + (0 - now.dayOfWeek ()) * 86400), "sunday -> next sunday");
 
       Datetime r5 ("monday");
       if (now.dayOfWeek () >= 1)
         t.ok (r5.sameDay (now + (1 - now.dayOfWeek () + 7) * 86400), "monday -> next monday");
       else
-        t.ok (r5.sameDay (now + (1 - now.dayOfWeek ()) * 86400), "monday -> next monday");;
+        t.ok (r5.sameDay (now + (1 - now.dayOfWeek ()) * 86400), "monday -> next monday");
 
       Datetime r6 ("tuesday");
       if (now.dayOfWeek () >= 2)
         t.ok (r6.sameDay (now + (2 - now.dayOfWeek () + 7) * 86400), "tuesday -> next tuesday");
       else
-        t.ok (r6.sameDay (now + (2 - now.dayOfWeek ()) * 86400), "tuesday -> next tuesday");;
+        t.ok (r6.sameDay (now + (2 - now.dayOfWeek ()) * 86400), "tuesday -> next tuesday");
 
       Datetime r7 ("wednesday");
       if (now.dayOfWeek () >= 3)
         t.ok (r7.sameDay (now + (3 - now.dayOfWeek () + 7) * 86400), "wednesday -> next wednesday");
       else
-        t.ok (r7.sameDay (now + (3 - now.dayOfWeek ()) * 86400), "wednesday -> next wednesday");;
+        t.ok (r7.sameDay (now + (3 - now.dayOfWeek ()) * 86400), "wednesday -> next wednesday");
 
       Datetime r8 ("thursday");
       if (now.dayOfWeek () >= 4)
         t.ok (r8.sameDay (now + (4 - now.dayOfWeek () + 7) * 86400), "thursday -> next thursday");
       else
-        t.ok (r8.sameDay (now + (4 - now.dayOfWeek ()) * 86400), "thursday -> next thursday");;
+        t.ok (r8.sameDay (now + (4 - now.dayOfWeek ()) * 86400), "thursday -> next thursday");
 
       Datetime r9 ("friday");
       if (now.dayOfWeek () >= 5)
         t.ok (r9.sameDay (now + (5 - now.dayOfWeek () + 7) * 86400), "friday -> next friday");
       else
-        t.ok (r9.sameDay (now + (5 - now.dayOfWeek ()) * 86400), "friday -> next friday");;
+        t.ok (r9.sameDay (now + (5 - now.dayOfWeek ()) * 86400), "friday -> next friday");
 
       Datetime r10 ("saturday");
       if (now.dayOfWeek () >= 6)
         t.ok (r10.sameDay (now + (6 - now.dayOfWeek () + 7) * 86400), "saturday -> next saturday");
       else
-        t.ok (r10.sameDay (now + (6 - now.dayOfWeek ()) * 86400), "saturday -> next saturday");;
+        t.ok (r10.sameDay (now + (6 - now.dayOfWeek ()) * 86400), "saturday -> next saturday");
     }
 
     // Relative dates - look back
