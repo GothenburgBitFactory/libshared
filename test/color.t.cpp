@@ -119,18 +119,18 @@ int main (int, char**)
   char description [64];
   for (int i = 0; i < 256; ++i)
   {
-    sprintf (color,       "color%d", i);
-    sprintf (codes,       "\033[38;5;%dmfoo\033[0m", i);
-    sprintf (description, "color%d -> ^[[38;5;%dm", i, i);
+    snprintf (color, 24, "color%d", i);
+    snprintf (codes, 64, "\033[38;5;%dmfoo\033[0m", i);
+    snprintf (description, 64,  "color%d -> ^[[38;5;%dm", i, i);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
 
   for (int i = 0; i < 256; ++i)
   {
-    sprintf (color,       "on color%d", i);
-    sprintf (codes,       "\033[48;5;%dmfoo\033[0m", i);
-    sprintf (description, "on color%d -> ^[[48;5;%dm", i, i);
+    snprintf (color, 24, "on color%d", i);
+    snprintf (codes, 64, "\033[48;5;%dmfoo\033[0m", i);
+    snprintf (description, 64, "on color%d -> ^[[48;5;%dm", i, i);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
@@ -141,9 +141,9 @@ int main (int, char**)
       for (int b = 0; b < 6; ++b)
       {
         int code = 16 + (r*36 + g*6 + b);
-        sprintf (color,       "rgb%d%d%d", r, g, b);
-        sprintf (codes,       "\033[38;5;%dmfoo\033[0m", code);
-        sprintf (description, "rgb%d%d%d -> ^[[38;5;%dm", r, g, b, code);
+        snprintf (color, 24, "rgb%d%d%d", r, g, b);
+        snprintf (codes, 64, "\033[38;5;%dmfoo\033[0m", code);
+        snprintf (description, 64, "rgb%d%d%d -> ^[[38;5;%dm", r, g, b, code);
 
         t.is (Color::colorize ("foo", color), std::string (codes), description);
       }
@@ -153,9 +153,9 @@ int main (int, char**)
       for (int b = 0; b < 6; ++b)
       {
         int code = 16 + (r*36 + g*6 + b);
-        sprintf (color,       "on rgb%d%d%d", r, g, b);
-        sprintf (codes,       "\033[48;5;%dmfoo\033[0m", code);
-        sprintf (description, "on rgb%d%d%d -> ^[[48;5;%dm", r, g, b, code);
+        snprintf (color, 24, "on rgb%d%d%d", r, g, b);
+        snprintf (codes, 64, "\033[48;5;%dmfoo\033[0m", code);
+        snprintf (description, 64, "on rgb%d%d%d -> ^[[48;5;%dm", r, g, b, code);
 
         t.is (Color::colorize ("foo", color), std::string (codes), description);
       }
@@ -166,18 +166,18 @@ int main (int, char**)
 
   for (int i = 0; i < 24; ++i)
   {
-    sprintf (color,       "gray%d", i);
-    sprintf (codes,       "\033[38;5;%dmfoo\033[0m", i + 232);
-    sprintf (description, "gray%d -> ^[[38;5;%dm", i + 232, i + 232);
+    snprintf (color, 24, "gray%d", i);
+    snprintf (codes, 64, "\033[38;5;%dmfoo\033[0m", i + 232);
+    snprintf (description, 64, "gray%d -> ^[[38;5;%dm", i + 232, i + 232);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
 
   for (int i = 0; i < 24; ++i)
   {
-    sprintf (color,       "on gray%d", i);
-    sprintf (codes,       "\033[48;5;%dmfoo\033[0m", i + 232);
-    sprintf (description, "on gray%d -> ^[[48;5;%dm", i + 232, i + 232);
+    snprintf (color, 24, "on gray%d", i);
+    snprintf (codes, 64, "\033[48;5;%dmfoo\033[0m", i + 232);
+    snprintf (description, 64, "on gray%d -> ^[[48;5;%dm", i + 232, i + 232);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
