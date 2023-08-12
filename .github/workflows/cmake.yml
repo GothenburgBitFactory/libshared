@@ -45,3 +45,22 @@ jobs:
       shell: bash
       # Execute tests
       run: make test
+
+  integration-test:
+    needs: build
+    strategy:
+      matrix:
+        include:
+          - name: "Timewarrior [stable]"
+            container: "timew-libshared-stable"
+          - name: "Timewarrior [develop]"
+            container: "timew-libshared-develop"
+          - name: "Taskwarrior [stable]"
+            container: "task-libshared-stable"
+          - name: "Taskwarrior [develop]"
+            container: "task-libshared-develop"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Test on ${{ matrix.name }}"
+        run: docker-compose up ${{ matrix.container }}
