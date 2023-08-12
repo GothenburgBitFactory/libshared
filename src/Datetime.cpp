@@ -2056,7 +2056,7 @@ bool Datetime::initializeEopww (Pig& pig)
       time_t now = time (nullptr);
       struct tm* t = localtime (&now);
 
-      t->tm_mday -= (t->tm_wday + 1) % 7;
+      t->tm_mday -= t->tm_wday + 1;
       t->tm_hour = t->tm_min = 0;
       t->tm_sec = -1;
       t->tm_isdst = -1;
