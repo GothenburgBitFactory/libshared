@@ -170,7 +170,7 @@ int main (int, char**)
     try
     {
       json::value* root = json::parse (negative_tests[i]);
-      t.is ((const char*) root, (const char*) NULL,
+      t.is ((const char*) root, (const char*) nullptr,
             std::string ("negative: ") + negative_tests[i]);
     }
 
