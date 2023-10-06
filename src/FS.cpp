@@ -159,7 +159,7 @@ std::string Path::realpath () const
   if (_data.empty ())
     return "";
 
-  char *result_c = ::realpath (_data.c_str(), NULL);
+  char *result_c = ::realpath (_data.c_str(), nullptr);
   if (result_c == nullptr)
     return "";
 
