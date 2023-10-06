@@ -24,12 +24,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <iomanip>
-#include <iostream>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iomanip>
+#include <iostream>
+#include <string>
 #include <test.h>
 #include <unistd.h>
 
@@ -222,7 +223,6 @@ void UnitTest::is (size_t actual, size_t expected, const std::string& name)
               << '\n';
   }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 void UnitTest::is (time_t actual, time_t expected, const std::string& name)

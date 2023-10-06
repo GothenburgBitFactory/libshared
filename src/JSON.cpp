@@ -25,9 +25,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <JSON.h>
-#include <cmake.h>
 #include <format.h>
-#include <shared.h>
 #include <utf8.h>
 
 const char *json_encode[] = {

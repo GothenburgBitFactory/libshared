@@ -25,10 +25,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <JSON.h>
-#include <cmake.h>
+#include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <cstdlib>
 #include <test.h>
 
 const char *positive_tests[] =
@@ -170,8 +169,7 @@ int main (int, char**)
     try
     {
       json::value* root = json::parse (negative_tests[i]);
-      t.is ((const char*) root, (const char*) nullptr,
-            std::string ("negative: ") + negative_tests[i]);
+      t.is ((const char*) root, (const char*) nullptr, std::string ("negative: ") + negative_tests[i]);
     }
 
     catch (const std::string& e) { t.pass (e); }

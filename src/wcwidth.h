@@ -258,7 +258,6 @@ static const struct widechar_range widechar_ambiguous_table[] = {
     {0xE0100, 0xE01EF}, {0xF0000, 0xFFFFD}, {0x100000, 0x10FFFD}
 };
 
-
 /* Unassigned characters. */
 static const struct widechar_range widechar_unassigned_table[] = {
     {0x00378, 0x00379}, {0x00380, 0x00383}, {0x0038B, 0x0038B},

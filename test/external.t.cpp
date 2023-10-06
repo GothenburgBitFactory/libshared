@@ -28,8 +28,6 @@
 #include <Packrat.h>
 #include <Pig.h>
 #include <Tree.h>
-#include <cmake.h>
-#include <iostream>
 #include <test.h>
 
 ////////////////////////////////////////////////////////////////////////////////

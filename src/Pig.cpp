@@ -27,7 +27,6 @@
 #include <Pig.h>
 #include <algorithm>
 #include <cinttypes>
-#include <cmake.h>
 #include <cstdlib>
 #include <shared.h>
 #include <sstream>

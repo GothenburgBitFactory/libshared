@@ -25,7 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <JSON.h>
-#include <cmake.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>

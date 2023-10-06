@@ -28,8 +28,8 @@
 #define INCLUDED_DURATION
 
 #include <Pig.h>
-#include <string>
 #include <ctime>
+#include <string>
 
 class Duration
 {

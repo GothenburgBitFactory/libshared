@@ -24,7 +24,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cmake.h>
 #include <format.h>
 #include <test.h>
 
@@ -115,7 +114,7 @@ int main (int, char**)
   // std::string formatBytes (size_t);
   t.is (formatBytes (0), "0 B", "0 -> 0 B");
 
-  t.is (formatBytes (994),  "994 B", "994 -> 994 B");
+  t.is (formatBytes (994),  "994 B",   "994 -> 994 B");
   t.is (formatBytes (995),  "1.0 KiB", "995 -> 1.0 KiB");
   t.is (formatBytes (999),  "1.0 KiB", "999 -> 1.0 KiB");
   t.is (formatBytes (1000), "1.0 KiB", "1000 -> 1.0 KiB");
@@ -131,7 +130,7 @@ int main (int, char**)
 
   // std::string printable (const std::string&);
   t.is (printable ("f\ro\no\tb\va\vr"), "f\\ro\\no\\tb\\va\\vr", "printable f\\ro\\no\\tb\\va\\vr --> f\\\\ro\\\\no\\\\tb\\\\va\\\\vr");
-  t.is (printable ("foobar"), "foobar",                          "printable foobar --> foobar");
+  t.is (printable ("foobar"),           "foobar",                "printable foobar --> foobar");
 
   // std::string printable (char);
   t.is (printable ('\r'), "\\r", "printable \\r --> \\\\r");
@@ -142,7 +141,7 @@ int main (int, char**)
   t.is (printable ('x'), "x",    "printable x --> x");
 
   // std::string obfuscateText (const std::string&);
-  t.is (obfuscateText ("foo"),                    "xxx",                    "obfuscateText 'foo' --> 'xxx'");
+  t.is (obfuscateText ("foo"),                      "xxx",                      "obfuscateText 'foo' --> 'xxx'");
   t.is (obfuscateText ("[33mfoo[0m"),         "[33mxxx[0m",         "obfuscateText '<red>foo</red>' --> '<red>xxx</red>'");
   t.is (obfuscateText ("one[33mtwo[0mthree"), "xxx[33mxxx[0mxxxxx", "obfuscateText 'one<red>two</red>three' --> 'xxx<red>xxx</red>xxxxx'");
 

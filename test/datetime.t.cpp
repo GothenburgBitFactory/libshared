@@ -25,10 +25,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Datetime.h>
-#include <cmake.h>
+#include <ctime>
 #include <iostream>
 #include <test.h>
-#include <ctime>
 
 ////////////////////////////////////////////////////////////////////////////////
 void testParse (
@@ -170,7 +169,6 @@ int main (int, char**)
   utc_now->tm_year  = f_yr - 1900;
   time_t f_utc1 = timegm (utc_now);
   std::cout << "# future midnight 9850-12-01 " << f_utc1 << '\n';
-
 
   int hms = (12 * 3600) + (34 * 60) + 56; // The time 12:34:56 in seconds.
   int hm  = (12 * 3600) + (34 * 60);      // The time 12:34:00 in seconds.

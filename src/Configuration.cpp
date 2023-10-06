@@ -27,11 +27,10 @@
 #include <Configuration.h>
 #include <FS.h>
 #include <JSON.h>
-#include <cmake.h>
-#include <format.h>
 #include <cinttypes>
-#include <shared.h>
 #include <cstdlib>
+#include <format.h>
+#include <shared.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 bool setVariableInFile (
