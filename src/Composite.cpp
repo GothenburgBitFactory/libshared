@@ -25,7 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Composite.h>
-#include <cmake.h>
 #include <sstream>
 #include <stack>
 #include <utf8.h>

@@ -26,11 +26,9 @@
 
 #include <FS.h>
 #include <JSON.h>
-#include <cmake.h>
-#include <iostream>
-#include <stdlib.h>
 #include <cstring>
-
+#include <iostream>
+#include <string>
 
 ////////////////////////////////////////////////////////////////////////////////
 int main (int argc, char** argv)

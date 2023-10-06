@@ -25,7 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cctype>
-#include <cmake.h>
 #include <shared.h>
 
 static bool isPort (const std::string&, unsigned int&);

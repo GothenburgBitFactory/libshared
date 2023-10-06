@@ -25,7 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Duration.h>
-#include <cmake.h>
 #include <iomanip>
 #include <sstream>
 #include <unicode.h>

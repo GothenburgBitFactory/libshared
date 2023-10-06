@@ -25,7 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Packrat.h>
-#include <cmake.h>
 #include <format.h>
 #include <iostream>
 #include <shared.h>

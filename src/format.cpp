@@ -28,16 +28,11 @@
 #include <cctype>
 #include <cmake.h>
 #include <cmath>
-#include <csignal>
+#include <cstring>
 #include <format.h>
 #include <iomanip>
-#include <iostream>
 #include <sstream>
-#include <cstring>
 #include <strings.h>
-#include <sys/select.h>
-#include <ctime>
-#include <unistd.h>
 #include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////

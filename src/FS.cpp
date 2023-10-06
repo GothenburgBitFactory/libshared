@@ -30,19 +30,18 @@
 #define _GNU_SOURCE
 #endif
 #include <FS.h>
-#include <cstdio>
-#include <dirent.h>
 #include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <dirent.h>
 #include <fcntl.h>
 #include <format.h>
 #include <fstream>
 #include <glob.h>
 #include <pwd.h>
-#include <shared.h>
-#include <cstdlib>
-#include <cstring>
+#include <string>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD || defined DRAGONFLY || !defined(__GLIBC__)

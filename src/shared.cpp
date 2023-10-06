@@ -32,7 +32,6 @@
 #include <csignal>
 #include <cstring>
 #include <format.h>
-#include <iomanip>
 #include <iostream>
 #include <shared.h>
 #include <sstream>
