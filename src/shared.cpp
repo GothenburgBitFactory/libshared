@@ -487,7 +487,7 @@ bool compare (
 {
   // Use strcasecmp if required.
   if (! sensitive)
-    return strcasecmp (left.c_str (), right.c_str ()) == 0 ? true : false;
+    return strcasecmp (left.c_str (), right.c_str ()) == 0;
 
   // Otherwise, just use std::string::operator==.
   return left == right;
@@ -675,7 +675,7 @@ bool confirm (const std::string& question)
   while (! std::cin.eof () && matches.size () != 1);
 
   signal (SIGINT, SIG_DFL);
-  return matches.size () == 1 && matches[0] == "yes" ? true : false;
+  return matches.size () == 1 && matches[0] == "yes";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
