@@ -1,6 +1,6 @@
 {"results":[
  
-     {"text":"@twitterapi  http:\/\/tinyurl.com\/ctrefg",
+     {"text":"@twitterapi  https://tinyurl.com/ctrefg",
  
      "to_user_id":396524,
  
@@ -24,9 +24,9 @@
  
      "iso_language_code":"nl",
  
-     "source":"<a href=\"http:\/\/twitter.com\/\">twitter<\/a>",
+     "source":"<a href=\"https://twitter.com/\">twitter</a>",
  
-     "profile_image_url":"http:\/\/s3.amazonaws.com\/twitter_production\/profile_images\/118412707\/2522215727_a5f07da155_b_normal.jpg",
+     "profile_image_url":"https://s3.amazonaws.com/twitter_production/profile_images/118412707/2522215727_a5f07da155_b_normal.jpg",
  
      "created_at":"Wed, 08 Apr 2009 19:22:10 +0000"}
  

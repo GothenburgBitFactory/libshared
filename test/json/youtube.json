@@ -16,15 +16,15 @@
             "GDD07","GDD07US","Maps"
          ],
          "thumbnail":{
-            "default":"http://i.ytimg.com/vi/hYB0mn5zh2c/default.jpg",
-            "hqDefault":"http://i.ytimg.com/vi/hYB0mn5zh2c/hqdefault.jpg"
+            "default":"https://i.ytimg.com/vi/hYB0mn5zh2c/default.jpg",
+            "hqDefault":"https://i.ytimg.com/vi/hYB0mn5zh2c/hqdefault.jpg"
          },
          "player":{
-            "default":"http://www.youtube.com/watch?v\u003dhYB0mn5zh2c"
+            "default":"https://www.youtube.com/watch?v\u003dhYB0mn5zh2c"
          },
          "content":{
             "1":"rtsp://v5.cache3.c.youtube.com/CiILENy.../0/0/0/video.3gp",
-            "5":"http://www.youtube.com/v/hYB0mn5zh2c?f...",
+            "5":"https://www.youtube.com/v/hYB0mn5zh2c?f...",
             "6":"rtsp://v1.cache1.c.youtube.com/CiILENy.../0/0/0/video.3gp"
          },
          "duration":2840,

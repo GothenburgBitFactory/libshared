@@ -9,11 +9,11 @@
          "actions": [
             {
                "name": "Comment",
-               "link": "http://www.facebook.com/X999/posts/Y999"
+               "link": "https://www.facebook.com/X999/posts/Y999"
             },
             {
                "name": "Like",
-               "link": "http://www.facebook.com/X999/posts/Y999"
+               "link": "https://www.facebook.com/X999/posts/Y999"
             }
          ],
          "type": "status",
@@ -29,11 +29,11 @@
          "actions": [
             {
                "name": "Comment",
-               "link": "http://www.facebook.com/X998/posts/Y998"
+               "link": "https://www.facebook.com/X998/posts/Y998"
             },
             {
                "name": "Like",
-               "link": "http://www.facebook.com/X998/posts/Y998"
+               "link": "https://www.facebook.com/X998/posts/Y998"
             }
          ],
          "type": "status",
