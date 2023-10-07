@@ -935,7 +935,7 @@ bool Lexer::readWord (
     prev = c;
   }
 
-  return word.length () > 0 ? true : false;
+  return word.length () > 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

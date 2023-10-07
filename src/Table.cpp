@@ -43,7 +43,7 @@ int Table::addRow ()
 {
   _data.push_back (std::vector <std::string> (_columns.size (), ""));
   _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
-  _oddness.push_back (_data.size () % 2 ? true : false);
+  _oddness.push_back (_data.size () % 2 != 0);
   return _data.size () - 1;
 }
 
