@@ -361,7 +361,7 @@ std::vector <std::string> Path::glob (const std::string& pattern)
   if (!::glob (pattern.c_str (), GLOB_ERR | GLOB_BRACE | GLOB_TILDE, nullptr, &g))
 #endif
     for (int i = 0; i < (int) g.gl_pathc; ++i)
-      results.push_back (g.gl_pathv[i]);
+      results.emplace_back (g.gl_pathv[i]);
 
   globfree (&g);
   return results;

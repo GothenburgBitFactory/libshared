@@ -82,7 +82,7 @@ std::vector <std::tuple <std::string, Lexer::Type>> Lexer::tokenize (const std::
   Lexer::Type type;
   Lexer lexer (input);
   while (lexer.token (token, type))
-    tokens.push_back (std::make_tuple (token, type));
+    tokens.emplace_back (token, type);
 
   return tokens;
 }

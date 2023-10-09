@@ -50,7 +50,7 @@ void Composite::add (
   std::string::size_type offset,
   const Color& color)
 {
-  _layers.push_back (std::make_tuple (text, offset, color));
+  _layers.emplace_back (text, offset, color);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

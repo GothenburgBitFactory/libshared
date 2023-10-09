@@ -41,8 +41,8 @@ void Table::add (const std::string& col, bool alignLeft, bool wrap)
 ////////////////////////////////////////////////////////////////////////////////
 int Table::addRow ()
 {
-  _data.push_back (std::vector <std::string> (_columns.size (), ""));
-  _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
+  _data.emplace_back (_columns.size (), "");
+  _color.emplace_back (_columns.size (), Color::nocolor);
   _oddness.push_back (_data.size () % 2 != 0);
   return _data.size () - 1;
 }
@@ -50,8 +50,8 @@ int Table::addRow ()
 ////////////////////////////////////////////////////////////////////////////////
 int Table::addRowOdd ()
 {
-  _data.push_back (std::vector <std::string> (_columns.size (), ""));
-  _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
+  _data.emplace_back (_columns.size (), "");
+  _color.emplace_back (_columns.size (), Color::nocolor);
   _oddness.push_back (true);
   return _data.size () - 1;
 }
@@ -59,8 +59,8 @@ int Table::addRowOdd ()
 ////////////////////////////////////////////////////////////////////////////////
 int Table::addRowEven ()
 {
-  _data.push_back (std::vector <std::string> (_columns.size (), ""));
-  _color.push_back (std::vector <Color> (_columns.size (), Color::nocolor));
+  _data.emplace_back (_columns.size (), "");
+  _color.emplace_back (_columns.size (), Color::nocolor);
   _oddness.push_back (false);
   return _data.size () - 1;
 }
@@ -182,7 +182,7 @@ std::string Table::render ()
   std::vector <std::vector <std::string>> headers;
   for (unsigned int c = 0; c < _columns.size (); ++c)
   {
-    headers.push_back ({});
+    headers.emplace_back ();
     renderCell (headers[c], _columns[c], widths[c], _align[c], _wrap[c], _header);
 
     if (headers[c].size () > max_lines)
@@ -265,7 +265,7 @@ std::string Table::render ()
       cell_color = row_color;
       cell_color.blend (_color[row][col]);
 
-      cells.push_back (std::vector <std::string> ());
+      cells.emplace_back ();
       renderCell (cells[col], _data[row][col], widths[col], _align[col], _wrap[col], cell_color);
 
       if (cells[col].size () > max_lines)

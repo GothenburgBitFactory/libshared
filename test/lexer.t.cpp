@@ -58,7 +58,7 @@ int main (int, char**)
   while (l3.token (token, type))
   {
     std::cout << "# «" << token << "» " << Lexer::typeName (type) << '\n';
-    tokens.push_back (std::pair <std::string, Lexer::Type> (token, type));
+    tokens.emplace_back (token, type);
   }
 
   t.is ((int)tokens.size (),     7,                           "7 tokens");
