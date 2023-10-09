@@ -89,7 +89,7 @@ void Args::scan (int argc, const char** argv)
     // Or a positional.
     else
     {
-      _positionals.push_back (argv[i]);
+      _positionals.emplace_back (argv[i]);
       if (_limit != -1 &&
           static_cast <int> (_positionals.size ()) > _limit)
         throw std::string ("Too many positional arguments.");
