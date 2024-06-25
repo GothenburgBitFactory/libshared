@@ -54,7 +54,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh && \
 # Checkout Taskwarrior
 WORKDIR /root
 # clone repo with submodels as we need corrosion
-RUN git clone --recurse-submodels https://github.com/GothenburgBitFactory/taskwarrior.git code
+RUN git clone --recurse-submodules https://github.com/GothenburgBitFactory/taskwarrior.git code
 WORKDIR code
 RUN git checkout ${BRANCH}
 
