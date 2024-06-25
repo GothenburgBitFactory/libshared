@@ -63,7 +63,7 @@ FROM base AS builder
 ADD . src/libshared
 
 # Build Taskwarrior
-RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release .
+RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build build -j 8 --target build_tests
 
 # Running tests
