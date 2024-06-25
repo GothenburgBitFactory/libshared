@@ -53,9 +53,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh && \
 
 # Checkout Taskwarrior
 WORKDIR /root
-RUN git clone https://github.com/GothenburgBitFactory/taskwarrior.git code
+# clone repo with submodels as we need corrosion
+RUN git clone --recurse-submodels https://github.com/GothenburgBitFactory/taskwarrior.git code
 WORKDIR code
 RUN git checkout ${BRANCH}
+
+# remove libshared folder which is the submodel
+RUN rm -rf src/libshared
 
 FROM base AS builder
 
