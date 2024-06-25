@@ -63,10 +63,8 @@ FROM base AS builder
 ADD . src/libshared
 
 # Build Taskwarrior
-RUN cmake -DCMAKE_BUILD_TYPE=release . && \
-    make -j8
+RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release .
+RUN cmake --build build -j 8 --target build_tests
 
-WORKDIR test
-RUN make
-
-CMD ["bash", "-c", "./run_all -v ; cat all.log | grep 'not ok' ; ./problems ; FAILED=$? ; python3 --version ; cmake --version ; gcc --version ; exit $FAILED"]
+# Running tests
+CMD ctest --test-dir build -j 8 --output-on-failure --rerun-failed
