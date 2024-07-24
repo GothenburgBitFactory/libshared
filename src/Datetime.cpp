@@ -3512,14 +3512,26 @@ int Datetime::dayOfWeek (const std::string& input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Using Zeller's Congruence.
+// Using variant of Zeller's Congruence snarfed from RFC3339 appendix B
 // Static
 int Datetime::dayOfWeek (int year, int month, int day)
 {
-  int adj = (14 - month) / 12;
-  int m = month + 12 * adj - 2;
-  int y = year - adj;
-  return (day + (13 * m - 1) / 5 + y + y / 4 - y / 100 + y / 400) % 7;
+  int cent;
+
+  /* adjust months so February is the last one */
+  month -= 2;
+  if (month < 1)
+  {
+    month += 12;
+    --year;
+  }
+
+  /* split by century */
+  cent = year / 100;
+  year %= 100;
+
+  return ((26 * month - 2) / 10
+          + day + year + year / 4 + cent / 4 + 5 * cent) % 7;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
