@@ -222,7 +222,7 @@ void Datetime::clear ()
   _year    = 0;
   _month   = 0;
   _week    = 0;
-  _weekday = 0;
+  _weekday = Datetime::weekstart;
   _julian  = 0;
   _day     = 0;
   _seconds = 0;
@@ -752,18 +752,22 @@ bool Datetime::parse_date_ext (Pig& pig)
     int month {};
     int day {};
     int julian {};
+    int week {};
+    int weekday {};
 
     if (pig.skip ('W') &&
-        parse_week (pig, _week))
+        parse_week (pig, week))
     {
-      if (pig.skip ('-') &&
-          pig.getDigit (_weekday))
+      if (! (pig.skip ('-') &&
+             parse_weekday (pig, weekday)))
       {
-        // What is happening here - must be something to do?
+        weekday = Datetime::weekstart;
       }
 
       if (! unicodeLatinDigit (pig.peek ()))
       {
+        _weekday = weekday;
+        _week = week;
         _year = year;
         return true;
       }
@@ -969,13 +973,14 @@ bool Datetime::parse_date (Pig& pig)
     if (pig.skip ('W') &&
         parse_week (pig, week))
     {
-      if (pig.getDigit (weekday))
-        _weekday = weekday;
+      if (! (parse_weekday (pig, weekday)))
+        weekday = Datetime::weekstart;
 
       if (! unicodeLatinDigit (pig.peek ()))
       {
         _year = year;
         _week = week;
+        _weekday = weekday;
         return true;
       }
     }
@@ -1216,8 +1221,8 @@ bool Datetime::parse_weekday (Pig& pig, int& value)
 
   int weekday;
   if (pig.getDigit (weekday) &&
-      weekday >= 1           &&
-      weekday <= 7)
+      weekday >= Datetime::weekstart &&
+      weekday <= (Datetime::weekstart == 1 ? 7 : 6))
   {
     value = weekday;
     return true;
@@ -3096,11 +3101,15 @@ bool Datetime::isOrdinal (const std::string& token, int& ordinal)
 // Validation via simple range checking.
 bool Datetime::validate ()
 {
+  // for ISO 8601 week specification: YYYY-Www-D where D is 1-7 (Mon-Sun)
+  int wks = (Datetime::weekstart == 1 ? 1: 0);
+  int wke = (Datetime::weekstart == 1 ? 7: 6);
+
   // _year;
   if ((_year    && (_year    <   1900 || _year    >                                  9999)) ||
       (_month   && (_month   <      1 || _month   >                                    12)) ||
       (_week    && (_week    <      1 || _week    >                                    53)) ||
-      (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
+      (true     && (_weekday <    wks || _weekday >                                   wke)) ||
       (_julian  && (_julian  <      1 || _julian  >          Datetime::daysInYear (_year))) ||
       (_day     && (_day     <      1 || _day     > Datetime::daysInMonth (_year, _month))) ||
       (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
@@ -3117,7 +3126,7 @@ bool Datetime::validate ()
 // int tm_mday;      day of month (1 - 31)
 // int tm_mon;       month of year (0 - 11)
 // int tm_year;      year - 1900
-// int tm_wday;      day of week (Sunday = 0)
+// int tm_wday;      day of week (0-6 or 1-7 depending on Datetime::weekstart)
 // int tm_yday;      day of year (0 - 365)
 // int tm_isdst;     is daylight saving time in effect?
 // char *tm_zone;    abbreviation of timezone name
@@ -3161,16 +3170,54 @@ void Datetime::resolve ()
       month   == 0           &&
       day     == 0           &&
       week    == 0           &&
-      weekday == 0           &&
+      weekday == Datetime::weekstart &&
       seconds < seconds_now)
   {
     seconds += 86400;
   }
 
-  // Convert week + weekday --> julian.
+  // Convert week + weekday --> julian, possibly in the previous or next
+  // calendar year (for ISO8601 weeks).  Weekday will be 1-7 if weekstart = 1,
+  // as per ISO week spec.  This is incompatible with tm.tm_wday (which is
+  // 0-6, Sunday based), but that field is not assigned anywhere in this
+  // function, and note that mktime() uses tm_wday only as an output field.
+  // We use Datetime::weekstart as a hint about whether the user is
+  // giving/wants ISO weeks, although the very use of 2024-W30 and 2024-W30-1
+  // format is from ISO8601 in the first place.
+  //
   if (week)
   {
-    julian = (week * 7) + weekday - dayOfWeek (year, 1, 4) - 3;
+    // Get 0-based (Sunday) and 1-based (Monday, ie ISO) dow for 4th Jan
+    // 0 Sun, 1 Mon, 2 Tue, 3 Wed, 4 Thu, 5 Fri, 6 Sat
+    //        1 Mon, 2 Tue, 3 Wed, 4 Thu, 5 Fri, 6 Sat, 7 Sun
+    //
+    int jan4dow0 = dayOfWeek (year, 1, 4);
+    int jan4dow1 = (jan4dow0 == 0 ? 7 : jan4dow0);
+
+    if (Datetime::weekstart == 1)
+    {
+      // https://en.wikipedia.org/wiki/ISO_week_date
+      julian = week * 7 + weekday - (jan4dow1 + 3);
+      if (julian < 1)
+      {
+        julian += daysInYear (--year);
+      }
+      else
+      {
+        int yeardays = daysInYear (year);
+        if (julian > yeardays)
+        {
+          year++;
+          julian -= yeardays;
+        }
+      }
+    }
+    else
+    {
+      // Prior algorithm that was used for all weekstarts before, now only
+      // used for Sunday weekstarts
+      julian = week * 7 + weekday - jan4dow0 - 3;
+    }
   }
 
   // Provide default values for year, month, day.
