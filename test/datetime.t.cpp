@@ -693,6 +693,32 @@ int main (int, char**)
     Datetime f_iso (2147483650);
     t.is (f_iso.toISO (), "20380119T031410Z", "2147483650 -> 20380119T031410Z");
 
+    // Test known-overlapped ISO8601 year boundaries, including leap year 1980.
+    // Only makes sense for weekstart == 1 which activates the ISO8601 algorithm.
+    // Dates are taken from the table at https://en.wikipedia.org/wiki/ISO_week_date
+    Datetime::weekstart = 1;
+    //            input         y   m     mo  wk wd jul d sec tz utc    time_t
+    testParse (t, "1976-W53-6", 10, 1976,  0, 53, 6, 0, 0, 0, 0, false, Datetime (1977,  1,  1).toEpoch ());
+    testParse (t, "1976-W53-6", 10, 1976,  0, 53, 6, 0, 0, 0, 0, false, Datetime (1977,  1,  1).toEpoch ());
+    testParse (t, "1976-W53-7", 10, 1976,  0, 53, 7, 0, 0, 0, 0, false, Datetime (1977,  1,  2).toEpoch ());
+    testParse (t, "1977-W52-6", 10, 1977,  0, 52, 6, 0, 0, 0, 0, false, Datetime (1977, 12, 31).toEpoch ());
+    testParse (t, "1977-W52-7", 10, 1977,  0, 52, 7, 0, 0, 0, 0, false, Datetime (1978,  1,  1).toEpoch ());
+    testParse (t, "1978-W01-1", 10, 1978,  0,  1, 1, 0, 0, 0, 0, false, Datetime (1978,  1,  2).toEpoch ());
+    testParse (t, "1978-W52-7", 10, 1978,  0, 52, 7, 0, 0, 0, 0, false, Datetime (1978, 12, 31).toEpoch ());
+    testParse (t, "1979-W01-1", 10, 1979,  0,  1, 1, 0, 0, 0, 0, false, Datetime (1979,  1,  1).toEpoch ());
+    testParse (t, "1979-W52-7", 10, 1979,  0, 52, 7, 0, 0, 0, 0, false, Datetime (1979, 12, 30).toEpoch ());
+    testParse (t, "1980-W01-1", 10, 1980,  0,  1, 1, 0, 0, 0, 0, false, Datetime (1979, 12, 31).toEpoch ());
+    testParse (t, "1980-W01-2", 10, 1980,  0,  1, 2, 0, 0, 0, 0, false, Datetime (1980,  1,  1).toEpoch ());
+    testParse (t, "1980-W52-7", 10, 1980,  0, 52, 7, 0, 0, 0, 0, false, Datetime (1980, 12, 28).toEpoch ());
+    testParse (t, "1981-W01-1", 10, 1981,  0,  1, 1, 0, 0, 0, 0, false, Datetime (1980, 12, 29).toEpoch ());
+    testParse (t, "1981-W01-2", 10, 1981,  0,  1, 2, 0, 0, 0, 0, false, Datetime (1980, 12, 30).toEpoch ());
+    testParse (t, "1981-W01-3", 10, 1981,  0,  1, 3, 0, 0, 0, 0, false, Datetime (1980, 12, 31).toEpoch ());
+    testParse (t, "1981-W01-4", 10, 1981,  0,  1, 4, 0, 0, 0, 0, false, Datetime (1981,  1,  1).toEpoch ());
+    testParse (t, "1981-W53-4", 10, 1981,  0, 53, 4, 0, 0, 0, 0, false, Datetime (1981, 12, 31).toEpoch ());
+    testParse (t, "1981-W53-5", 10, 1981,  0, 53, 5, 0, 0, 0, 0, false, Datetime (1982,  1,  1).toEpoch ());
+    testParse (t, "1981-W53-6", 10, 1981,  0, 53, 6, 0, 0, 0, 0, false, Datetime (1982,  1,  2).toEpoch ());
+    testParse (t, "1981-W53-7", 10, 1981,  0, 53, 7, 0, 0, 0, 0, false, Datetime (1982,  1,  3).toEpoch ());
+
     // Quantization.
     Datetime quant (1234526400);
     t.is (quant.startOfDay ().toString ("YMDHNS"),   "20090213000000", "1234526400 -> 2/13/2009 12:00:00 UTC -> 2/13/2009 0:00:00");
