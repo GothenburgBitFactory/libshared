@@ -54,4 +54,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "Test on ${{ matrix.name }}"
-        run: docker-compose up ${{ matrix.container }}
+        run: docker compose up ${{ matrix.container }}
