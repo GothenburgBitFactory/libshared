@@ -68,7 +68,7 @@ ADD . src/libshared
 
 # Build Taskwarrior
 RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-RUN cmake --build build -j 8 --target build_tests
+RUN cmake --build build -j 8 --target test_runner --target task_executable
 
 # Running tests
 CMD ctest --test-dir build -j 8 --output-on-failure --rerun-failed
