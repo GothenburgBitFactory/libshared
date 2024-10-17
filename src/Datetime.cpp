@@ -701,8 +701,8 @@ bool Datetime::parse_epoch (Pig& pig)
   long long epoch {};
   if (pig.getDigits (epoch)             &&
       ! unicodeLatinAlpha (pig.peek ()) &&
-      epoch >= 315532800                &&
-      epoch < 253402293599 )  // 9999-12-31, 23:59:59 AoE
+      epoch >= EPOCH_MIN_VALUE          &&
+      epoch < EPOCH_MAX_VALUE)
   {
     _date = static_cast <time_t> (epoch);
     return true;
