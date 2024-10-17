@@ -3654,8 +3654,6 @@ int Datetime::week () const
     throw std::string ("The week may only start on a Sunday or Monday.");
 
   int weekNumber = strtol (weekStr, nullptr, 10);
-  if (weekstart == 0)
-    weekNumber += 1;
 
   return weekNumber;
 }
