@@ -52,7 +52,7 @@ int main (int, char**)
   t.is ((std::string) c, "color1 on color0", "upgrade color1 on black -> color1 on color0");
 
   c = Color ("bold red on color0");
-  t.is ((std::string) c, "color9 on color0", "upgrade bold red on color0 -> color9 on color0");
+  t.is ((std::string) c, "bold color1 on color0", "upgrade bold red on color0 -> bold color1 on color0");
 
   c = Color ("color1 on bright black");
   t.is ((std::string) c, "color1 on color8", "upgrade color1 on bright black -> color1 on color8");
