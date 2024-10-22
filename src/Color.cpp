@@ -325,12 +325,12 @@ void Color::blend (const Color& other)
   Color c (other);
   _value |= (c._value & _COLOR_UNDERLINE);    // Always inherit underline.
   _value |= (c._value & _COLOR_INVERSE);      // Always inherit inverse.
+  _value |= (c._value & _COLOR_BOLD);         // Always inherit bold.
 
   // 16 <-- 16.
   if (!(_value   & _COLOR_256) &&
       !(c._value & _COLOR_256))
   {
-    _value |= (c._value & _COLOR_BOLD);       // Inherit bold.
     _value |= (c._value & _COLOR_BRIGHT);     // Inherit bright.
 
     if (c._value & _COLOR_HASFG)
@@ -379,11 +379,9 @@ void Color::upgrade ()
   {
     if (_value & _COLOR_HASFG)
     {
-      bool bold = _value & _COLOR_BOLD;
       unsigned int fg = _value & _COLOR_FG;
       _value &= ~_COLOR_FG;
-      _value &= ~_COLOR_BOLD;
-      _value |= (bold ? fg + 7 : fg - 1);
+      _value |= fg - 1;
     }
 
     if (_value & _COLOR_HASBG)
@@ -429,72 +427,57 @@ void Color::_colorize (std::string &result, const std::string& input) const
 
   int count = 0;
 
-  // 256 color
-  if (_value & _COLOR_256)
+  result += "\033[";
+
+  if (_value & _COLOR_BOLD)
   {
-    if (_value & _COLOR_UNDERLINE)
-      result += "\033[4m";
-
-    if (_value & _COLOR_INVERSE)
-      result += "\033[7m";
-
-    if (_value & _COLOR_HASFG)
-    {
-      result += "\033[38;5;";
-      result += colorstring[(_value & _COLOR_FG)];
-      result += 'm';
-    }
-
-    if (_value & _COLOR_HASBG)
-    {
-      result += "\033[48;5;";
-      result += colorstring[((_value & _COLOR_BG) >> 8)];
-      result += 'm';
-    }
-
-    result += input;
-    result += "\033[0m";
+    result += '1';
+    ++count;
   }
 
-  // 16 color
-  else
+  if (_value & _COLOR_UNDERLINE)
   {
-    result += "\033[";
+    if (count++) result += ';';
+    result += '4';
+  }
 
-    if (_value & _COLOR_BOLD)
+  if (_value & _COLOR_INVERSE)
+  {
+    if (count++) result += ';';
+    result += '7';
+  }
+
+  if (_value & _COLOR_HASFG)
+  {
+    if (count++) result += ';';
+    if (_value & _COLOR_256)
     {
-      if (count++) result += ';';
-      result += '1';
+      result += "38;5;";
+      result += colorstring[(_value & _COLOR_FG)];
     }
-
-    if (_value & _COLOR_UNDERLINE)
+    else
     {
-      if (count++) result += ';';
-      result += '4';
-    }
-
-    if (_value & _COLOR_INVERSE)
-    {
-      if (count++) result += ';';
-      result += '7';
-    }
-
-    if (_value & _COLOR_HASFG)
-    {
-      if (count++) result += ';';
       result += colorstring[(29 + (_value & _COLOR_FG))];
     }
+  }
 
-    if (_value & _COLOR_HASBG)
+  if (_value & _COLOR_HASBG)
+  {
+    if (count++) result += ';';
+    if (_value & _COLOR_256)
     {
-      if (count++) result += ';';
+      result += "48;5;";
+      result += colorstring[((_value & _COLOR_BG) >> 8)];
+    }
+    else
+    {
       result += colorstring[((_value & _COLOR_BRIGHT ? 99 : 39) + ((_value & _COLOR_BG) >> 8))];
     }
-
-    result += 'm';
-    result += input;
-    result += "\033[0m";
   }
+
+  result += 'm';
+  result += input;
+  result += "\033[0m";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
