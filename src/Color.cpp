@@ -530,8 +530,8 @@ std::string Color::colorize (const std::string& input) const
 //   256 fg               \033[38;5;Nm
 //   256 bg               \033[48;5;Nm
 //
-//   24 bit fg            \033[38;2;R;G;Bm]
-//   24 bit gg            \033[48;2;R;G;Bm]
+//   24 bit fg            \033[38;2;R;G;Bm
+//   24 bit gg            \033[48;2;R;G;Bm
 void Color::_colorize (std::string &result, const std::string& input) const
 {
   if (!nontrivial ())
@@ -567,11 +567,10 @@ void Color::_colorize (std::string &result, const std::string& input) const
     if (count++) result += ';';
     if (_value & _COLOR_24BIT)
     {
-      result += "\033[38;2;";
+      result += "38;2;";
       result += format((_value >> 16) & 0xFF) + ';';
       result += format((_value >>  8) & 0xFF) + ';';
       result += format((_value)       & 0xFF);
-      result += 'm';
     }
     else if (_value & _COLOR_256)
     {
@@ -589,11 +588,10 @@ void Color::_colorize (std::string &result, const std::string& input) const
     if (count++) result += ';';
     if (_value & _COLOR_24BIT)
     {
-      result += "\033[48;2;";
+      result += "48;2;";
       result += format((_value >> 48) & 0xFF) + ';';
       result += format((_value >> 40) & 0xFF) + ';';
       result += format((_value >> 32) & 0xFF);
-      result += 'm';
     }
     else if (_value & _COLOR_256)
     {

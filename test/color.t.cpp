@@ -189,13 +189,13 @@ int main (int, char**)
 
 
   // 24-bit color
-  t.is (Color::colorize ("foo", "0x0a1b2c"),               std::string ("\033[38;2;10;27;44mfoo\033[0m"),                       "0x0a1b2c               -> ^[[38;2;10;27;44m");
-  t.is (Color::colorize ("foo", "0x0a1b2c on color127"),   std::string ("\033[38;2;10;27;44m\033[48;2;126;0;126mfoo\033[0m"),   "0x0a1b2c on color127   -> ^[[38;2;10;27;44m^[[48;2;126;0;126m");
-  t.is (Color::colorize ("foo", "red on 0x0a1b2c"),        std::string ("\033[38;2;128;0;0m\033[48;2;10;27;44mfoo\033[0m"),     "red on 0x0a1b2c        -> ^[[38;2;128;0;0m^[[38;2;10;27;44m");
-  t.is (Color::colorize ("foo", "bold red on 0x0a1b2c"),   std::string ("\033[38;2;255;0;0m\033[48;2;10;27;44mfoo\033[0m"),     "bold on 0x0a1b2c       -> ^[[38;2;255;0;0m^[[38;2;10;27;44m");
-  t.is (Color::colorize ("foo", "0x0a1b2c on bright red"), std::string ("\033[38;2;10;27;44m\033[48;2;255;0;0mfoo\033[0m"),     "0x0a1b2c on bright red -> ^[[38;2;10;27;44m^[[48;2;255;0;0m");
-  t.is (Color::colorize ("foo", "0x010101 on grey0"),      std::string ("\033[38;2;1;1;1m\033[48;2;10;10;10mfoo\033[0m"),       "0x0101010 on grey0     -> ^[[38;2;1;1;1m^[[48;2;10;10;10m");
-  t.is (Color::colorize ("foo", "0x101010 on grey23"),     std::string ("\033[38;2;16;16;16m\033[48;2;240;240;240mfoo\033[0m"), "0x101010 on grey0      -> ^[[38;2;16;16;16m^[[48;2;240;240;240m");
+  t.is (Color::colorize ("foo", "0x0a1b2c"),               std::string ("\033[38;2;10;27;44mfoo\033[0m"),                  "0x0a1b2c               -> ^[[38;2;10;27;44m");
+  t.is (Color::colorize ("foo", "0x0a1b2c on color127"),   std::string ("\033[38;2;10;27;44;48;2;126;0;126mfoo\033[0m"),   "0x0a1b2c on color127   -> ^[[38;2;10;27;44;48;2;126;0;126m");
+  t.is (Color::colorize ("foo", "red on 0x0a1b2c"),        std::string ("\033[38;2;128;0;0;48;2;10;27;44mfoo\033[0m"),     "red on 0x0a1b2c        -> ^[[38;2;128;0;0;48;2;10;27;44m");
+  t.is (Color::colorize ("foo", "bold red on 0x0a1b2c"),   std::string ("\033[1;38;2;128;0;0;48;2;10;27;44mfoo\033[0m"),   "bold on 0x0a1b2c       -> ^[[1;38;2;255;0;0;48;2;10;27;44m");
+  t.is (Color::colorize ("foo", "0x0a1b2c on bright red"), std::string ("\033[38;2;10;27;44;48;2;255;0;0mfoo\033[0m"),     "0x0a1b2c on bright red -> ^[[38;2;10;27;44;48;2;255;0;0m");
+  t.is (Color::colorize ("foo", "0x010101 on grey0"),      std::string ("\033[38;2;1;1;1;48;2;10;10;10mfoo\033[0m"),       "0x0101010 on grey0     -> ^[[38;2;1;1;1;48;2;10;10;10m");
+  t.is (Color::colorize ("foo", "0x101010 on grey23"),     std::string ("\033[38;2;16;16;16;48;2;240;240;240mfoo\033[0m"), "0x101010 on grey0      -> ^[[38;2;16;16;16;48;2;240;240;240m");
 
 
   t.is (Color ("0x0F1E2D").code (), "[38;2;15;30;45m", "Color::code '0x0F1E2D' --> ^[[38;2;15;30;45m");
