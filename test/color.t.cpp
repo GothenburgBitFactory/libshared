@@ -118,7 +118,7 @@ int main (int, char**)
   {
     snprintf (color, 24, "color%d", i);
     snprintf (codes, 64, "\033[38;5;%dmfoo\033[0m", i);
-    snprintf (description, 64,  "color%d -> ^[[38;5;%dm", i, i);
+    snprintf (description, 64,  "\033[38;5;%dmfoo\033[0m: color%d -> ^[[38;5;%dm", i, i, i);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
@@ -127,7 +127,7 @@ int main (int, char**)
   {
     snprintf (color, 24, "on color%d", i);
     snprintf (codes, 64, "\033[48;5;%dmfoo\033[0m", i);
-    snprintf (description, 64, "on color%d -> ^[[48;5;%dm", i, i);
+    snprintf (description, 64, "\033[48;5;%dmfoo\033[0m: on color%d -> ^[[48;5;%dm", i, i, i);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
@@ -140,7 +140,7 @@ int main (int, char**)
         int code = 16 + (r*36 + g*6 + b);
         snprintf (color, 24, "rgb%d%d%d", r, g, b);
         snprintf (codes, 64, "\033[38;5;%dmfoo\033[0m", code);
-        snprintf (description, 64, "rgb%d%d%d -> ^[[38;5;%dm", r, g, b, code);
+        snprintf (description, 64, "\033[38;5;%dmfoo\033[0m: rgb%d%d%d -> ^[[38;5;%dm", code, r, g, b, code);
 
         t.is (Color::colorize ("foo", color), std::string (codes), description);
       }
@@ -152,20 +152,20 @@ int main (int, char**)
         int code = 16 + (r*36 + g*6 + b);
         snprintf (color, 24, "on rgb%d%d%d", r, g, b);
         snprintf (codes, 64, "\033[48;5;%dmfoo\033[0m", code);
-        snprintf (description, 64, "on rgb%d%d%d -> ^[[48;5;%dm", r, g, b, code);
+        snprintf (description, 64, "\033[48;5;%dmfoo\033[0m: on rgb%d%d%d -> ^[[48;5;%dm", code, r, g, b, code);
 
         t.is (Color::colorize ("foo", color), std::string (codes), description);
       }
 
   // 256-color, grays.
   // grey == gray.
-  t.is (Color::colorize ("foo", "grey0"), std::string ("\033[38;5;232mfoo\033[0m"), "grey0 -> ^[[38;5;232m");
+  t.is (Color::colorize ("foo", "grey0"), std::string ("\033[38;5;232mfoo\033[0m"), "\033[38;5;232mfoo\033[0m: grey0 -> ^[[38;5;232m");
 
   for (int i = 0; i < 24; ++i)
   {
     snprintf (color, 24, "gray%d", i);
     snprintf (codes, 64, "\033[38;5;%dmfoo\033[0m", i + 232);
-    snprintf (description, 64, "gray%d -> ^[[38;5;%dm", i + 232, i + 232);
+    snprintf (description, 64, "\033[38;5;%dmfoo\033[0m: gray%d -> ^[[38;5;%dm", i + 232, i, i + 232);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
@@ -174,19 +174,19 @@ int main (int, char**)
   {
     snprintf (color, 24, "on gray%d", i);
     snprintf (codes, 64, "\033[48;5;%dmfoo\033[0m", i + 232);
-    snprintf (description, 64, "on gray%d -> ^[[48;5;%dm", i + 232, i + 232);
+    snprintf (description, 64, "\033[48;5;%dmfoo\033[0m: on gray%d -> ^[[48;5;%dm", i + 232, i, i + 232);
 
     t.is (Color::colorize ("foo", color), std::string (codes), description);
   }
 
   // 24-bit color
-  t.is (Color::colorize ("foo", "0x0a1b2c"),               std::string ("\033[38;2;10;27;44mfoo\033[0m"),                  "0x0a1b2c               -> ^[[38;2;10;27;44m");
-  t.is (Color::colorize ("foo", "0x0a1b2c on color127"),   std::string ("\033[38;2;10;27;44;48;2;126;0;126mfoo\033[0m"),   "0x0a1b2c on color127   -> ^[[38;2;10;27;44;48;2;126;0;126m");
-  t.is (Color::colorize ("foo", "red on 0x0a1b2c"),        std::string ("\033[38;2;128;0;0;48;2;10;27;44mfoo\033[0m"),     "red on 0x0a1b2c        -> ^[[38;2;128;0;0;48;2;10;27;44m");
-  t.is (Color::colorize ("foo", "bold red on 0x0a1b2c"),   std::string ("\033[1;38;2;128;0;0;48;2;10;27;44mfoo\033[0m"),   "bold on 0x0a1b2c       -> ^[[1;38;2;255;0;0;48;2;10;27;44m");
-  t.is (Color::colorize ("foo", "0x0a1b2c on bright red"), std::string ("\033[38;2;10;27;44;48;2;255;0;0mfoo\033[0m"),     "0x0a1b2c on bright red -> ^[[38;2;10;27;44;48;2;255;0;0m");
-  t.is (Color::colorize ("foo", "0x010101 on grey0"),      std::string ("\033[38;2;1;1;1;48;2;10;10;10mfoo\033[0m"),       "0x0101010 on grey0     -> ^[[38;2;1;1;1;48;2;10;10;10m");
-  t.is (Color::colorize ("foo", "0x101010 on grey23"),     std::string ("\033[38;2;16;16;16;48;2;240;240;240mfoo\033[0m"), "0x101010 on grey23     -> ^[[38;2;16;16;16;48;2;240;240;240m");
+  t.is (Color::colorize ("foo", "0x0a1b2c"),               std::string ("\033[38;2;10;27;44mfoo\033[0m"),                  std::string("\033[38;2;10;27;44mfoo\033[0m: ")                  + "0x0a1b2c               -> ^[[38;2;10;27;44m");
+  t.is (Color::colorize ("foo", "0x0a1b2c on color127"),   std::string ("\033[38;2;10;27;44;48;2;126;0;126mfoo\033[0m"),   std::string("\033[38;2;10;27;44;48;2;126;0;126mfoo\033[0m: ")   + "0x0a1b2c on color127   -> ^[[38;2;10;27;44;48;2;126;0;126m");
+  t.is (Color::colorize ("foo", "red on 0x0a1b2c"),        std::string ("\033[38;2;128;0;0;48;2;10;27;44mfoo\033[0m"),     std::string("\033[38;2;128;0;0;48;2;10;27;44mfoo\033[0m: ")     + "red on 0x0a1b2c        -> ^[[38;2;128;0;0;48;2;10;27;44m");
+  t.is (Color::colorize ("foo", "bold red on 0x0a1b2c"),   std::string ("\033[1;38;2;128;0;0;48;2;10;27;44mfoo\033[0m"),   std::string("\033[1;38;2;128;0;0;48;2;10;27;44mfoo\033[0m: ")   + "bold on 0x0a1b2c       -> ^[[1;38;2;255;0;0;48;2;10;27;44m");
+  t.is (Color::colorize ("foo", "0x0a1b2c on bright red"), std::string ("\033[38;2;10;27;44;48;2;255;0;0mfoo\033[0m"),     std::string("\033[38;2;10;27;44;48;2;255;0;0mfoo\033[0m: ")     + "0x0a1b2c on bright red -> ^[[38;2;10;27;44;48;2;255;0;0m");
+  t.is (Color::colorize ("foo", "0x010101 on grey0"),      std::string ("\033[38;2;1;1;1;48;2;10;10;10mfoo\033[0m"),       std::string("\033[38;2;1;1;1;48;2;10;10;10mfoo\033[0m: ")       + "0x010101 on grey0      -> ^[[38;2;1;1;1;48;2;10;10;10m");
+  t.is (Color::colorize ("foo", "0x101010 on grey23"),     std::string ("\033[38;2;16;16;16;48;2;240;240;240mfoo\033[0m"), std::string("\033[38;2;16;16;16;48;2;240;240;240mfoo\033[0m: ") + "0x101010 on grey23     -> ^[[38;2;16;16;16;48;2;240;240;240m");
 
   // std::string Color::strip (const std::string&);
   t.is (Color::strip (""),                  "",    "Color::strip '' -> ''");
