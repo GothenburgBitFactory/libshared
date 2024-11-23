@@ -1,5 +1,24 @@
 master/HEAD
 
+- Add 24bit color support
+          (thanks to xs5871)
+- Add bold color with 256 color space
+          (thanks to Tadeas Uhlir)
+- Fix wrong week number output when weekstart=0
+          (thanks to Scott Mcdermott)
+- Add defines for the values that are allowed for epoch timestamps
+          (thanks to Fredrik Lanker)
+- Make week number parsing conform to ISO8601 when Datetime::weekstart == 1
+          (thanks to Scott Mcdermott)
+- Replace dayOfWeek determination with a canonical version from RFC3339
+          (thanks to Scott Mcdermott)
+- #82 Fix test runs after recent gh/docker/cmake changes
+          (thanks to Scott Mcdermott)
+- JSON: Fix build with GCC 13
+          (thanks to Sam James)
+- Apply clang-tidy
+          (thanks to Rosen Penev)
+
 - Fixed bug where the isIPv4Address() port value could be left uninitialized.
 - Removed CMake CMP0037.
 - TI-91 Timewarrior does not compile on DragonFly
