@@ -29,15 +29,18 @@
 
 #include <string>
 
-#define _COLOR_INVERSE   0x00400000  // Inverse attribute.
-#define _COLOR_256       0x00200000  // 256-color mode.
-#define _COLOR_HASBG     0x00100000  // Has background color (all values taken).
-#define _COLOR_HASFG     0x00080000  // Has foreground color (all values taken).
-#define _COLOR_UNDERLINE 0x00040000  // General underline attribute.
-#define _COLOR_BOLD      0x00020000  // 16-color bold attribute.
-#define _COLOR_BRIGHT    0x00010000  // 16-color bright background attribute.
-#define _COLOR_BG        0x0000FF00  // 8-bit background color index.
-#define _COLOR_FG        0x000000FF  // 8-bit foreground color index.
+#define _COLOR_24BIT     0x0000000080000000  // 24-bit mode.
+#define _COLOR_INVERSE   0x0000000040000000  // Inverse attribute.
+#define _COLOR_256       0x0000000020000000  // 256-color mode.
+#define _COLOR_HASBG     0x0000000010000000  // Has background color (all values taken).
+#define _COLOR_HASFG     0x0000000008000000  // Has foreground color (all values taken).
+#define _COLOR_UNDERLINE 0x0000000004000000  // General underline attribute.
+#define _COLOR_BOLD      0x0000000002000000  // 16-color bold attribute.
+#define _COLOR_BRIGHT    0x0000000001000000  // 16-color bright background attribute.
+#define _COLOR_BG        0x000000000000FF00  // 8-bit background color index.
+#define _COLOR_FG        0x00000000000000FF  // 8-bit foreground color index.
+#define _COLOR_24BIT_BG  0x00FFFFFF00000000  // 24-bit background color index.
+#define _COLOR_24BIT_FG  0x0000000000FFFFFF  // 24-bit foreground color index.
 
 class Color
 {
@@ -47,7 +50,7 @@ public:
   Color ();
   Color (const Color&) = default;
   Color& operator= (const Color&) = default;
-  Color (unsigned int);                         // 256 | INVERSE | UNDERLINE | BOLD | BRIGHT | (BG << 8) | FG
+  Color (unsigned long int);                    // 256 | INVERSE | UNDERLINE | BOLD | BRIGHT | (BG << 8) | FG
   Color (const std::string&);                   // "red on bright black"
   Color (color_id);                             // fg.
   Color (color_id, color_id, bool, bool, bool); // fg, bg, underline, bold, bright
@@ -55,6 +58,8 @@ public:
   operator int () const;
 
   void upgrade ();
+  void upgrade24b ();
+  unsigned int index2truecolor(unsigned int);
   void blend (const Color&);
 
   std::string colorize (const std::string&) const;
@@ -74,7 +79,7 @@ private:
   std::string bg () const;
 
 private:
-  unsigned int _value;
+  unsigned long int _value;
 };
 
 #endif

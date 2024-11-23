@@ -29,6 +29,7 @@
 #include <format.h>
 #include <shared.h>
 #include <sstream>
+#include <iomanip>
 
 // uint to string lookup table for Color::_colorize()
 // _colorize() gets called _a lot_, having this lookup table is a cheap
@@ -92,15 +93,26 @@ Color::Color ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Color::Color (unsigned int c)
+Color::Color (unsigned long int c)
 : _value (0)
 {
-  if (!(c & _COLOR_HASFG)) _value &= ~_COLOR_FG;
-  if (!(c & _COLOR_HASBG)) _value &= ~_COLOR_BG;
+  if ((c & _COLOR_24BIT)) {
+    if (!(c & _COLOR_HASFG)) _value &= ~_COLOR_24BIT_FG;
+    if (!(c & _COLOR_HASBG)) _value &= ~_COLOR_24BIT_BG;
 
-  _value = c & (_COLOR_256 | _COLOR_HASBG | _COLOR_HASFG |_COLOR_UNDERLINE |
-                _COLOR_INVERSE | _COLOR_BOLD | _COLOR_BRIGHT | _COLOR_BG |
-                _COLOR_FG);
+    _value = c & (_COLOR_24BIT | _COLOR_HASBG | _COLOR_HASFG |_COLOR_UNDERLINE |
+                  _COLOR_INVERSE | _COLOR_BOLD | _COLOR_BRIGHT |
+                  _COLOR_24BIT_BG | _COLOR_24BIT_FG);
+  }
+
+  else {
+    if (!(c & _COLOR_HASFG)) _value &= ~_COLOR_FG;
+    if (!(c & _COLOR_HASBG)) _value &= ~_COLOR_BG;
+
+    _value = c & (_COLOR_256 | _COLOR_HASBG | _COLOR_HASFG |_COLOR_UNDERLINE |
+                  _COLOR_INVERSE | _COLOR_BOLD | _COLOR_BRIGHT | _COLOR_BG |
+                  _COLOR_FG);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,10 +123,11 @@ Color::Color (unsigned int c)
 //   black
 //   red
 //   ...
-//   grayN  0 <= N <= 23       fg 38;5;232 + N              bg 48;5;232 + N
-//   greyN  0 <= N <= 23       fg 38;5;232 + N              bg 48;5;232 + N
-//   colorN 0 <= N <= 255      fg 38;5;N                    bg 48;5;N
-//   rgbRGB 0 <= R,G,B <= 5    fg 38;5;16 + R*36 + G*6 + B  bg 48;5;16 + R*36 + G*6 + B
+//   grayN    0 <= N <= 23     fg 38;5;232 + N              bg 48;5;232 + N
+//   greyN    0 <= N <= 23     fg 38;5;232 + N              bg 48;5;232 + N
+//   colorN   0 <= N <= 255    fg 38;5;N                    bg 48;5;N
+//   rgbRGB   0 <= R,G,B <= 5  fg 38;5;16 + R*36 + G*6 + B  bg 48;5;16 + R*36 + G*6 + B
+//   0xRRGGBB 0 <= R,G,B <= FF fg 38;2;R;G;B                bg 48;2;R;G;B
 Color::Color (const std::string& spec)
 : _value (0)
 {
@@ -124,8 +137,8 @@ Color::Color (const std::string& spec)
   // Construct the color as two separate colors, then blend them later.  This
   // make it possible to declare a color such as "color1 on black", and have
   // the upgrade work properly.
-  unsigned int fg_value = 0;
-  unsigned int bg_value = 0;
+  unsigned long int fg_value = 0;
+  unsigned long int bg_value = 0;
 
   bool bg = false;
   int index;
@@ -233,6 +246,28 @@ Color::Color (const std::string& spec)
         fg_value |= _COLOR_256;
       }
     }
+
+    // 0xX where 0 <= X <= 0xFFFFFF.
+    else if (! word.compare (0, 2, "0x", 2))
+    {
+      unsigned long int color = strtol (word.c_str (), nullptr, 16);
+      if (color > 0x00FFFFFF)
+        throw format ("The color '{1}' is not recognized.", word);
+
+      upgrade24b ();
+
+      if (bg) {
+        bg_value |= _COLOR_HASBG;
+        bg_value |= color << 32;
+        bg_value |= _COLOR_24BIT;
+      }
+      else
+      {
+        fg_value |= _COLOR_HASFG;
+        fg_value |= color;
+        fg_value |= _COLOR_24BIT;
+      }
+    }
     else if (!word.empty ())
       throw format ("The color '{1}' is not recognized.", word);
   }
@@ -257,9 +292,9 @@ Color::Color (color_id fg)
 Color::Color (color_id fg, color_id bg, bool underline, bool bold, bool bright)
 : _value (0)
 {
-  _value |= ((underline ? 1 : 0) << 18)
-         |  ((bold      ? 1 : 0) << 17)
-         |  ((bright    ? 1 : 0) << 16);
+  _value |= ((underline ? _COLOR_UNDERLINE : 0))
+         |  ((bold      ? _COLOR_BOLD : 0))
+         |  ((bright    ? _COLOR_BRIGHT : 0));
 
   if (bg != Color::nocolor)
   {
@@ -327,9 +362,31 @@ void Color::blend (const Color& other)
   _value |= (c._value & _COLOR_INVERSE);      // Always inherit inverse.
   _value |= (c._value & _COLOR_BOLD);         // Always inherit bold.
 
+  // 24 bit <-- 24 bit.
+  if ((_value   & _COLOR_24BIT) ||
+      (c._value & _COLOR_24BIT))
+  {
+    // Upgrade either color, if necessary.
+    if (!(_value   & _COLOR_24BIT)) upgrade24b ();
+    if (!(c._value & _COLOR_24BIT)) c.upgrade24b ();
+
+    if (c._value & _COLOR_HASFG)
+    {
+      _value |= _COLOR_HASFG;                  // There is now a color.
+      _value &= ~_COLOR_24BIT_FG;              // Remove previous color.
+      _value |= (c._value & _COLOR_24BIT_FG);  // Apply other color.
+    }
+
+    if (c._value & _COLOR_HASBG)
+    {
+      _value |= _COLOR_HASBG;                  // There is now a color.
+      _value &= ~_COLOR_24BIT_BG;              // Remove previous color.
+      _value |= (c._value & _COLOR_24BIT_BG);  // Apply other color.
+    }
+  }
   // 16 <-- 16.
-  if (!(_value   & _COLOR_256) &&
-      !(c._value & _COLOR_256))
+  else if (!(_value   & _COLOR_256) &&
+           !(c._value & _COLOR_256))
   {
     _value |= (c._value & _COLOR_BRIGHT);     // Inherit bright.
 
@@ -346,8 +403,6 @@ void Color::blend (const Color& other)
       _value &= ~_COLOR_BG;                   // Remove previous color.
       _value |= (c._value & _COLOR_BG);       // Apply other color.
     }
-
-    return;
   }
   else
   {
@@ -375,26 +430,83 @@ void Color::blend (const Color& other)
 ////////////////////////////////////////////////////////////////////////////////
 void Color::upgrade ()
 {
-  if (!(_value & _COLOR_256))
+  if ((_value & _COLOR_256) ||
+      (_value & _COLOR_24BIT)) return;
+
+  if (_value & _COLOR_HASFG)
   {
-    if (_value & _COLOR_HASFG)
-    {
-      unsigned int fg = _value & _COLOR_FG;
-      _value &= ~_COLOR_FG;
-      _value |= fg - 1;
-    }
-
-    if (_value & _COLOR_HASBG)
-    {
-      bool bright = _value & _COLOR_BRIGHT;
-      unsigned int bg = (_value & _COLOR_BG) >> 8;
-      _value &= ~_COLOR_BG;
-      _value &= ~_COLOR_BRIGHT;
-      _value |= (bright ? bg + 7 : bg - 1) << 8;
-    }
-
-    _value |= _COLOR_256;
+    unsigned int fg = _value & _COLOR_FG;
+    _value &= ~_COLOR_FG;
+    _value |= fg - 1;
   }
+
+  if (_value & _COLOR_HASBG)
+  {
+    bool bright = _value & _COLOR_BRIGHT;
+    unsigned int bg = (_value & _COLOR_BG) >> 8;
+    _value &= ~_COLOR_BG;
+    _value &= ~_COLOR_BRIGHT;
+    _value |= (bright ? bg + 7 : bg - 1) << 8;
+  }
+
+  _value |= _COLOR_256;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Color::upgrade24b ()
+{
+  if (_value & _COLOR_24BIT) return;
+
+  upgrade ();
+
+  _value &= ~_COLOR_256;
+
+  if (_value & _COLOR_HASFG)
+  {
+    unsigned int fg = _value & _COLOR_FG;
+    _value &= ~_COLOR_FG;
+    _value |= index2truecolor(fg);
+  }
+
+  if (_value & _COLOR_HASBG)
+  {
+    unsigned int bg = (_value & _COLOR_BG) >> 8;
+    _value &= ~_COLOR_FG;
+    _value |= ((unsigned long int)(index2truecolor(bg)) << 32);
+  }
+
+  _value |= _COLOR_24BIT;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned int Color::index2truecolor(unsigned int index) {
+  unsigned int color = 0x0;
+
+  if (index <= 8)
+  {
+    color |= (index & 1) * 0x800000;
+    color |= (index & 2) * 0x004000;
+    color |= (index & 4) * 0x000020;
+  }
+  else if (index <= 16)
+  {
+    color |= (index        & 1) * 0xFF0000;
+    color |= ((index >> 1) & 1) * 0x00FF00;
+    color |= ((index >> 2) & 1) * 0x0000FF;
+  }
+  else if (index <= 231)
+  {
+    index -= 16;
+    color |= ((index / 36)    ) * 0x2a0000;
+    color |= ((index % 36) / 6) * 0x002a00;
+    color |= ((index %  6)    ) * 0x00002a;
+  }
+  else
+  {
+    color |= (index - 231) * 0x0a0a0a;
+  }
+
+  return color;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -417,6 +529,9 @@ std::string Color::colorize (const std::string& input) const
 //
 //   256 fg               \033[38;5;Nm
 //   256 bg               \033[48;5;Nm
+//
+//   24 bit fg            \033[38;2;R;G;Bm
+//   24 bit gg            \033[48;2;R;G;Bm
 void Color::_colorize (std::string &result, const std::string& input) const
 {
   if (!nontrivial ())
@@ -450,7 +565,14 @@ void Color::_colorize (std::string &result, const std::string& input) const
   if (_value & _COLOR_HASFG)
   {
     if (count++) result += ';';
-    if (_value & _COLOR_256)
+    if (_value & _COLOR_24BIT)
+    {
+      result += "38;2;";
+      result += format((_value >> 16) & 0xFF) + ';';
+      result += format((_value >>  8) & 0xFF) + ';';
+      result += format((_value)       & 0xFF);
+    }
+    else if (_value & _COLOR_256)
     {
       result += "38;5;";
       result += colorstring[(_value & _COLOR_FG)];
@@ -464,7 +586,14 @@ void Color::_colorize (std::string &result, const std::string& input) const
   if (_value & _COLOR_HASBG)
   {
     if (count++) result += ';';
-    if (_value & _COLOR_256)
+    if (_value & _COLOR_24BIT)
+    {
+      result += "48;2;";
+      result += format((_value >> 48) & 0xFF) + ';';
+      result += format((_value >> 40) & 0xFF) + ';';
+      result += format((_value >> 32) & 0xFF);
+    }
+    else if (_value & _COLOR_256)
     {
       result += "48;5;";
       result += colorstring[((_value & _COLOR_BG) >> 8)];
@@ -521,8 +650,36 @@ std::string Color::code () const
 
   std::string result;
 
+  // 24 bit color
+  if (_value & _COLOR_24BIT)
+  {
+    if (_value & _COLOR_UNDERLINE)
+      result += "\033[4m";
+
+    if (_value & _COLOR_INVERSE)
+      result += "\033[7m";
+
+    if (_value & _COLOR_HASFG)
+    {
+      result += "\033[38;2;";
+      result += format((_value >> 16) & 0xFF) + ';';
+      result += format((_value >>  8) & 0xFF) + ';';
+      result += format((_value)       & 0xFF);
+      result += 'm';
+    }
+
+    if (_value & _COLOR_HASBG)
+    {
+      result += "\033[48;2;";
+      result += format((_value >> 48) & 0xFF) + ';';
+      result += format((_value >> 40) & 0xFF) + ';';
+      result += format((_value >> 32) & 0xFF);
+      result += 'm';
+    }
+  }
+
   // 256 color
-  if (_value & _COLOR_256)
+  else if (_value & _COLOR_256)
   {
     if (_value & _COLOR_UNDERLINE)
       result += "\033[4m";
@@ -615,9 +772,17 @@ int Color::find (const std::string& input)
 ////////////////////////////////////////////////////////////////////////////////
 std::string Color::fg () const
 {
-  int index = _value & _COLOR_FG;
-
-  if (_value & _COLOR_256)
+  if (_value & _COLOR_24BIT)
+  {
+    if (_value & _COLOR_HASFG)
+    {
+      std::stringstream s;
+      s << "0x" << std::setfill('0') << std::setw(6) << std::hex <<
+        (_value & _COLOR_24BIT_FG);
+      return s.str ();
+    }
+  }
+  else if (_value & _COLOR_256)
   {
     if (_value & _COLOR_HASFG)
     {
@@ -628,6 +793,7 @@ std::string Color::fg () const
   }
   else
   {
+    int index = _value & _COLOR_FG;
     for (unsigned int i = 0; i < NUM_COLORS; ++i)
       if (allColors[i].index == index)
         return allColors[i].english_name;
@@ -639,9 +805,17 @@ std::string Color::fg () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string Color::bg () const
 {
-  int index = (_value & _COLOR_BG) >> 8;
-
-  if (_value & _COLOR_256)
+  if (_value & _COLOR_24BIT)
+  {
+    if (_value & _COLOR_HASBG)
+    {
+      std::stringstream s;
+      s << "0x" << std::setfill('0') << std::setw(6) << std::hex <<
+        ((_value & _COLOR_24BIT_BG) >> 32);
+      return s.str ();
+    }
+  }
+  else if (_value & _COLOR_256)
   {
     if (_value & _COLOR_HASBG)
     {
@@ -652,6 +826,7 @@ std::string Color::bg () const
   }
   else
   {
+    int index = (_value & _COLOR_BG) >> 8;
     for (unsigned int i = 0; i < NUM_COLORS; ++i)
       if (allColors[i].index == index)
         return allColors[i].english_name;
