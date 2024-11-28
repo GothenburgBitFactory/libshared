@@ -29,6 +29,7 @@
 
 #include <Pig.h>
 #include <ctime>
+#include <cstdint>
 #include <string>
 
 #define EPOCH_MIN_VALUE 315532800    // 1980-01-01T00:00:00Z
@@ -101,10 +102,10 @@ public:
   bool sameMonth   (const Datetime&) const;
   bool sameQuarter (const Datetime&) const;
   bool sameYear    (const Datetime&) const;
-  Datetime operator+  (const int);
-  Datetime operator-  (const int);
-  Datetime& operator+= (const int);
-  Datetime& operator-= (const int);
+  Datetime operator+  (const int64_t);
+  Datetime operator-  (const int64_t);
+  Datetime& operator+= (const int64_t);
+  Datetime& operator-= (const int64_t);
   time_t operator- (const Datetime&);
   void operator--  ();    // Prefix
   void operator--  (int); // Postfix

@@ -3788,26 +3788,26 @@ bool Datetime::sameYear (const Datetime& rhs) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime Datetime::operator+ (const int delta)
+Datetime Datetime::operator+ (const int64_t delta)
 {
   return { _date + delta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime Datetime::operator- (const int delta)
+Datetime Datetime::operator- (const int64_t delta)
 {
   return { _date - delta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime& Datetime::operator+= (const int delta)
+Datetime& Datetime::operator+= (const int64_t delta)
 {
   _date += (time_t) delta;
   return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Datetime& Datetime::operator-= (const int delta)
+Datetime& Datetime::operator-= (const int64_t delta)
 {
   _date -= (time_t) delta;
   return *this;
