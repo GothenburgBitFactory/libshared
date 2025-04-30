@@ -73,8 +73,15 @@ unsigned int utf8_codepoint (const std::string& input)
 //   - returns the next character
 unsigned int utf8_next_char (const std::string& input, std::string::size_type& i)
 {
-  if (input[i] == '\0')
+  // Try to recognize end of string without checking length on every call.
+  if (input[i] == '\0') {
+    // If this is not the end of the string, then this is a NUL character
+    // embedded in the string, so advance over it.
+    if (i != input.length()) {
+      i += 1;
+    }
     return 0;
+  }
 
   // How many bytes in the sequence?
   int length = utf8_sequence (input[i]);

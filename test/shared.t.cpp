@@ -30,7 +30,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (204);
+  UnitTest t (211);
 
   // void wrapText (std::vector <std::string>& lines, const std::string& text, const int width, bool hyphenate)
   std::string text = "This is a test of the line wrapping code.";
@@ -97,6 +97,19 @@ int main (int, char**)
   extractLine (line, text, 10, true, offset);
   t.is (line, "AAAAAAAAA-", "extractLine hyphenated unbreakable line");
   t.diag (line);
+
+  text = "abc\n";
+  offset = 3;
+  t.ok (extractLine(line, text, 10, true, offset), "extractLine succeeds at trailing newline");
+  t.is (line, "", "recognized newline as a line ending");
+  t.is (offset, 4, "incremented offset");
+
+  text = std::string("abc\0", 4);
+  offset = 3;
+  t.is (text.length(), (size_t)4, "trailing NUL included in string length");
+  t.ok (extractLine(line, text, 10, true, offset), "extractLine succeeds at NUL");
+  t.is (line, "", "recognized NUL as a line ending");
+  t.is (offset, 4, "incremented ofset");
 
 /*
   TODO Resolve above against below, from Taskwarrior 2.6.0
