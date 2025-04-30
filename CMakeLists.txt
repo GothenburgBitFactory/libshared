@@ -4,6 +4,8 @@ set (HAVE_CMAKE true)
 # https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html
 set(CMAKE_CXX_STANDARD 17)
 
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project (shared)
 include (CXXSniffer)
 
