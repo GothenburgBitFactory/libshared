@@ -27,7 +27,7 @@
 #ifndef INCLUDED_RX
 #define INCLUDED_RX
 
-#include <regex.h>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -51,7 +51,7 @@ private:
   bool _compiled       {false};
   std::string _pattern {};
   bool _case_sensitive {false};
-  regex_t _regex;
+  std::regex _regex;
 };
 
 #endif
