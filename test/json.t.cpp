@@ -137,7 +137,7 @@ void saxTest (UnitTest& t, const std::string& input, const std::string& expected
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 28 + 4);
+  UnitTest t (NUM_POSITIVE_TESTS + NUM_NEGATIVE_TESTS + 31 + 4);
 
   // Ensure environment has no influence.
   unsetenv ("TASKDATA");
@@ -220,6 +220,15 @@ int main (int, char**)
     t.is (encoded[4], '\\',                  "json::encode one<backslash>[4] -> <backslash>");
 
     t.is (json::decode (encoded), "one\\",   "json::decode one<backslash><backslash> -> one<backslash>");
+
+    // Invalid input, trailing `\`.
+    t.is (json::decode ("1\\"), "1\\", "json::decode <backslash> -> <backslash>");
+
+    // Embedded NUL.
+    t.is (json::decode ("\0012"), "\0012", "json::decode <nul>12 -> <nul>12");
+
+    // Escaped embedded NUL.
+    t.is (json::decode ("\\\0012"), "\\\0012", "json::decode <backslash><nul>12 -> <backslash><nul>12");
   }
 
   catch (const std::string& e) {t.diag (e);}

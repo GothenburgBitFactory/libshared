@@ -466,6 +466,11 @@ std::string json::decode (const std::string& input)
           pos += 3;
           break;
 
+        // End-of-string will always have a NUL in C++11.
+        case 0:
+          output += '\\';
+          break;
+
         // If it is an unrecognized sequence, do nothing.
         default:
           output += '\\';
