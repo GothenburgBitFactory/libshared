@@ -36,6 +36,10 @@
 #include <unicode.h>
 #include <utf8.h>
 
+#ifdef _WIN32
+  #define timegm _mkgmtime
+#endif
+
 static std::vector <std::string> dayNames {
   "sunday",
   "monday",
