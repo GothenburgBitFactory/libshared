@@ -25,7 +25,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <RX.h>
+
 #include <cstring>
+#include <regex>
 #include <string>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,11 +53,7 @@ RX::RX (const RX& other)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-RX::~RX ()
-{
-  if (_compiled)
-    regfree (&_regex);
-}
+RX::~RX() = default;
 
 ////////////////////////////////////////////////////////////////////////////////
 RX& RX::operator= (const RX& other)
@@ -72,23 +70,16 @@ void RX::compile ()
 {
   if (! _compiled)
   {
-    memset (&_regex, 0, sizeof (regex_t));
-
-    int result;
-    if ((result = regcomp (&_regex, _pattern.c_str (),
-#if defined REG_ENHANCED
-                           REG_ENHANCED | REG_EXTENDED | REG_NEWLINE |
-#else
-                           REG_EXTENDED | REG_NEWLINE |
-#endif
-                           (_case_sensitive ? 0 : REG_ICASE))) != 0)
-    {
-      char message[256];
-      regerror (result, &_regex, message, 256);
-      throw std::string (message);
+    std::regex::flag_type flags = std::regex_constants::ECMAScript;
+    if (!_case_sensitive) {
+      flags |= std::regex_constants::icase;
     }
-
-    _compiled = true;
+    try {
+      _regex.assign(_pattern, flags);
+      _compiled = true;
+    } catch (const std::regex_error& e) {
+      throw std::runtime_error(e.what());
+    }
   }
 }
 
@@ -98,7 +89,7 @@ bool RX::match (const std::string& in)
   if (! _compiled)
     compile ();
 
-  return regexec (&_regex, in.c_str (), 0, nullptr, 0) == 0;
+  return std::regex_search(in, _regex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,21 +100,13 @@ bool RX::match (
   if (! _compiled)
     compile ();
 
-  regmatch_t rm[2];
-  int offset = 0;
-  int length = in.length ();
-  while (regexec (&_regex, in.c_str () + offset, 2, &rm[0], 0) == 0 &&
-         offset < length)
-  {
-    matches.push_back (in.substr (rm[0].rm_so + offset, rm[0].rm_eo - rm[0].rm_so));
-    offset += rm[0].rm_eo;
-
-    // Protection against zero-width patterns causing infinite loops.
-    if (rm[0].rm_so == rm[0].rm_eo)
-      ++offset;
+  auto matches_begin = std::sregex_iterator(in.begin(), in.end(), _regex);
+  auto matches_end = std::sregex_iterator();
+  for (std::sregex_iterator it = matches_begin; it != matches_end; ++it) {
+      matches.push_back(it->str());
   }
 
-  return !matches.empty ();
+  return !matches.empty();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,19 +118,11 @@ bool RX::match (
   if (! _compiled)
     compile ();
 
-  regmatch_t rm[2];
-  int offset = 0;
-  int length = in.length ();
-  while (regexec (&_regex, in.c_str () + offset, 2, &rm[0], 0) == 0 &&
-         offset < length)
-  {
-    start.push_back (rm[0].rm_so + offset);
-    end.push_back   (rm[0].rm_eo + offset);
-    offset += rm[0].rm_eo;
-
-    // Protection against zero-width patterns causing infinite loops.
-    if (rm[0].rm_so == rm[0].rm_eo)
-      ++offset;
+  auto matches_begin = std::sregex_iterator(in.begin(), in.end(), _regex);
+  auto matches_end = std::sregex_iterator();
+  for (std::sregex_iterator it = matches_begin; it != matches_end; ++it) {
+    start.push_back(it->position());
+    end.push_back(it->position() + it->length());
   }
 
   return !start.empty ();
