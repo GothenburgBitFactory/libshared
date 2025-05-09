@@ -33,8 +33,10 @@
 /* Found strlcpy() */
 #cmakedefine HAVE_STRLCPY
 
+/* Found timegm(struct tm*) */
+#cmakedefine HAVE_TIMEGM
+
 /* Functions */
 #cmakedefine HAVE_GET_CURRENT_DIR_NAME
-#cmakedefine HAVE_TIMEGM
 #cmakedefine HAVE_UUID_UNPARSE_LOWER
 

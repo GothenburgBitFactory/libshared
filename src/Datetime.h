@@ -201,6 +201,10 @@ private:
   bool validate ();
   void resolve ();
 
+  #ifndef HAVE_TIMEGM
+  time_t timegm(struct tm*);
+  #endif
+
 public:
   int _year    {0};
   int _month   {0};
