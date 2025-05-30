@@ -22,6 +22,7 @@ set (PACKAGE_VERSION "${VERSION}")
 set (PACKAGE_STRING "${PACKAGE} ${VERSION}")
 
 check_function_exists(strlcpy HAVE_STRLCPY)
+check_function_exists(timegm  HAVE_TIMEGM)
 
 message ("-- Configuring cmake.h")
 configure_file (

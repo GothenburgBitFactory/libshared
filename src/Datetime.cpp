@@ -3119,6 +3119,23 @@ bool Datetime::validate ()
   return true;
 }
 
+#ifndef HAVE_TIMEGM
+time_t Datetime::timegm(struct tm* tm) {
+  time_t ret;
+  char* tz;
+  tz = getenv("TZ");
+  setenv("TZ", "UTC", 1);
+  tzset();
+  ret = mktime(tm);
+  if (tz)
+    setenv("TZ", tz, 1);
+  else
+    unsetenv("TZ");
+  tzset();
+  return ret;
+}
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 // int tm_sec;       seconds (0 - 60)
 // int tm_min;       minutes (0 - 59)
