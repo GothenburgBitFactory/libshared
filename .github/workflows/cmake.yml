@@ -16,6 +16,8 @@ jobs:
             runner: ubuntu-22.04
           - name: "Ubuntu 24.04"
             runner: ubuntu-24.04
+          - name: "macOS 15"
+            runner: macos-15
           - name: "macOS 14"
             runner: macos-14
           - name: "macOS 13"
