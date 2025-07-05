@@ -34,15 +34,24 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#ifndef _WIN32
 #include <dirent.h>
 #include <fcntl.h>
-#include <format.h>
-#include <fstream>
 #include <glob.h>
 #include <pwd.h>
+#include <unistd.h>
+#else
+#include <io.h>
+#include <direct.h>
+#include <windows.h>
+#include <winbase.h>
+#include <shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
+#endif
+#include <format.h>
+#include <fstream>
 #include <string>
 #include <sys/stat.h>
-#include <unistd.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD || defined DRAGONFLY || !defined(__GLIBC__)
 #include <climits>
@@ -59,6 +68,16 @@
 
 #ifndef GLOB_BRACE
 #define GLOB_BRACE 0
+#endif
+
+#ifdef _WIN32
+// Windows compatibility defines
+#define F_OK 0
+#define R_OK 4
+#define W_OK 2
+#define X_OK 1
+#define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
+#define S_ISLNK(mode) (0) // Windows doesn't have symlinks in the same way
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,6 +177,7 @@ std::string Path::realpath () const
   if (_data.empty ())
     return "";
 
+#ifndef _WIN32
   char *result_c = ::realpath (_data.c_str(), nullptr);
   if (result_c == nullptr)
     return "";
@@ -165,12 +185,22 @@ std::string Path::realpath () const
   std::string result (result_c);
   free(result_c);
   return result;
+#else
+  char full_path[MAX_PATH];
+  if (GetFullPathNameA(_data.c_str(), MAX_PATH, full_path, nullptr) == 0)
+    return "";
+  return std::string(full_path);
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::exists () const
 {
+#ifndef _WIN32
   return access (_data.c_str (), F_OK) == 0;
+#else
+  return _access(_data.c_str(), 0) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,11 +233,16 @@ bool Path::is_link () const
   if (! exists ())
     return false;
 
+#ifndef _WIN32
   struct stat s {};
   if (lstat (_data.c_str (), &s))
     throw format ("lstat error {1}: {2}", errno, strerror (errno));
 
   return S_ISLNK (s.st_mode);
+#else
+  // Windows doesn't have symlinks in the same way, so return false
+  return false;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -218,11 +253,15 @@ bool Path::readable () const
   if (! exists ())
     return false;
 
+#ifndef _WIN32
   auto status = access (_data.c_str (), R_OK);
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status == 0;
+#else
+  return _access(_data.c_str(), 4) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,11 +272,15 @@ bool Path::writable () const
   if (! exists ())
     return false;
 
+#ifndef _WIN32
   auto status = access (_data.c_str (), W_OK);
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status == 0;
+#else
+  return _access(_data.c_str(), 2) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,11 +291,15 @@ bool Path::executable () const
   if (! exists ())
     return false;
 
+#ifndef _WIN32
   auto status = access (_data.c_str (), X_OK);
   if (status == -1 && errno != EACCES)
     throw format ("access error {1}: {2}", errno, strerror (errno));
 
   return status == 0;
+#else
+  return _access(_data.c_str(), 1) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,6 +347,7 @@ std::string Path::expand (const std::string& in)
       // Convert: ~ --> /home/user
       if (slash == 1)
       {
+#ifndef _WIN32
         const char* home = getenv ("HOME");
         if (home == nullptr)
         {
@@ -307,16 +355,29 @@ std::string Path::expand (const std::string& in)
           home = pw->pw_dir;
         }
         result += home;
+#else
+        const char* home = getenv ("USERPROFILE");
+        if (home == nullptr)
+          home = getenv ("HOME");
+        if (home == nullptr)
+          home = "C:\\Users\\Default";
+        result += home;
+#endif
       }
       // Convert: ~name --> /home/name
       else
       {
+#ifndef _WIN32
         std::string name = in.substr (1, slash - 1);
         struct passwd* pw = getpwnam (name.c_str ());
         if (pw)
           result += pw->pw_dir;
         else
           result += "/home/" + name;
+#else
+        std::string name = in.substr (1, slash - 1);
+        result += "C:\\Users\\" + name;
+#endif
       }
 
       // Process `/` in the next loop.
@@ -354,6 +415,7 @@ std::vector <std::string> Path::glob (const std::string& pattern)
 {
   std::vector <std::string> results;
 
+#ifndef _WIN32
   glob_t g;
 #ifdef SOLARIS
   if (!::glob (pattern.c_str (), GLOB_ERR, nullptr, &g))
@@ -364,6 +426,11 @@ std::vector <std::string> Path::glob (const std::string& pattern)
       results.emplace_back (g.gl_pathv[i]);
 
   globfree (&g);
+#else
+  // Simple Windows implementation - just return the pattern if it doesn't contain wildcards
+  if (pattern.find('*') == std::string::npos && pattern.find('?') == std::string::npos)
+    results.emplace_back(pattern);
+#endif
   return results;
 }
 
@@ -431,7 +498,9 @@ bool File::create (int mode /* = 0640 */)
 {
   if (open ())
   {
+#ifndef _WIN32
     fchmod (_h, mode);
+#endif
     close ();
     return true;
   }
@@ -442,7 +511,11 @@ bool File::create (int mode /* = 0640 */)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove () const
 {
+#ifndef _WIN32
   return unlink (_data.c_str ()) == 0;
+#else
+  return _unlink(_data.c_str()) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -495,6 +568,7 @@ void File::close ()
 
     // fdatasync() is faster we can't trust it anywhere but Linux.
     // https://news.ycombinator.com/item?id=25171572
+#ifndef _WIN32
     #if defined (LINUX)
       if (fdatasync (fileno (_fh)))
         throw format ("fdatasync error {1}: {2}", errno, strerror (errno));
@@ -513,6 +587,11 @@ void File::close ()
       if (fsync (fileno (_fh)))
         throw format ("fsync error {1}: {2}", errno, strerror (errno));
     # endif
+#else
+    // Windows doesn't have fsync, use FlushFileBuffers instead
+    if (FlushFileBuffers((HANDLE)_get_osfhandle(fileno(_fh))) == 0)
+      throw format ("FlushFileBuffers error {1}: {2}", GetLastError(), "Windows file flush failed");
+#endif
     if (fclose (_fh))
       throw format ("fclose error {1}: {2}", errno, strerror (errno));
 
@@ -528,6 +607,7 @@ bool File::lock ()
   _locked = false;
   if (_fh && _h != -1)
   {
+#ifndef _WIN32
 #if defined(DARWIN)
                     // l_start l_len l_pid l_type   l_whence
     struct flock fl = {0,      0,    0,    F_WRLCK, SEEK_SET};
@@ -541,6 +621,10 @@ bool File::lock ()
     fl.l_pid = getpid ();
     if (fcntl (_h, F_SETLKW, &fl) == 0)
       _locked = true;
+#else
+    // Windows file locking is handled differently - for now, just return true
+    _locked = true;
+#endif
   }
 
   return _locked;
@@ -551,6 +635,7 @@ void File::unlock ()
 {
   if (_locked)
   {
+#ifndef _WIN32
 #if defined(DARWIN)
                     // l_start l_len l_pid l_type   l_whence
     struct flock fl = {0,      0,    0,    F_WRLCK, SEEK_SET};
@@ -564,6 +649,7 @@ void File::unlock ()
     fl.l_pid = getpid ();
 
     fcntl (_h, F_SETLK, &fl);
+#endif
     _locked = false;
   }
 }
@@ -676,8 +762,13 @@ void File::truncate ()
     open ();
 
   if (_fh)
+#ifndef _WIN32
     if (ftruncate (_h, 0))
       throw format ("ftruncate error {1}: {2}", errno, strerror (errno));
+#else
+    if (_chsize(_h, 0))
+      throw format ("_chsize error {1}: {2}", errno, strerror (errno));
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -757,8 +848,10 @@ bool File::create (const std::string& name, int mode /* = 0640 */)
   if (out.good ())
   {
     out.close ();
+#ifndef _WIN32
     if (chmod (full_name.c_str (), mode))
       throw format ("chmod error {1}: {2}", errno, strerror (errno));
+#endif
 
     return true;
   }
@@ -945,7 +1038,11 @@ bool Directory::create (int mode /* = 0755 */)
           return false;
       }
   }
+#ifndef _WIN32
   return mkdir (_data.c_str (), mode) == 0;
+#else
+  return _mkdir(_data.c_str()) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -957,6 +1054,7 @@ bool Directory::remove () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::remove_directory (const std::string& dir) const
 {
+#ifndef _WIN32
   DIR* dp = opendir (dir.c_str ());
   if (dp != nullptr)
   {
@@ -997,6 +1095,33 @@ bool Directory::remove_directory (const std::string& dir) const
   }
 
   return rmdir (dir.c_str ()) == 0;
+#else
+  // Windows implementation
+  std::string search_path = dir + "\\*";
+  WIN32_FIND_DATAA find_data;
+  HANDLE find_handle = FindFirstFileA(search_path.c_str(), &find_data);
+
+  if (find_handle != INVALID_HANDLE_VALUE)
+  {
+    do
+    {
+      std::string filename = find_data.cFileName;
+      if (filename != "." && filename != "..")
+      {
+        std::string full_path = dir + "\\" + filename;
+
+        if (find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+          remove_directory(full_path);
+        else
+          _unlink(full_path.c_str());
+      }
+    } while (FindNextFileA(find_handle, &find_data));
+
+    FindClose(find_handle);
+  }
+
+  return _rmdir(dir.c_str()) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1018,6 +1143,7 @@ std::vector <std::string> Directory::listRecursive ()
 ////////////////////////////////////////////////////////////////////////////////
 std::string Directory::cwd ()
 {
+#ifndef _WIN32
 #ifdef HAVE_GET_CURRENT_DIR_NAME
   char *buf = get_current_dir_name ();
   if (buf == nullptr)
@@ -1029,6 +1155,12 @@ std::string Directory::cwd ()
   char buf[PATH_MAX];
   getcwd (buf, PATH_MAX - 1);
   return std::string (buf);
+#endif
+#else
+  char buf[MAX_PATH];
+  if (_getcwd(buf, MAX_PATH) == nullptr)
+    throw std::bad_alloc();
+  return std::string(buf);
 #endif
 }
 
@@ -1056,7 +1188,11 @@ bool Directory::up ()
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::cd () const
 {
+#ifndef _WIN32
   return chdir (_data.c_str ()) == 0;
+#else
+  return _chdir(_data.c_str()) == 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1065,6 +1201,7 @@ void Directory::list (
   std::vector <std::string>& results,
   bool recursive)
 {
+#ifndef _WIN32
   DIR* dp = opendir (base.c_str ());
   if (dp != nullptr)
   {
@@ -1103,6 +1240,31 @@ void Directory::list (
 
     closedir (dp);
   }
+#else
+  // Windows implementation using FindFirstFile/FindNextFile
+  std::string search_path = base + "\\*";
+  WIN32_FIND_DATAA find_data;
+  HANDLE find_handle = FindFirstFileA(search_path.c_str(), &find_data);
+
+  if (find_handle != INVALID_HANDLE_VALUE)
+  {
+    do
+    {
+      std::string filename = find_data.cFileName;
+      if (filename != "." && filename != "..")
+      {
+        std::string full_path = base + "\\" + filename;
+
+        if (recursive && (find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+          list(full_path, results, recursive);
+        else
+          results.push_back(full_path);
+      }
+    } while (FindNextFileA(find_handle, &find_data));
+
+    FindClose(find_handle);
+  }
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
