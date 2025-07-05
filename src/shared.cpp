@@ -35,10 +35,12 @@
 #include <iostream>
 #include <shared.h>
 #include <sstream>
+#ifndef _WIN32
 #include <strings.h>
-#include <sys/select.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <sys/select.h>
+#endif
 #include <utf8.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -485,9 +487,15 @@ bool compare (
   const std::string& right,
   bool sensitive /*= true*/)
 {
-  // Use strcasecmp if required.
+  // Use case-insensitive comparison if required.
   if (! sensitive)
+  {
+#ifndef _WIN32
     return strcasecmp (left.c_str (), right.c_str ()) == 0;
+#else
+    return _stricmp (left.c_str (), right.c_str ()) == 0;
+#endif
+  }
 
   // Otherwise, just use std::string::operator==.
   return left == right;
@@ -686,6 +694,13 @@ int execute (
   const std::string& input,
   std::string& output)
 {
+#ifdef _WIN32
+  // Windows doesn't have fork/pipe/exec, use CreateProcess
+  // This is a simplified implementation - for full functionality,
+  // you'd need to implement proper pipe handling with Windows API
+  output = "";
+  return -1; // Not implemented on Windows
+#else
   pid_t pid;
   int pin[2], pout[2];
   fd_set rfds, wfds;
@@ -827,6 +842,7 @@ int execute (
     throw std::string (std::strerror (errno));
 
   return status;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -854,6 +870,8 @@ std::string osName ()
   return "GNU/kFreeBSD";
 #elif defined (GNUHURD)
   return "GNU/Hurd";
+#elif defined (_WIN32)
+  return "Windows";
 #else
   return "<unknown>";
 #endif
