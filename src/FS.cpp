@@ -51,6 +51,7 @@
 #include <format.h>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <sys/stat.h>
 
 #if defined SOLARIS || defined NETBSD || defined FREEBSD || defined DRAGONFLY || !defined(__GLIBC__)
@@ -186,10 +187,17 @@ std::string Path::realpath () const
   free(result_c);
   return result;
 #else
-  char full_path[MAX_PATH];
-  if (GetFullPathNameA(_data.c_str(), MAX_PATH, full_path, nullptr) == 0)
+  // Query the required buffer size first
+  DWORD required_size = GetFullPathNameA(_data.c_str(), 0, nullptr, nullptr);
+  if (required_size == 0)
     return "";
-  return std::string(full_path);
+
+  // Allocate buffer of the required size
+  std::vector<char> full_path(required_size);
+  if (GetFullPathNameA(_data.c_str(), required_size, full_path.data(), nullptr) == 0)
+    return "";
+
+  return std::string(full_path.data());
 #endif
 }
 
