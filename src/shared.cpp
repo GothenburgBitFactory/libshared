@@ -42,6 +42,9 @@
 #include <sys/select.h>
 #endif
 #include <utf8.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 void wrapText (
@@ -695,11 +698,68 @@ int execute (
   std::string& output)
 {
 #ifdef _WIN32
-  // Windows doesn't have fork/pipe/exec, use CreateProcess
-  // This is a simplified implementation - for full functionality,
-  // you'd need to implement proper pipe handling with Windows API
+  // Windows implementation using CreateProcess and pipes
+  HANDLE hChildStdOutRd, hChildStdOutWr;
+  HANDLE hChildStdInRd, hChildStdInWr;
+  SECURITY_ATTRIBUTES saAttr = {sizeof(SECURITY_ATTRIBUTES), NULL, TRUE};
+
+  // Create pipes for the child process's STDOUT and STDIN
+  if (!CreatePipe(&hChildStdOutRd, &hChildStdOutWr, &saAttr, 0) ||
+      !SetHandleInformation(hChildStdOutRd, HANDLE_FLAG_INHERIT, 0) ||
+      !CreatePipe(&hChildStdInRd, &hChildStdInWr, &saAttr, 0) ||
+      !SetHandleInformation(hChildStdInWr, HANDLE_FLAG_INHERIT, 0))
+    return -1;
+
+  // Prepare the child process
+  PROCESS_INFORMATION piProcInfo = {0};
+  STARTUPINFO siStartInfo = {sizeof(STARTUPINFO)};
+  siStartInfo.hStdError = hChildStdOutWr;
+  siStartInfo.hStdOutput = hChildStdOutWr;
+  siStartInfo.hStdInput = hChildStdInRd;
+  siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+  // Build the command line
+  std::string command = executable;
+  for (const auto& arg : args)
+    command += " " + arg;
+
+  // Create the child process
+  if (!CreateProcess(NULL, &command[0], NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo))
+    return -1;
+
+  // Close unused handles
+  CloseHandle(hChildStdOutWr);
+  CloseHandle(hChildStdInRd);
+
+  // Write input to child process if provided
+  if (!input.empty()) {
+    DWORD bytesWritten;
+    WriteFile(hChildStdInWr, input.c_str(), static_cast<DWORD>(input.length()), &bytesWritten, NULL);
+  }
+  CloseHandle(hChildStdInWr);
+
+  // Read the child process's output
+  char buffer[4096];
+  DWORD bytesRead;
   output = "";
-  return -1; // Not implemented on Windows
+  while (ReadFile(hChildStdOutRd, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+    buffer[bytesRead] = '\0';
+    output += buffer;
+  }
+
+  // Wait for the child process to finish
+  WaitForSingleObject(piProcInfo.hProcess, INFINITE);
+
+  // Get the exit code
+  DWORD exitCode;
+  GetExitCodeProcess(piProcInfo.hProcess, &exitCode);
+
+  // Clean up
+  CloseHandle(piProcInfo.hProcess);
+  CloseHandle(piProcInfo.hThread);
+  CloseHandle(hChildStdOutRd);
+
+  return static_cast<int>(exitCode);
 #else
   pid_t pid;
   int pin[2], pout[2];
