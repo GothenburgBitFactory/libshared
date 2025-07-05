@@ -3124,6 +3124,16 @@ time_t Datetime::timegm(struct tm* tm) {
   time_t ret;
   char* tz;
   tz = getenv("TZ");
+#ifdef _WIN32
+  _putenv_s("TZ", "UTC");
+  _tzset();
+  ret = mktime(tm);
+  if (tz)
+    _putenv_s("TZ", tz);
+  else
+    _putenv_s("TZ", "");
+  _tzset();
+#else
   setenv("TZ", "UTC", 1);
   tzset();
   ret = mktime(tm);
@@ -3132,6 +3142,7 @@ time_t Datetime::timegm(struct tm* tm) {
   else
     unsetenv("TZ");
   tzset();
+#endif
   return ret;
 }
 #endif
