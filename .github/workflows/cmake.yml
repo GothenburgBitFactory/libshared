@@ -49,7 +49,7 @@ jobs:
       - name: Test project
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
-            cmake --build build --target test
+            cd build && ctest --output-on-failure
           else
             make test
           fi
