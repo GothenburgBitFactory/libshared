@@ -31,6 +31,7 @@ jobs:
 
       # Configure in-source build and tests
       - name: Configure CMake
+        shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
             cmake -S . -B build -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
@@ -39,6 +40,7 @@ jobs:
           fi
 
       - name: Build project
+        shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
             cmake --build build
@@ -47,6 +49,7 @@ jobs:
           fi
 
       - name: Test project
+        shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
             cd build && ctest --output-on-failure
