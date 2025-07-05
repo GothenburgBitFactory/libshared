@@ -199,7 +199,7 @@ bool Path::exists () const
 #ifndef _WIN32
   return access (_data.c_str (), F_OK) == 0;
 #else
-  return _access(_data.c_str(), 0) == 0;
+  return _access(_data.c_str(), F_OK) == 0;
 #endif
 }
 
