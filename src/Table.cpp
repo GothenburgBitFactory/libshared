@@ -27,7 +27,12 @@
 #include <Table.h>
 #include <format.h>
 #include <shared.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
+#ifdef _WIN32
+#include <io.h>
+#endif
 #include <utf8.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +101,12 @@ std::string Table::render ()
 {
   // Piped output disables color, unless overridden.
   if (! _forceColor &&
-      ! isatty (STDOUT_FILENO))
+#ifdef _WIN32
+      ! _isatty(_fileno(stdout))
+#else
+      ! isatty (STDOUT_FILENO)
+#endif
+      )
   {
     _header     = Color ("");
     _odd        = Color ("");
