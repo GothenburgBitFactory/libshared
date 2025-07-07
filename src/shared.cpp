@@ -704,11 +704,18 @@ int execute (
   SECURITY_ATTRIBUTES saAttr = {sizeof(SECURITY_ATTRIBUTES), NULL, TRUE};
 
   // Create pipes for the child process's STDOUT and STDIN
-  if (!CreatePipe(&hChildStdOutRd, &hChildStdOutWr, &saAttr, 0) ||
-      !SetHandleInformation(hChildStdOutRd, HANDLE_FLAG_INHERIT, 0) ||
-      !CreatePipe(&hChildStdInRd, &hChildStdInWr, &saAttr, 0) ||
-      !SetHandleInformation(hChildStdInWr, HANDLE_FLAG_INHERIT, 0))
-    return -1;
+  if (!CreatePipe(&hChildStdOutRd, &hChildStdOutWr, &saAttr, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+  if (!SetHandleInformation(hChildStdOutRd, HANDLE_FLAG_INHERIT, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+  if (!CreatePipe(&hChildStdInRd, &hChildStdInWr, &saAttr, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+  if (!SetHandleInformation(hChildStdInWr, HANDLE_FLAG_INHERIT, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
 
   // Prepare the child process
   PROCESS_INFORMATION piProcInfo = {0};
