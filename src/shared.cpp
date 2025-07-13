@@ -35,11 +35,16 @@
 #include <iostream>
 #include <shared.h>
 #include <sstream>
+#ifndef _WIN32
 #include <strings.h>
-#include <sys/select.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <sys/select.h>
+#endif
 #include <utf8.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 void wrapText (
@@ -485,9 +490,15 @@ bool compare (
   const std::string& right,
   bool sensitive /*= true*/)
 {
-  // Use strcasecmp if required.
+  // Use case-insensitive comparison if required.
   if (! sensitive)
+  {
+#ifndef _WIN32
     return strcasecmp (left.c_str (), right.c_str ()) == 0;
+#else
+    return _stricmp (left.c_str (), right.c_str ()) == 0;
+#endif
+  }
 
   // Otherwise, just use std::string::operator==.
   return left == right;
@@ -686,6 +697,77 @@ int execute (
   const std::string& input,
   std::string& output)
 {
+#ifdef _WIN32
+  // Windows implementation using CreateProcess and pipes
+  HANDLE hChildStdOutRd, hChildStdOutWr;
+  HANDLE hChildStdInRd, hChildStdInWr;
+  SECURITY_ATTRIBUTES saAttr = {sizeof(SECURITY_ATTRIBUTES), NULL, TRUE};
+
+  // Create pipes for the child process's STDOUT and STDIN
+  if (!CreatePipe(&hChildStdOutRd, &hChildStdOutWr, &saAttr, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+  if (!SetHandleInformation(hChildStdOutRd, HANDLE_FLAG_INHERIT, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+  if (!CreatePipe(&hChildStdInRd, &hChildStdInWr, &saAttr, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+  if (!SetHandleInformation(hChildStdInWr, HANDLE_FLAG_INHERIT, 0)) {
+    return -1 * static_cast<int>(GetLastError());
+  }
+
+  // Prepare the child process
+  PROCESS_INFORMATION piProcInfo = {0};
+  STARTUPINFO siStartInfo = {sizeof(STARTUPINFO)};
+  siStartInfo.hStdError = hChildStdOutWr;
+  siStartInfo.hStdOutput = hChildStdOutWr;
+  siStartInfo.hStdInput = hChildStdInRd;
+  siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+  // Build the command line
+  std::string command = executable;
+  for (const auto& arg : args)
+    command += " " + arg;
+
+  // Create the child process
+  if (!CreateProcess(NULL, &command[0], NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo))
+    return -1;
+
+  // Close unused handles
+  CloseHandle(hChildStdOutWr);
+  CloseHandle(hChildStdInRd);
+
+  // Write input to child process if provided
+  if (!input.empty()) {
+    DWORD bytesWritten;
+    WriteFile(hChildStdInWr, input.c_str(), static_cast<DWORD>(input.length()), &bytesWritten, NULL);
+  }
+  CloseHandle(hChildStdInWr);
+
+  // Read the child process's output
+  char buffer[4096];
+  DWORD bytesRead;
+  output = "";
+  while (ReadFile(hChildStdOutRd, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+    buffer[bytesRead] = '\0';
+    output += buffer;
+  }
+
+  // Wait for the child process to finish
+  WaitForSingleObject(piProcInfo.hProcess, INFINITE);
+
+  // Get the exit code
+  DWORD exitCode;
+  GetExitCodeProcess(piProcInfo.hProcess, &exitCode);
+
+  // Clean up
+  CloseHandle(piProcInfo.hProcess);
+  CloseHandle(piProcInfo.hThread);
+  CloseHandle(hChildStdOutRd);
+
+  return static_cast<int>(exitCode);
+#else
   pid_t pid;
   int pin[2], pout[2];
   fd_set rfds, wfds;
@@ -827,6 +909,7 @@ int execute (
     throw std::string (std::strerror (errno));
 
   return status;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -854,6 +937,8 @@ std::string osName ()
   return "GNU/kFreeBSD";
 #elif defined (GNUHURD)
   return "GNU/Hurd";
+#elif defined (_WIN32)
+  return "Windows";
 #else
   return "<unknown>";
 #endif

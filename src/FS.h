@@ -32,6 +32,11 @@
 #include <sys/stat.h>
 #include <vector>
 
+#ifdef _WIN32
+#include <windows.h>
+typedef unsigned short mode_t;
+#endif
+
 #ifndef PATH_MAX
 #define PATH_MAX 4096
 #endif

@@ -22,20 +22,40 @@ jobs:
             runner: macos-14
           - name: "macOS 13"
             runner: macos-13
+          - name: "Windows"
+            runner: windows-latest
     runs-on: ${{ matrix.runner }}
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    # Configure in-source build and tests
-    - name: Configure CMake
-      run: cmake -S . -B . -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+      # Configure in-source build and tests
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+          else
+            cmake -S . -B . -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+          fi
 
-    - name: Build project
-      run: cmake --build .
+      - name: Build project
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cmake --build build
+          else
+            cmake --build .
+          fi
 
-    - name: Test project
-      run: make test
+      - name: Test project
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cd build && ctest --output-on-failure
+          else
+            make test
+          fi
 
   integration-test:
     needs: build

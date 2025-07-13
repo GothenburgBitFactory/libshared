@@ -88,7 +88,7 @@ void PEG::loadFromString (const std::string& input)
     line = trim (removeComment (line));
 
     // Skip blank lines with no semantics.
-    if (line.empty () and rule_name.empty ())
+    if (line.empty () && rule_name.empty ())
       continue;
 
     if (!line.empty ())
@@ -175,7 +175,7 @@ void PEG::loadFromString (const std::string& input)
             t.tag ("literal");
             t.tag (token[0] == '\'' ? "character" : "string");
           }
-          else if (t._token.front () == '<' and
+          else if (t._token.front () == '<' &&
                    t._token.back ()  == '>')
           {
             t.tag ("intrinsic");
@@ -392,8 +392,8 @@ void PEG::validate () const
         else if (! token.hasTag ("literal"))
           allTokens.push_back (token._token);
 
-        if (token._token == production[0]._token and
-            rule.first == production[0]._token   and
+        if (token._token == production[0]._token &&
+            rule.first == production[0]._token   &&
             production.size () == 1)
           allLeftRecursive.push_back (token._token);
       }
@@ -420,7 +420,7 @@ void PEG::validate () const
       throw format ("Definition '{1}' may not redefine an intrinsic.");
 
   for (const auto& r : allRules)
-    if (r[0] == '"' or
+    if (r[0] == '"' ||
         r[0] == '\'')
       throw format ("Definition '{1}' may not be a literal.");
 
