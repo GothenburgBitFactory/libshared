@@ -1,5 +1,6 @@
 master/HEAD
-
+- #102 Native Windows support
+          (thanks to Marcus Ekwall)
 - Add 24bit color support
           (thanks to xs5871)
 - Add bold color with 256 color space
