@@ -32,6 +32,8 @@
 #include <cstdint>
 #include <string>
 
+#include "cmake.h"
+
 #define EPOCH_MIN_VALUE 315532800    // 1980-01-01T00:00:00Z
 #define EPOCH_MAX_VALUE 253402293599 // 9999-12-31, 23:59:59 AoE
 
