@@ -1,6 +1,10 @@
 master/HEAD
+- #105 Fix Datetime.{h,cpp} to include cmake.h for HAVE_TIMEGM define
+          (thanks to Scott Mcdermott, )
 - #102 Native Windows support
           (thanks to Marcus Ekwall)
+- #99  Move timegm implementation out of Taskwarrior into libshared
+          (thanks to Tobias Predel)
 - Add 24bit color support
           (thanks to xs5871)
 - Add bold color with 256 color space
