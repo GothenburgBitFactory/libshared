@@ -47,7 +47,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-# Checkout Timewarrior
+# Checkout Timewarrior (without libshared submodule)
 WORKDIR /root
 RUN git clone https://github.com/GothenburgBitFactory/timewarrior.git code
 WORKDIR code
