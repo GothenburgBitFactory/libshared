@@ -21,13 +21,18 @@ set (PACKAGE_TARNAME "${PACKAGE}")
 set (PACKAGE_VERSION "${VERSION}")
 set (PACKAGE_STRING "${PACKAGE} ${VERSION}")
 
-check_function_exists(strlcpy HAVE_STRLCPY)
-check_function_exists(timegm  HAVE_TIMEGM)
+if (PROJECT_IS_TOP_LEVEL)
+  # cmake.h should only be configured if libshared is not used as a CMake subdirectory.
+  # If libshared is a CMake subdirectory, the top-level project already configures 
+  # cmake.h by itself.
+  check_function_exists(strlcpy HAVE_STRLCPY)
+  check_function_exists(timegm  HAVE_TIMEGM)
 
-message ("-- Configuring cmake.h")
-configure_file (
-  ${CMAKE_SOURCE_DIR}/cmake.h.in
-  ${CMAKE_SOURCE_DIR}/cmake.h)
+  message ("-- Configuring cmake.h")
+  configure_file (
+    ${CMAKE_SOURCE_DIR}/cmake.h.in
+    ${CMAKE_SOURCE_DIR}/cmake.h)
+endif (PROJECT_IS_TOP_LEVEL)
 
 add_subdirectory (src)
 if (EXISTS ${CMAKE_SOURCE_DIR}/test)
