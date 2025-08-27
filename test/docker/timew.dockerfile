@@ -28,7 +28,7 @@ ARG BRANCH
 
 FROM ubuntu:24.04 AS base
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN ( apt-get update && yes | unminimize ) && \
     apt-get install -y \
@@ -43,9 +43,9 @@ RUN ( apt-get update && yes | unminimize ) && \
             tzdata
 
 # Setup language environment
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
 
 # Checkout Timewarrior (without libshared submodule)
 WORKDIR /root
