@@ -25,7 +25,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # Configure in-source build and tests
       - name: Configure CMake
@@ -70,6 +70,6 @@ jobs:
             container: "task-libshared-develop"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: "Test on ${{ matrix.name }}"
         run: docker compose up ${{ matrix.container }}
