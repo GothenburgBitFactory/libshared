@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2016 - 2017, 2019 - 2021, 2023, Gothenburg Bit Factory.
+// Copyright 2016 - 2017, 2019 - 2021, 2023, 2025 Gothenburg Bit Factory.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,7 @@ public:
   void forceColor ()                   { _forceColor = true;         }
   void obfuscate ()                    { _obfuscate = true;          }
   void underlineHeaders ()             { _underline_headers = true;  }
+  void withColor (bool with_color)     { _with_color = with_color;   }
   int lines ()                         { return _lines;              }
   int rows ()                          { return (int) _data.size (); }
 
@@ -90,7 +91,8 @@ private:
   Color                                   _extra_even        {0};
   int                                     _truncate_lines    {0};
   int                                     _truncate_rows     {0};
-  bool                                    _forceColor        {false};
+  bool                                    _forceColor        {false}; // TODO: remove once TW and TI have switched
+  bool                                    _with_color        {true};
   bool                                    _obfuscate         {false};
   bool                                    _underline_headers {false};
   int                                     _lines             {0};

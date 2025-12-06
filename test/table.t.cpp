@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1);
+  UnitTest t (3);
 
   try
   {
@@ -75,6 +75,25 @@ int main (int, char**)
 
     std::cout << t1.render ();
     t.ok (t1.lines () > 4, "Table::lines > 4");
+    
+    // Test color behavior - with color enabled (default)
+    Table t3;
+    t3.width (80);
+    t3.add ("Header", true);
+    row = t3.addRow ();
+    t3.set (row, 0, "cell with color", single_cell);
+    std::string colored_output = t3.render ();
+    t.ok (colored_output.find("\033[") != std::string::npos, "Colored output contains ANSI escape codes");
+    
+    // Test color behavior - with color disabled
+    Table t4;
+    t4.width (80);
+    t4.withColor (false);  // Disable color
+    t4.add ("Header", true);
+    row = t4.addRow ();
+    t4.set (row, 0, "cell without color", single_cell);
+    std::string uncolored_output = t4.render ();
+    t.ok (uncolored_output.find("\033[") == std::string::npos, "Uncolored output does not contain ANSI escape codes");
 
     // Chessboard example
     Table t2;

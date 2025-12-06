@@ -100,13 +100,7 @@ void Table::set (int row, int col, const Color color)
 std::string Table::render ()
 {
   // Piped output disables color, unless overridden.
-  if (! _forceColor &&
-#ifdef _WIN32
-      ! _isatty(_fileno(stdout))
-#else
-      ! isatty (STDOUT_FILENO)
-#endif
-      )
+  if (! _with_color)
   {
     _header     = Color ("");
     _odd        = Color ("");
