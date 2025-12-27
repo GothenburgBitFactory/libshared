@@ -217,25 +217,28 @@ bool Duration::parse_designated (Pig& pig)
 {
   auto checkpoint = pig.cursor ();
 
+  // sign = -1 if a '-' is present, else 1
+  int sign = !pig.skip ('-') * 2 - 1;
+
   if (pig.skip ('P') &&
       ! pig.eos ())
   {
     long long value;
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('Y'))
-      _year = value;
+      _year = sign * value;
     else
       pig.restore ();
 
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('M'))
-      _month = value;
+      _month = sign * value;
     else
       pig.restore ();
 
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('D'))
-      _day = value;
+      _day = sign * value;
     else
       pig.restore ();
 
@@ -244,19 +247,19 @@ bool Duration::parse_designated (Pig& pig)
     {
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('H'))
-        _hours = value;
+        _hours = sign * value;
       else
         pig.restore ();
 
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('M'))
-        _minutes = value;
+        _minutes = sign * value;
       else
         pig.restore ();
 
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('S'))
-        _seconds = value;
+        _seconds = sign * value;
       else
         pig.restore ();
     }
@@ -454,12 +457,18 @@ std::string Duration::formatISO () const
   if (_period)
   {
     time_t t = _period;
+
+    std::stringstream s;
+    if (t < 0) {
+      s << '-';
+      t *= -1;
+    }
+
     int seconds = t % 60; t /= 60;
     int minutes = t % 60; t /= 60;
     int hours   = t % 24; t /= 24;
     int days    = t;
 
-    std::stringstream s;
     s << 'P';
     if (days)   s << days   << 'D';
 
