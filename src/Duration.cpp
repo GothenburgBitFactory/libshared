@@ -221,21 +221,25 @@ bool Duration::parse_designated (Pig& pig)
       ! pig.eos ())
   {
     long long value;
+    int sign;
     pig.save ();
+    sign = !pig.skip ('-') * 2 - 1;  // -1 if a '-' is present, else 1
     if (pig.getDigits (value) && pig.skip ('Y'))
-      _year = value;
+      _year = sign * value;
     else
       pig.restore ();
 
     pig.save ();
+    sign = !pig.skip ('-') * 2 - 1;  // -1 if a '-' is present, else 1
     if (pig.getDigits (value) && pig.skip ('M'))
-      _month = value;
+      _month = sign * value;
     else
       pig.restore ();
 
     pig.save ();
+    sign = !pig.skip ('-') * 2 - 1;  // -1 if a '-' is present, else 1
     if (pig.getDigits (value) && pig.skip ('D'))
-      _day = value;
+      _day = sign * value;
     else
       pig.restore ();
 
@@ -243,20 +247,23 @@ bool Duration::parse_designated (Pig& pig)
         ! pig.eos ())
     {
       pig.save ();
+      sign = !pig.skip ('-') * 2 - 1;  // -1 if a '-' is present, else 1
       if (pig.getDigits (value) && pig.skip ('H'))
-        _hours = value;
+        _hours = sign * value;
       else
         pig.restore ();
 
       pig.save ();
+      sign = !pig.skip ('-') * 2 - 1;  // -1 if a '-' is present, else 1
       if (pig.getDigits (value) && pig.skip ('M'))
-        _minutes = value;
+        _minutes = sign * value;
       else
         pig.restore ();
 
       pig.save ();
+      sign = !pig.skip ('-') * 2 - 1;  // -1 if a '-' is present, else 1
       if (pig.getDigits (value) && pig.skip ('S'))
-        _seconds = value;
+        _seconds = sign * value;
       else
         pig.restore ();
     }
