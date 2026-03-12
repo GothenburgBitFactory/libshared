@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.10)
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set (HAVE_CMAKE true)
 # https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html
 set(CMAKE_CXX_STANDARD 17)
@@ -30,11 +30,11 @@ if (PROJECT_IS_TOP_LEVEL)
 
   message ("-- Configuring cmake.h")
   configure_file (
-    ${CMAKE_SOURCE_DIR}/cmake.h.in
-    ${CMAKE_SOURCE_DIR}/cmake.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake.h)
 endif (PROJECT_IS_TOP_LEVEL)
 
 add_subdirectory (src)
-if (EXISTS ${CMAKE_SOURCE_DIR}/test)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test)
   add_subdirectory (test EXCLUDE_FROM_ALL)
-endif (EXISTS ${CMAKE_SOURCE_DIR}/test)
+endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test)
