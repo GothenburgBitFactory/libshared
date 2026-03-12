@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.10)
-include_directories (${CMAKE_SOURCE_DIR}
-                     ${CMAKE_SOURCE_DIR}/src)
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}
+                     ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 set (shared_HEADERS Args.h
                     Color.h

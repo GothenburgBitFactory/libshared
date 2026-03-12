@@ -8,9 +8,9 @@ if(POLICY CMP0037 AND ${CMAKE_VERSION} VERSION_LESS "3.11.0")
   cmake_policy(SET CMP0037 OLD)
 endif()
 
-include_directories (${CMAKE_SOURCE_DIR}
-                     ${CMAKE_SOURCE_DIR}/src
-                     ${CMAKE_SOURCE_DIR}/test
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}
+                     ${CMAKE_CURRENT_SOURCE_DIR}/../src
+                     ${CMAKE_CURRENT_SOURCE_DIR}/..
                      ${SHARED_INCLUDE_DIRS})
 
 set (test_SRCS args.t autocomplete.t charliteral.t composite.t color.t configuration.t dates.t datetime.t duration.t external.t format.t fs.t intrinsic.t json.t json_test lexer.t list.t msg.t negative.t palette.t peg.t pig.t plus.t positive.t question.t rx.t sax_test shared.t star.t stringliteral.t table.t timer.t tree.t unicode.t utf8.t)
@@ -26,4 +26,7 @@ endforeach (src_FILE)
 
 configure_file(run_all run_all COPYONLY)
 configure_file(problems problems COPYONLY)
+
+# Copy config directory structure to build directory for tests
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config DESTINATION ${CMAKE_BINARY_DIR}/test)
 
