@@ -300,6 +300,31 @@ std::string utf8_substr (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Truncate a UTF-8 string to fit within a target display width.
+// Unlike substr which counts characters, this counts display columns.
+const std::string utf8_truncate_to_width (
+  const std::string& input,
+  unsigned int target_width)
+{
+  unsigned int current_width = 0;
+  std::string::size_type i = 0;
+  std::string::size_type last_safe = 0;
+  unsigned int c;
+
+  while ((c = utf8_next_char (input, i)))
+  {
+    int w = mk_wcwidth (c);
+    if (w < 0) w = 0;
+    if (current_width + w > target_width)
+      break;
+    current_width += w;
+    last_safe = i;
+  }
+
+  return input.substr (0, last_safe);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int mk_wcwidth(wchar_t ucs)
 {
     int width = widechar_wcwidth (ucs);
@@ -315,6 +340,23 @@ int mk_wcwidth(wchar_t ucs)
     // This includes accented characters like á or é
     if (width == widechar_ambiguous)
       return 1;
+
+    // Emoji pictographs (U+1F300+) — width 2 in modern terminals
+    if ((ucs >= 0x1F300 && ucs <= 0x1F9FF) ||  // Misc Symbols, Pictographs, Emoticons, Supplemental
+        (ucs >= 0x1FA00 && ucs <= 0x1FAFF))    // Symbols and Pictographs Extended-A
+      return 2;
+
+    // Common symbols — width 1 in modern terminals
+    if ((ucs >= 0x2190 && ucs <= 0x21FF) ||    // Arrows
+        (ucs >= 0x2300 && ucs <= 0x23FF) ||    // Misc Technical
+        (ucs >= 0x25A0 && ucs <= 0x25FF) ||    // Geometric Shapes
+        (ucs >= 0x2600 && ucs <= 0x26FF) ||    // Misc Symbols
+        (ucs >= 0x2700 && ucs <= 0x27BF))      // Dingbats
+      return 1;
+
+    // Variation selectors — zero width
+    if (ucs >= 0xFE00 && ucs <= 0xFE0F)
+      return 0;
 
     // All other negative values
     return 0;
