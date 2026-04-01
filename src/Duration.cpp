@@ -226,49 +226,75 @@ bool Duration::parse_designated (Pig& pig)
     long long value;
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('Y'))
+    {
       _year = sign * value;
+    }
     else
+    {
       pig.restore ();
+    }
 
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('M'))
+    {
       _month = sign * value;
+    }
     else
+    {
       pig.restore ();
+    }
 
     pig.save ();
     if (pig.getDigits (value) && pig.skip ('D'))
+    {
       _day = sign * value;
+    }
     else
+    {
       pig.restore ();
+    }
 
     if (pig.skip ('T') &&
         ! pig.eos ())
     {
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('H'))
+      {
         _hours = sign * value;
+      }
       else
+      {
         pig.restore ();
+      }
 
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('M'))
+      {
         _minutes = sign * value;
+      }
       else
+      {
         pig.restore ();
+      }
 
       pig.save ();
       if (pig.getDigits (value) && pig.skip ('S'))
+      {
         _seconds = sign * value;
+      }
       else
+      {
         pig.restore ();
+      }
     }
 
     auto following = pig.peek ();
     if (pig.cursor () - checkpoint >= 3   &&
         ! unicodeLatinAlpha (following) &&
         ! unicodeLatinDigit (following))
+    {
       return true;
+    }
   }
 
   pig.restoreTo (checkpoint);
@@ -405,7 +431,8 @@ std::string Duration::format () const
     time_t t = _period;
 
     std::stringstream s;
-    if (t < 0) {
+    if (t < 0)
+    {
       s << '-';
       t *= -1;
     }
@@ -440,7 +467,8 @@ std::string Duration::formatHours () const
     time_t t = _period;
 
     std::stringstream s;
-    if (t < 0) {
+    if (t < 0)
+    {
       s << '-';
       t *= -1;
     }
@@ -471,7 +499,8 @@ std::string Duration::formatISO () const
     time_t t = _period;
 
     std::stringstream s;
-    if (t < 0) {
+    if (t < 0)
+    {
       s << '-';
       t *= -1;
     }
@@ -517,7 +546,8 @@ std::string Duration::formatVague (bool padding) const
   float days = (float) _period / 86400.0;
 
   std::stringstream formatted;
-  if (t < 0) {
+  if (t < 0)
+  {
     formatted << '-';
     t *= -1;
     days *= -1.0;
