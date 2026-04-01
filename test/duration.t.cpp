@@ -93,7 +93,7 @@ void testParseError (
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (1921);
+  UnitTest t (2229);
 
   // Simple negative tests.
   testParseError (t, "foo");
@@ -133,6 +133,28 @@ int main (int, char**)
 
   //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format          hours               iso     vague
   testParse (t, "0seconds",        8,    0,  0,  0,  0,  0,  0,         0,                               0,        "0:00:00",     "0:00:00",           "PT0S",       "");
+
+  // Negative ISO format tests
+  //            input              i  Year  Mo  We  Da  Ho  Mi         Se                           time_t           format          hours               iso     vague
+  testParse (t, "-P1Y",            4,   -1,  0,  0,  0,  0,  0,         0,                           -year,  "-365d 0:00:00", "-8760:00:00",         "-P365D",  "-1.0y");
+  testParse (t, "-P1M",            4,    0, -1,  0,  0,  0,  0,         0,                          -month,   "-30d 0:00:00",  "-720:00:00",          "-P30D",   "-4w");
+  testParse (t, "-P1D",            4,    0,  0,  0, -1,  0,  0,         0,                           -day,    "-1d 0:00:00",   "-24:00:00",           "-P1D",   "-1d");
+  testParse (t, "-P1Y1M",          6,   -1, -1,  0,  0,  0,  0,         0,                  -(year + month), "-395d 0:00:00", "-9480:00:00",         "-P395D",  "-1.1y");
+  testParse (t, "-P1Y1D",          6,   -1,  0,  0, -1,  0,  0,         0,                   -(year + day), "-366d 0:00:00", "-8784:00:00",         "-P366D",  "-1.0y");
+  testParse (t, "-P1M1D",          6,    0, -1,  0, -1,  0,  0,         0,                  -(month + day),  "-31d 0:00:00",  "-744:00:00",          "-P31D",   "-4w");
+  testParse (t, "-P1Y1M1D",        8,   -1, -1,  0, -1,  0,  0,         0,           -(year + month + day), "-396d 0:00:00", "-9504:00:00",         "-P396D",  "-1.1y");
+  testParse (t, "-PT1H",           5,    0,  0,  0,  0, -1,  0,         0,                              -h,       "-1:00:00",    "-1:00:00",          "-PT1H",   "-1h");
+  testParse (t, "-PT1M",           5,    0,  0,  0,  0,  0, -1,         0,                              -m,       "-0:01:00",    "-0:01:00",          "-PT1M", "-1min");
+  testParse (t, "-PT1S",           5,    0,  0,  0,  0,  0,  0,        -1,                              -1,       "-0:00:01",    "-0:00:01",          "-PT1S",   "-1s");
+  testParse (t, "-PT1H1M",         7,    0,  0,  0,  0, -1, -1,         0,                          -(h + m),       "-1:01:00",    "-1:01:00",        "-PT1H1M",   "-1h");
+  testParse (t, "-PT1H1S",         7,    0,  0,  0,  0, -1,  0,        -1,                          -(h + 1),       "-1:00:01",    "-1:00:01",        "-PT1H1S",   "-1h");
+  testParse (t, "-PT1M1S",         7,    0,  0,  0,  0,  0, -1,        -1,                          -(m + 1),       "-0:01:01",    "-0:01:01",        "-PT1M1S", "-1min");
+  testParse (t, "-PT1H1M1S",       9,    0,  0,  0,  0, -1, -1,        -1,                      -(h + m + 1),       "-1:01:01",    "-1:01:01",      "-PT1H1M1S",   "-1h");
+  testParse (t, "-P1Y1M1DT1H1M1S",15,   -1, -1,  0, -1, -1, -1,        -1, -(year + month + day + h + m + 1), "-396d 1:01:01", "-9505:01:01", "-P396DT1H1M1S", "-1.1y");
+  testParse (t, "-PT24H",          6,    0,  0,  0,  0, -24,  0,         0,                           -day,    "-1d 0:00:00",   "-24:00:00",           "-P1D",   "-1d");
+  testParse (t, "-PT40000000S",   12,    0,  0,  0,  0,  0,  0, -40000000,                       -40000000, "-462d 23:06:40", "-11111:06:40", "-P462DT23H6M40S", "-1.3y");
+  testParse (t, "-PT3600S",        8,    0,  0,  0,  0,  0,  0,     -3600,                              -h,       "-1:00:00",    "-1:00:00",          "-PT1H",   "-1h");
+  testParse (t, "-PT60M",          6,    0,  0,  0,  0,  0, -60,         0,                              -h,       "-1:00:00",    "-1:00:00",          "-PT1H",   "-1h");
   testParse (t, "2 seconds",       9,    0,  0,  0,  0,  0,  0,         0,                               2,        "0:00:02",     "0:00:02",           "PT2S",     "2s");
   testParse (t, "10seconds",       9,    0,  0,  0,  0,  0,  0,         0,                              10,        "0:00:10",     "0:00:10",          "PT10S",    "10s");
   testParse (t, "1.5seconds",     10,    0,  0,  0,  0,  0,  0,         0,                               1,        "0:00:01",     "0:00:01",           "PT1S",     "1s");
@@ -398,6 +420,62 @@ int main (int, char**)
   t.diag ("  1y         " + Duration ("1y").formatISO ());
 
   t.diag ("--------------------------------------------");
+
+  // Test negative duration formatting
+  // Verify that negative durations are formatted with a leading '-'
+  t.is (Duration ("-1s").format (),        "-0:00:01", "format: -1s -> '-0:00:01'");
+  t.is (Duration ("-60s").format (),       "-0:01:00", "format: -60s -> '-0:01:00'");
+  t.is (Duration ("-3600s").format (),     "-1:00:00", "format: -3600s -> '-1:00:00'");
+  t.is (Duration ("-86400s").format (),    "-1d 0:00:00", "format: -86400s -> '-1d 0:00:00'");
+  t.is (Duration ("-90061s").format (),    "-1d 1:01:01", "format: -90061s -> '-1d 1:01:01'");
+
+  t.is (Duration ("-1s").formatHours (),   "-0:00:01", "formatHours: -1s -> '-0:00:01'");
+  t.is (Duration ("-60s").formatHours (),  "-0:01:00", "formatHours: -60s -> '-0:01:00'");
+  t.is (Duration ("-3600s").formatHours (), "-1:00:00", "formatHours: -3600s -> '-1:00:00'");
+  t.is (Duration ("-90061s").formatHours (), "-25:01:01", "formatHours: -90061s -> '-25:01:01'");
+
+  t.is (Duration ("-1s").formatISO (),     "-PT1S", "formatISO: -1s -> '-PT1S'");
+  t.is (Duration ("-60s").formatISO (),    "-PT1M", "formatISO: -60s -> '-PT1M'");
+  t.is (Duration ("-3600s").formatISO (),  "-PT1H", "formatISO: -3600s -> '-PT1H'");
+  t.is (Duration ("-86400s").formatISO (), "-P1D", "formatISO: -86400s -> '-P1D'");
+  t.is (Duration ("-90061s").formatISO (), "-P1DT1H1M1S", "formatISO: -90061s -> '-P1DT1H1M1S'");
+
+  t.is (Duration ("-1s").formatVague (),   "-1s", "formatVague: -1s -> '-1s'");
+  t.is (Duration ("-60s").formatVague (),   "-1min", "formatVague: -60s -> '-1min'");
+  t.is (Duration ("-3600s").formatVague (), "-1h", "formatVague: -3600s -> '-1h'");
+  t.is (Duration ("-86400s").formatVague (), "-1d", "formatVague: -86400s -> '-1d'");
+  t.is (Duration ("-604800s").formatVague (), "-7d", "formatVague: -604800s -> '-7d'");
+  t.is (Duration ("-2592000s").formatVague (), "-4w", "formatVague: -2592000 -> '-4w'");
+  t.is (Duration ("-7776000s").formatVague (), "-3mo", "formatVague: -7776000 -> '-3mo'");
+  t.is (Duration ("-31536000s").formatVague (), "-1.0y", "formatVague: -31536000 -> '-1.0y'");
+
+  // Test round-trip: parse negative ISO format, then format back
+  t.is (Duration ("-PT1S").formatISO (), "-PT1S", "round-trip: -PT1S -> parse -> formatISO -> -PT1S");
+  t.is (Duration ("-PT1M").formatISO (), "-PT1M", "round-trip: -PT1M -> parse -> formatISO -> -PT1M");
+  t.is (Duration ("-PT1H").formatISO (), "-PT1H", "round-trip: -PT1H -> parse -> formatISO -> -PT1H");
+  t.is (Duration ("-P1D").formatISO (), "-P1D", "round-trip: -P1D -> parse -> formatISO -> -P1D");
+  t.is (Duration ("-P1DT1H1M1S").formatISO (), "-P1DT1H1M1S", "round-trip: -P1DT1H1M1S -> parse -> formatISO -> -P1DT1H1M1S");
+  t.is (Duration ("-PT1H1M1S").formatISO (), "-PT1H1M1S", "round-trip: -PT1H1M1S -> parse -> formatISO -> -PT1H1M1S");
+  t.is (Duration ("-P1Y").formatISO (), "-P365D", "round-trip: -P1Y -> parse -> formatISO -> -P365D");
+  t.is (Duration ("-P1M").formatISO (), "-P30D", "round-trip: -P1M -> parse -> formatISO -> -P30D");
+
+  // Test formatVague with padding
+  t.is (Duration ("-1s").formatVague (true),   "-1s  ", "formatVague (true): -1s -> '-1s  '");
+  t.is (Duration ("-3600s").formatVague (true), "-1h  ", "formatVague (true): -3600s -> '-1h  '");
+  t.is (Duration ("-86400s").formatVague (true), "-1d  ", "formatVague (true): -86400s -> '-1d  '");
+  t.is (Duration ("-604800s").formatVague (true), "-7d  ", "formatVague (true): -604800s -> '-7d  '");
+
+  // Test that positive durations don't get a leading '-'
+  t.is (Duration ("1s").format (),        "0:00:01", "format: 1s -> '0:00:01' (no leading '-')");
+  t.is (Duration ("1s").formatHours (),   "0:00:01", "formatHours: 1s -> '0:00:01' (no leading '-')");
+  t.is (Duration ("1s").formatISO (),     "PT1S", "formatISO: 1s -> 'PT1S' (no leading '-')");
+  t.is (Duration ("1s").formatVague (),   "1s", "formatVague: 1s -> '1s' (no leading '-')");
+
+  // Test zero duration
+  t.is (Duration ("0s").format (),        "0:00:00", "format: 0s -> '0:00:00'");
+  t.is (Duration ("0s").formatHours (),   "0:00:00", "formatHours: 0s -> '0:00:00'");
+  t.is (Duration ("0s").formatISO (),     "PT0S", "formatISO: 0s -> 'PT0S'");
+  t.is (Duration ("0s").formatVague (),   "", "formatVague: 0s -> ''");
 
   return 0;
 }
