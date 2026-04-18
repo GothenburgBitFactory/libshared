@@ -1,4 +1,9 @@
 master/HEAD
+- #111 Duration: support negative durations by prefixing a '-' before the P in ISO format
+          (thanks to Andrew Poelstra)
+- #113 Set CMAKE_CURRENT_SOURCE_DIR instead of CMAKE_SOURCE_DIR
+- #114 Add emoji display width support and width-aware string truncation
+          (thanks to thaafox)
 - #105 Fix Datetime.{h,cpp} to include cmake.h for HAVE_TIMEGM define
           (thanks to Scott Mcdermott, )
 - #102 Native Windows support
