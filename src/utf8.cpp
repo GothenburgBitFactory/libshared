@@ -341,6 +341,10 @@ int mk_wcwidth(wchar_t ucs)
     if (width == widechar_ambiguous)
       return 1;
 
+    // Interpret Private Use Area (PUA) characters as 1 char for Nerd Fonts
+    if (width == widechar_private_use)
+      return 1;
+
     // Emoji pictographs (U+1F300+) — width 2 in modern terminals
     if ((ucs >= 0x1F300 && ucs <= 0x1F9FF) ||  // Misc Symbols, Pictographs, Emoticons, Supplemental
         (ucs >= 0x1FA00 && ucs <= 0x1FAFF))    // Symbols and Pictographs Extended-A
