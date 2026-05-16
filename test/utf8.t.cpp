@@ -152,6 +152,11 @@ int main (int, char**)
   t.is (mk_wcwidth (0x1F602),                           2, "mk_wcwidth U+1F602 '😂' --> 2");
   t.is (mk_wcwidth (0x1F64F),                           2, "mk_wcwidth U+1F64F '🙏' --> 2");
 
+  // Nerd Fonts
+  t.is (mk_wcwidth (0xF023),                           1, "mk_wcwidth U+F023'' --> 1");
+  t.is (mk_wcwidth (0xF023),                           1, "mk_wcwidth U+F023'' --> 1");
+  t.is (mk_wcwidth (0xF023),                           1, "mk_wcwidth U+F023'' --> 1");
+
   t.is (mk_wcwidth (0x5149),                            2, "mk_wcwidth U+5149 --> 2");
   t.is (mk_wcwidth (0x9a8c),                            2, "mk_wcwidth U+9a8c --> 2");
   t.is (mk_wcwidth (0x4e70),                            2, "mk_wcwidth U+4e70 --> 2");
