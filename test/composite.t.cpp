@@ -30,7 +30,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (3);
+  UnitTest t (4);
 
   Composite c1;
   c1.add ("left",  2, Color ());
@@ -130,8 +130,52 @@ int main (int, char**)
   c8.add (       "foo", 7, Color ("white on red"));
   t.diag (c8.str ());
 
+  // Add layers containing characters with non-standard Unicode width.
+  // Verify that they are composited correctly.
+  //   * Each zero-width character should be included in the column of the
+  //     preceding non-zero-width character on the same layer. (If there is
+  //     no such character, the zero-width character should be skipped.)
+  //   * Each wide character should be treated as occupying two columns of the
+  //     layer, the one corresponding to the array index at which the character
+  //     code is stored, and the next one.
+  //   * If exactly one of the columns occupied by a wide characher is also
+  //     occupied by a character in a higher layer (obscuring half of the wide
+  //     character), then the wide character should not be displayed at all.
+  //     The unobscured column should be treated as containing blank space
+  //     (but still be covered by the current layer).
+  Composite c9;
+  c9.add ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 0, Color ());  // BG
+  c9.add ("a", 50, Color ());  // more BG
+  c9.add ("😃😃😃", 1, Color ());  // some wide chars
+  c9.add ("bb", 1, Color ());  // obscure the first of the two wide chars
+  c9.add ("😖😖😖", 8, Color ());  // a few more wide chars
+  c9.add ("cc", 9, Color ());  // obscure half of each of the first two
+  c9.add ("😬😬😬", 15, Color ());  // even more
+  c9.add ("会会会", 18, Color ());  // obscure the last one-and-half
+  c9.add ("[èé][ñn̄][öô]", 25, Color ());  // layer with zero-width chars (combining diacritics)
+  c9.add ("}{", 32, Color ());  // obscure two of the non-zero-width chars
+  c9.add ("è🐋é🐋", 38, Color ());  // 1-col, 0-col and 2-col chars on same layer
+  c9.add ("\a\aff", 45, Color ());  // zero-width characters at beginning of layer
+  t.is (c9.str (), "abb😃😃a cc 😖a😬 会会会a[èé][ñn̄}{öô]aè🐋é🐋affa  a", "Composite ... --> 'abb😃😃a cc 😖a😬 会会会a[èé][ñn̄}{öô]aè🐋é🐋affa  a'");
+
+  // Add colored layers containing characters with non-standard Unicode width.
+  // Display the result.
+  Composite c10;
+  c10.add ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 0, Color ("black on bright blue"));  // BG
+  c10.add ("a", 50, Color ("black on bright blue"));  // more BG
+  c10.add ("😃😃😃", 1, Color ("yellow on grey10"));  // some wide chars
+  c10.add ("bb", 1, Color ("red on black"));  // obscure the first of the two wide chars
+  c10.add ("😖😖😖", 8, Color ("green on blue"));  // a few more wide chars
+  c10.add ("cc", 9, Color ("grey18 on green"));  // obscure half of each of the first two
+  c10.add ("😬😬😬", 15, Color ("white on red"));  // even more
+  c10.add ("会会会", 18, Color ("magenta on grey6"));  // obscure the last one-and-half
+  c10.add ("[èé][ñn̄][öô]", 25, Color ("blue on white"));  // layer with zero-width chars (combining diacritics)
+  c10.add ("}{", 32, Color ("red on white"));  // obscure two of the non-zero-width chars
+  c10.add ("è🐋é🐋", 38, Color ("yellow on cyan"));  // 1-col, 0-col and 2-col chars on same layer
+  c10.add ("\a\aff", 45, Color ("black on bright yellow"));  // zero-width characters at beginning of layer
+  t.diag (c10.str ());
+
   return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
