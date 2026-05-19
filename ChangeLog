@@ -1,4 +1,6 @@
 master/HEAD
+- #117 Extended Unicode support in Composite, character display width now taken into account
+          (thanks to Johan Sarge)
 - #111 Duration: support negative durations by prefixing a '-' before the P in ISO format
           (thanks to Andrew Poelstra)
 - #113 Set CMAKE_CURRENT_SOURCE_DIR instead of CMAKE_SOURCE_DIR
