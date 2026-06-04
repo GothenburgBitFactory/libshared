@@ -1070,6 +1070,9 @@ int main (int, char**)
     t.is (Datetime::length ("V"), 2,  "length 'V' --> 2");
     t.is (Datetime::length ("h"), 2,  "length 'h' --> 2");
     t.is (Datetime::length ("H"), 2,  "length 'H' --> 2");
+    t.is (Datetime::length ("i"), 2,  "length 'i' --> 2");
+    t.is (Datetime::length ("I"), 2,  "length 'I' --> 2");
+    t.is (Datetime::length ("p"), 2,  "length 'p' --> 2");
     t.is (Datetime::length ("n"), 2,  "length 'n' --> 2");
     t.is (Datetime::length ("N"), 2,  "length 'N' --> 2");
     t.is (Datetime::length ("s"), 2,  "length 's' --> 2");
@@ -1095,6 +1098,9 @@ int main (int, char**)
     t.is (r32.toString ("d"),        "28", "2015-10-28T12:55:01 -> d ->        28");
     t.is (r32.toString ("H"),        "12", "2015-10-28T12:55:01 -> H ->        12");
     t.is (r32.toString ("h"),        "12", "2015-10-28T12:55:01 -> h ->        12");
+    t.is (r32.toString ("I"),        "12", "2015-10-28T12:55:01 -> I ->        12");
+    t.is (r32.toString ("i"),        "12", "2015-10-28T12:55:01 -> i ->        12");
+    t.is (r32.toString ("p"),        "PM", "2015-10-28T12:55:01 -> p ->        PM");
     t.is (r32.toString ("N"),        "55", "2015-10-28T12:55:01 -> N ->        55");
     t.is (r32.toString ("n"),        "55", "2015-10-28T12:55:01 -> n ->        55");
     t.is (r32.toString ("S"),        "00", "2015-10-28T12:55:01 -> S ->        01");
@@ -1108,6 +1114,16 @@ int main (int, char**)
     t.is (r32.toString ("J"),       "301", "2015-10-28T12:55:01 -> J ->       301");
     t.is (r32.toString ("j"),       "301", "2015-10-28T12:55:01 -> j ->       301");
     t.is (r32.toString ("w"),         "3", "2015-10-28T12:55:01 -> w ->         3");
+
+    Datetime r32a ("2015-10-28T00:05:00");
+    t.is (r32a.toString ("I"),       "12", "2015-10-28T00:05:00 -> I ->        12");
+    t.is (r32a.toString ("i"),       "12", "2015-10-28T00:05:00 -> i ->        12");
+    t.is (r32a.toString ("p"),       "AM", "2015-10-28T00:05:00 -> p ->        AM");
+
+    Datetime r32b ("2015-10-28T13:05:00");
+    t.is (r32b.toString ("I"),       "01", "2015-10-28T13:05:00 -> I ->        01");
+    t.is (r32b.toString ("i"),        "1", "2015-10-28T13:05:00 -> i ->         1");
+    t.is (r32b.toString ("p"),       "PM", "2015-10-28T13:05:00 -> p ->        PM");
 
     // Test all parse options.
     Datetime r33 ("2015 10 28 19 28 01", "Y M D H N S");
@@ -1125,6 +1141,24 @@ int main (int, char**)
     t.is(r34.hour (),      3,         "h works");
     t.is(r34.minute (),    2,         "n works");
     t.is(r34.second (),    1,         "s works");
+
+    Datetime r34a ("2015 10 28 12 00 AM", "Y M D I N p");
+    t.is(r34a.hour (),      0,         "12 AM parses as hour 0");
+    t.is(r34a.minute (),    0,         "12 AM minute works");
+
+    Datetime r34b ("2015 10 28 12 00 PM", "Y M D I N p");
+    t.is(r34b.hour (),     12,         "12 PM parses as hour 12");
+    t.is(r34b.minute (),    0,         "12 PM minute works");
+
+    Datetime r34c ("2015 10 28 1 30 PM", "Y M D i N p");
+    t.is(r34c.hour (),     13,         "1 PM parses as hour 13");
+    t.is(r34c.minute (),   30,         "1 PM minute works");
+
+    Datetime r34d ("2015 10 28 11 45 pm", "Y M D i N p");
+    t.is(r34d.hour (),     23,         "lowercase pm parses as hour 23");
+    t.is(r34d.minute (),   45,         "lowercase pm minute works");
+
+    t.notok (Datetime::valid ("2015_10_28_1_30", "Y_M_D_i_N"), "ambiguous 12-hour time without AM/PM is invalid");
 
     Datetime r35 ("Wednesday October 28 2015", "A B D Y");
     t.is(r35.year (),    2015,        "Y works");

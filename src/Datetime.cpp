@@ -166,7 +166,8 @@ bool Datetime::parse (
     return true;
   }
 
-  if (parse_formatted (pig, format))
+  bool ambiguous {false};
+  if (parse_formatted (pig, format, ambiguous))
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -175,6 +176,10 @@ bool Datetime::parse (
       resolve ();
       return true;
     }
+  }
+  else if (ambiguous)
+  {
+    return false;
   }
 
   // Allow parse_date_time and parse_date_time_ext regardless of
@@ -232,7 +237,7 @@ void Datetime::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_formatted (Pig& pig, const std::string& format)
+bool Datetime::parse_formatted (Pig& pig, const std::string& format, bool& ambiguous)
 {
   // Short-circuit on missing format.
   if (format.empty ())
@@ -247,6 +252,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   int minute {-1};
   int second {-1};
   int meridiem {-1};
+  bool twelveHourTime {false};
 
   // For parsing, unused.
   int wday   {-1};
@@ -355,6 +361,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       break;
 
     case 'i':
+      twelveHourTime = true;
       if (pig.getDigit (hour))
       {
         if (hour == 0)
@@ -381,6 +388,7 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
       break;
 
     case 'I':
+      twelveHourTime = true;
       if (! pig.getDigit2 (hour) || hour < 1 || hour > 12)
       {
         pig.restoreTo (checkpoint);
@@ -591,6 +599,13 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   if (hour   == -1) hour   = 0;
   if (minute == -1) minute = 0;
   if (second == -1) second = 0;
+
+  if (twelveHourTime && meridiem == -1)
+  {
+    ambiguous = true;
+    pig.restoreTo (checkpoint);
+    return false;
+  }
 
   if (meridiem != -1)
   {
