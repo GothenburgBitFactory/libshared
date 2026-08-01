@@ -55,6 +55,29 @@ jobs:
             make test
           fi
 
+  build-haiku:
+    name: "Haiku r1beta5"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build and test in Haiku VM
+        uses: vmactions/haiku-vm@v1
+        with:
+          release: r1beta5
+          usesh: true
+          copyback: false
+          cache-after-prepare: true
+          envs: "BUILD_TYPE"
+          prepare: |
+            pkgman install -y cmd:cmake cmd:make cmd:python3
+          run: |
+            set -e
+            cmake -S . -B . -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+            cmake --build .
+            make test
+
   integration-test:
     needs: build
     strategy:

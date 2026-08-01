@@ -850,7 +850,13 @@ int execute (
     select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, nullptr, &tv);
 
     if (select_retval == -1)
+    {
+      // Haiku (and probably some very old-school UNIXs) fails with EINTR or
+      // EAGAIN when SIGCHLD arrives during a blocking call. Retrying fixes it.
+      if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
+        continue;
       throw std::string (std::strerror (errno));
+    }
 
     // Write data to child's STDIN
     if (FD_ISSET (pin[1], &wfds))
@@ -863,6 +869,11 @@ int execute (
           // Child died (or closed the pipe) before reading all input.
           // We don't really care; pretend we wrote it all.
           write_retval = input.size () - written;
+        }
+        else if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
+        {
+          // Interrupted, try again.
+          write_retval = 0;
         }
         else
         {
@@ -883,7 +894,11 @@ int execute (
     {
       read_retval = read (pout[0], &buf, sizeof (buf) - 1);
       if (read_retval == -1)
+      {
+        if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
+          continue;
         throw std::string (std::strerror (errno));
+      }
 
       buf[read_retval] = '\0';
       output += buf;
@@ -893,7 +908,11 @@ int execute (
   close (pout[0]);  // Close the read end of the output pipe.
 
   int status = -1;
-  if (wait (&status) == -1)
+  int wait_retval;
+  do
+    wait_retval = waitpid (pid, &status, 0);
+  while (wait_retval == -1 && (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK));
+  if (wait_retval == -1)
     throw std::string (std::strerror (errno));
 
   if (WIFEXITED (status))
