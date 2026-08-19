@@ -166,7 +166,8 @@ bool Datetime::parse (
     return true;
   }
 
-  if (parse_formatted (pig, format))
+  bool ambiguous {false};
+  if (parse_formatted (pig, format, ambiguous))
   {
     // Check the values and determine time_t.
     if (validate ())
@@ -175,6 +176,10 @@ bool Datetime::parse (
       resolve ();
       return true;
     }
+  }
+  else if (ambiguous)
+  {
+    return false;
   }
 
   // Allow parse_date_time and parse_date_time_ext regardless of
@@ -232,7 +237,7 @@ void Datetime::clear ()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Datetime::parse_formatted (Pig& pig, const std::string& format)
+bool Datetime::parse_formatted (Pig& pig, const std::string& format, bool& ambiguous)
 {
   // Short-circuit on missing format.
   if (format.empty ())
@@ -246,6 +251,8 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   int hour   {-1};
   int minute {-1};
   int second {-1};
+  int meridiem {-1};
+  bool twelveHourTime {false};
 
   // For parsing, unused.
   int wday   {-1};
@@ -347,6 +354,60 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
 
     case 'H':
       if (! pig.getDigit2 (hour))
+      {
+        pig.restoreTo (checkpoint);
+        return false;
+      }
+      break;
+
+    case 'i':
+      twelveHourTime = true;
+      if (pig.getDigit (hour))
+      {
+        if (hour == 0)
+          pig.getDigit (hour);
+
+        if (hour == 1)
+        {
+          int tens = hour;
+          if (pig.getDigit (hour))
+            hour += 10 * tens;
+        }
+
+        if (hour < 1 || hour > 12)
+        {
+          pig.restoreTo (checkpoint);
+          return false;
+        }
+      }
+      else
+      {
+        pig.restoreTo (checkpoint);
+        return false;
+      }
+      break;
+
+    case 'I':
+      twelveHourTime = true;
+      if (! pig.getDigit2 (hour) || hour < 1 || hour > 12)
+      {
+        pig.restoreTo (checkpoint);
+        return false;
+      }
+      break;
+
+    case 'p':
+      if (compare (pig.peek (2), "AM", false))
+      {
+        meridiem = 0;
+        pig.skipN (2);
+      }
+      else if (compare (pig.peek (2), "PM", false))
+      {
+        meridiem = 1;
+        pig.skipN (2);
+      }
+      else
       {
         pig.restoreTo (checkpoint);
         return false;
@@ -538,6 +599,27 @@ bool Datetime::parse_formatted (Pig& pig, const std::string& format)
   if (hour   == -1) hour   = 0;
   if (minute == -1) minute = 0;
   if (second == -1) second = 0;
+
+  if (twelveHourTime && meridiem == -1)
+  {
+    ambiguous = true;
+    pig.restoreTo (checkpoint);
+    return false;
+  }
+
+  if (meridiem != -1)
+  {
+    if (hour < 1 || hour > 12)
+    {
+      pig.restoreTo (checkpoint);
+      return false;
+    }
+
+    if (meridiem == 0 && hour == 12)
+      hour = 0;
+    else if (meridiem == 1 && hour != 12)
+      hour += 12;
+  }
 
   _year    = year;
   _month   = month;
@@ -3394,6 +3476,9 @@ std::string Datetime::toString (const std::string& format) const
     case 'V': formatted << std::setw (2) << std::setfill ('0') << week ();                break;
     case 'h': formatted                                        << hour ();                break;
     case 'H': formatted << std::setw (2) << std::setfill ('0') << hour ();                break;
+    case 'i': formatted << ((hour () % 12) == 0 ? 12 : (hour () % 12));                break;
+    case 'I': formatted << std::setw (2) << std::setfill ('0') << ((hour () % 12) == 0 ? 12 : (hour () % 12));                break;
+    case 'p': formatted << (hour () < 12 ? "AM" : "PM");                break;
     case 'n': formatted                                        << minute ();              break;
     case 'N': formatted << std::setw (2) << std::setfill ('0') << minute ();              break;
     case 's': formatted                                        << second ();              break;
@@ -3641,6 +3726,9 @@ int Datetime::length (const std::string& format)
     case 'V':
     case 'h':
     case 'H':
+    case 'i':
+    case 'I':
+    case 'p':
     case 'n':
     case 'N':
     case 's':
