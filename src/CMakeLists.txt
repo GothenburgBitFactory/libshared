@@ -56,9 +56,11 @@ set (shared_SRCS Args.cpp
 
 add_library (shared STATIC ${shared_SRCS})
 
-set (CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
-install (TARGETS shared DESTINATION lib)
-install (FILES ${shared_HEADERS} DESTINATION include)
+if (LIBSHARED_IS_TOP_LEVEL)
+  set (CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
+  install (TARGETS shared DESTINATION lib)
+  install (FILES ${shared_HEADERS} DESTINATION include)
+endif ()
 
 add_executable (lex_executable lex.cpp)
 target_link_libraries (lex_executable shared)
