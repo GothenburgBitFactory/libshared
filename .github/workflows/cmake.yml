@@ -22,6 +22,8 @@ jobs:
             runner: macos-15-intel
           - name: "macOS 26"
             runner: macos-26
+          - name: "macOS 26 (Intel)"
+            runner: macos-26-intel
           - name: "Windows"
             runner: windows-latest
     runs-on: ${{ matrix.runner }}
