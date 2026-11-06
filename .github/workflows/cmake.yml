@@ -18,8 +18,6 @@ jobs:
             runner: ubuntu-24.04
           - name: "macOS 15"
             runner: macos-15
-          - name: "macOS 14"
-            runner: macos-14
           - name: "Windows"
             runner: windows-latest
     runs-on: ${{ matrix.runner }}
