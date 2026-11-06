@@ -7,6 +7,11 @@ set(CMAKE_CXX_STANDARD 17)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project (shared)
+
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set (LIBSHARED_IS_TOP_LEVEL ON)
+endif ()
+
 include (CXXSniffer)
 
 include (CheckFunctionExists)
