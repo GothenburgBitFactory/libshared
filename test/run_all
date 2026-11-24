@@ -39,7 +39,7 @@ def run_test(testqueue, outqueue, threadname):
 
         output = ("# {0}\n".format(os.path.basename(test)), out, err)
         log.debug("Collected output %s", output)
-        outqueue.put(output)
+        outqueue.put((output, test, p.returncode))
 
         testqueue.task_done()
 
@@ -50,6 +50,7 @@ def run_test(testqueue, outqueue, threadname):
 class TestRunner(object):
     def __init__(self):
         self.threads = []
+        self.process_failed = False
         self.tap = open(cmd_args.tapfile, 'w', errors='ignore')
         self._parallelq = Queue()
         self._serialq = Queue()
@@ -138,9 +139,13 @@ class TestRunner(object):
 
         while self.is_running() or not self._outputq.empty():
             try:
-                outputs = self._outputq.get(block=True, timeout=TIMEOUT)
+                outputs, test, returncode = self._outputq.get(block=True, timeout=TIMEOUT)
             except Empty:
                 continue
+
+            if returncode:
+                self.process_failed = True
+                log.error("%s exited with status %s", test, returncode)
 
             log.debug("Outputting to TAP: %s", outputs)
 
@@ -192,7 +197,8 @@ def main():
     runner.start()
 
     # Propagate the return code
-    return runner.show_report()
+    report_status = runner.show_report()
+    return report_status or int(runner.process_failed)
 
 
 if __name__ == "__main__":

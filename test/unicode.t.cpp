@@ -180,9 +180,9 @@ int main (int, char**)
 //  t.ok    (unicodeAlpha (0x00DF), "U+00DF (ß) unicodeAlpha");
 //  t.ok    (unicodeAlpha (0x00E9), "U+00E9 (é) unicodeAlpha");
 //  t.ok    (unicodeAlpha (0x00F6), "U+00F6 (ö) unicodeAlpha");
-#ifdef HAIKU
-  // Haiku classifies So symbols as Unicode printables, not punctuation. 
-  t.skip ("U+3004 ! unicodeAlpha");  
+#if defined (HAIKU) || defined (__ANDROID__)
+  // These platforms classify U+3004 as printable and outside the punctuation class.
+  t.skip ("U+3004 ! unicodeAlpha");
 #else
   t.notok (unicodeAlpha (0x3004), "U+3004 (〄) ! unicodeAlpha");
 #endif

@@ -993,7 +993,9 @@ int execute (
 ////////////////////////////////////////////////////////////////////////////////
 std::string osName ()
 {
-#if defined (DARWIN)
+#if defined (__ANDROID__)
+  return "Android";
+#elif defined (DARWIN)
   return "Darwin";
 #elif defined (SOLARIS)
   return "Solaris";
