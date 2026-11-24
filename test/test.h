@@ -27,6 +27,7 @@
 #ifndef INCLUDED_UNITTEST
 #define INCLUDED_UNITTEST
 
+#include <ctime>
 #include <string>
 
 class UnitTest
