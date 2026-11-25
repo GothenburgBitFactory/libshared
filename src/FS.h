@@ -49,7 +49,7 @@ public:
   Path (const std::string&);
 
   Path& operator= (const Path&);
-  bool operator== (const Path&);
+  bool operator== (const Path&) const;
   Path& operator+= (const std::string&);
   operator std::string () const;
 
