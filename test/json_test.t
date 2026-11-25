@@ -64,9 +64,7 @@ class MetaTestJson(MetaTest):
         return test
 
 
-class TestJsonParsing(TestCase):
-    __metaclass__ = MetaTestJson
-
+class TestJsonParsing(TestCase, metaclass=MetaTestJson):
     EXTRA = {}
     EXTRA["TEST_DIR"] = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
     EXTRA["TEST_BIN"] = os.path.join(EXTRA["TEST_DIR"], "json_test")
