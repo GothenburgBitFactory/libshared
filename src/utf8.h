@@ -29,10 +29,10 @@
 
 #include <string>
 
-unsigned int utf8_codepoint (const std::string&);
-unsigned int utf8_next_char (const std::string&, std::string::size_type&);
-std::string utf8_character (unsigned int);
-int utf8_sequence (unsigned int);
+char32_t utf8_codepoint (const std::string&);
+char32_t utf8_next_char (const std::string&, std::string::size_type&);
+std::string utf8_character (char32_t);
+int utf8_sequence (char lead);
 unsigned int utf8_length (const std::string&);
 unsigned int utf8_text_length (const std::string&);
 unsigned int utf8_width (const std::string& str);
@@ -41,6 +41,6 @@ std::string utf8_substr (const std::string&, unsigned int, unsigned int length =
 
 const std::string utf8_truncate_to_width (const std::string&, unsigned int target_width);
 
-int mk_wcwidth (wchar_t);
+int mk_wcwidth (char32_t);
 
 #endif

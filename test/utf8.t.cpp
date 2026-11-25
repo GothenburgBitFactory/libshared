@@ -40,13 +40,13 @@ int main (int, char**)
   std::string utf8_text_color       = "más [1msábado[0m miércoles";
   std::string utf8_wide_text_color  = "改[1m变各种[0m颜色";
 
-  // unsigned int utf8_codepoint (const std::string&);
+  // char32_t utf8_codepoint (const std::string&);
   t.is ((int) utf8_codepoint ("\\u0020"),              32, "\\u0020 --> ' '");
   t.is ((int) utf8_codepoint ("U+0020"),               32, "U+0020 --> ' '");
 
-  // TODO unsigned int utf8_next_char (const std::string&, std::string::size_type&);
-  // TODO std::string utf8_character (unsigned int);
-  // TODO int utf8_sequence (unsigned int);
+  // TODO char32_t utf8_next_char (const std::string&, std::string::size_type&);
+  // TODO std::string utf8_character (char32_t);
+  // TODO int utf8_sequence (char lead);
 
   // unsigned int utf8_length (const std::string&);
   t.is ((int) utf8_length (ascii_text),                14, "ASCII utf8_length");
@@ -73,7 +73,7 @@ int main (int, char**)
   t.is (utf8_substr (utf8_text, 0, 2),                     "má", "UTF8 utf8_substr");
   t.is (utf8_substr (utf8_wide_text, 0, 2),                "改变", "UTF8 wide utf8_substr");
 
-  // int mk_wcwidth (wchar_t);
+  // int mk_wcwidth (char32_t);
 
   // Control characters
   t.is (mk_wcwidth ('\0'),                              0, "mk_wcwidth U+0000 --> 0");

@@ -29,7 +29,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // Complete Unicode whitespace list.
-bool unicodeWhitespace (unsigned int c)
+bool unicodeWhitespace (char32_t c)
 {
   return unicodeHorizontalWhitespace (c) ||
          unicodeVerticalWhitespace   (c);
@@ -43,7 +43,7 @@ bool unicodeWhitespace (unsigned int c)
 // Static
 //
 // TODO This list should be derived from the Unicode database.
-bool unicodeHorizontalWhitespace (unsigned int c)
+bool unicodeHorizontalWhitespace (char32_t c)
 {
   return (c == 0x0020 ||   // space Common  Separator, space
           c == 0x0009 ||   // Common  Other, control  HT, Horizontal Tab
@@ -78,7 +78,7 @@ bool unicodeHorizontalWhitespace (unsigned int c)
 // Static
 //
 // TODO This list should be derived from the Unicode database.
-bool unicodeVerticalWhitespace (unsigned int c)
+bool unicodeVerticalWhitespace (char32_t c)
 {
   return (c == 0x000A ||   // Common  Other, control  LF, Line feed
           c == 0x000B ||   // Common  Other, control  VT, Vertical Tab
@@ -90,13 +90,13 @@ bool unicodeVerticalWhitespace (unsigned int c)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool unicodePunctuation (unsigned int c)
+bool unicodePunctuation (char32_t c)
 {
   return iswpunct (c) != 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool unicodeAlpha (unsigned int c)
+bool unicodeAlpha (char32_t c)
 {
   return iswprint (c)             &&
          ! iswpunct (c)           &&
@@ -105,7 +105,7 @@ bool unicodeAlpha (unsigned int c)
 
 ////////////////////////////////////////////////////////////////////////////////
 // TODO Needs better definition.
-bool unicodeLatinAlpha (unsigned int c)
+bool unicodeLatinAlpha (char32_t c)
 {
   return (c >= 'A' && c <= 'Z') ||
          (c >= 'a' && c <= 'z');
@@ -115,14 +115,14 @@ bool unicodeLatinAlpha (unsigned int c)
 // Digits 0-9.
 //
 // TODO This list should be derived from the Unicode database.
-bool unicodeLatinDigit (unsigned int c)
+bool unicodeLatinDigit (char32_t c)
 {
   return c >= 0x30 && c <= 0x39;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Digits 0-9 a-f A-F.
-bool unicodeHexDigit (unsigned int c)
+bool unicodeHexDigit (char32_t c)
 {
   return (c >= '0' && c <= '9') ||
          (c >= 'a' && c <= 'f') ||

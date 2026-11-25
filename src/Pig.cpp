@@ -507,7 +507,7 @@ bool Pig::getDecimal (double& result)
 // Handles escaped quotes:  "foo\"bar" -> foo\"bar  (for c = '"')
 // Returns false if first character is not c, or if there is no closing c.
 // Does not modify content between quotes.
-bool Pig::getQuoted (int quote, std::string& result)
+bool Pig::getQuoted (char quote, std::string& result)
 {
   if (! (*_text)[_cursor] ||
       (*_text)[_cursor] != quote)
@@ -624,7 +624,7 @@ bool Pig::eos () const
 
 ////////////////////////////////////////////////////////////////////////////////
 // Peeks ahead - does not move cursor.
-int Pig::peek () const
+char Pig::peek () const
 {
   return (*_text)[_cursor];
 }

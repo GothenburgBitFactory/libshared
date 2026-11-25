@@ -199,11 +199,11 @@ std::string Composite::str () const
     std::string::size_type cursor = 0;
     unsigned int column_count = 0;
     std::string::size_type prev_spacer_column_i = INVALID_COLUMN_I;
-    unsigned int character;
+    char32_t character;
     while ((character = utf8_next_char (text, cursor)))
     {
       std::string::size_type column_i = offset + column_count;
-      int ch_width = mk_wcwidth ((wchar_t)character);
+      int ch_width = mk_wcwidth (character);
 
       switch (ch_width)
       {

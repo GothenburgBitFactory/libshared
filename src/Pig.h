@@ -57,13 +57,13 @@ public:
   bool getNumber (double&);
   bool getDecimal (std::string&);
   bool getDecimal (double&);
-  bool getQuoted (int, std::string&);
+  bool getQuoted (char, std::string&);
   bool getOneOf (const std::vector <std::string>&, std::string&);
   bool getHMS (int&, int&, int&);
   bool getRemainder (std::string&);
 
   bool eos () const;
-  int peek () const;
+  char peek () const;
   std::string peek (const int) const;
   std::string::size_type cursor () const;
   std::string::size_type save ();

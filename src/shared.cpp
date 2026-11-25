@@ -52,16 +52,16 @@ static const std::string DEFAULT_SURROGATE_STR = ".";
 static const std::string HYPHENATION_STR = "-";
 
 // Replaces a Unicode character in UTF-8 encoding at byte index (i) in the byte string (input)
-// with the byte string (subst). Returns the byte index of the character following the substituted
-// one, after the substitution.
-static unsigned int utf8ReplaceChar (
+// with the byte string (subst) and advances (i) to the following byte position.
+// Returns the original code point, or zero if the decoder returns zero.
+static char32_t utf8ReplaceChar (
   std::string& input, std::string::size_type& i, const std::string& subst)
 {
   std::string::size_type old_i = i;
 
-  int ch = utf8_next_char (input, i);
+  const char32_t ch = utf8_next_char (input, i);
   if (ch == 0)
-    return 0;
+    return ch;
 
   input.replace (old_i, i - old_i, subst);
   i = old_i + subst.size ();  // byte index of next code point, post-substitution
@@ -96,7 +96,7 @@ static bool containsTooWideChars (const std::string& text, int width)
 
   while (byte_i < text.size ())
   {
-    int ch = utf8_next_char (text, byte_i);
+    char32_t ch = utf8_next_char (text, byte_i);
 
     if (mk_wcwidth (ch) > width)
       return true;
@@ -114,12 +114,12 @@ static void replaceTooWideChars (std::string& text, int width, const std::string
   while (byte_i < text.size ())
   {
     std::string::size_type old_byte_i = byte_i;
-    int ch = utf8_next_char (text, byte_i);
+    char32_t ch = utf8_next_char (text, byte_i);
 
     if (mk_wcwidth (ch) > width)
     {
       byte_i = old_byte_i;  // Rewind (byte_i) by one code point.
-      utf8ReplaceChar (text, byte_i, surrogate);
+      (void) utf8ReplaceChar (text, byte_i, surrogate);
     }
   }
 }
@@ -131,7 +131,7 @@ static void replaceTooWideChars (std::string& text, int width, const std::string
 // in (text).
 static void getUtf8CharAt (
   const std::string& s, const std::vector<std::string::size_type>& ch_byte_indexes,
-  unsigned int ch_index, unsigned int& ch, int& ch_width)
+  unsigned int ch_index, char32_t& ch, int& ch_width)
 {
   std::string::size_type ch_byte_index = ch_byte_indexes[ch_index];
   ch = utf8_next_char (s, ch_byte_index);
@@ -160,13 +160,13 @@ static bool extractLine (
   unsigned int prev_pos_w_ch_i = text_len_utf8;
   unsigned int prev_prev_pos_w_ch_i = text_len_utf8;
   unsigned int ch_i = line_start_ch_i;  // CPI of current character
-  unsigned int ch = 0;  // Unicode code point of current character
+  char32_t ch = 0;  // Unicode code point of current character
   int line_width = 0;  // accumulated display width of current line
 
   while (ch_i < text_len_utf8)
   {
     // Step 0: Fetch the current Unicode character and determine its display width.
-    unsigned int prev_ch = ch;
+    char32_t prev_ch = ch;
     int ch_width;
     getUtf8CharAt (text, ch_byte_indexes, ch_i, ch, ch_width);
 
@@ -227,7 +227,7 @@ static bool extractLine (
       // for the next character.
       bool hyphenation_failure = false;
       unsigned int hyphen_ch_i = (line_width < width) ? ch_i : prev_pos_w_ch_i;
-      unsigned int hyphen_ch;
+      char32_t hyphen_ch;
       int hyphen_ch_width;
       getUtf8CharAt (text, ch_byte_indexes, hyphen_ch_i, hyphen_ch, hyphen_ch_width);
 
@@ -449,7 +449,7 @@ int longestWord (const std::string& input)
   int longest = 0;
   int length = 0;
   std::string::size_type i = 0;
-  int character;
+  char32_t character;
 
   while ((character = utf8_next_char (input, i)))
   {
@@ -476,7 +476,7 @@ int longestLine (const std::string& input)
   int longest = 0;
   int length = 0;
   std::string::size_type i = 0;
-  int character;
+  char32_t character;
 
   while ((character = utf8_next_char (input, i)))
   {
