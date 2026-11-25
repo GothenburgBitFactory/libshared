@@ -320,13 +320,13 @@ int main (int, char**)
 
   catch (const std::string& e)
   {
-    t.diag ("Tests terminated early");
+    t.ok (false, "Tests terminated early");
     t.diag (e);
   }
 
   catch (...)
   {
-    t.diag ("Tests terminated early");
+    t.ok (false, "Tests terminated early");
     t.diag ("Unexpected test error");
   }
 
