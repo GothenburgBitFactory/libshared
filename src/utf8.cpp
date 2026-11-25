@@ -41,9 +41,9 @@
 //         xxxx
 //         \uxxxx
 //         U+xxxx
-unsigned int utf8_codepoint (const std::string& input)
+char32_t utf8_codepoint (const std::string& input)
 {
-  unsigned int codepoint = 0;
+  char32_t codepoint = 0;
   int length = input.length ();
 
   // U+xxxx, \uxxxx
@@ -71,7 +71,7 @@ unsigned int utf8_codepoint (const std::string& input)
 // Iterates along a UTF8 string.
 //   - argument i counts bytes advanced through the string
 //   - returns the next character
-unsigned int utf8_next_char (const std::string& input, std::string::size_type& i)
+char32_t utf8_next_char (const std::string& input, std::string::size_type& i)
 {
   // Try to recognize end of string without checking length on every call.
   if (input[i] == '\0') {
@@ -89,34 +89,34 @@ unsigned int utf8_next_char (const std::string& input, std::string::size_type& i
 
   // 0xxxxxxx -> 0xxxxxxx
   if (length == 1)
-    return input[i - 1];
+    return static_cast<unsigned char>(input[i - 1]);
 
   // 110yyyyy 10xxxxxx -> 00000yyy yyxxxxxx
   if (length == 2)
-    return ((input[i - 2] & 0x1F) << 6) +
-            (input[i - 1] & 0x3F);
+    return ((static_cast<unsigned char>(input[i - 2]) & 0x1F) << 6) +
+            (static_cast<unsigned char>(input[i - 1]) & 0x3F);
 
   // 1110zzzz 10yyyyyy 10xxxxxx -> zzzzyyyy yyxxxxxx
   if (length == 3)
-    return ((input[i - 3] & 0xF)  << 12) +
-           ((input[i - 2] & 0x3F) <<  6) +
-            (input[i - 1] & 0x3F);
+    return ((static_cast<unsigned char>(input[i - 3]) & 0xF)  << 12) +
+           ((static_cast<unsigned char>(input[i - 2]) & 0x3F) <<  6) +
+            (static_cast<unsigned char>(input[i - 1]) & 0x3F);
 
   // 11110www 10zzzzzz 10yyyyyy 10xxxxxx -> 000wwwzz zzzzyyyy yyxxxxxx
   if (length == 4)
-    return ((input[i - 4] & 0x7)  << 18) +
-           ((input[i - 3] & 0x3F) << 12) +
-           ((input[i - 2] & 0x3F) <<  6) +
-            (input[i - 1] & 0x3F);
+    return ((static_cast<unsigned char>(input[i - 4]) & 0x7)  << 18) +
+           ((static_cast<unsigned char>(input[i - 3]) & 0x3F) << 12) +
+           ((static_cast<unsigned char>(input[i - 2]) & 0x3F) <<  6) +
+            (static_cast<unsigned char>(input[i - 1]) & 0x3F);
 
   // Default: pretend as though it's a single character.
   // TODO Or should this throw?
-  return input[i - 1];
+  return static_cast<unsigned char>(input[i - 1]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // http://en.wikipedia.org/wiki/UTF-8
-std::string utf8_character (unsigned int codepoint)
+std::string utf8_character (char32_t codepoint)
 {
   char sequence[5] {};
 
@@ -154,8 +154,10 @@ std::string utf8_character (unsigned int codepoint)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int utf8_sequence (unsigned int character)
+int utf8_sequence (char lead)
 {
+  const auto character = static_cast<unsigned char>(lead);
+
   if ((character & 0xE0) == 0xC0)
     return 2;
 
@@ -181,7 +183,7 @@ unsigned int utf8_length (const std::string& str)
   for (int i = 0; i < byteLength; i++)
   {
     // Extract the first two bits and check whether they are 10
-    if ((data[i] & 0xC0) == 0x80)
+    if ((static_cast<unsigned char>(data[i]) & 0xC0) == 0x80)
       charLength--;
   }
 
@@ -194,13 +196,10 @@ unsigned int utf8_width (const std::string& str)
 {
   unsigned int length = 0;
   std::string::size_type i = 0;
-  unsigned int c;
+  char32_t c;
   while ((c = utf8_next_char (str, i)))
   {
-    // Control characters, and more especially newline characters, make
-    // mk_wcwidth() return -1.  Ignore that, thereby "adding zero" to length.
-    // Since control characters are not displayed in reports, this is a valid
-    // choice.
+    // mk_wcwidth() counts control characters, including newlines, as zero columns.
     int l = mk_wcwidth (c);
     if (l != -1)
       length += l;
@@ -238,7 +237,7 @@ unsigned int utf8_text_length (const std::string& str)
       else
       {
         // Extract the first two bits and check whether they are 10
-        if ((data[i] & 0xC0) == 0x80)
+        if ((static_cast<unsigned char>(data[i]) & 0xC0) == 0x80)
           --charLength;
       }
     }
@@ -254,7 +253,7 @@ unsigned int utf8_text_width (const std::string& str)
 
   unsigned int length = 0;
   std::string::size_type i = 0;
-  unsigned int c;
+  char32_t c;
   while ((c = utf8_next_char (str, i)))
   {
     if (in_color)
@@ -309,7 +308,7 @@ const std::string utf8_truncate_to_width (
   unsigned int current_width = 0;
   std::string::size_type i = 0;
   std::string::size_type last_safe = 0;
-  unsigned int c;
+  char32_t c;
 
   while ((c = utf8_next_char (input, i)))
   {
@@ -325,7 +324,7 @@ const std::string utf8_truncate_to_width (
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int mk_wcwidth(wchar_t ucs)
+int mk_wcwidth(char32_t ucs)
 {
     int width = widechar_wcwidth (ucs);
 
