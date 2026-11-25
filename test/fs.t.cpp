@@ -30,6 +30,7 @@
 #include <filesystem>
 #include <string>
 #include <test.h>
+#include <unistd.h>
 
 int main (int, char**)
 {
