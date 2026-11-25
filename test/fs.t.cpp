@@ -29,6 +29,9 @@
 #include <cstdlib>
 #include <string>
 #include <test.h>
+#ifdef __MSYS__
+#include <unistd.h>
+#endif
 
 int main (int, char**)
 {
@@ -168,11 +171,19 @@ int main (int, char**)
     File f8 ("tmp/file.t.perm.txt");
     f8.create (0744);
     t.ok (f8.exists (),                    "File::create perm file exists");
+    bool posix_permissions = true;
+#ifdef __MSYS__
+    // A noacl mount synthesizes some mode bits instead of storing them.
+    posix_permissions = pathconf ("tmp", _PC_POSIX_PERMISSIONS) != 0;
+#endif
     mode_t m = f8.mode ();
     t.ok    (m & S_IFREG,                  "File::mode tmp/file.t.perm.txt S_IFREG good");
     t.ok    (m & S_IRUSR,                  "File::mode tmp/file.t.perm.txt r-------- good");
     t.ok    (m & S_IWUSR,                  "File::mode tmp/file.t.perm.txt -w------- good");
-    t.ok    (m & S_IXUSR,                  "File::mode tmp/file.t.perm.txt --x------ good");
+    if (posix_permissions)
+      t.ok  (m & S_IXUSR,                  "File::mode tmp/file.t.perm.txt --x------ good");
+    else
+      t.skip ("File::mode owner execute requires POSIX permissions");
     t.ok    (m & S_IRGRP,                  "File::mode tmp/file.t.perm.txt ---r----- good");
     t.notok (m & S_IWGRP,                  "File::mode tmp/file.t.perm.txt ----w---- good");
     t.notok (m & S_IXGRP,                  "File::mode tmp/file.t.perm.txt -----x--- good");
@@ -291,9 +302,15 @@ int main (int, char**)
     t.ok    (m & S_IRGRP,             "Directory::mode tmp/dir.perm ---r----- good");
     t.notok (m & S_IWGRP,             "Directory::mode tmp/dir.perm ----w---- good");
     t.ok    (m & S_IXGRP,             "Directory::mode tmp/dir.perm -----x--- good");
-    t.notok (m & S_IROTH,             "Directory::mode tmp/dir.perm ------r-- good");
+    if (posix_permissions)
+      t.notok (m & S_IROTH,           "Directory::mode tmp/dir.perm ------r-- good");
+    else
+      t.skip ("Directory::mode other read requires POSIX permissions");
     t.notok (m & S_IWOTH,             "Directory::mode tmp/dir.perm -------w- good");
-    t.notok (m & S_IXOTH,             "Directory::mode tmp/dir.perm --------x good");
+    if (posix_permissions)
+      t.notok (m & S_IXOTH,           "Directory::mode tmp/dir.perm --------x good");
+    else
+      t.skip ("Directory::mode other execute requires POSIX permissions");
     d10.remove ();
     t.notok (d10.exists (),           "Directory::remove temp/dir.perm file no longer exists");
 
