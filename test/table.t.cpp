@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main (int, char**)
 {
-  UnitTest t (3);
+  UnitTest t (4);
 
   try
   {
@@ -94,6 +94,24 @@ int main (int, char**)
     t4.set (row, 0, "cell without color", single_cell);
     std::string uncolored_output = t4.render ();
     t.ok (uncolored_output.find("\033[") == std::string::npos, "Uncolored output does not contain ANSI escape codes");
+
+    Table mixed;
+    mixed.width (80);
+    mixed.leftMargin (0);
+    mixed.extraPadding (0);
+    mixed.intraPadding (1);
+    mixed.withColor (false);
+    mixed.add ("Name", true);
+    mixed.add ("Start\nDate", true);
+
+    const auto mixed_row = mixed.addRow ();
+    mixed.set (mixed_row, 0, "Task");
+    mixed.set (mixed_row, 1, "Today");
+
+    const std::string expected_headers = "     Start\nName Date\n";
+    const std::string output = mixed.render ();
+    t.ok (output.compare (0, expected_headers.size (), expected_headers) == 0,
+          "Mixed-height headers are bottom-aligned");
 
     // Chessboard example
     Table t2;

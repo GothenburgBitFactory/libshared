@@ -216,10 +216,12 @@ std::string Table::render ()
       if (c)
         out += intra;
 
-      if (headers[c].size () < max_lines - i)
+      const auto& lines = headers[c];
+      const auto padding = max_lines - lines.size ();
+      if (i < padding)
         out += _header.colorize (std::string (widths[c], ' '));
       else
-        out += headers[c][i];
+        out += lines[i - padding];
     }
 
     out += extra;
