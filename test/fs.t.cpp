@@ -27,15 +27,31 @@
 #include <FS.h>
 #include <algorithm>
 #include <cstdlib>
+#include <filesystem>
 #include <string>
 #include <test.h>
+#include <unistd.h>
 
 int main (int, char**)
 {
   UnitTest t (128);
 
+  const auto originalCwd = std::filesystem::current_path ();
+  const char* tmpdir = std::getenv ("TMPDIR");
+  std::string fixture = (std::filesystem::absolute (tmpdir && *tmpdir ? tmpdir : ".") /
+                         "libshared-fs.XXXXXX").string ();
+  if (!mkdtemp (fixture.data ()))
+  {
+    t.ok (false, "Could not create filesystem test fixture: " + fixture);
+    return 1;
+  }
+
   try
   {
+    std::filesystem::current_path (fixture);
+    const std::string fixturePath = fixture + "/glob/tmp";
+    std::filesystem::create_directories (fixturePath);
+
     // Path ();
     Path p0;
     t.is (p0._data, "", "Path::Path");
@@ -48,8 +64,8 @@ int main (int, char**)
     Path p2 ("~");
     t.ok (p2._data != "~", "~ expanded to " + p2._data);
 
-    Path p3 ("/tmp");
-    t.ok (p3._data == "/tmp", "/tmp -> /tmp");
+    Path p3 (fixturePath);
+    t.ok (p3._data == fixturePath, "Path preserves the absolute fixture path");
 
     // operator==
     t.notok (p2 == p3, "p2 != p3");
@@ -59,7 +75,7 @@ int main (int, char**)
     t.is (p3._data, p3_copy._data, "Path::Path (Path&)");
 
     // operator (std::string) const;
-    t.is ((std::string) p3, "/tmp", "Path::operator (std::string) const");
+    t.is ((std::string) p3, fixturePath, "Path::operator (std::string) const");
 
     // std::string name () const;
     Path p4 ("/a/b/c/file.ext");
@@ -73,27 +89,27 @@ int main (int, char**)
 
     // bool exists () const;
     t.ok (p2.exists (), "~ exists");
-    t.ok (p3.exists (), "/tmp exists");
+    t.ok (p3.exists (), "fixture directory exists");
     t.notok (p4.exists (), "/a/b/c/file.ext does not exist");
 
     // bool is_directory () const;
     t.ok (p2.is_directory (), "~ is_directory");
-    t.ok (p3.is_directory (), "/tmp is_directory");
+    t.ok (p3.is_directory (), "fixture directory is_directory");
 
     // bool is_link () const;
     t.notok (p2.is_link (), "~ !is_link");
 
     // bool readable () const;
     t.ok (p2.readable (), "~ readable");
-    t.ok (p3.readable (), "/tmp readable");
+    t.ok (p3.readable (), "fixture directory readable");
 
     // bool writable () const;
     t.ok (p2.writable (), "~ writable");
-    t.ok (p3.writable (), "/tmp writable");
+    t.ok (p3.writable (), "fixture directory writable");
 
     // bool executable () const;
     t.ok (p2.executable (), "~ executable");
-    t.ok (p3.executable (), "/tmp executable");
+    t.ok (p3.executable (), "fixture directory executable");
 
     // static std::string expand (const std::string&);
     setenv ("HOME", "/home/user", 1);
@@ -108,24 +124,20 @@ int main (int, char**)
     t.is (Path::expand ("~/$FOO/bar"), "/home/user/hello/world/bar", "tilde and environment expanded expansion");
 
     // static std::vector <std::string> glob (const std::string&);
-    std::vector <std::string> out = Path::glob ("/tmp");
-    t.ok (out.size () == 1, "/tmp -> 1 result");
-    t.is (out[0], "/tmp", "/tmp -> /tmp");
-
-    out = Path::glob ("/t?p");
-    t.ok (out.size () == 1, "/t?p -> 1 result");
-    t.is (out[0], "/tmp", "/t?p -> /tmp");
-
-    out = Path::glob ("/[s-u]mp");
-    t.ok (out.size () == 1, "/[s-u]mp -> 1 result");
-    t.is (out[0], "/tmp", "/[s-u]mp -> /tmp");
+    for (const char* pattern : {"/tmp", "/t?p", "/[s-u]mp"})
+    {
+      const auto out = Path::glob (fixture + "/glob" + pattern);
+      t.ok (out.size () == 1, std::string (pattern) + " -> 1 result");
+      t.ok (!out.empty () && out.front () == fixturePath,
+            std::string (pattern) + " -> fixture directory");
+    }
 
     // bool is_absolute () const;
     t.notok (p0.is_absolute (), "'' !is_absolute");
     t.ok    (p1.is_absolute (), "/foo is_absolute");
     t.notok (Path("foo").is_absolute (), "foo !is_absolute");
     t.ok    (p2.is_absolute (), "~ is_absolute (after expansion)");
-    t.ok    (p3.is_absolute (), "/tmp is_absolute");
+    t.ok    (p3.is_absolute (), "fixture directory is_absolute");
     t.ok    (p4.is_absolute (), "/a/b/c/file.ext is_absolute");
 
     Path p5 ("~/file.ext");
@@ -232,15 +244,15 @@ int main (int, char**)
     std::vector <std::string> files = d5.list ();
     std::sort (files.begin (), files.end ());
     t.is ((int)files.size (), 2, "Directory::list 1 file");
-    t.is (files[0], "tmp/test_directory/dir", "file[0] is tmp/test_directory/dir");
-    t.is (files[1], "tmp/test_directory/f0", "file[1] is tmp/test_directory/f0");
+    t.is (files.size () > 0 ? files[0] : std::string {}, "tmp/test_directory/dir", "file[0] is tmp/test_directory/dir");
+    t.is (files.size () > 1 ? files[1] : std::string {}, "tmp/test_directory/f0", "file[1] is tmp/test_directory/f0");
 
     // std::vector <std::string> listRecursive ();
     files = d5.listRecursive ();
     std::sort (files.begin (), files.end ());
     t.is ((int)files.size (), 2, "Directory::list 1 file");
-    t.is (files[0], "tmp/test_directory/dir/f1", "file is tmp/test_directory/dir/f1");
-    t.is (files[1], "tmp/test_directory/f0", "file is tmp/test_directory/f0");
+    t.is (files.size () > 0 ? files[0] : std::string {}, "tmp/test_directory/dir/f1", "file is tmp/test_directory/dir/f1");
+    t.is (files.size () > 1 ? files[1] : std::string {}, "tmp/test_directory/f0", "file is tmp/test_directory/f0");
 
     // virtual bool remove ();
     t.ok (File::remove (d5._data + "/f0"), "File::remove tmp/test_directory/f0");
@@ -297,12 +309,13 @@ int main (int, char**)
     d10.remove ();
     t.notok (d10.exists (),           "Directory::remove temp/dir.perm file no longer exists");
 
-    // Directory::cd
-    Directory d11 ("/tmp");
-    t.ok (d11.cd (),                  "Directory::cd /tmp good");
-
     tmp.remove ();
     t.notok (tmp.exists (),           "tmp dir removed.");
+
+    // Directory::cd
+    Directory d11 (originalCwd.string ());
+    t.ok (d11.cd () && std::filesystem::current_path () == originalCwd,
+          "Directory::cd returns to the original directory");
 
     // File::removeBOM
     std::string line = "Should not be modified.";
@@ -320,16 +333,18 @@ int main (int, char**)
 
   catch (const std::string& e)
   {
-    t.diag ("Tests terminated early");
+    t.ok (false, "Tests terminated early");
     t.diag (e);
   }
 
   catch (...)
   {
-    t.diag ("Tests terminated early");
+    t.ok (false, "Tests terminated early");
     t.diag ("Unexpected test error");
   }
 
+  std::filesystem::current_path (originalCwd);
+  std::filesystem::remove_all (fixture);
   return 0;
 }
 
